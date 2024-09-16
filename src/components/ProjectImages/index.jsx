@@ -3,6 +3,7 @@ import './index.css';
 import { Box } from "@mui/material";
 import { Children, useEffect, useRef, useState } from "react";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
+import kuru from "../../assets/ktm.jpg";
 
 function ProjectImages() {
 //   if (!images || images.length === 0) {
@@ -35,20 +36,20 @@ function ProjectImages() {
     <div>
       <Carousel showArrows={false} showIndicators={false} interval={3000}
         transitionTime={500} showStatus={false} >
-          <div
+          <Box
             sx={{
               height: '30rem', borderRadius: '.2rem', overflow: 'hidden',
             }}
           >
-            <img src='https://testupload123pp.blob.core.windows.net/pptestupload/storyImg1.jpg' />
-          </div>
-          <div
+            <img src={kuru} />
+          </Box>
+          <Box
             sx={{
               height: '30rem', borderRadius: '.2rem', overflow: 'hidden',
             }}
           >
-            <img src='https://testupload123pp.blob.core.windows.net/pptestupload/storyImg1.jpg' />
-          </div>
+            <img src={kuru} />
+          </Box>
       </Carousel>
     </div>
 

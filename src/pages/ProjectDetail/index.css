@@ -1,0 +1,19 @@
+.Mui-selected {
+    background-color: "none !important";
+}
+.carousel .thumbs {
+    display: flex;
+    align-items: center;
+    justify-content: center
+}
+.like-btn { 
+    font-size: 20px !important;
+}
+.like-btn:hover{
+    background-color: #F5F7F8 !important;
+    color:#1BAA64 !important ;
+    outline: none !important;
+}
+.like-btn:focus{
+    outline: none !important;
+}

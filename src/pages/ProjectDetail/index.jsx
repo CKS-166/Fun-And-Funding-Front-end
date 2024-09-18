@@ -1,11 +1,17 @@
-import React from 'react'
-import { Box, Typography, Button, Stack, Container, Avatar, LinearProgress, styled, linearProgressClasses } from '@mui/material';
+import React, { useState } from 'react'
+import {
+  Box, Typography, Button, Stack, Container,
+  Avatar, LinearProgress, styled, linearProgressClasses, Tab, tabsClasses, Divider
+} from '@mui/material';
+import { TabContext, TabList, TabPanel } from '@mui/lab';
 import Grid from '@mui/material/Grid2';
 import './index.css';
 import ProjectImages from '../../components/ProjectImages';
 import CssBaseline from '@mui/material/CssBaseline';
 import { CiBookmark, CiHeart } from "react-icons/ci";
-
+import PackageSide from '../../components/PackageList/PackageSide';
+import PackageReward from '../../components/PackageList/PackageReward';
+import CommentSection from '../../components/CommentSection';
 const ProjectDetail = () => {
   //sample data
   const sampleTile = 'Hollow Knight';
@@ -15,6 +21,11 @@ const ProjectDetail = () => {
   const target = 100000000;
   const convertPercentage = (a, b) => Math.ceil((a / b) * 100);
   const daysLeft = 30;
+  const [tabValue, setTabValue] = useState('1');
+
+  const handleTabValue = (event, newValue) => {
+    setTabValue(newValue);
+  }
   const BorderLinearProgress = styled(LinearProgress)(() => ({
     height: 15,
     borderRadius: 40,
@@ -29,100 +40,218 @@ const ProjectDetail = () => {
     },
   }));
   return (
-    
-    <Grid container spacing={2} sx={{ marginTop: '100px' }}>
-      <Grid size={6.5} sx={{ mt: '0 !important' }}>
-        <Box>
-          <ProjectImages />
-        </Box>
-      </Grid>
-      <Grid size={5.5} sx={{ mt: '0 !important', justifyContent: 'space-between' }} paddingLeft={5}>
-        {/* project detail */}
-        <Container>
-          <Typography sx={{ color: '#1BAA64', fontSize: '30px', fontStyle: 'italic', fontWeight: '200' }}>
-            Funding
-          </Typography>
-          <Typography sx={{ fontSize: '54px', fontWeight: '800', marginTop: '8px' }}>
-            {sampleTile.toUpperCase()}
-          </Typography>
-          <Typography sx={{ fontSize: '18px', lineHeight: '27px', margin: '15px 0' }}>
-            A beautiful and mysterious 2D adventure through a surreal world of insects and heroes. A game for PC, Mac and Linux
-          </Typography>
-
-          {/* owner info */}
-          <Box sx={{ display: 'flex', alignItems: 'center', spacing: '10px', marginTop: '30px' }}>
-            <Avatar sx={{ width: '50px', height: '50px', marginRight: '10px' }} />
-            <Box>
-              <Typography sx={{ fontSize: '18px' }}>
-                GameFounder123
-              </Typography>
-              <Typography sx={{ fontSize: '12px', opacity: '0.6' }}>
-                1 campaign | Rollinsofrd, United States
-              </Typography>
-            </Box>
-          </Box>
-          {/* progress bar */}
-          <Box>
-            <Box sx={{ display: 'flex', marginTop: '27px', justifyContent: 'space-between' }}>
-              <Typography sx={{ fontSize: '22px', fontWeight: 800 }}>
-                {formattedNumber} <span style={{ fontSize: '18px', fontWeight: '400' }}>VND</span>
-              </Typography>
-              <Typography sx={{ fontSize: '22px', fontWeight: 800 }}>
-                {backers} <span style={{ fontSize: '18px', fontWeight: '400' }}>backers</span>
-              </Typography>
-            </Box>
-            <BorderLinearProgress variant="determinate" sx={{ width: "100%", my: 0, py: 1 }}
-              value={60} />
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', marginTop : '5px' }}>
-              <Typography sx={{ fontSize: '18px' }}>
-                {convertPercentage(number, target)}% <span style={{ fontSize: '18px' }}>out of {target.toLocaleString('de-DE')} vnd</span>
-              </Typography>
-              <Typography sx={{ fontSize: '18px' }}>
-                {daysLeft} <span style={{ fontSize: '18px' }}>days left</span>
-              </Typography>
-            </Box>  
-          </Box>
-
-          {/* buttons interaction */}
-          <Stack spacing={1} direction="column" sx={{ marginTop: '39px' }}>
-            <Button variant="contained"
-              sx={{
-                width: "100%", whiteSpace: "nowrap"
-                , background: "#1BAA64", fontWeight: "bold", py: 1
-              }}
-              className="like-btn"
-            >
-              Back this project
-            </Button>
-
-            <Grid container spacing={2} sx={{ marginTop: '20px' }}>
-              <Grid size={6}>
-                <Button variant="contained"
-                  sx={{
-                    width: "100%", whiteSpace: "nowrap"
-                    , background: "#F5F7F8", fontWeight: "bold", py: 1, color: '#000000', border: '1px solid #000000'
-                  }}
-                  className="like-btn"
-                >
-                  <CiBookmark style={{ marginRight: '5px', fontSize: '20px' }} />  Follow
-                </Button>
-              </Grid>
-              <Grid size={6} >
-                <Button variant="contained"
-                  sx={{
-                    width: "100%", whiteSpace: "nowrap"
-                    , background: "#F5F7F8", fontWeight: "bold", py: 1, color: '#000000', border: '1px solid #000000'
-                  }}
-                  className="like-btn"
-                >
-                  <CiHeart style={{ marginRight: '5px', fontSize: '24px' }} />  Like
-                </Button>
-              </Grid>
+    <Box>
+      <Box sx={{ backgroundColor: '#FFFFFF' }}>
+        <Container maxWidth="xl">
+          <Grid container spacing={2} sx={{ marginTop: '100px' }}>
+            <Grid size={6.5} sx={{ mt: '0 !important' }}>
+              <Box>
+                <ProjectImages />
+              </Box>
             </Grid>
-          </Stack>
+            <Grid size={5.5} sx={{ mt: '0 !important', justifyContent: 'space-between' }} paddingLeft={5}>
+              {/* project detail */}
+              <Container>
+                <Typography sx={{ color: '#1BAA64', fontSize: '30px', fontStyle: 'italic', fontWeight: '200' }}>
+                  Funding
+                </Typography>
+                <Typography sx={{ fontSize: '54px', fontWeight: '800', marginTop: '8px' }}>
+                  {sampleTile.toUpperCase()}
+                </Typography>
+                <Typography sx={{ fontSize: '18px', lineHeight: '27px', margin: '15px 0' }}>
+                  A beautiful and mysterious 2D adventure through a surreal world of insects and heroes. A game for PC, Mac and Linux
+                </Typography>
+
+                {/* owner info */}
+                <Box sx={{ display: 'flex', alignItems: 'center', spacing: '10px', marginTop: '30px' }}>
+                  <Avatar sx={{ width: '50px', height: '50px', marginRight: '10px' }} />
+                  <Box>
+                    <Typography sx={{ fontSize: '18px' }}>
+                      GameFounder123
+                    </Typography>
+                    <Typography sx={{ fontSize: '12px', opacity: '0.6' }}>
+                      1 campaign | Rollinsofrd, United States
+                    </Typography>
+                  </Box>
+                </Box>
+                {/* progress bar */}
+                <Box>
+                  <Box sx={{ display: 'flex', marginTop: '27px', justifyContent: 'space-between' }}>
+                    <Typography sx={{ fontSize: '22px', fontWeight: 800 }}>
+                      {formattedNumber} <span style={{ fontSize: '18px', fontWeight: '400' }}>VND</span>
+                    </Typography>
+                    <Typography sx={{ fontSize: '22px', fontWeight: 800 }}>
+                      {backers} <span style={{ fontSize: '18px', fontWeight: '400' }}>backers</span>
+                    </Typography>
+                  </Box>
+                  <BorderLinearProgress variant="determinate" sx={{ width: "100%", my: 0, py: 1 }}
+                    value={60} />
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', marginTop: '5px' }}>
+                    <Typography sx={{ fontSize: '18px' }}>
+                      {convertPercentage(number, target)}% <span style={{ fontSize: '18px' }}>out of {target.toLocaleString('de-DE')} vnd</span>
+                    </Typography>
+                    <Typography sx={{ fontSize: '18px' }}>
+                      {daysLeft} <span style={{ fontSize: '18px' }}>days left</span>
+                    </Typography>
+                  </Box>
+                </Box>
+
+                {/* buttons interaction */}
+                <Stack spacing={1} direction="column" sx={{ marginTop: '39px' }}>
+                  <Button variant="contained"
+                    sx={{
+                      width: "100%", whiteSpace: "nowrap"
+                      , background: "#1BAA64", fontWeight: "bold", py: 1
+                    }}
+                    className="like-btn"
+                  >
+                    Back this project
+                  </Button>
+
+                  <Grid container spacing={2} sx={{ marginTop: '20px' }}>
+                    <Grid size={6}>
+                      <Button variant="contained"
+                        sx={{
+                          width: "100%", whiteSpace: "nowrap"
+                          , background: "#FFFFFF", fontWeight: "bold", py: 1, color: '#000000', border: '1px solid #000000'
+                        }}
+                        className="like-btn"
+                      >
+                        <CiBookmark style={{ marginRight: '5px', fontSize: '20px' }} />  Follow
+                      </Button>
+                    </Grid>
+                    <Grid size={6} >
+                      <Button variant="contained"
+                        sx={{
+                          width: "100%", whiteSpace: "nowrap"
+                          , background: "#FFFFFF", fontWeight: "bold", py: 1, color: '#000000', border: '1px solid #000000'
+                        }}
+                        className="like-btn"
+                      >
+                        <CiHeart style={{ marginRight: '5px', fontSize: '24px' }} />  Like
+                      </Button>
+                    </Grid>
+                  </Grid>
+                </Stack>
+              </Container>
+            </Grid>
+          </Grid>
+
         </Container>
-      </Grid>
-    </Grid>
+      </Box>
+
+      {/* tab value */}
+      <TabContext value={tabValue} >
+        <Box
+          sx={{
+            position: "sticky", top: 0, zIndex: 2
+          }}>
+          <Box >
+            <TabList
+              onChange={handleTabValue}
+              // centered
+              // variant="fullWidth"
+              className='detail-tab'
+              sx={{
+                background: "white",
+                [`& .${tabsClasses.scrollButtons}`]: {
+                  '&.Mui-disabled': { opacity: 0.3 },
+                },
+                [`& .MuiTabs-indicator`]: {
+                  display: "flex",
+                  justifyContent: "center",
+                  backgroundColor: 'rgba(0, 0, 0, 0.3)',
+                },
+
+              }}>
+              {/* intro */}
+              <Tab label="Introduction"
+                sx={{
+                  fontStyle: "normal",
+                  fontWeight: "bold", px: 4, py: 3, whiteSpace: "nowrap",
+                  textTransform: "none", color: "rgba(0, 0, 0, 0.6) !important",
+                  '&:active': { outline: 'none !important', color: "#1BAA64 !important", background: "transparent !important" },
+                  '&:focus': { outline: 'none !important', color: "#1BAA64 !important", background: "transparent !important" },
+                }}
+                value="1" />
+                {/* reward */}
+              <Tab label="Rewards"
+                sx={{
+                  fontStyle: "normal",
+                  fontWeight: "bold", px: 4, py: 3, whiteSpace: "nowrap",
+                  textTransform: "none", color: "rgba(0, 0, 0, 0.6) !important",
+                  '&:active': { outline: 'none !important', color: "#1BAA64 !important", background: "transparent !important" },
+                  '&:focus': { outline: 'none !important', color: "#1BAA64 !important", background: "transparent !important" },
+                }}
+                value="2" />
+                {/* comment  */}
+              <Tab label="Comments"
+                sx={{
+                  fontStyle: "normal",
+                  fontWeight: "bold", px: 4, py: 3, whiteSpace: "nowrap",
+                  textTransform: "none", color: "rgba(0, 0, 0, 0.6) !important",
+                  '&:active': { outline: 'none !important', color: "#1BAA64 !important", background: "transparent !important" },
+                  '&:focus': { outline: 'none !important', color: "#1BAA64 !important", background: "transparent !important" },
+                }}
+                value="3" />
+              <Tab label="Updates"
+                sx={{
+                  fontStyle: "normal",
+                  fontWeight: "bold", px: 4, py: 3, whiteSpace: "nowrap",
+                  textTransform: "none", color: "rgba(0, 0, 0, 0.6) !important",
+                  '&:active': { outline: 'none !important', color: "#1BAA64 !important", background: "transparent !important" },
+                  '&:focus': { outline: 'none !important', color: "#1BAA64 !important", background: "transparent !important" },
+                }}
+                value="4" />
+              <Tab label="Backers"
+                sx={{
+                  fontStyle: "normal",
+                  fontWeight: "bold", px: 4, py: 3, whiteSpace: "nowrap",
+                  textTransform: "none", color: "rgba(0, 0, 0, 0.6) !important",
+                  '&:active': { outline: 'none !important', color: "#1BAA64 !important", background: "transparent !important" },
+                  '&:focus': { outline: 'none !important', color: "#1BAA64 !important", background: "transparent !important" },
+                }}
+                value="5" />
+
+            </TabList>
+          </Box>
+          <Divider />
+        </Box>
+
+        <Container maxWidth = {tabValue === '2' ? 'false' : 'lg'} className="flex flex-row "
+          
+        >
+            {tabValue === "1" ? (
+              <Box sx={{ display: "flex", flexDirection: "row", width: "100%", marginTop : '80px' }}>
+                <Box sx={{marginRight : '150px'}}>
+                  <Box>
+                    <ProjectImages/>
+                  </Box>
+                </Box>
+                <Box size={4}>
+                 <Box>
+                    <PackageSide/>
+                  </Box>
+                
+                </Box>
+              </Box>
+
+            ) : tabValue === "2" ? (
+              <Container maxWidth="1400px">
+                <PackageReward />
+              </Container>
+            ) : tabValue === "3" ? (
+              <Container maxWidth="1400px">
+                <CommentSection/>
+              </Container>) : <div>a</div>}
+
+        </Container>
+
+      </TabContext>
+    </Box>
+
+    // tab value    
+
   )
 }
 

@@ -12,6 +12,8 @@ import { CiBookmark, CiHeart } from "react-icons/ci";
 import PackageSide from '../../components/PackageList/PackageSide';
 import PackageReward from '../../components/PackageList/PackageReward';
 import CommentSection from '../../components/CommentSection';
+import UpdatesSection from '../../components/UpdatesSection';
+import BackerSection from '../../components/BackerSection';
 const ProjectDetail = () => {
   //sample data
   const sampleTile = 'Hollow Knight';
@@ -228,7 +230,7 @@ const ProjectDetail = () => {
                     <ProjectImages/>
                   </Box>
                 </Box>
-                <Box size={4}>
+                <Box>
                  <Box>
                     <PackageSide/>
                   </Box>
@@ -241,9 +243,47 @@ const ProjectDetail = () => {
                 <PackageReward />
               </Container>
             ) : tabValue === "3" ? (
-              <Container maxWidth="1400px">
-                <CommentSection/>
-              </Container>) : <div>a</div>}
+              <Box sx={{ display: "flex", flexDirection: "row", width: "100%", marginTop : '80px' }}>
+                <Box sx={{marginRight : '150px'}}>
+                  <Box>
+                    <CommentSection isBacker={true}/>
+                  </Box>
+                </Box>
+                <Box>
+                 <Box>
+                    <PackageSide/>
+                  </Box>
+                
+                </Box>
+              </Box>) : tabValue === "4" ? (
+              <Box sx={{ display: "flex", flexDirection: "row", width: "100%", marginTop : '80px' }}>
+                <Box sx={{marginRight : '150px'}}>
+                  <Box>
+                    <UpdatesSection/>
+                  </Box>
+                </Box>
+                <Box>
+                 <Box>
+                    <PackageSide/>
+                  </Box>
+                
+                </Box>
+              </Box>) : <Box>
+                
+              <Box sx={{ display: "flex", flexDirection: "row", width: "100%", marginTop : '80px' }}>
+                <Box sx={{marginRight : '150px'}}>
+                  <Box>
+                    <BackerSection/>
+                  </Box>
+                </Box>
+                <Box>
+                 <Box>
+                    <PackageSide/>
+                  </Box>
+                
+                </Box>
+              </Box>
+            </Box>}
 
         </Container>
 

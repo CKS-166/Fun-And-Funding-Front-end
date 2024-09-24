@@ -5,8 +5,8 @@ const TestCR = () => {
         name: '',
         description: '',
         introduction: 'a',
-        startDate: '12-09-2023',
-        endDate: '12-09-2023',
+        startDate: '',
+        endDate: '',
         target: 0,
         balance: 0,
         bankAccount: { BankNumber: '1', BankCode: 'a' },
@@ -14,6 +14,7 @@ const TestCR = () => {
             { 
                 name: '', 
                 requiredAmount: 0, 
+                limitQuantity : 0,
                 rewardItems: [{ name: "string", description: "string", quantity: 0, imageFile: null }] 
             }
         ],
@@ -75,6 +76,8 @@ const TestCR = () => {
         projectData.packages.forEach((packageData, index) => {
             formData.append(`Packages[${index}].Name`, packageData.name);
             formData.append(`Packages[${index}].RequiredAmount`, packageData.requiredAmount);
+            formData.append(`Packages[${index}].Description`, packageData.description);
+            formData.append(`Packages[${index}].LimitQuantity`, packageData.limitQuantity);
 
             packageData.rewardItems.forEach((reward, rewardIndex) => {
                 formData.append(`Packages[${index}].RewardItems[${rewardIndex}].Name`, reward.name);
@@ -94,7 +97,7 @@ const TestCR = () => {
         }
 
         try {
-            const response = await axios.post('https://localhost:7044/api/FundingProject/project-add', formData, {
+            const response = await axios.post('https://localhost:7044/api/funding-projects', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
@@ -106,9 +109,15 @@ const TestCR = () => {
     };
 
     return (
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} style={{marginTop :'200px'}}>
             <input type="text" name="name" onChange={handleInputChange} placeholder="Project Name" />
             <input type="text" name="description" onChange={handleInputChange} placeholder="Description" />
+            <input type="number" name="target" onChange={handleInputChange} placeholder='Target'/>
+            <label>Start date</label>
+            <input type="date" name="startDate" onChange={handleInputChange} placeholder='Start Date'/>
+            <label>End date</label>
+            <input type="date" name="endDate" onChange={handleInputChange} placeholder='End Date'/>
+
             <input type="file" multiple onChange={handleFileChange} />
 
             {projectData.packages.map((pkg, packageIndex) => (
@@ -120,6 +129,27 @@ const TestCR = () => {
                         onChange={(e) => handlePackageChange(e, packageIndex)}
                         name="name"
                         placeholder="Package Name"
+                    />
+                    <input
+                        type="text"
+                        value={pkg.description}
+                        onChange={(e) => handlePackageChange(e, packageIndex)}
+                        name="description"
+                        placeholder="Package description"
+                    />
+                   <input
+                        type="number"
+                        value={pkg.requiredAmount}
+                        onChange={(e) => handlePackageChange(e, packageIndex)}
+                        name="requiredAmount"
+                        placeholder="Required Amount"
+                    />
+                    <input
+                        type="number"
+                        value={pkg.limitQuantity}
+                        onChange={(e) => handlePackageChange(e, packageIndex)}
+                        name="limitQuantity"
+                        placeholder="Limit Quantity"
                     />
                     {pkg.rewardItems.map((reward, rewardIndex) => (
                         <div key={rewardIndex}>

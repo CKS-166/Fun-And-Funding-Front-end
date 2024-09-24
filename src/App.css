@@ -1,9 +1,23 @@
-
 * {
 
-font-family: 'Poppins', sans-serif !important;
+    font-family: 'Poppins', sans-serif !important;
 }
 
-body{
-    background-color:  #F5F7F8;
+body {
+    background-color: #F5F7F8;
+}
+
+:root {
+    --primary-green: #1BAA64;
+    --dark-green: #06402b;
+}
+
+@font-face {
+    font-family: WhyteInktrap;
+    src: url('/src/assets/fonts/WhyteInktrap.ttf');
+}
+
+@font-face {
+    font-family: GuthenBloots;
+    src: url('/src/assets/fonts/GuthenBloots.ttf');
 }

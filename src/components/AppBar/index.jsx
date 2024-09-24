@@ -8,56 +8,56 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import { AppBar, Avatar, Backdrop, Badge, Box, Button, CircularProgress, Container, Divider, IconButton, ListItemIcon, ListItemText, Menu, MenuItem, Toolbar, Tooltip, Typography } from '@mui/material';
 import logo from "../../assets/logo.png";
 const FunFundingAppBar = () => {
-    const pages = [
-        { label: 'Trang chủ', route: '/home' },
-        { label: 'Toàn bộ dự án', route: '/all-projects' },
-        { label: 'Về chúng tôi', route: '/about-us' },
-        { label: 'Hỗ trợ', route: '/help-and-support' }
-      ];
-      const profileMenu = [
-        { label: 'Tài khoản', route: '/profile', icon: <AccountCircleIcon /> },
-        { label: 'Ví của tôi', route: '/my-wallet', icon: <AccountBalanceWalletIcon /> },
-        { label: 'Dự án của tôi', route: '/profile/projects', icon: <BallotIcon /> },
-        { label: 'Đăng xuất', route: 'logout', icon: <LogoutIcon /> }
-      ];
-      const [anchorElNav, setAnchorElNav] = React.useState(null);
-      const [user, setUser] = React.useState(null);
-      const [anchorElProfile, setAnchorElProfile] = React.useState(null);
-      const [isLoading, setIsLoading] = React.useState(false);
-      const [logoSrc, setLogoSrc] = React.useState(logo);
-      const [classHeader, setClassHeader] = React.useState("scrolled");
-      const [tabValue, setTabValue] = React.useState(0);
+  const pages = [
+    { label: 'Home', route: '/home' },
+    { label: 'CrowdFunding', route: '/all-projects' },
+    { label: 'Marketplace', route: '/about-us' },
+    { label: 'Help', route: '/help-and-support' }
+  ];
+  const profileMenu = [
+    { label: 'Tài khoản', route: '/profile', icon: <AccountCircleIcon /> },
+    { label: 'Ví của tôi', route: '/my-wallet', icon: <AccountBalanceWalletIcon /> },
+    { label: 'Dự án của tôi', route: '/profile/projects', icon: <BallotIcon /> },
+    { label: 'Đăng xuất', route: 'logout', icon: <LogoutIcon /> }
+  ];
+  const [anchorElNav, setAnchorElNav] = React.useState(null);
+  const [user, setUser] = React.useState(null);
+  const [anchorElProfile, setAnchorElProfile] = React.useState(null);
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [logoSrc, setLogoSrc] = React.useState(logo);
+  const [classHeader, setClassHeader] = React.useState("scrolled");
+  const [tabValue, setTabValue] = React.useState(0);
   return (
     <>
       {/* <Backdrop sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }} open={isLoading}>
         <CircularProgress color="inherit" />
       </Backdrop> */}
-      <AppBar position='absolute' className={classHeader} sx={{ background: '#FFFFFF', height: '5.2rem', justifyContent: 'center !important', display: 'flex' }}>
-        <Container maxWidth="false">
+      <AppBar position='' className={classHeader} sx={{ background: 'white', height: '4.5rem', justifyContent: 'center !important', display: 'flex', boxShadow: 'none !important' }}>
+        <Container maxWidth="false" sx={{ px: '2rem !important' }}>
           <Toolbar disableGutters={true} sx={{ display: 'flex', justifyContent: 'space-between' }}>
             <div className='flex flex-row w-full h-[5rem]'>
-              <Typography variant="h6" noWrap component="a" sx={{ mr: 4, display: { xs: 'none', lg: 'flex' }, fontWeight: 700, letterSpacing: '.3rem', color: 'inherit', textDecoration: 'none', alignItems: 'center', cursor: 'pointer', ml: '6rem' }}>
-                <img src={logoSrc} style={{ width: '6rem', height: '6rem' }} />
+              <Typography variant="h6" noWrap component="a" sx={{ display: { xs: 'none', lg: 'flex' }, fontWeight: 700, letterSpacing: '.3rem', color: 'inherit', textDecoration: 'none', alignItems: 'center', cursor: 'pointer' }}>
+                <img src={logoSrc} style={{ height: '3rem' }} />
               </Typography>
-              <Box sx={{ flexGrow: 1, display: { xs: 'flex', lg: 'none' }, justifyContent: 'space-between', height: '5rem' }}>
-                <IconButton className='notiIcon' title="Phụ lục" size="large" aria-label="account of current user" aria-controls="menu-appbar" aria-haspopup="true"  sx={{ outline: 'none !important' }}>
+              <Box sx={{ flexGrow: 1, display: { xs: 'flex', lg: 'none' }, justifyContent: 'space-between', height: '5rem', width: '100%' }}>
+                <IconButton className='notiIcon' title="Phụ lục" size="large" aria-label="account of current user" aria-controls="menu-appbar" aria-haspopup="true" sx={{ outline: 'none !important' }}>
                   <MenuIcon />
                 </IconButton>
-                <Menu anchorEl={anchorElNav} anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }} transformOrigin={{ vertical: 'top', horizontal: 'left' }} open={Boolean(anchorElNav)} sx={{ display: { xs: 'block', md: 'none' } }}>
+                <Menu anchorEl={anchorElNav} anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }} transformOrigin={{ vertical: 'top', horizontal: 'left' }} open={Boolean(anchorElNav)} sx={{ display: { xs: 'flex', md: 'none' }, justifyContent: 'center' }}>
                   {pages.map((page) => (
-                    <MenuItem key={page.label}  sx={{ mr: 8 }}>
+                    <MenuItem key={page.label}>
                       <ListItemText>{page.label}</ListItemText>
                     </MenuItem>
                   ))}
                 </Menu>
               </Box>
-              <Box style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'center', height: '5rem' }}>
-                <Box sx={{ flexGrow: 1, display: { xs: 'none', lg: 'flex' } }}>
+              <Box style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'center', height: '5rem', width: '100%' }}>
+                <Box sx={{ flexGrow: 1, display: { xs: 'none', lg: 'flex' }, justifyContent: 'center', gap: '2rem' }}>
                   {pages.map((page) => (
-                    <Button disableRipple={true} key={page.label} 
-                     sx={{
-                      color: location.pathname === page.route ? '#FBB03B !important' : '#44494D', display: 'block', fontWeight: 600, mr: 4, fontSize: '1rem', textTransform: 'none', height: '5rem'
-                    }} className='focusedMenuItem'>
+                    <Button disableRipple={true} key={page.label}
+                      sx={{
+                        color: location.pathname === page.route ? '#FBB03B !important' : '#44494D', display: 'block', fontWeight: 600, fontSize: '1rem', textTransform: 'none', height: '5rem'
+                      }} className='focusedMenuItem'>
                       {page.label}
                     </Button>
                   ))}
@@ -81,7 +81,7 @@ const FunFundingAppBar = () => {
                   </MenuItem>
                   <Divider />
                   {profileMenu.map((menuItem) => (
-                    <MenuItem key={menuItem.label}  sx={{ width: '100%', height: '54px' }}>
+                    <MenuItem key={menuItem.label} sx={{ width: '100%', height: '54px' }}>
                       <ListItemIcon sx={{ marginRight: '0.5rem', color: '#44494D' }}>{menuItem.icon}</ListItemIcon>
                       <ListItemText sx={{ width: '15vh', color: '#44494D' }}>{menuItem.label}</ListItemText>
                     </MenuItem>
@@ -89,13 +89,13 @@ const FunFundingAppBar = () => {
                 </Menu>
               </Box>
               :
-              <div className='flex flex-row login-register'>
-                <Typography variant="h6" noWrap  component="a" sx={{ textDecoration: 'none', fontSize: '1rem', cursor: 'pointer', fontWeight: 600, transition: 'all 0.3s' }} className='focusedMenuItem'>
-                  Đăng nhập
+              <div className='flex flex-row login-register text-black/80'>
+                <Typography variant="h6" noWrap component="a" sx={{ textDecoration: 'none', fontSize: '1rem', cursor: 'pointer', fontWeight: 600, transition: 'all 0.3s' }} className='focusedMenuItem'>
+                  Login
                 </Typography>
-                <div className='text-[#FFFFFF] font-bold text-[1rem] mx-[0.3rem] slash select-none'>/</div>
-                <Typography variant="h6" noWrap  component="a" sx={{ textDecoration: 'none', fontSize: '1rem', cursor: 'pointer', fontWeight: 600, transition: 'all 0.3s' }} className='focusedMenuItem'>
-                  Đăng ký
+                <div className=' font-bold text-[1rem] mx-[0.3rem] slash select-none'>/</div>
+                <Typography variant="h6" noWrap component="a" sx={{ textDecoration: 'none', fontSize: '1rem', cursor: 'pointer', fontWeight: 600, transition: 'all 0.3s' }} className='focusedMenuItem'>
+                  Register
                 </Typography>
               </div>
             }

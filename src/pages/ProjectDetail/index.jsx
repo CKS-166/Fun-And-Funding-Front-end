@@ -43,7 +43,7 @@ const ProjectDetail = () => {
     <Box>
       <Box sx={{ backgroundColor: '#FFFFFF' }}>
         <Container maxWidth="xl">
-          <Grid container spacing={2} sx={{ marginTop: '100px' }}>
+          <Grid container spacing={2}>
             <Grid size={6.5} sx={{ mt: '0 !important' }}>
               <Box>
                 <ProjectImages />
@@ -174,7 +174,7 @@ const ProjectDetail = () => {
                   '&:focus': { outline: 'none !important', color: "#1BAA64 !important", background: "transparent !important" },
                 }}
                 value="1" />
-                {/* reward */}
+              {/* reward */}
               <Tab label="Rewards"
                 sx={{
                   fontStyle: "normal",
@@ -184,7 +184,7 @@ const ProjectDetail = () => {
                   '&:focus': { outline: 'none !important', color: "#1BAA64 !important", background: "transparent !important" },
                 }}
                 value="2" />
-                {/* comment  */}
+              {/* comment  */}
               <Tab label="Comments"
                 sx={{
                   fontStyle: "normal",
@@ -218,32 +218,32 @@ const ProjectDetail = () => {
           <Divider />
         </Box>
 
-        <Container maxWidth = {tabValue === '2' ? 'false' : 'lg'} className="flex flex-row "
-          
+        <Container maxWidth={tabValue === '2' ? 'false' : 'lg'} className="flex flex-row "
+
         >
-            {tabValue === "1" ? (
-              <Box sx={{ display: "flex", flexDirection: "row", width: "100%", marginTop : '80px' }}>
-                <Box sx={{marginRight : '150px'}}>
-                  <Box>
-                    <ProjectImages/>
-                  </Box>
-                </Box>
-                <Box size={4}>
-                 <Box>
-                    <PackageSide/>
-                  </Box>
-                
+          {tabValue === "1" ? (
+            <Box sx={{ display: "flex", flexDirection: "row", width: "100%", marginTop: '80px' }}>
+              <Box sx={{ marginRight: '150px' }}>
+                <Box>
+                  <ProjectImages />
                 </Box>
               </Box>
+              <Box size={4}>
+                <Box>
+                  <PackageSide />
+                </Box>
 
-            ) : tabValue === "2" ? (
-              <Container maxWidth="1400px">
-                <PackageReward />
-              </Container>
-            ) : tabValue === "3" ? (
-              <Container maxWidth="1400px">
-                <CommentSection/>
-              </Container>) : <div>a</div>}
+              </Box>
+            </Box>
+
+          ) : tabValue === "2" ? (
+            <Container maxWidth="1400px">
+              <PackageReward />
+            </Container>
+          ) : tabValue === "3" ? (
+            <Container maxWidth="1400px">
+              <CommentSection />
+            </Container>) : <div>a</div>}
 
         </Container>
 

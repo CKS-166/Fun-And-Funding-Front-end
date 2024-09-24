@@ -176,7 +176,7 @@ const ProjectDetail = () => {
                   '&:focus': { outline: 'none !important', color: "#1BAA64 !important", background: "transparent !important" },
                 }}
                 value="1" />
-                {/* reward */}
+              {/* reward */}
               <Tab label="Rewards"
                 sx={{
                   fontStyle: "normal",
@@ -186,7 +186,7 @@ const ProjectDetail = () => {
                   '&:focus': { outline: 'none !important', color: "#1BAA64 !important", background: "transparent !important" },
                 }}
                 value="2" />
-                {/* comment  */}
+              {/* comment  */}
               <Tab label="Comments"
                 sx={{
                   fontStyle: "normal",
@@ -220,70 +220,70 @@ const ProjectDetail = () => {
           <Divider />
         </Box>
 
-        <Container maxWidth = {tabValue === '2' ? 'false' : 'lg'} className="flex flex-row "
-          
+        <Container maxWidth={tabValue === '2' ? 'false' : 'lg'} className="flex flex-row "
+
         >
-            {tabValue === "1" ? (
-              <Box sx={{ display: "flex", flexDirection: "row", width: "100%", marginTop : '80px' }}>
-                <Box sx={{marginRight : '150px'}}>
-                  <Box>
-                    <ProjectImages/>
-                  </Box>
-                </Box>
+          {tabValue === "1" ? (
+            <Box sx={{ display: "flex", flexDirection: "row", width: "100%", marginTop: '80px' }}>
+              <Box sx={{ marginRight: '150px' }}>
                 <Box>
-                 <Box>
-                    <PackageSide/>
-                  </Box>
-                
+                  <ProjectImages />
                 </Box>
               </Box>
+              <Box>
+                <Box>
+                  <PackageSide />
+                </Box>
 
-            ) : tabValue === "2" ? (
-              <Container maxWidth="1400px">
-                <PackageReward />
-              </Container>
-            ) : tabValue === "3" ? (
-              <Box sx={{ display: "flex", flexDirection: "row", width: "100%", marginTop : '80px' }}>
-                <Box sx={{marginRight : '150px'}}>
+              </Box>
+            </Box>
+
+          ) : tabValue === "2" ? (
+            <Container maxWidth="1400px">
+              <PackageReward />
+            </Container>
+          ) : tabValue === "3" ? (
+            <Box sx={{ display: "flex", flexDirection: "row", width: "100%", marginTop: '80px' }}>
+              <Box sx={{ marginRight: '150px' }}>
+                <Box>
+                  <CommentSection isBacker={true} />
+                </Box>
+              </Box>
+              <Box>
+                <Box>
+                  <PackageSide />
+                </Box>
+
+              </Box>
+            </Box>) : tabValue === "4" ? (
+              <Box sx={{ display: "flex", flexDirection: "row", width: "100%", marginTop: '80px' }}>
+                <Box sx={{ marginRight: '150px' }}>
                   <Box>
-                    <CommentSection isBacker={true}/>
+                    <UpdatesSection />
                   </Box>
                 </Box>
                 <Box>
-                 <Box>
-                    <PackageSide/>
-                  </Box>
-                
-                </Box>
-              </Box>) : tabValue === "4" ? (
-              <Box sx={{ display: "flex", flexDirection: "row", width: "100%", marginTop : '80px' }}>
-                <Box sx={{marginRight : '150px'}}>
                   <Box>
-                    <UpdatesSection/>
+                    <PackageSide />
                   </Box>
-                </Box>
-                <Box>
-                 <Box>
-                    <PackageSide/>
-                  </Box>
-                
+
                 </Box>
               </Box>) : <Box>
-                
-              <Box sx={{ display: "flex", flexDirection: "row", width: "100%", marginTop : '80px' }}>
-                <Box sx={{marginRight : '150px'}}>
-                  <Box>
-                    <BackerSection/>
-                  </Box>
-                </Box>
+
+            <Box sx={{ display: "flex", flexDirection: "row", width: "100%", marginTop: '80px' }}>
+              <Box sx={{ marginRight: '150px' }}>
                 <Box>
-                 <Box>
-                    <PackageSide/>
-                  </Box>
-                
+                  <BackerSection />
                 </Box>
               </Box>
-            </Box>}
+              <Box>
+                <Box>
+                  <PackageSide />
+                </Box>
+
+              </Box>
+            </Box>
+          </Box>}
 
         </Container>
 

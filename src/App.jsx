@@ -11,11 +11,20 @@ import UserLayout from "./layouts/UserLayout";
 import AboutUs from './pages/AboutUs';
 import HomePage from "./pages/HomePage";
 import ProjectDetail from './pages/ProjectDetail';
-
+import './index.css'
+import CreateFundingProjectLayout from './layouts/CreateFundingProjectLayout'
+import Introduction from './pages/CreateFundingProjectForm/Introduction'
+import ProjectMedia from './pages/CreateFundingProjectForm/ProjectMedia'
+import SetupBankAccount from './pages/CreateFundingProjectForm/SetupBankAccount'
+import SetupDonatePackage from './pages/CreateFundingProjectForm/SetupDonatePackage'
+import ChoosePlan from './pages/CreateFundingProjectForm/ChoosePlan'
+import BasicInfo from './pages/CreateFundingProjectForm/BasicInfo'
+import FunFundingAppBar from "./components/AppBar";
 function App() {
 
   return (
     <>
+      <FunFundingAppBar />
       <Routes>
         <Route element={<UserLayout />}>
           <Route path="/" element={<Navigate to="/home" />} />
@@ -23,6 +32,19 @@ function App() {
           <Route path="/about-us" element={<AboutUs />} />
           <Route path="/project-detail" element={<ProjectDetail />} />
         </Route>
+
+        <Route path='choose-project-plan' element={<ChoosePlan />} />
+        <Route element={<CreateFundingProjectLayout />}>
+          <Route path='request-funding-project/basic-info' element={<BasicInfo />} />
+          <Route path='request-funding-project/introduction' element={<Introduction />} />
+          <Route path='request-funding-project/project-media' element={<ProjectMedia />} />
+          <Route path='request-funding-project/setup-bank-account' element={<SetupBankAccount />} />
+          <Route path='request-funding-project/setup-donate-package' element={<SetupDonatePackage />} />
+        </Route>
+
+        <Route path='/funding-detail' element={<ProjectDetail />} />
+
+        <Route path='*' element={<Navigate to='/funding-detail' />} />
       </Routes>
     </>
   )

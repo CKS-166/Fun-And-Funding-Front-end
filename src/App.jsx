@@ -22,7 +22,7 @@ import BasicInfo from './pages/CreateFundingProjectForm/BasicInfo'
 import FunFundingAppBar from "./components/AppBar";
 import TestCR from './pages/TestCR';
 import TestDetail from './pages/TestDetail';
-
+import TestUpdate from "./pages/TestCR/testUpdate";
 function App() {
 
   return (
@@ -47,6 +47,8 @@ function App() {
 
         <Route path='/funding-detail' element={<ProjectDetail />} />
         <Route path='/test' element={<TestCR/>}/>
+        <Route path='/test-update' element={<TestUpdate/>}/>
+
          <Route path='/test-detail' element={<TestDetail/>}/>
         <Route path='*' element={<Navigate to='/funding-detail' />} />
       </Routes>

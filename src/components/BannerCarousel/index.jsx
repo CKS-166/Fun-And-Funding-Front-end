@@ -3,7 +3,7 @@ import './index.css'
 
 function BannerCarousel() {
     return (
-        <div className='carouselImg'>
+        <div className='carouselImg '>
 
         </div>
     )

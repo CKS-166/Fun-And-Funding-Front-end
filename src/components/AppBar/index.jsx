@@ -53,11 +53,11 @@ const FunFundingAppBar = () => {
     setAnchorElProfile(null);
   };
 
-  const isHomePage = location.pathname === '/home';
+  const isPage = location.pathname === '/home' || location.pathname === '/choose-project-plan';
   const appBarStyles = {
-    background: isHomePage ? 'transparent' : '#F5F7F8',
+    background: isPage ? 'transparent' : '#F5F7F8',
     boxShadow: 'none',
-    height: '6.4rem',
+    height: "6.4rem",
     justifyContent: 'center',
     display: 'flex',
     px: '4rem', //padding for AppBar
@@ -67,7 +67,7 @@ const FunFundingAppBar = () => {
     fontWeight: '900 !important',
     fontSize: '1.1rem',
     textTransform: 'none',
-    color: isHomePage ? '#F5F7F8' : '#2F3645',
+    color: isPage ? '#F5F7F8' : '#2F3645',
     '&.Mui-selected': {
       color: '#1BAA64 !important',
     },
@@ -80,11 +80,11 @@ const FunFundingAppBar = () => {
   };
 
   return (
-    <AppBar position='absolute' sx={appBarStyles}>
+    <AppBar position='relative' sx={appBarStyles}>
       <Container maxWidth="false">
         <Toolbar disableGutters sx={{ display: 'flex', justifyContent: 'space-between' }}>
           <Typography variant="h6" noWrap component="a" sx={{ mr: 4, display: { xs: 'none', lg: 'flex' }, fontWeight: 700, letterSpacing: '.3rem', color: 'inherit', textDecoration: 'none', alignItems: 'center', cursor: 'pointer' }}>
-            <img src={isHomePage ? homeLogo : defaultLogo} style={{ height: '3.2rem' }} alt="Logo" />
+            <img src={isPage ? homeLogo : defaultLogo} style={{ height: '3.2rem' }} alt="Logo" />
           </Typography>
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '5rem' }}>
             <Tabs
@@ -104,7 +104,7 @@ const FunFundingAppBar = () => {
                   label={page.label}
                   sx={{
                     ...tabStyles,
-                    color: isHomePage ? (tabValue === index ? '#1BAA64' : '#F5F7F8') : (tabValue === index ? '#1BAA64' : '#2F3645'),
+                    color: isPage ? (tabValue === index ? '#1BAA64' : '#F5F7F8') : (tabValue === index ? '#1BAA64' : '#2F3645'),
                     fontWeight: '700 !important',
                   }}
                 />

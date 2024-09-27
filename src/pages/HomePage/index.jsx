@@ -26,7 +26,7 @@ function HomePage() {
         }, 5000);
     }
     return (
-        <div>
+        <div className='mt-[-6.4rem]'>
             <BannerCarousel />
             <div className='flex flex-col justify-center px-[6rem] pt-[7.5rem] pb-[3.75rem]'>
                 <div className='flex justify-between gap-[4rem] mb-[2.5rem]'>

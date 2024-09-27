@@ -55,9 +55,9 @@ const FunFundingAppBar = () => {
 
   const isPage = location.pathname === '/home' || location.pathname === '/choose-project-plan';
   const appBarStyles = {
-    background: isPage ? 'transparent' : '#F5F7F8',
+    background: isPage ? 'transparent' : 'white',
     boxShadow: 'none',
-    height: "6.4rem",
+    height: "4.5rem",
     justifyContent: 'center',
     display: 'flex',
     px: '4rem', //padding for AppBar
@@ -65,7 +65,7 @@ const FunFundingAppBar = () => {
 
   const tabStyles = {
     fontWeight: '900 !important',
-    fontSize: '1.1rem',
+    fontSize: '1rem',
     textTransform: 'none',
     color: isPage ? '#F5F7F8' : '#2F3645',
     '&.Mui-selected': {
@@ -84,7 +84,7 @@ const FunFundingAppBar = () => {
       <Container maxWidth="false">
         <Toolbar disableGutters sx={{ display: 'flex', justifyContent: 'space-between' }}>
           <Typography variant="h6" noWrap component="a" sx={{ mr: 4, display: { xs: 'none', lg: 'flex' }, fontWeight: 700, letterSpacing: '.3rem', color: 'inherit', textDecoration: 'none', alignItems: 'center', cursor: 'pointer' }}>
-            <img src={isPage ? homeLogo : defaultLogo} style={{ height: '3.2rem' }} alt="Logo" />
+            <img src={isPage ? homeLogo : defaultLogo} style={{ height: '2.5rem' }} alt="Logo" />
           </Typography>
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '5rem' }}>
             <Tabs
@@ -136,7 +136,7 @@ const FunFundingAppBar = () => {
               </Menu>
             </Box>
           ) : (
-            <Button variant="contained" sx={{ background: "#1BAA64", fontWeight: "600", textTransform: "none", px: '3rem', fontSize: '1.2rem' }}>
+            <Button variant="contained" sx={{ background: "#1BAA64", fontWeight: "600", textTransform: "none", px: '2rem', fontSize: '1rem' }}>
               Sign In
             </Button>
           )}

@@ -1,19 +1,27 @@
-import React, { useState } from 'react'
+import { TabContext, TabList } from '@mui/lab';
 import {
-  Box, Typography, Button, Stack, Container,
-  Avatar, LinearProgress, styled, linearProgressClasses, Tab, tabsClasses, Divider
+  Avatar,
+  Box,
+  Button,
+  Container,
+  Divider,
+  LinearProgress,
+  linearProgressClasses,
+  Stack,
+  styled,
+  Tab, tabsClasses,
+  Typography
 } from '@mui/material';
-import { TabContext, TabList, TabPanel } from '@mui/lab';
 import Grid from '@mui/material/Grid2';
-import './index.css';
-import ProjectImages from '../../components/ProjectImages';
-import CssBaseline from '@mui/material/CssBaseline';
+import React, { useState } from 'react';
 import { CiBookmark, CiHeart } from "react-icons/ci";
-import PackageSide from '../../components/PackageList/PackageSide';
-import PackageReward from '../../components/PackageList/PackageReward';
-import CommentSection from '../../components/CommentSection';
-import UpdatesSection from '../../components/UpdatesSection';
 import BackerSection from '../../components/BackerSection';
+import CommentSection from '../../components/CommentSection';
+import PackageReward from '../../components/PackageList/PackageReward';
+import PackageSide from '../../components/PackageList/PackageSide';
+import ProjectImages from '../../components/ProjectImages';
+import UpdatesSection from '../../components/UpdatesSection';
+import './index.css';
 const ProjectDetail = () => {
   //sample data
   const sampleTile = 'Hollow Knight';
@@ -31,7 +39,7 @@ const ProjectDetail = () => {
   const BorderLinearProgress = styled(LinearProgress)(() => ({
     height: 15,
     borderRadius: 40,
-    marginTop: 20,
+    // marginTop: 20,
     marginBottom: 20,
     [`&.${linearProgressClasses.colorPrimary}`]: {
       backgroundColor: "#D8D8D8",
@@ -45,7 +53,7 @@ const ProjectDetail = () => {
     <Box>
       <Box sx={{ backgroundColor: '#FFFFFF' }}>
         <Container maxWidth="xl">
-          <Grid container spacing={2} sx={{ marginTop: '100px' }}>
+          <Grid container spacing={2}>
             <Grid size={6.5} sx={{ mt: '0 !important' }}>
               <Box>
                 <ProjectImages />

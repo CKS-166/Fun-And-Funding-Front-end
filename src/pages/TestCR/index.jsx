@@ -53,7 +53,9 @@ const TestCR = () => {
     };
 
     const handleFileChange = (e) => {
-        setFiles([...e.target.files]);
+        const selectedFiles = Array.from(e.target.files); // Convert FileList to an array
+        setFiles(selectedFiles);
+        console.log(files)
     };
 
     const handleSubmit = async (e) => {
@@ -89,6 +91,7 @@ const TestCR = () => {
             });
         });
 
+        console.log(files);
         // Add other files (e.g., Funding Files)
         for (let i = 0; i < files.length; i++) {
             formData.append(`FundingFiles[${i}].Name`, files[i].name);
@@ -118,7 +121,7 @@ const TestCR = () => {
             <label>End date</label>
             <input type="date" name="endDate" onChange={handleInputChange} placeholder='End Date'/>
 
-            <input type="file" multiple onChange={handleFileChange} />
+            <input type="file"  multiple onChange={handleFileChange} />
 
             {projectData.packages.map((pkg, packageIndex) => (
                 <div key={packageIndex}>

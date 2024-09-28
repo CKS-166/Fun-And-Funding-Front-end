@@ -2,7 +2,7 @@ import React from 'react'
 import { Typography, Avatar, Box } from '@mui/material';
 import Grid from '@mui/material/Grid2';
 import './index.css'
-function CommentBar({isBacker}) {
+function CommentBar() {
     return (
         <Box sx={{
             background: '#FFFFFF', height: '170px'

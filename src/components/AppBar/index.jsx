@@ -3,6 +3,7 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import BallotIcon from '@mui/icons-material/Ballot';
 import LogoutIcon from '@mui/icons-material/Logout';
 import NotificationsIcon from '@mui/icons-material/Notifications';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { AppBar, Avatar, Badge, Box, Button, Container, Divider, IconButton, ListItemIcon, ListItemText, Menu, MenuItem, Tab, Tabs, Toolbar, Tooltip, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -55,9 +56,9 @@ const FunFundingAppBar = () => {
 
   const isPage = location.pathname === '/home' || location.pathname === '/choose-project-plan';
   const appBarStyles = {
-    background: isPage ? 'transparent' : 'white',
+    background: isPage ? 'transparent' : '#F5F7F8',
     boxShadow: 'none',
-    height: "4.5rem",
+    height: "5rem",
     justifyContent: 'center',
     display: 'flex',
     px: '4rem', //padding for AppBar
@@ -111,13 +112,14 @@ const FunFundingAppBar = () => {
               ))}
             </Tabs>
           </Box>
-          {user ? (
-            <Box sx={{ maxWidth: '100%', mr: { xs: '16px', lg: '6rem' }, display: 'flex', alignItems: 'center' }}>
-              <Badge badgeContent={0} max={99} showZero sx={{ marginRight: '32px', "& .MuiBadge-badge": { backgroundColor: '#FBB03B !important' } }}>
-                <NotificationsIcon fontSize='large' sx={{ color: '#44494D', cursor: 'pointer', transition: 'color 0.3s', '&:hover': { color: '#FBB03B' } }} />
+          {true ? (
+            <Box sx={{ maxWidth: '100%', display: 'flex', alignItems: 'center' }}>
+              <ShoppingCartIcon fontSize='large' sx={{ marginRight: '2rem', color: isPage ? '#F5F7F8' : '#2F3645', transition: 'color 0.3s', '&:hover': { color: '#1BAA64' }, cursor: 'pointer' }} />
+              <Badge badgeContent={0} max={99} showZero sx={{ marginRight: '2rem', "& .MuiBadge-badge": { backgroundColor: '#1BAA64 !important' } }}>
+                <NotificationsIcon fontSize='large' sx={{ cursor: 'pointer', transition: 'color 0.3s', '&:hover': { color: '#1BAA64' }, color: isPage ? '#F5F7F8' : '#2F3645' }} />
               </Badge>
               <Tooltip title="Tài khoản">
-                <IconButton sx={{ p: 0, mr: '16px' }} onClick={handleOpenProfileMenu}>
+                <IconButton sx={{ p: 0 }} onClick={handleOpenProfileMenu}>
                   <Avatar alt="User" src={user?.userAvatarUrl} />
                 </IconButton>
               </Tooltip>

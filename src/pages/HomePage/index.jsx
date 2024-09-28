@@ -4,6 +4,7 @@ import MailOutlineIcon from '@mui/icons-material/MailOutline';
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import { Button, Card, CardContent, Chip, CircularProgress, InputAdornment, Paper, TextField, Typography } from '@mui/material';
 import React, { useState } from 'react';
+import { AiFillProject } from "react-icons/ai";
 import Background from "../../assets/background-pattern.png";
 import Confetti from "../../assets/confetti-background.png";
 import Devices from '../../assets/devices.png';
@@ -158,7 +159,7 @@ function HomePage() {
                     See more games
                 </Button>
             </div>
-            <div className='flex flex-col mt-[3.75rem] h-[58rem] justify-between bg-[#F5F7F8] relative pb-[3.75rem]'>
+            <div className='flex flex-col mt-[3.75rem] h-[56rem] justify-between bg-[#F5F7F8] relative pb-[3.75rem]'>
                 <div className="achievement-background">
                     <img src={Confetti} alt="footer" border="0" style={{ height: '58rem', objectFit: 'cover', width: '100%' }} />
                     <div className="achievement-overlay"></div>
@@ -197,7 +198,7 @@ function HomePage() {
                                     10.000.000
                                 </Typography>
                                 <Typography sx={{ fontWeight: '500', fontSize: '1.25rem', color: '#2F3645', textAlign: 'center', alignSelf: 'flex-end' }}>
-                                    Next target: <span style={{ fontWeight: '700' }}>1000 users</span>
+                                    Next target: <span style={{ fontWeight: '700' }}>100.000.000 VND</span>
                                 </Typography>
                             </CardContent>
                         </Card>
@@ -210,7 +211,7 @@ function HomePage() {
                                     300+
                                 </Typography>
                                 <div className='flex justify-between align-bottom'>
-                                    <PeopleAltIcon style={{ color: '#2F3645', fontSize: '4rem' }} />
+                                    <AiFillProject style={{ color: '#2F3645', fontSize: '4rem' }} />
                                     <Typography sx={{ fontWeight: '500', fontSize: '1rem', color: '#2F3645', textAlign: 'right', alignSelf: 'flex-end' }}>
                                         Next target: <br /><span style={{ fontWeight: '700' }}>1000 projects</span>
                                     </Typography>

@@ -10,7 +10,7 @@ body {
 :root {
     --primary-green: #1BAA64;
     --dark-green: #06402b;
-    --header-height: '7rem';
+    --header-height: '6.4rem';
 }
 
 @font-face {

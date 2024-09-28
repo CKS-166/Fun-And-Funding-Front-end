@@ -45,7 +45,7 @@ function App() {
           <Route path='request-funding-project/setup-donate-package' element={<SetupDonatePackage />} />
         </Route>
 
-        <Route path='/funding-detail' element={<ProjectDetail />} />
+        <Route path='/funding-detail/:id' element={<ProjectDetail />} />
         <Route path='/test' element={<TestCR/>}/>
         <Route path='/test-update' element={<TestUpdate/>}/>
 

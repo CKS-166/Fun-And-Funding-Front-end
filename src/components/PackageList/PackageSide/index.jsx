@@ -2,7 +2,7 @@ import React from 'react'
 import {Card , CardContent, CardActions, CardMedia,
      Typography, Divider, Button} from '@mui/material';
 
-const PackageSide = () => {
+const PackageSide = ({packageList}) => {
     return (
         <div>
             <Card sx={{ borderRadius: 0, 

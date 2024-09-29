@@ -40,29 +40,28 @@ const ProjectDetail = () => {
   const [isLoading, setIsLoading] = useState(false);  
   const [daysLeft, setDaysLeft] = useState(0);
   //fetch project data
+  const fetchProject = async () => {
+    try {
+        const { data } = await axios.get(`https://localhost:7044/api/funding-projects/${id}`)
+        .then(response => {
+          setProjectData(response.data._data);
+          setIsLoading(true);
+          const start = new Date(response.data._data.startDate);
+          const end = new Date(response.data._data.endDate);
+          const timeDiff = end - start;
+
+          // Convert milliseconds to days (1 day = 24 * 60 * 60 * 1000 ms)
+          const dayDiff = timeDiff / (1000 * 60 * 60 * 24);
+          setDaysLeft(dayDiff);
+        });
+        console.log(data)
+        
+        
+    } catch (error) {
+        console.error('Error fetching project:', error);
+    }
+};
   useEffect(() => {
-    const fetchProject = async () => {
-        try {
-            const { data } = await axios.get(`https://localhost:7044/api/funding-projects/${id}`)
-            .then(response => {
-              setProjectData(response.data._data);
-              setIsLoading(true);
-              const start = new Date(response.data._data.startDate);
-              const end = new Date(response.data._data.endDate);
-              const timeDiff = end - start;
-
-              // Convert milliseconds to days (1 day = 24 * 60 * 60 * 1000 ms)
-              const dayDiff = timeDiff / (1000 * 60 * 60 * 24);
-              setDaysLeft(dayDiff);
-            });
-            console.log(data)
-            
-            
-        } catch (error) {
-            console.error('Error fetching project:', error);
-        }
-    };
-
     fetchProject();
 }, [id]);
 
@@ -95,7 +94,7 @@ console.log(projectData);
           <Grid container spacing={2}>
             <Grid size={6.5} sx={{ mt: '0 !important' }}>
               <Box>
-                <ProjectImages />
+                <ProjectImages files = {projectData.fundingFiles}/>
               </Box>
             </Grid>
             <Grid size={5.5} sx={{ mt: '0 !important', justifyContent: 'space-between' }} paddingLeft={5}>
@@ -278,14 +277,14 @@ console.log(projectData);
               </Box>
               <Box>
                 <Box>
-                  <PackageSide />
+                  <PackageSide packageList={projectData.packages} reloadDetail={fetchProject} />
                 </Box>
               </Box>
             </Box>
 
           ) : tabValue === "2" ? (
             <Container maxWidth="1400px">
-              <PackageReward packageList={projectData.packages}/>
+              <PackageReward packageList={projectData.packages} reloadDetail={fetchProject}/>
             </Container>
           ) : tabValue === "3" ? (
             <Box sx={{ display: "flex", flexDirection: "row", width: "100%", marginTop: '80px' }}>
@@ -296,7 +295,7 @@ console.log(projectData);
               </Box>
               <Box>
                 <Box>
-                  <PackageSide />
+                  <PackageSide packageList={projectData.packages} reloadDetail={fetchProject}/>
                 </Box>
 
               </Box>
@@ -309,7 +308,7 @@ console.log(projectData);
                 </Box>
                 <Box>
                   <Box>
-                    <PackageSide />
+                    <PackageSide packageList={projectData.packages} reloadDetail={fetchProject}/>
                   </Box>
 
                 </Box>
@@ -323,7 +322,7 @@ console.log(projectData);
               </Box>
               <Box>
                 <Box>
-                  <PackageSide />
+                  <PackageSide packageList={projectData.packages}/>
                 </Box>
 
               </Box>

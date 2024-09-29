@@ -7,8 +7,8 @@ import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { AppBar, Avatar, Badge, Box, Button, Container, Divider, IconButton, ListItemIcon, ListItemText, Menu, MenuItem, Tab, Tabs, Toolbar, Tooltip, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import homeLogo from "../../assets/logo-alt.png";
-import defaultLogo from "../../assets/logo.png";
+import homeLogo from "../../assets/images/logo-alt.png";
+import defaultLogo from "../../assets/images/logo-text.png";
 
 const FunFundingAppBar = () => {
   const navigate = useNavigate();

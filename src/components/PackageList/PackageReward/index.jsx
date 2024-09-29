@@ -1,10 +1,10 @@
-import React, { useState } from 'react'
+import { Box, Button, InputAdornment, TextField, Typography } from '@mui/material';
 import Grid from '@mui/material/Grid2';
-import { Box, Typography, Button, TextField, InputAdornment } from '@mui/material';
-import kuru from '../../../assets/ktm.jpg';
+import axios from 'axios';
+import React, { useState } from 'react';
+import kuru from '../../../assets/images/ktm.jpg';
 import './index.css';
 import PackageItem from './PackageItem';
-import axios from 'axios';
 const PackageReward = ({ packageList }) => {
     const type = 'free';
     const sampleArray = [1, 1, 1, 1];
@@ -19,7 +19,7 @@ const PackageReward = ({ packageList }) => {
             "packageId": item.id,
             "donateAmount": donatedMoney
         }
-        
+
         console.log(donateBody)
         // await axios.post('https://localhost:7044/api/PackageBackers', donateBody).then(res => {
         //     console.log(res)
@@ -28,23 +28,23 @@ const PackageReward = ({ packageList }) => {
     }
 
     const handlePackageDonate = async (item) => {
-            let donateBody =
-            {
-                "userId": "8C94B07C-209B-4E11-A1B6-BC59E0B29976",
-                "packageId": item.id,
-                "donateAmount": item.requiredAmount
-            }
-            
-            console.log(donateBody)
-            try{
-                await axios.post('https://localhost:7044/api/PackageBackers', donateBody).then(res => {
-                    console.log(res)
-                })
-            }catch(error){
-                console.log(error)
-            }
-            
-            console.log('abcd')
+        let donateBody =
+        {
+            "userId": "8C94B07C-209B-4E11-A1B6-BC59E0B29976",
+            "packageId": item.id,
+            "donateAmount": item.requiredAmount
+        }
+
+        console.log(donateBody)
+        try {
+            await axios.post('https://localhost:7044/api/PackageBackers', donateBody).then(res => {
+                console.log(res)
+            })
+        } catch (error) {
+            console.log(error)
+        }
+
+        console.log('abcd')
     }
     const sortedPackageList = packageList.sort((a, b) => {
         // First, check if either packageType is 0
@@ -96,7 +96,7 @@ const PackageReward = ({ packageList }) => {
                                             borderRadius: '8px', color: '#FFFFFF', marginTop: '10px'
                                         }}
                                             className='pledge-btn'
-                                            onClick={() =>handleDonateFree(item)}>
+                                            onClick={() => handleDonateFree(item)}>
                                             Pledge
                                         </Button>
                                     </Box>

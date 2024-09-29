@@ -7,24 +7,26 @@ import "@fontsource/poppins/600.css";
 import "@fontsource/poppins/700.css";
 import { Navigate, Route, Routes } from "react-router-dom";
 import "./App.css";
-import UserLayout from "./layouts/UserLayout";
-import AboutUs from "./pages/AboutUs";
-import HomePage from "./pages/HomePage";
-import ProjectDetail from "./pages/ProjectDetail";
+import FunFundingAppBar from "./components/AppBar";
 import "./index.css";
 import CreateFundingProjectLayout from "./layouts/CreateFundingProjectLayout";
+import PublicProfileLayout from "./layouts/ProfileLayout/PublicProfileLayout";
+import UserProfileLayout from "./layouts/ProfileLayout/UserProfileLayout";
+import UserLayout from "./layouts/UserLayout";
+import AboutUs from "./pages/AboutUs";
+import AccountProfile from "./pages/AccountProfile";
+import BasicInfo from "./pages/CreateFundingProjectForm/BasicInfo";
+import ChoosePlan from "./pages/CreateFundingProjectForm/ChoosePlan";
 import Introduction from "./pages/CreateFundingProjectForm/Introduction";
 import ProjectMedia from "./pages/CreateFundingProjectForm/ProjectMedia";
 import SetupBankAccount from "./pages/CreateFundingProjectForm/SetupBankAccount";
 import SetupDonatePackage from "./pages/CreateFundingProjectForm/SetupDonatePackage";
-import ChoosePlan from "./pages/CreateFundingProjectForm/ChoosePlan";
-import BasicInfo from "./pages/CreateFundingProjectForm/BasicInfo";
-import FunFundingAppBar from "./components/AppBar";
+import HomePage from "./pages/HomePage";
+import ProjectDetail from "./pages/ProjectDetail";
+import PublicProfile from "./pages/PublicProfile";
 import TestCR from "./pages/TestCR";
-import TestDetail from "./pages/TestDetail";
 import TestUpdate from "./pages/TestCR/testUpdate";
-import ProfileLayout from "./layouts/ProfileLayout";
-import AccountProfile from "./pages/AccountProfile";
+import TestDetail from "./pages/TestDetail";
 function App() {
   return (
     <>
@@ -68,8 +70,11 @@ function App() {
         <Route path="/test-detail" element={<TestDetail />} />
         <Route path="*" element={<Navigate to="/funding-detail" />} />
 
-        <Route element={<ProfileLayout />}>
+        <Route element={<UserProfileLayout />}>
           <Route path="/account/profile" element={<AccountProfile />} />
+        </Route>
+        <Route element={<PublicProfileLayout />}>
+          <Route path="/profile" element={<PublicProfile />} />
         </Route>
       </Routes>
     </>

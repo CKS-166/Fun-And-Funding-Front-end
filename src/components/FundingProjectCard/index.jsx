@@ -4,7 +4,7 @@ import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import React from 'react';
 import { FaRegBookmark } from "react-icons/fa6";
-import Media from '../../assets/ktm.jpg';
+import Media from '../../assets/images/ktm.jpg';
 import './index.css';
 
 const BorderLinearProgress = styled(LinearProgress)(() => ({

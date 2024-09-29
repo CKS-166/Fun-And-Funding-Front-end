@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
 import Grid from '@mui/material/Grid2';
+import React, { useState } from 'react';
 import { Box, Typography, Button, TextField, InputAdornment, Backdrop, CircularProgress } from '@mui/material';
 import kuru from '../../../assets/ktm.jpg';
 import './index.css';
@@ -21,7 +21,7 @@ const PackageReward = ({ packageList, reloadDetail }) => {
             "packageId": item.id,
             "donateAmount": donatedMoney
         }
-        
+
         console.log(donateBody)
         // await axios.post('https://localhost:7044/api/PackageBackers', donateBody).then(res => {
         //     console.log(res)
@@ -115,7 +115,7 @@ const PackageReward = ({ packageList, reloadDetail }) => {
                                             borderRadius: '8px', color: '#FFFFFF', marginTop: '10px'
                                         }}
                                             className='pledge-btn'
-                                            onClick={() =>handleDonateFree(item)}>
+                                            onClick={() => handleDonateFree(item)}>
                                             Pledge
                                         </Button>
                                     </Box>

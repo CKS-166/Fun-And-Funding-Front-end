@@ -1,16 +1,14 @@
-import { Carousel } from "react-responsive-carousel";
-import './index.css';
 import { Box } from "@mui/material";
-import { Children, useEffect, useRef, useState } from "react";
+import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
-import kuru from "../../assets/ktm.jpg";
+import kuru from "../../assets/images/ktm.jpg";
+import './index.css';
 
 function ProjectImages({files}) {
   const videoFile = files.find(file => file.filetype === 1);
   const thumbnail = files.find(file => file.filetype === 2);
   const stories = files.filter(file => file.filetype === 4);
   console.log(videoFile)
-
 
   const medias = [
     { type: 'video', src: videoFile && videoFile.url },

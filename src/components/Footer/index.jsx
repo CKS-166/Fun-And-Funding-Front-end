@@ -3,8 +3,8 @@ import React from "react";
 import { AiOutlineFacebook } from "react-icons/ai";
 import { FaGithub, FaInstagram } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
-import Background from "../../assets/background-pattern.png";
-import Logo from "../../assets/logo-alt.png";
+import Background from "../../assets/images/background-pattern.png";
+import Logo from "../../assets/images/logo-alt.png";
 import "./index.css";
 
 function Footer() {

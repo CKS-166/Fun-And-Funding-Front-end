@@ -1,17 +1,19 @@
-import { Box, Button, InputAdornment, TextField, Typography } from '@mui/material';
 import Grid from '@mui/material/Grid2';
-import axios from 'axios';
 import React, { useState } from 'react';
-import kuru from '../../../assets/images/ktm.jpg';
+import { Box, Typography, Button, TextField, InputAdornment, Backdrop, CircularProgress } from '@mui/material';
+import kuru from '../../../assets/ktm.jpg';
 import './index.css';
 import PackageItem from './PackageItem';
-const PackageReward = ({ packageList }) => {
+import axios from 'axios';
+import Swal from 'sweetalert2';
+const PackageReward = ({ packageList, reloadDetail }) => {
     const type = 'free';
     const sampleArray = [1, 1, 1, 1];
     const sampleItemArray = [1, 1, 1, 1, 1, 1];
     const number = 30000000;
     const formattedNumber = number.toLocaleString('de-DE');
     const [donatedMoney, setDonatedMoney] = useState(0);
+    const [isLoading, setIsLoading] = useState(false);
     const handleDonateFree = async (item) => {
         let donateBody =
         {
@@ -28,23 +30,32 @@ const PackageReward = ({ packageList }) => {
     }
 
     const handlePackageDonate = async (item) => {
-        let donateBody =
-        {
-            "userId": "8C94B07C-209B-4E11-A1B6-BC59E0B29976",
-            "packageId": item.id,
-            "donateAmount": item.requiredAmount
-        }
-
-        console.log(donateBody)
-        try {
-            await axios.post('https://localhost:7044/api/PackageBackers', donateBody).then(res => {
-                console.log(res)
-            })
-        } catch (error) {
-            console.log(error)
-        }
-
-        console.log('abcd')
+        setIsLoading(true);
+            let donateBody =
+            {
+                "userId": "8C94B07C-209B-4E11-A1B6-BC59E0B29976",
+                "packageId": item.id,
+                "donateAmount": item.requiredAmount
+            }
+            
+            console.log(donateBody)
+            try{
+                await axios.post('https://localhost:7044/api/PackageBackers', donateBody).then(res => {
+                    console.log(res)
+                    setIsLoading(false);
+                    Swal.fire({
+                        title: "Donation Success",
+                        text: "Thank you for your donation!",
+                        
+                        icon: "success"
+                      });
+                      reloadDetail()
+                })
+            }catch(error){
+                console.log(error)
+            }
+            
+            console.log('abcd')
     }
     const sortedPackageList = packageList.sort((a, b) => {
         // First, check if either packageType is 0
@@ -60,7 +71,15 @@ const PackageReward = ({ packageList }) => {
     return (
         <div>
             <Grid container spacing={1} sx={{ marginTop: '78px', marginBottom: '100px' }}>
-
+            <Backdrop
+                sx={{
+                    color: '#fff',
+                    zIndex: (theme) => theme.zIndex.drawer + 100,
+                }}
+                open={isLoading}
+            >
+                <CircularProgress color="inherit" />
+            </Backdrop>
                 {sortedPackageList.map((item, index) => (
                     <>
                         {item.packageTypes == 0 ? <Grid size={6} sx={{ overflowY: 'auto' }}>

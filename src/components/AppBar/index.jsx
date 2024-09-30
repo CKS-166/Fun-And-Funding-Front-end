@@ -30,32 +30,15 @@ import { useLocation, useNavigate } from "react-router-dom";
 import homeLogo from "../../assets/images/logo-alt.png";
 import defaultLogo from "../../assets/images/logo-text.png";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import LoginForm from "../../pages/LoginForm";
-import RoleForm from "../../pages/RoleForm";
-import BackerForm from "../../pages/RegisterBacker";
-import OwnerForm from "../../pages/RegisterGameOwner";
-
+import AuthDialog from "../Popup";
 // Functions to handle opening and closing the modal
 
 const FunFundingAppBar = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const [currentForm, setCurrentForm] = useState(null);
-
-  const openLoginForm = () => setCurrentForm("login");
-  const openRoleSelectionForm = () => setCurrentForm("role");
-  const openBackerForm = () => setCurrentForm("backer");
-  const openOwnerForm = () => setCurrentForm("owner");
-  const closeForm = () => setCurrentForm(null);
-  const goBack = () => {
-    closeForm();
-    openLoginForm();
-  };
-  const goBackRole = () => {
-    closeForm();
-    openRoleSelectionForm();
-  };
-
+  const [isAuthDialogOpen, setIsAuthDialogOpen] = useState(false);
+  const openAuthDialog = () => setIsAuthDialogOpen(true);
+  const closeAuthDialog = () => setIsAuthDialogOpen(false);
   const pages = [
     { label: "Home", route: "/home", index: 0 },
     { label: "Crowdfunding", route: "/crowdfunding", index: 1 },
@@ -272,43 +255,12 @@ const FunFundingAppBar = () => {
                 fontSize: "1.2rem",
               }}
               className="poiner-cursor" // Inline style to ensure pointer cursor
-              onClick={openLoginForm}
+              onClick={openAuthDialog}
             >
               Sign In
             </Button>
           )}
-          {/* Conditional Dialogs based on form state */}
-          <Dialog open={currentForm === "login"} onClose={closeForm}>
-            <LoginForm
-              onClose={closeForm}
-              onOpenRoleSelection={openRoleSelectionForm}
-            />
-          </Dialog>
-
-          <Dialog open={currentForm === "role"} onClose={closeForm}>
-            <RoleForm
-              onClose={closeForm}
-              onOpenBackerForm={openBackerForm}
-              onOpenOwnerForm={openOwnerForm}
-              onBack={goBack}
-            />
-          </Dialog>
-
-          <Dialog open={currentForm === "backer"} onClose={closeForm}>
-            <BackerForm
-              onClose={closeForm}
-              onOpenLogin={openLoginForm}
-              onBack={goBackRole}
-            />
-          </Dialog>
-
-          <Dialog open={currentForm === "owner"} onClose={closeForm}>
-            <OwnerForm
-              onClose={closeForm}
-              onOpenLogin={openLoginForm}
-              onBack={goBackRole}
-            />
-          </Dialog>
+          <AuthDialog isOpen={isAuthDialogOpen} onClose={closeAuthDialog} />
         </Toolbar>
       </Container>
     </AppBar>

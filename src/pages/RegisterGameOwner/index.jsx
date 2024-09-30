@@ -16,8 +16,7 @@ function OwnerForm({ onClose, onOpenLogin, onBack }) {
   const [showPassword, setShowPassword] = useState(false);
 
   const handleLoginClick = () => {
-    onClose(); // Close role selection form
-    onOpenLogin(); // Open BackerForm
+    onOpenLogin(); // Switch to the LoginForm without closing the dialog
   };
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
@@ -52,7 +51,10 @@ function OwnerForm({ onClose, onOpenLogin, onBack }) {
         className="bg-white p-10 rounded-3xl relative shadow-lg w-[720px] "
       >
         {/* Close Button */}
-        <button onClick={onClose} className="absolute top-4 right-4  text-xl">
+        <button
+          onClick={onClose}
+          className="absolute text-[#1BAA64] top-4 right-4  text-xl"
+        >
           &times; {/* X Symbol */}
         </button>
         {/* Back Button */}

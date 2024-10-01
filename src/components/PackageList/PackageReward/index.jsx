@@ -1,7 +1,7 @@
 import Grid from '@mui/material/Grid2';
 import React, { useState } from 'react';
 import { Box, Typography, Button, TextField, InputAdornment, Backdrop, CircularProgress } from '@mui/material';
-import kuru from '../../../assets/ktm.jpg';
+import kuru from '../../../assets/images/ktm.jpg';
 import './index.css';
 import PackageItem from './PackageItem';
 import axios from 'axios';

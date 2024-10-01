@@ -5,9 +5,22 @@ import {
 } from '@mui/material';
 import axios from 'axios';
 import Swal from 'sweetalert2';
+import PackageModal from '../PackageModal';
 const PackageSide = ({ packageList, reloadDetail }) => {
     const fixedPackageList = packageList && packageList.filter((item) => item.packageTypes === 1)
     const [isLoading, setIsLoading] = useState(false)
+
+    const [openModal, setOpenModal] = useState(false);
+    const [selectedItem, setSelectedItem] = useState(null);
+    const handleOpen = (item) => {
+        setSelectedItem(item);
+        setOpenModal(true);
+    };
+
+    const handleClose = () => {
+        setOpenModal(false);
+        setSelectedItem(null);
+    };
     const handlePackageDonate = async (item) => {
         setIsLoading(true);
             let donateBody =
@@ -91,13 +104,21 @@ const PackageSide = ({ packageList, reloadDetail }) => {
                             width: '286px', marginTop: '14px'
                             , backgroundColor: '#1BAA64', fontWeight: 700
                         }}
-                        onClick = {() => handlePackageDonate(item)}>
+                        // onClick = {() => handlePackageDonate(item)}
+                        onClick={() => handleOpen(item)}>
                             Pledge {item.requiredAmount.toLocaleString('de-DE')} VND
                         </Button>
                     </CardActions>
                 </Card>
             ))}
-
+             {selectedItem && (
+                <PackageModal
+                    open={openModal}
+                    handleClose={handleClose}
+                    item={selectedItem}
+                    onDonate={handlePackageDonate}
+                />
+            )}
         </div>
     )
 }

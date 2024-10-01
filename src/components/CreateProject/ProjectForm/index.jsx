@@ -3,7 +3,6 @@ import { Paper } from "@mui/material";
 import { useForm } from "react-hook-form";
 import FormDivider from "./Divider";
 import FormField from "./FormField";
-import { fieldCategory, fieldProjectName, fieldProjectDescription, fieldProjectGoalAmount, fieldProjectDuration } from "../../../pages/CreateFundingProjectForm/BasicInfo/BasicInfoFields";
 
 
 

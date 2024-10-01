@@ -1,9 +1,7 @@
 import { Box } from "@mui/material";
 import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
-import kuru from "../../assets/images/ktm.jpg";
 import './index.css';
-
 function ProjectImages({files}) {
   const videoFile = files.find(file => file.filetype === 1);
   const thumbnail = files.find(file => file.filetype === 2);

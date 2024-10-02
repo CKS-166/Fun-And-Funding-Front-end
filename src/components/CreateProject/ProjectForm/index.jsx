@@ -4,17 +4,15 @@ import { useForm } from "react-hook-form";
 import FormDivider from "./Divider";
 import FormField from "./FormField";
 
-
-
 const ProjectForm = ({ formIndex, setFormIndex }) => {
   const formRef = useRef(null);
 
   const { register, handleSubmit, watch, setValue, formState: { errors } } = useForm({
     defaultValues: {
-      category: '',
+      categories: '',
       projectName: '',
       description: '',
-      goalAmount: '',
+      target: '',
       startDate: '',
       endDate: ''
     }

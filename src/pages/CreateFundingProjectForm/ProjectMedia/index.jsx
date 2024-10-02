@@ -19,6 +19,7 @@ const ProjectMedia = () => {
   const [thumbnail, setThumbnail] = useState([]);
   const [projectVideo, setProjectVideo] = useState([]);
   const [projectImages, setProjectImages] = useState([]);
+  // const { thumbnail, setThumbnail, projectVideo, setProjectVideo, projectImages, setProjectImages } = useOutletContext();
 
   useEffect(() => {
     setFormIndex(2);
@@ -30,7 +31,7 @@ const ProjectMedia = () => {
     if (thumbnail.length > 0) {
       fundingFiles.push({
         name: "thumbnail",
-        url: URL.createObjectURL(thumbnail[0].file),
+        url: thumbnail[0].file,
         filetype: 0,
       });
     }
@@ -38,7 +39,7 @@ const ProjectMedia = () => {
     if (projectVideo.length > 0) {
       fundingFiles.push({
         name: "video",
-        url: URL.createObjectURL(projectVideo[0].file),
+        url: projectVideo[0].file,
         filetype: 1,
       });
     }
@@ -47,8 +48,8 @@ const ProjectMedia = () => {
       projectImages.forEach((image, index) => {
         fundingFiles.push({
           name: `image_${index + 1}`,
-          url: URL.createObjectURL(image.file),
-          filetype: 0,
+          url: image.file,
+          filetype: 4,
         });
       });
     }

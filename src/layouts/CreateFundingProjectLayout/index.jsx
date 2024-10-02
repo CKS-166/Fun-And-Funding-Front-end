@@ -11,7 +11,7 @@ const CreateFundingProjectLayout = () => {
   const [projectData, setProjectData] = useState({});
   const formRef = useRef();
 
-  console.log('Project data: ' + JSON.stringify(projectData, null, 2));
+  console.log(projectData);
 
   useEffect(() => {
     if (formRef.current) {

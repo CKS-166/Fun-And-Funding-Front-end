@@ -10,6 +10,8 @@ import axios from "axios"
 const SetupDonatePackage = () => {
 
   const { setFormIndex, setProjectData, projectData } = useOutletContext()
+  const { thumbnail, projectVideo, projectImages } = useOutletContext();
+  console.log(thumbnail);
   const navigate = useNavigate()
   const [openModal, setOpenModal] = useState(false)
 
@@ -55,8 +57,50 @@ const SetupDonatePackage = () => {
 
   // call api create project
   const createRequest = async () => {
+    const formData = new FormData();
+    formData.append('Name', projectData.name);
+    formData.append('Description', projectData.description);
+    formData.append('Introduction', projectData.introduction);
+    formData.append('StartDate', projectData.startDate);
+    formData.append('EndDate', projectData.endDate);
+    formData.append('Target', projectData.target);
+    formData.append('Balance', 0);
+    // Append Bank Account information
+    formData.append('BankAccount.BankNumber', projectData.bankAccount.BankNumber);
+    formData.append('BankAccount.BankCode', projectData.bankAccount.BankCode);
+    formData.append('Email', 'john@example.com');
+    // Append packages and reward items
+    projectData.packages.forEach((packageData, index) => {
+      formData.append(`Packages[${index}].Name`, packageData.name);
+      formData.append(`Packages[${index}].RequiredAmount`, packageData.requiredAmount);
+      formData.append(`Packages[${index}].Description`, packageData.description);
+      formData.append(`Packages[${index}].LimitQuantity`, packageData.limitQuantity);
+      if (packageData.imageFile) {
+        formData.append(`Packages[${index}].ImageFile`, packageData.imageFile);
+      }
+      packageData.rewardItems.forEach((reward, rewardIndex) => {
+        formData.append(`Packages[${index}].RewardItems[${rewardIndex}].Name`, reward.name);
+        formData.append(`Packages[${index}].RewardItems[${rewardIndex}].Description`, reward.description);
+        formData.append(`Packages[${index}].RewardItems[${rewardIndex}].Quantity`, reward.quantity);
+        if (reward.imageFile) {
+          formData.append(`Packages[${index}].RewardItems[${rewardIndex}].ImageFile`, reward.imageFile);
+        }
+      });
+    });
+    //append categories
+    console.log(projectData.categories[0]);
+    // for (let i = 0; i < projectData.categories.length; i++) {
+      formData.append(`Categories[0]`, projectData.categories);
+    // }
+    // Add other files (e.g., Funding Files)
+    for (let i = 0; i < projectData.fundingFiles.length; i++) {
+      formData.append(`FundingFiles[${i}].Name`, projectData.fundingFiles[i].name);
+      formData.append(`FundingFiles[${i}].URL`, projectData.fundingFiles[i].url); // The actual file
+      formData.append(`FundingFiles[${i}].Filetype`,  projectData.fundingFiles[i].filetype); // Example file type
+    }
+
     try {
-      const response = await axios.post('https://localhost:7044/api/funding-projects', projectData, {
+      const response = await axios.post('https://localhost:7044/api/funding-projects', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -65,6 +109,7 @@ const SetupDonatePackage = () => {
     } catch (error) {
       console.error('Error creating project:', error);
     }
+    console.log(projectData);
   }
 
   return (

@@ -1,10 +1,9 @@
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import BallotIcon from '@mui/icons-material/Ballot';
 import LogoutIcon from '@mui/icons-material/Logout';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import { AppBar, Avatar, Badge, Box, Button, Container, Divider, IconButton, ListItemIcon, ListItemText, Menu, MenuItem, Tab, Tabs, Toolbar, Tooltip, Typography } from '@mui/material';
+import { AppBar, Avatar, Badge, Box, Button, Container, IconButton, ListItemIcon, ListItemText, Menu, MenuItem, Tab, Tabs, Toolbar, Tooltip, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import homeLogo from "../../assets/images/logo-alt.png";
@@ -22,10 +21,9 @@ const FunFundingAppBar = () => {
   ];
 
   const profileMenu = [
-    { label: 'Tài khoản', route: '/profile', icon: <AccountCircleIcon /> },
-    { label: 'Ví của tôi', route: '/my-wallet', icon: <AccountBalanceWalletIcon /> },
-    { label: 'Dự án của tôi', route: '/profile/projects', icon: <BallotIcon /> },
-    { label: 'Đăng xuất', route: 'logout', icon: <LogoutIcon /> }
+    { label: 'Account', route: '/account/profile', icon: <AccountCircleIcon /> },
+    { label: 'Wallet', route: '/my-wallet', icon: <AccountBalanceWalletIcon /> },
+    { label: 'Logout', route: 'logout', icon: <LogoutIcon /> }
   ];
 
   const [anchorElProfile, setAnchorElProfile] = useState(null);
@@ -118,17 +116,12 @@ const FunFundingAppBar = () => {
               <Badge badgeContent={0} max={99} showZero sx={{ marginRight: '2rem', "& .MuiBadge-badge": { backgroundColor: '#1BAA64 !important' } }}>
                 <NotificationsIcon fontSize='large' sx={{ cursor: 'pointer', transition: 'color 0.3s', '&:hover': { color: '#1BAA64' }, color: isPage ? '#F5F7F8' : '#2F3645' }} />
               </Badge>
-              <Tooltip title="Tài khoản">
+              <Tooltip title="Account">
                 <IconButton sx={{ p: 0 }} onClick={handleOpenProfileMenu}>
                   <Avatar alt="User" src={user?.userAvatarUrl} />
                 </IconButton>
               </Tooltip>
               <Menu anchorEl={anchorElProfile} anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }} transformOrigin={{ vertical: 'top', horizontal: 'center' }} open={Boolean(anchorElProfile)} onClose={handleCloseProfileMenu}>
-                <MenuItem>
-                  <Typography>{user?.accountName}</Typography>
-                  <Typography>{user?.userEmail}</Typography>
-                </MenuItem>
-                <Divider />
                 {profileMenu.map((menuItem) => (
                   <MenuItem key={menuItem.label} onClick={() => navigate(menuItem.route)}>
                     <ListItemIcon>{menuItem.icon}</ListItemIcon>

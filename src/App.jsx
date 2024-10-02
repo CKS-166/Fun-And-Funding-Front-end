@@ -15,6 +15,7 @@ import UserProfileLayout from "./layouts/ProfileLayout/UserProfileLayout";
 import UserLayout from "./layouts/UserLayout";
 import AboutUs from "./pages/AboutUs";
 import AccountProfile from "./pages/AccountProfile";
+import AccountProject from "./pages/AccountProject";
 import BasicInfo from "./pages/CreateFundingProjectForm/BasicInfo";
 import ChoosePlan from "./pages/CreateFundingProjectForm/ChoosePlan";
 import Introduction from "./pages/CreateFundingProjectForm/Introduction";
@@ -72,6 +73,7 @@ function App() {
 
         <Route element={<UserProfileLayout />}>
           <Route path="/account/profile" element={<AccountProfile />} />
+          <Route path="/account/projects" element={<AccountProject />} />
         </Route>
         <Route element={<PublicProfileLayout />}>
           <Route path="/profile" element={<PublicProfile />} />

@@ -3,19 +3,16 @@ import { Paper } from "@mui/material";
 import { useForm } from "react-hook-form";
 import FormDivider from "./Divider";
 import FormField from "./FormField";
-import { fieldCategory, fieldProjectName, fieldProjectDescription, fieldProjectGoalAmount, fieldProjectDuration } from "../../../pages/CreateFundingProjectForm/BasicInfo/BasicInfoFields";
-
-
 
 const ProjectForm = ({ formIndex, setFormIndex }) => {
   const formRef = useRef(null);
 
   const { register, handleSubmit, watch, setValue, formState: { errors } } = useForm({
     defaultValues: {
-      category: '',
+      categories: '',
       projectName: '',
       description: '',
-      goalAmount: '',
+      target: '',
       startDate: '',
       endDate: ''
     }

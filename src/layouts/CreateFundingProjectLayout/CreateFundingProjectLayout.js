@@ -31,6 +31,9 @@ export const stepStyle = (active, completed) => ({
 
 // create project api params
 const requestBody = {
+  "categories" : [
+    {"id" : ""}
+  ],
   "name": "string",
   "description": "string",
   "introduction": "string",

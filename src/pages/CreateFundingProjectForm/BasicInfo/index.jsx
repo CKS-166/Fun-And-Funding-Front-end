@@ -2,27 +2,43 @@ import { TextField, MenuItem, Select, FormControl, InputLabel, InputAdornment, G
 import FormDivider from "../../../components/CreateProject/ProjectForm/Divider";
 import { useForm } from "react-hook-form";
 import { useOutletContext } from "react-router";
-import { useEffect } from "react";
+import { useEffect,useState } from "react";
 import NavigateButton from "../../../components/CreateProject/ProjectForm/NavigateButton";
 import { useNavigate, useLocation } from "react-router-dom";
-
+import axios from "axios";
 const BasicInfo = () => {
   const { register, handleSubmit, watch, setValue, formState: { errors } } = useForm({
     defaultValues: {
-      category: '',
+      categories: [
+        {
+          id : ''
+        }
+      ],
       projectName: '',
       description: '',
-      goalAmount: '',
+      target: '',
       startDate: '',
       endDate: ''
     }
   });
 
   const { setFormIndex, setProjectData } = useOutletContext();
+  const [categories, setCategories] = useState([]); 
   const navigate = useNavigate();
 
+  const fetchCates = async () => {
+    try{
+      await axios.get('https://localhost:7044/api/categories').then(res => {
+        setCategories(res.data._data.items);
+      })
+    }catch(err){
+      console.log(err)
+    }
+    
+  }
   useEffect(() => {
     setFormIndex(0);
+    fetchCates();
   }, []);
 
   const onSubmit = (data) => {
@@ -85,10 +101,13 @@ const BasicInfo = () => {
                 <InputLabel>Category</InputLabel>
                 <Select
                   label='Category'
-                  {...register("category", { required: "Category is required" })}
+                  // {...register("categories", { required: "Category is required" })}
+                  onChange={(e) => setValue("categories", { id: e.target.value })} // Update the category id here
                 >
-                  <MenuItem value="category1">Category 1</MenuItem>
-                  <MenuItem value="category2">Category 2</MenuItem>
+                  {categories.map((category) => (
+                    <MenuItem key={category.id} value={category.id}>{category.name}</MenuItem>
+                  ))}
+                  
                 </Select>
                 {errors.category && <p className="text-red-600">{errors.category.message}</p>}
               </FormControl>
@@ -147,7 +166,7 @@ const BasicInfo = () => {
                   inputProps: { min: '0' },
                 }}
                 variant="outlined"
-                {...register("goalAmount", {
+                {...register("target", {
                   required: "Goal amount is required",
                   min: {
                     value: 10000,

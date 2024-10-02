@@ -15,7 +15,7 @@ const SetupBankAccount = () => {
   const [selectedBank, setSelectedBank] = useState(setProjectData.bankAccount?.bankCode || null)
   const [bankList, setBankList] = useState([])
   const [bankAccountNumber, setBankaccountNumber] = useState(setProjectData.bankAccount?.bankNumber || '')
-
+  const [ownerName,setOwnerName] = useState('')
   useEffect(() => {
 
   }, [selectedBank, bankAccountNumber])
@@ -26,6 +26,32 @@ const SetupBankAccount = () => {
       setBankList(res.data.data);
     })
   }, [])
+
+  const checkBankAccount = async () => {
+    axios.post("https://api.httzip.com/api/bank/id-lookup-prod", {
+      "bank":selectedBank&& selectedBank.code,
+      "account":bankAccountNumber
+    },{
+      headers: {
+        'x-api-key' : '11f028b5-b964-4efa-ab9c-db4e199dccb4key',
+        'x-api-secret' : '691b9c60-353e-4e68-946f-ce68292884d0secret'
+      }
+    }).then(res => {
+      console.log(res)
+      setOwnerName(res.data.data.ownerName)
+    })
+  }
+
+  const onSubmit = () => {
+    setProjectData(prevData => ({
+      ...prevData,
+      bankAccount: {
+        bankCode: selectedBank?.code,
+        bankNumber: bankAccountNumber
+      }
+    }))
+    navigate('/request-funding-project/setup-donate-package')
+  }
 
   return (
     <>
@@ -52,7 +78,10 @@ const SetupBankAccount = () => {
                 value={selectedBank}
                 options={bankList}
                 getOptionLabel={(option) => option.name || ''}
-                onChange={(event, newValue) => setSelectedBank(newValue)}
+                onChange={(event, newValue) => {
+                  setSelectedBank(newValue)
+                  // console.log(newValue)
+                }}
                 renderOption={(props, option) => (
                   <Box component="li" {...props}>
                     <Avatar alt={option.name} src={option.logo_url}
@@ -100,6 +129,7 @@ const SetupBankAccount = () => {
                 disabled
                 label='Name of the account owner'
                 fullWidth
+                value={ownerName}
                 InputLabelProps={{
                   shrink: true,
                 }}
@@ -109,13 +139,15 @@ const SetupBankAccount = () => {
             </Grid2>
           </Grid2>
 
-          <button type="button" class="text-white bg-primary-green font-medium rounded text-sm px-5 py-2.5 me-2 mb-2">Check</button>
+          <button type="button" class="text-white bg-primary-green font-medium rounded text-sm px-5 py-2.5 me-2 mb-2"
+          onClick={checkBankAccount}>
+            Check
+          </button>
 
           <div className="flex justify-center gap-5 my-5">
             <NavigateButton text={'Back'} onClick={() => { navigate('/request-funding-project/project-media') }} />
-            <NavigateButton text={'Next'} onClick={() => { navigate('/request-funding-project/setup-donate-package') }} />
+            <NavigateButton text={'Next'} onClick={() => onSubmit()} />
           </div>
-
         </div>
       </Paper>
     </>

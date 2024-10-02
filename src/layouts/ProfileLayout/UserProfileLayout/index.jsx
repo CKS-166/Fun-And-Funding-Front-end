@@ -1,7 +1,16 @@
-import CameraAltIcon from '@mui/icons-material/CameraAlt';
-import { Box, Grid2, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Paper } from '@mui/material';
-import Avatar from '@mui/material/Avatar';
-import React from 'react';
+import CameraAltIcon from "@mui/icons-material/CameraAlt";
+import {
+  Box,
+  Grid2,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  Paper,
+} from "@mui/material";
+import Avatar from "@mui/material/Avatar";
+import React from "react";
 import { FaClipboardList } from "react-icons/fa";
 import { FaBookBookmark, FaFolderOpen, FaUserTie } from "react-icons/fa6";
 import { IoMdWallet } from "react-icons/io";
@@ -151,4 +160,4 @@ function UserProfileLayout() {
     )
 }
 
-export default UserProfileLayout
+export default UserProfileLayout;

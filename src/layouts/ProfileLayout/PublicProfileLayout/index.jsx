@@ -1,6 +1,5 @@
-import CameraAltIcon from '@mui/icons-material/CameraAlt';
-// import ReportIcon from '@mui/icons-material/Report';
 import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1';
+import ReportIcon from '@mui/icons-material/Report';
 import { Avatar, Button, Chip, Divider, Paper, Typography } from "@mui/material";
 import React from "react";
 import { ImUserCheck } from "react-icons/im";
@@ -18,26 +17,6 @@ function PublicProfileLayout() {
           <div className="flex justify-between items-center gap-[4rem]">
             <div className='relative'>
               <Avatar src={ktm} alt="User" sx={{ width: "14rem", height: "14rem" }} />
-              <div
-                style={{
-                  position: 'absolute',
-                  bottom: 8,
-                  right: 12
-                }}
-              >
-                <Avatar
-                  sx={{
-                    cursor: 'pointer', backgroundColor: 'white', boxShadow: '0 0 5px rgba(0, 0, 0, 0.2)',
-                    color: '#2F3645',
-                    '&:hover': {
-                      backgroundColor: '#1BAA64',
-                      color: 'white',
-                      transition: 'all 0.3s',
-                    }
-                  }}>
-                  <CameraAltIcon />
-                </Avatar>
-              </div>
             </div>
             <div className="w-[30.813rem] py-[1rem] flex flex-col justify-between h-[14rem]">
               <div className='w-full'>
@@ -113,9 +92,9 @@ function PublicProfileLayout() {
                 <Button startIcon={<IoChatbubbleEllipsesSharp style={{ marginRight: '0.5rem' }} />} sx={{ background: "#1BAA64", fontWeight: "600", textTransform: "none", px: '2rem', fontSize: '1rem', color: '#F5F7F8' }}>
                   Contact
                 </Button>
-                {/* <Button startIcon={<ReportIcon style={{ marginRight: '0.5rem' }} />} sx={{ background: "#d9534f", fontWeight: "600", textTransform: "none", px: '2rem', fontSize: '1rem', color: '#F5F7F8' }}>
+                <Button startIcon={<ReportIcon style={{ marginRight: '0.5rem' }} />} sx={{ background: "#d9534f", fontWeight: "600", textTransform: "none", px: '2rem', fontSize: '1rem', color: '#F5F7F8' }}>
                   Report
-                </Button> */}
+                </Button>
               </div>
             </div>
             <Divider orientation="vertical" sx={{ border: '1px solid #EAEAEA', borderRadius: '0.625rem', height: '14rem' }} />

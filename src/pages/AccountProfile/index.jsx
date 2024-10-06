@@ -1,5 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useNavigate, useOutletContext } from "react-router";
 import dayjs from "dayjs";
+import Cookies from "js-cookie";
+import userApiInstace from "../../utils/userApiInstance";
 import {
   Backdrop,
   Button,
@@ -105,32 +108,65 @@ const CustomDatePicker = styled(DatePicker)(({ theme }) => ({
 }));
 
 const CustomSelect = styled(Select)(({ theme }) => ({
+  width: "100%",
+  height: "100%",
+  "& label": {
+    fontSize: "0.875rem",
+    color: "#1BAA64 !important",
+    borderColor: "#1BAA64 !important",
+  },
+  "& .MuiInputLabel-root": {
+    color: "#1BAA64 !important",
+  },
   "& .MuiOutlinedInput-root": {
     borderRadius: "10px !important",
     "&:hover fieldset": {
-      borderColor: "#D1D5DB",
+      borderColor: "#1BAA64 !important",
     },
     "&.Mui-focused fieldset": {
-      borderColor: "#D1D5DB",
+      borderColor: "#1BAA64 !important",
     },
   },
   "& .MuiInputBase-input": {
     padding: "14px 16px",
     fontSize: "1rem",
     borderRadius: "10px !important",
+    color: "#2F3645 !important",
+    borderColor: "#1BAA64 !important",
+  },
+  "& .MuiSelect-select": {
+    color: "#2F3645 !important", // Select text color
+  },
+  "& .MuiSelect-select.Mui-focused": {
+    borderColor: "#1BAA64 !important", // Focused state border color
   },
   "& .MuiSelected": {
     fontSize: "1rem !important",
+    borderColor: "#1BAA64 !important",
   },
   textAlign: "left",
-  height: "49px",
   borderRadius: "10px !important",
 }));
 
 function AccountProfile() {
   //hooks
+  // const { setIsLoading } = useOutletContext();
   const [isEditProfile, setIsEditProfile] = useState(false);
   const [isEditPassword, setIsEditPassword] = useState(false);
+  const [selectedGender, setSelectedGender] = useState("");
+  const [userEmail, setUserEmail] = useState("");
+  const [accountName, setAccountName] = useState("");
+  const [userName, setUserName] = useState("");
+  const [userBirthDate, setUserBirthDate] = useState(null);
+  const [userPhone, setUserPhone] = useState("");
+  const [userAddress, setUserAddress] = useState("");
+  const [user, setUser] = useState(null);
+  const [isShowPassword, setIsShowPassword] = useState(false);
+  const [isShowChangedPassword, setIsShowChangedPassword] = useState(false);
+  const [isShowConfirmPassword, setIsShowConfirmPassword] = useState(false);
+
+  const navigate = useNavigate();
+  const token = Cookies.get("_auth");
 
   //functions
 
@@ -149,6 +185,49 @@ function AccountProfile() {
 
   //update pass
   const handleUpdatePassword = () => {};
+
+  //show pass
+  const handleClickShowPassword = () => setIsShowPassword((prev) => !prev);
+  const handleClickShowChangedPassword = () =>
+    setIsShowChangedPassword((prev) => !prev);
+  const handleClickShowConfirmPassword = () =>
+    setIsShowConfirmPassword((prev) => !prev);
+
+  //fetch api
+  useEffect(() => {
+    fetchUserData();
+  }, []);
+
+  const fetchUserData = () => {
+    userApiInstace
+      .get("/info", {
+        // headers: { Authorization: `Bearer ${token}` },
+        headers: {
+          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjY0YjQ3MzM1LTg2MjAtNDlhMi1iOGMxLWY0YWYzYTRkOGZkMSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWUiOiJEbyBZb28gTGltIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvZW1haWxhZGRyZXNzIjoicXV5ZGllbTIwMTVAZ21haWwuY29tIiwianRpIjoiSmNtRjh1ajJJU3ZlTDVGdnZOazRwbnA4eHJoSU56OC0xNjE0MjI1NjI0IiwiYXBpX2tleSI6IkpjbUY4dWoySVN2ZUw1RnZ2Tms0cG5wOHhyaElOejgiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJCYWNrZXIiLCJleHAiOjE3Mjg1NjQyOTksImlzcyI6IkFQUE9UQVBBWSIsImF1ZCI6Imh0dHA6Ly9sb2NhbGhvc3Q6NzIzNSJ9.xzqIUkSgBNm_uzVx4iu2yQzR7_iVusNPaAEAy7HaHc0`,
+        },
+      })
+      .then((response) => {
+        const userData = response.data._data;
+
+        setUser(userData);
+        setUserEmail(userData.email || "");
+        setAccountName(userData.fullName || "");
+        setUserName(userData.userName || "");
+        setUserAddress(userData.address || "");
+        setSelectedGender(
+          userData.gender == null ? "" : genderMapping[userData.gender]
+        );
+        setUserBirthDate(
+          userBirthDate.isValid() ? dayjs(userData.dayOfBirth) : ""
+        );
+      })
+      .catch((error) => {
+        console.error("Error fetching user profile:", error);
+      })
+      .finally(() => {
+        // setIsLoading(false);
+      });
+  };
 
   return (
     <>
@@ -265,14 +344,14 @@ function AccountProfile() {
               <CustomTextField
                 label="Email"
                 variant="outlined"
-                value={""}
+                value={user?.email || ""}
                 fullWidth
                 disabled={!isEditProfile}
                 slotProps={{
                   input: {
                     startAdornment: (
                       <InputAdornment position="start" sx={{ ml: "0.4rem" }}>
-                        <MdEmail style={{ color: "#44494D" }} />
+                        <MdEmail style={{ color: "#2F3645" }} />
                       </InputAdornment>
                     ),
                   },
@@ -283,14 +362,14 @@ function AccountProfile() {
               <CustomTextField
                 label="Username"
                 variant="outlined"
-                value={""}
+                value={user?.userName || ""}
                 fullWidth
                 disabled={!isEditProfile}
                 slotProps={{
                   input: {
                     startAdornment: (
                       <InputAdornment position="start" sx={{ ml: "0.4rem" }}>
-                        <MdSwitchAccount style={{ color: "#44494D" }} />
+                        <MdSwitchAccount style={{ color: "#2F3645" }} />
                       </InputAdornment>
                     ),
                   },
@@ -301,14 +380,14 @@ function AccountProfile() {
               <CustomTextField
                 label="Full Name"
                 variant="outlined"
-                value={""}
+                value={user?.fullName || ""}
                 fullWidth
                 disabled={!isEditProfile}
                 slotProps={{
                   input: {
                     startAdornment: (
                       <InputAdornment position="start" sx={{ ml: "0.4rem" }}>
-                        <FaUser style={{ color: "#44494D" }} />
+                        <FaUser style={{ color: "#2F3645" }} />
                       </InputAdornment>
                     ),
                   },
@@ -320,6 +399,7 @@ function AccountProfile() {
                 <CustomDatePicker
                   disabled={!isEditProfile}
                   label="Date of Birth"
+                  value={userBirthDate}
                   onChange={(newValue) => setUserBirthDate(newValue)}
                   minDate={minDate}
                   maxDate={today}
@@ -331,7 +411,7 @@ function AccountProfile() {
                             position="start"
                             sx={{ ml: "0.4rem" }}
                           >
-                            <FaBirthdayCake style={{ color: "#44494D" }} />
+                            <FaBirthdayCake style={{ color: "#2F3645" }} />
                           </InputAdornment>
                         ),
                       },
@@ -341,11 +421,11 @@ function AccountProfile() {
               </LocalizationProvider>
             </Grid2>
             <Grid2 size={6}>
-              <FormControl fullWidth>
+              <FormControl fullWidth sx={{ height: "100%" }}>
                 <InputLabel
                   sx={{
                     fontSize: "0.875rem !important",
-                    color: "rgba(0, 0, 0, 0.38)",
+                    color: "#1BAA64",
                   }}
                 >
                   Gender
@@ -354,14 +434,18 @@ function AccountProfile() {
                   disabled={!isEditProfile}
                   labelId="gender-select-label"
                   id="gender-select"
+                  value={selectedGender || ""}
                   placeholder={"Gender"}
                   label="Gender"
                   onChange={() => {}}
                   startAdornment={
                     <InputAdornment position="start" sx={{ ml: "0.4rem" }}>
-                      <FaTransgenderAlt style={{ color: "#44494D" }} />
+                      <FaTransgenderAlt style={{ color: "#2F3645" }} />
                     </InputAdornment>
                   }
+                  sx={{
+                    height: "100%",
+                  }}
                 >
                   {gender.map((g, index) => (
                     <MenuItem key={index} value={g}>
@@ -373,34 +457,16 @@ function AccountProfile() {
             </Grid2>
             <Grid2 size={6}>
               <CustomTextField
-                label="Phone Number"
-                variant="outlined"
-                value={""}
-                fullWidth
-                disabled={!isEditProfile}
-                slotProps={{
-                  input: {
-                    startAdornment: (
-                      <InputAdornment position="start" sx={{ ml: "0.4rem" }}>
-                        <FaPhone style={{ color: "#44494D" }} />
-                      </InputAdornment>
-                    ),
-                  },
-                }}
-              />
-            </Grid2>
-            <Grid2 size={12}>
-              <CustomTextField
                 label="Address"
                 variant="outlined"
-                value={""}
+                value={user?.address || ""}
                 fullWidth
                 disabled={!isEditProfile}
                 slotProps={{
                   input: {
                     startAdornment: (
                       <InputAdornment position="start" sx={{ ml: "0.4rem" }}>
-                        <GoHomeFill style={{ color: "#44494D" }} />
+                        <GoHomeFill style={{ color: "#2F3645" }} />
                       </InputAdornment>
                     ),
                   },
@@ -525,14 +591,31 @@ function AccountProfile() {
               <CustomTextField
                 label="New Password"
                 variant="outlined"
-                value={""}
+                type={isShowChangedPassword ? "text" : "password"}
                 fullWidth
                 disabled={!isEditPassword}
                 slotProps={{
                   input: {
                     startAdornment: (
                       <InputAdornment position="start" sx={{ ml: "0.4rem" }}>
-                        <PiPasswordFill style={{ color: "#44494D" }} />
+                        <PiPasswordFill style={{ color: "#2F3645" }} />
+                      </InputAdornment>
+                    ),
+                    endAdornment: (
+                      <InputAdornment position="end" sx={{ mr: "0.4rem" }}>
+                        <IconButton
+                          sx={{ outline: "none !important" }}
+                          aria-label="toggle password visibility"
+                          onClick={handleClickShowChangedPassword}
+                          edge="end"
+                          disabled={!isEditPassword}
+                        >
+                          {isShowChangedPassword ? (
+                            <VisibilityOff />
+                          ) : (
+                            <Visibility />
+                          )}
+                        </IconButton>
                       </InputAdornment>
                     ),
                   },
@@ -543,6 +626,7 @@ function AccountProfile() {
               <CustomTextField
                 label="Confirm Password"
                 variant="outlined"
+                type="password"
                 value={""}
                 fullWidth
                 disabled={!isEditPassword}
@@ -550,7 +634,24 @@ function AccountProfile() {
                   input: {
                     startAdornment: (
                       <InputAdornment position="start" sx={{ ml: "0.4rem" }}>
-                        <PiPasswordFill style={{ color: "#44494D" }} />
+                        <PiPasswordFill style={{ color: "#2F3645" }} />
+                      </InputAdornment>
+                    ),
+                    endAdornment: (
+                      <InputAdornment position="end" sx={{ mr: "0.4rem" }}>
+                        <IconButton
+                          sx={{ outline: "none !important" }}
+                          aria-label="toggle password visibility"
+                          onClick={handleClickShowConfirmPassword}
+                          edge="end"
+                          disabled={!isEditPassword}
+                        >
+                          {isShowConfirmPassword ? (
+                            <VisibilityOff />
+                          ) : (
+                            <Visibility />
+                          )}
+                        </IconButton>
                       </InputAdornment>
                     ),
                   },

@@ -108,11 +108,6 @@ function UserProfileLayout() {
                                                         backgroundColor: isActive ? '#1BAA64' : 'transparent',
                                                         color: isActive ? '#F5F7F8' : '#2F3645',
                                                         '&:hover': {
-                                                            // backgroundColor: '#1BAA64',
-                                                            // color: '#F5F7F8 !important',
-                                                            // '& .MuiListItemIcon-root': {
-                                                            //     color: '#F5F7F8',
-                                                            // },
                                                             boxShadow: 'inset 0 0 0 1px #1BAA64',
                                                             backgroundColor: '#F5F7F8',
                                                             color: '#1BAA64 !important',

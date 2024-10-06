@@ -1,17 +1,17 @@
-import { TextField, MenuItem, Select, FormControl, InputLabel, InputAdornment, Grid, Grid2, Paper } from "@mui/material";
-import FormDivider from "../../../components/CreateProject/ProjectForm/Divider";
+import { FormControl, Grid2, InputAdornment, InputLabel, MenuItem, Paper, Select, TextField } from "@mui/material";
+import axios from "axios";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useOutletContext } from "react-router";
-import { useEffect,useState } from "react";
+import { useNavigate } from "react-router-dom";
+import FormDivider from "../../../components/CreateProject/ProjectForm/Divider";
 import NavigateButton from "../../../components/CreateProject/ProjectForm/NavigateButton";
-import { useNavigate, useLocation } from "react-router-dom";
-import axios from "axios";
 const BasicInfo = () => {
   const { register, handleSubmit, watch, setValue, formState: { errors } } = useForm({
     defaultValues: {
       categories: [
         {
-          id : ''
+          id: ''
         }
       ],
       projectName: '',
@@ -23,18 +23,18 @@ const BasicInfo = () => {
   });
 
   const { setFormIndex, setProjectData } = useOutletContext();
-  const [categories, setCategories] = useState([]); 
+  const [categories, setCategories] = useState([]);
   const navigate = useNavigate();
 
   const fetchCates = async () => {
-    try{
+    try {
       await axios.get('https://localhost:7044/api/categories').then(res => {
         setCategories(res.data._data.items);
       })
-    }catch(err){
+    } catch (err) {
       console.log(err)
     }
-    
+
   }
   useEffect(() => {
     setFormIndex(0);
@@ -107,7 +107,7 @@ const BasicInfo = () => {
                   {categories.map((category) => (
                     <MenuItem key={category.id} value={category.id}>{category.name}</MenuItem>
                   ))}
-                  
+
                 </Select>
                 {errors.category && <p className="text-red-600">{errors.category.message}</p>}
               </FormControl>

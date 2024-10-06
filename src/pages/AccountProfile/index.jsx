@@ -44,6 +44,7 @@ import {
   MdPassword,
 } from "react-icons/md";
 import { PiPasswordFill } from "react-icons/pi";
+import QuillEditor from "../../components/AccountProfile/QuillEditor";
 
 //date variables
 const today = dayjs();
@@ -160,6 +161,7 @@ function AccountProfile() {
   const [userBirthDate, setUserBirthDate] = useState(null);
   const [userPhone, setUserPhone] = useState("");
   const [userAddress, setUserAddress] = useState("");
+  const [userBio, setUserBio] = useState("");
   const [user, setUser] = useState(null);
   const [isShowPassword, setIsShowPassword] = useState(false);
   const [isShowChangedPassword, setIsShowChangedPassword] = useState(false);
@@ -176,7 +178,23 @@ function AccountProfile() {
   };
 
   //update profile
-  const handleUpdateProfile = () => {};
+  const handleUpdateProfile = () => {
+    const userUpdateRequest = {
+      fullName: accountName,
+      userPhone: userPhone,
+      userBirthDate:
+        userBirthDate == null
+          ? null
+          : `${userBirthDate.get("year")} - ${
+              userBirthDate.get("month") + 1 < 10
+                ? `0${userBirthDate.get("month") + 1}`
+                : userBirthDate.get("month") + 1
+            } - ${userBirthDate.get("date")}`,
+      userAddress: userAddress,
+      userGender: selectedGender,
+      bio: userBio,
+    };
+  };
 
   //edit pass
   const handleEditPassword = () => {
@@ -218,8 +236,9 @@ function AccountProfile() {
           userData.gender == null ? "" : genderMapping[userData.gender]
         );
         setUserBirthDate(
-          userBirthDate.isValid() ? dayjs(userData.dayOfBirth) : ""
+          userData.dayOfBirth ? dayjs(userData.dayOfBirth) : null
         );
+        setUserBio(userData.bio || "");
       })
       .catch((error) => {
         console.error("Error fetching user profile:", error);
@@ -437,7 +456,9 @@ function AccountProfile() {
                   value={selectedGender || ""}
                   placeholder={"Gender"}
                   label="Gender"
-                  onChange={() => {}}
+                  onChange={(e) => {
+                    setSelectedGender(e.target.value);
+                  }}
                   startAdornment={
                     <InputAdornment position="start" sx={{ ml: "0.4rem" }}>
                       <FaTransgenderAlt style={{ color: "#2F3645" }} />
@@ -471,6 +492,13 @@ function AccountProfile() {
                     ),
                   },
                 }}
+              />
+            </Grid2>
+            <Grid2 size={12} marginBottom={6}>
+              <QuillEditor
+                className="w-full !important"
+                value={user?.bio || ""}
+                disabled={!isEditProfile}
               />
             </Grid2>
           </Grid2>

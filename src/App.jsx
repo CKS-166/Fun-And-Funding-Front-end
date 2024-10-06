@@ -12,6 +12,7 @@ import "./index.css";
 import CreateFundingProjectLayout from "./layouts/CreateFundingProjectLayout";
 import PublicProfileLayout from "./layouts/ProfileLayout/PublicProfileLayout";
 import UserProfileLayout from "./layouts/ProfileLayout/UserProfileLayout";
+import UpdateFundingProjectLayout from "./layouts/UpdateFundingProjectLayout";
 import UserLayout from "./layouts/UserLayout";
 import AboutUs from "./pages/AboutUs";
 import AccountProfile from "./pages/AccountProfile";
@@ -28,6 +29,11 @@ import PublicProfile from "./pages/PublicProfile";
 import TestCR from "./pages/TestCR";
 import TestUpdate from "./pages/TestCR/testUpdate";
 import TestDetail from "./pages/TestDetail";
+import BankAccount from "./pages/UpdateProject/ProjectEditor/BankAccount";
+import BasicInformation from "./pages/UpdateProject/ProjectEditor/BasicInformation";
+import Media from "./pages/UpdateProject/ProjectEditor/Media";
+import Packages from "./pages/UpdateProject/ProjectEditor/Packages";
+import ProjectPreview from "./pages/UpdateProject/ProjectPreview";
 function App() {
   return (
     <>
@@ -62,6 +68,14 @@ function App() {
             path="request-funding-project/setup-donate-package"
             element={<SetupDonatePackage />}
           />
+        </Route>
+
+        <Route element={<UpdateFundingProjectLayout />}>
+          <Route path="/account/projects/update/preview" element={<ProjectPreview />} />
+          <Route path="/account/projects/update/basic-info" element={<BasicInformation />} />
+          <Route path="/account/projects/update/bank-account" element={<BankAccount />} />
+          <Route path="/account/projects/update/donation-packages" element={<Packages />} />
+          <Route path="/account/projects/update/media-files" element={<Media />} />
         </Route>
 
         <Route path="/funding-detail/:id" element={<ProjectDetail />} />

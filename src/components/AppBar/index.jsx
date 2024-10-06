@@ -3,11 +3,11 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import BallotIcon from "@mui/icons-material/Ballot";
 import LogoutIcon from "@mui/icons-material/Logout";
 import NotificationsIcon from "@mui/icons-material/Notifications";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import {
   AppBar,
   Avatar,
   Badge,
-  Dialog,
   Box,
   Button,
   Container,
@@ -21,13 +21,12 @@ import {
   Tabs,
   Toolbar,
   Tooltip,
-  Typography,
+  Typography
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import homeLogo from "../../assets/images/logo-alt.png";
 import defaultLogo from "../../assets/images/logo-text.png";
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import AuthDialog from "../Popup";
 // Functions to handle opening and closing the modal
 
@@ -171,15 +170,15 @@ const FunFundingAppBar = () => {
                         ? "#1BAA64"
                         : "#F5F7F8"
                       : tabValue === index
-                      ? "#1BAA64"
-                      : "#2F3645",
+                        ? "#1BAA64"
+                        : "#2F3645",
                     fontWeight: "700 !important",
                   }}
                 />
               ))}
             </Tabs>
           </Box>
-          {false ? (
+          {true ? (
             <Box
               sx={{ maxWidth: "100%", display: "flex", alignItems: "center" }}
             >

@@ -16,6 +16,7 @@ import {
   Paper,
   Select,
   TextField,
+  Typography,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -44,6 +45,7 @@ import {
   MdPassword,
 } from "react-icons/md";
 import { PiPasswordFill } from "react-icons/pi";
+import { RiProfileFill } from "react-icons/ri";
 import QuillEditor from "../../components/AccountProfile/QuillEditor";
 
 //date variables
@@ -221,7 +223,7 @@ function AccountProfile() {
       .get("/info", {
         // headers: { Authorization: `Bearer ${token}` },
         headers: {
-          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjY0YjQ3MzM1LTg2MjAtNDlhMi1iOGMxLWY0YWYzYTRkOGZkMSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWUiOiJEbyBZb28gTGltIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvZW1haWxhZGRyZXNzIjoicXV5ZGllbTIwMTVAZ21haWwuY29tIiwianRpIjoiSmNtRjh1ajJJU3ZlTDVGdnZOazRwbnA4eHJoSU56OC0xNjE0MjI1NjI0IiwiYXBpX2tleSI6IkpjbUY4dWoySVN2ZUw1RnZ2Tms0cG5wOHhyaElOejgiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJCYWNrZXIiLCJleHAiOjE3Mjg1NjQyOTksImlzcyI6IkFQUE9UQVBBWSIsImF1ZCI6Imh0dHA6Ly9sb2NhbGhvc3Q6NzIzNSJ9.xzqIUkSgBNm_uzVx4iu2yQzR7_iVusNPaAEAy7HaHc0`,
+          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6ImY4OWJmMjFkLTlmOTQtNDY2OS04MzdiLTdkNThmMjE4Y2EzZSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWUiOiJEbyBZb28gTGltIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvZW1haWxhZGRyZXNzIjoiZG95b29saW1AZ21haWwuY29tIiwianRpIjoiSmNtRjh1ajJJU3ZlTDVGdnZOazRwbnA4eHJoSU56OC0xNjE0MjI1NjI0IiwiYXBpX2tleSI6IkpjbUY4dWoySVN2ZUw1RnZ2Tms0cG5wOHhyaElOejgiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJCYWNrZXIiLCJleHAiOjE3Mjg3NDY0MTIsImlzcyI6IkFQUE9UQVBBWSIsImF1ZCI6Imh0dHA6Ly9sb2NhbGhvc3Q6NzIzNSJ9.aiFKvw26Md5rygB8Ler9JEovIWKC6ygpPpPjMyyPUiA`,
         },
       })
       .then((response) => {
@@ -495,10 +497,20 @@ function AccountProfile() {
               />
             </Grid2>
             <Grid2 size={12} marginBottom={6}>
+              <div className="flex gap-[1rem] items-center mb-16">
+                <RiProfileFill
+                  style={{ color: "#2F3645", fontSize: "1.4rem" }}
+                />
+                <h1 className="text-[1rem] text-left font-bold text-[#2F3645]">
+                  Bio
+                </h1>
+              </div>
               <QuillEditor
                 className="w-full !important"
                 value={user?.bio || ""}
-                disabled={!isEditProfile}
+                data={userBio}
+                setData={setUserBio}
+                isEnabled={isEditProfile}
               />
             </Grid2>
           </Grid2>

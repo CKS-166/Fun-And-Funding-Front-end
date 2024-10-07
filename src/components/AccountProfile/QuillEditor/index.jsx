@@ -2,36 +2,36 @@ import React, { useState } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 
-const QuillEditor = ({ introductionData, setIntroductionData }) => {
+const QuillEditor = ({ data, setData, isEnabled }) => {
   const [content, setContent] = useState("");
 
   const handleChange = (value) => {
-    setIntroductionData(value);
+    setData(value);
   };
 
-  const imageHandler = () => {
-    const input = document.createElement("input");
-    input.setAttribute("type", "file");
-    input.setAttribute("accept", "image/*");
-    input.click();
+  // const imageHandler = () => {
+  //   const input = document.createElement("input");
+  //   input.setAttribute("type", "file");
+  //   input.setAttribute("accept", "image/*");
+  //   input.click();
 
-    input.onchange = async () => {
-      const file = input.files[0];
-      const formData = new FormData();
-      formData.append("image", file);
+  //   input.onchange = async () => {
+  //     const file = input.files[0];
+  //     const formData = new FormData();
+  //     formData.append("image", file);
 
-      const res = await fetch("https://api.example.com/upload", {
-        method: "POST",
-        body: formData,
-      });
+  //     const res = await fetch("https://api.example.com/upload", {
+  //       method: "POST",
+  //       body: formData,
+  //     });
 
-      const data = await res.json();
-      const imageUrl = data.url;
+  //     const data = await res.json();
+  //     const imageUrl = data.url;
 
-      const range = this.quill.getSelection();
-      this.quill.insertEmbed(range.index, "image", imageUrl);
-    };
-  };
+  //     const range = this.quill.getSelection();
+  //     this.quill.insertEmbed(range.index, "image", imageUrl);
+  //   };
+  // };
 
   const modules = {
     toolbar: {
@@ -40,7 +40,7 @@ const QuillEditor = ({ introductionData, setIntroductionData }) => {
         [{ size: [] }],
         ["bold", "italic", "underline", "strike", "blockquote"],
         [{ list: "ordered" }, { list: "bullet" }],
-        ["link", "image"],
+        // ["link", "image"],
       ],
       handlers: {
         // image: imageHandler,
@@ -59,19 +59,22 @@ const QuillEditor = ({ introductionData, setIntroductionData }) => {
     "blockquote",
     "list",
     "bullet",
-    "link",
-    "image",
+    // "link",
+    // "image",
   ];
 
   return (
-    <div>
+    <div title="Bio">
       <ReactQuill
-        value={introductionData}
+        value={data}
         onChange={handleChange}
         modules={modules}
         formats={formats}
         theme="snow"
-        className="h-[20rem]"
+        className={`h-[20rem] ${
+          !isEnabled ? "text-[#98999a]" : "text-[#2F3645]"
+        }`}
+        readOnly={!isEnabled}
       />
     </div>
   );

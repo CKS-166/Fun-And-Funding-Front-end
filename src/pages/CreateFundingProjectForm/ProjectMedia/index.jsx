@@ -32,7 +32,7 @@ const ProjectMedia = () => {
       fundingFiles.push({
         name: "thumbnail",
         url: thumbnail[0].file,
-        filetype: 0,
+        filetype: 2,
       });
     }
 

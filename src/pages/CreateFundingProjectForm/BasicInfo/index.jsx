@@ -14,7 +14,7 @@ const BasicInfo = () => {
           id: ''
         }
       ],
-      projectName: '',
+      name: '',
       description: '',
       target: '',
       startDate: '',
@@ -125,7 +125,7 @@ const BasicInfo = () => {
                 placeholder='Project name...'
                 fullWidth
                 variant="outlined"
-                {...register("projectName", { required: "Project name is required" })}
+                {...register("name", { required: "Project name is required" })}
                 error={!!errors.projectName}
                 helperText={errors.projectName?.message}
               />

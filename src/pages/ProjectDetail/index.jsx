@@ -25,6 +25,7 @@ import ProjectImages from '../../components/ProjectImages';
 import ProjectIntro from '../../components/ProjectIntro';
 import UpdatesSection from '../../components/UpdatesSection';
 import './index.css';
+import DOMPurify from 'dompurify';
 const ProjectDetail = () => {
   //sample data
   const { id } = useParams();
@@ -39,6 +40,7 @@ const ProjectDetail = () => {
   const [projectData, setProjectData] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [daysLeft, setDaysLeft] = useState(0);
+  const [saniIntro, setSaniIntro] = useState('');
   //fetch project data
   const fetchProject = async () => {
     try {
@@ -49,7 +51,9 @@ const ProjectDetail = () => {
           const start = new Date(response.data._data.startDate);
           const end = new Date(response.data._data.endDate);
           const timeDiff = end - start;
-
+          const sanitizeIntro = DOMPurify.sanitize(response.data._data.introduction);
+          setSaniIntro(sanitizeIntro);
+          console.log(sanitizeIntro);
           // Convert milliseconds to days (1 day = 24 * 60 * 60 * 1000 ms)
           const dayDiff = timeDiff / (1000 * 60 * 60 * 24);
           setDaysLeft(dayDiff);
@@ -272,7 +276,7 @@ const ProjectDetail = () => {
                 <Box sx={{ display: "flex", flexDirection: "row", width: "100%", marginTop: '80px' }}>
                   <Box sx={{ marginRight: '150px' }}>
                     <Box>
-                      <ProjectIntro intro={projectData.introduction} />
+                      <ProjectIntro intro={saniIntro} />
                     </Box>
                   </Box>
                   <Box>

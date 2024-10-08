@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useOutletContext } from "react-router";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import dayjs from "dayjs";
 import Cookies from "js-cookie";
+import Swal from "sweetalert2";
 import userApiInstace from "../../utils/userApiInstance";
 import {
   Backdrop,
@@ -170,7 +171,9 @@ function AccountProfile() {
   const [isShowConfirmPassword, setIsShowConfirmPassword] = useState(false);
 
   const navigate = useNavigate();
-  const token = Cookies.get("_auth");
+  // const token = Cookies.get("_auth");
+  const token =
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6ImY4OWJmMjFkLTlmOTQtNDY2OS04MzdiLTdkNThmMjE4Y2EzZSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWUiOiJEbyBZb28gTGltIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvZW1haWxhZGRyZXNzIjoiZG95b29saW1AZ21haWwuY29tIiwianRpIjoiSmNtRjh1ajJJU3ZlTDVGdnZOazRwbnA4eHJoSU56OC0xNjE0MjI1NjI0IiwiYXBpX2tleSI6IkpjbUY4dWoySVN2ZUw1RnZ2Tms0cG5wOHhyaElOejgiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJCYWNrZXIiLCJleHAiOjE3Mjg4MTM3OTksImlzcyI6IkFQUE9UQVBBWSIsImF1ZCI6Imh0dHA6Ly9sb2NhbGhvc3Q6NzIzNSJ9.hqLjvpV3y3gC-bY7KIUnkvdbj5I9StuDsQz6CBvrh-I";
 
   //functions
 
@@ -181,10 +184,13 @@ function AccountProfile() {
 
   //update profile
   const handleUpdateProfile = () => {
+    // setIsLoading(true);
+
     const userUpdateRequest = {
       fullName: accountName,
+      userName: userName,
       userPhone: userPhone,
-      userBirthDate:
+      dayOfBirth:
         userBirthDate == null
           ? null
           : `${userBirthDate.get("year")} - ${
@@ -192,10 +198,39 @@ function AccountProfile() {
                 ? `0${userBirthDate.get("month") + 1}`
                 : userBirthDate.get("month") + 1
             } - ${userBirthDate.get("date")}`,
-      userAddress: userAddress,
-      userGender: selectedGender,
+      address: userAddress,
+      gender: Object.keys(genderMapping).find(
+        (key) => genderMapping[key] === selectedGender
+      ),
       bio: userBio,
+      userStatus: user.userStatus,
     };
+
+    //fetch update profile api
+    userApiInstace
+      .patch("/info", userUpdateRequest, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then((response) => {
+        if (response.status === 200) {
+          Swal.fire({
+            title: "Success",
+            text: "Update profile successfully.",
+            icon: "success",
+            showConfirmButton: false,
+            timer: 1500,
+          }).then(() => {
+            setTimeout();
+          });
+        }
+      })
+      .catch((error) => {
+        console.error("Update profile failed:", error);
+      })
+      .finally(() => {
+        setIsEditProfile(false);
+        // setIsLoading(false);
+      });
   };
 
   //edit pass
@@ -222,9 +257,7 @@ function AccountProfile() {
     userApiInstace
       .get("/info", {
         // headers: { Authorization: `Bearer ${token}` },
-        headers: {
-          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6ImY4OWJmMjFkLTlmOTQtNDY2OS04MzdiLTdkNThmMjE4Y2EzZSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWUiOiJEbyBZb28gTGltIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvZW1haWxhZGRyZXNzIjoiZG95b29saW1AZ21haWwuY29tIiwianRpIjoiSmNtRjh1ajJJU3ZlTDVGdnZOazRwbnA4eHJoSU56OC0xNjE0MjI1NjI0IiwiYXBpX2tleSI6IkpjbUY4dWoySVN2ZUw1RnZ2Tms0cG5wOHhyaElOejgiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJCYWNrZXIiLCJleHAiOjE3Mjg3NDY0MTIsImlzcyI6IkFQUE9UQVBBWSIsImF1ZCI6Imh0dHA6Ly9sb2NhbGhvc3Q6NzIzNSJ9.aiFKvw26Md5rygB8Ler9JEovIWKC6ygpPpPjMyyPUiA`,
-        },
+        headers: { Authorization: `Bearer ${token}` },
       })
       .then((response) => {
         const userData = response.data._data;
@@ -365,9 +398,9 @@ function AccountProfile() {
               <CustomTextField
                 label="Email"
                 variant="outlined"
-                value={user?.email || ""}
+                value={userEmail}
                 fullWidth
-                disabled={!isEditProfile}
+                disabled={true}
                 slotProps={{
                   input: {
                     startAdornment: (
@@ -383,9 +416,12 @@ function AccountProfile() {
               <CustomTextField
                 label="Username"
                 variant="outlined"
-                value={user?.userName || ""}
+                value={userName}
                 fullWidth
                 disabled={!isEditProfile}
+                onChange={(e) => {
+                  setUserName(e.target.value);
+                }}
                 slotProps={{
                   input: {
                     startAdornment: (
@@ -401,9 +437,12 @@ function AccountProfile() {
               <CustomTextField
                 label="Full Name"
                 variant="outlined"
-                value={user?.fullName || ""}
+                value={accountName}
                 fullWidth
                 disabled={!isEditProfile}
+                onChange={(e) => {
+                  setAccountName(e.target.value);
+                }}
                 slotProps={{
                   input: {
                     startAdornment: (
@@ -482,9 +521,12 @@ function AccountProfile() {
               <CustomTextField
                 label="Address"
                 variant="outlined"
-                value={user?.address || ""}
+                value={userAddress}
                 fullWidth
                 disabled={!isEditProfile}
+                onChange={(e) => {
+                  setUserAddress(e.target.value);
+                }}
                 slotProps={{
                   input: {
                     startAdornment: (
@@ -507,10 +549,13 @@ function AccountProfile() {
               </div>
               <QuillEditor
                 className="w-full !important"
-                value={user?.bio || ""}
+                value={userBio}
                 data={userBio}
                 setData={setUserBio}
                 isEnabled={isEditProfile}
+                onChange={(e) => {
+                  setUserBio(e.target.value);
+                }}
               />
             </Grid2>
           </Grid2>

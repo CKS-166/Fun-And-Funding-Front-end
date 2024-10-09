@@ -18,7 +18,10 @@ import {
   Select,
   TextField,
   Typography,
+  Modal,
+  Box,
 } from "@mui/material";
+// import { Modal as BaseModal, Modal } from "@mui/base/Modal";
 import { styled } from "@mui/material/styles";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -27,6 +30,7 @@ import {
   Edit as EditIcon,
   Visibility,
   VisibilityOff,
+  ArrowForward,
 } from "@mui/icons-material";
 import {
   FaAddressCard,
@@ -157,6 +161,8 @@ function AccountProfile() {
   // const { setIsLoading } = useOutletContext();
   const [isEditProfile, setIsEditProfile] = useState(false);
   const [isEditPassword, setIsEditPassword] = useState(false);
+
+  //user profile
   const [selectedGender, setSelectedGender] = useState("");
   const [userEmail, setUserEmail] = useState("");
   const [accountName, setAccountName] = useState("");
@@ -166,14 +172,32 @@ function AccountProfile() {
   const [userAddress, setUserAddress] = useState("");
   const [userBio, setUserBio] = useState("");
   const [user, setUser] = useState(null);
+  const navigate = useNavigate();
+
   const [isShowPassword, setIsShowPassword] = useState(false);
   const [isShowChangedPassword, setIsShowChangedPassword] = useState(false);
   const [isShowConfirmPassword, setIsShowConfirmPassword] = useState(false);
 
-  const navigate = useNavigate();
+  //password
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+
+  //avatar
+  const [avatar, setAvatar] = useState(null);
+  const [avatarName, setAvatarName] = useState(null);
+
+  //modal
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => {
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   // const token = Cookies.get("_auth");
   const token =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6ImY4OWJmMjFkLTlmOTQtNDY2OS04MzdiLTdkNThmMjE4Y2EzZSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWUiOiJEbyBZb28gTGltIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvZW1haWxhZGRyZXNzIjoiZG95b29saW1AZ21haWwuY29tIiwianRpIjoiSmNtRjh1ajJJU3ZlTDVGdnZOazRwbnA4eHJoSU56OC0xNjE0MjI1NjI0IiwiYXBpX2tleSI6IkpjbUY4dWoySVN2ZUw1RnZ2Tms0cG5wOHhyaElOejgiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJCYWNrZXIiLCJleHAiOjE3Mjg4MTM3OTksImlzcyI6IkFQUE9UQVBBWSIsImF1ZCI6Imh0dHA6Ly9sb2NhbGhvc3Q6NzIzNSJ9.hqLjvpV3y3gC-bY7KIUnkvdbj5I9StuDsQz6CBvrh-I";
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6ImY4OWJmMjFkLTlmOTQtNDY2OS04MzdiLTdkNThmMjE4Y2EzZSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWUiOiJEbyBZb28gTGltIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvZW1haWxhZGRyZXNzIjoiZG95b29saW1AZ21haWwuY29tIiwianRpIjoiSmNtRjh1ajJJU3ZlTDVGdnZOazRwbnA4eHJoSU56OC0xNjE0MjI1NjI0IiwiYXBpX2tleSI6IkpjbUY4dWoySVN2ZUw1RnZ2Tms0cG5wOHhyaElOejgiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJCYWNrZXIiLCJleHAiOjE3Mjg5MTk4MDgsImlzcyI6IkFQUE9UQVBBWSIsImF1ZCI6Imh0dHA6Ly9sb2NhbGhvc3Q6NzIzNSJ9.qR99g7vFzi0Cs2lIcvON3ei0bfucUm3NNBBLz4WgAxM";
 
   //functions
 
@@ -217,6 +241,16 @@ function AccountProfile() {
             title: "Success",
             text: "Update profile successfully.",
             icon: "success",
+            showConfirmButton: false,
+            timer: 1500,
+          }).then(() => {
+            setTimeout();
+          });
+        } else {
+          Swal.fire({
+            title: "Error",
+            text: "Update profile failed.",
+            icon: "error",
             showConfirmButton: false,
             timer: 1500,
           }).then(() => {
@@ -592,7 +626,7 @@ function AccountProfile() {
                 <Button
                   variant="contained"
                   startIcon={<EditIcon />}
-                  onClick={handleEditPassword}
+                  onClick={handleOpen}
                   sx={{
                     color: "#2F3645",
                     backgroundColor: "#F5F7F8",
@@ -711,7 +745,7 @@ function AccountProfile() {
               <CustomTextField
                 label="Confirm Password"
                 variant="outlined"
-                type="password"
+                type={isShowConfirmPassword ? "text" : "password"}
                 value={""}
                 fullWidth
                 disabled={!isEditPassword}
@@ -746,6 +780,106 @@ function AccountProfile() {
           </Grid2>
         </div>
       </Paper>
+
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-title"
+        aria-describedby="modal-description"
+        sx={{
+          display: "flex", // Enable Flexbox on the Modal itself
+          justifyContent: "center", // Center horizontally
+          alignItems: "center", // Center vertically
+        }}
+      >
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column", // Ensure items stack vertically
+            justifyContent: "center", // Center content within the box
+            alignItems: "center", // Center content within the box
+            height: "40vh",
+            padding: 8,
+            backgroundColor: "#F5F7F8",
+            margin: "auto",
+            width: "45%",
+            borderRadius: 1,
+          }}
+        >
+          <Typography
+            sx={{
+              fontWeight: "600",
+              fontSize: "1.5rem",
+              color: "#2F3645",
+              textAlign: "center",
+              marginBottom: "2rem",
+            }}
+          >
+            Enter your password to continue
+          </Typography>
+
+          <Grid2
+            container
+            columnSpacing={4}
+            rowSpacing={0}
+            sx={{
+              width: "100%",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Grid2 size={9}>
+              <CustomTextField
+                label="Password"
+                variant="outlined"
+                type={isShowPassword ? "text" : "password"}
+                sx={{ width: "100%" }}
+                slotProps={{
+                  input: {
+                    endAdornment: (
+                      <InputAdornment position="end" sx={{ mr: "0.4rem" }}>
+                        <IconButton
+                          sx={{ outline: "none !important" }}
+                          aria-label="toggle password visibility"
+                          onClick={handleClickShowPassword}
+                          edge="end"
+                        >
+                          {isShowPassword ? <VisibilityOff /> : <Visibility />}
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  },
+                }}
+              />
+            </Grid2>
+            <Grid2 size={3}>
+              <Button
+                variant="text"
+                endIcon={<ArrowForward />}
+                onClick={() => {}}
+                sx={{
+                  color: "#2F3645",
+                  backgroundColor: "#F5F7F8",
+                  textTransform: "none !important",
+                  "&:hover": {
+                    color: "#1BAA64",
+                  },
+                  "&:active": {
+                    outline: "none !important",
+                  },
+                  "&:focus": {
+                    outline: "none !important",
+                  },
+                  fontWeight: "bold",
+                  height: "51px",
+                }}
+              >
+                Continue
+              </Button>
+            </Grid2>
+          </Grid2>
+        </Box>
+      </Modal>
     </>
   );
 }

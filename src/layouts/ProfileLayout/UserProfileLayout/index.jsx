@@ -17,6 +17,7 @@ import { IoMdWallet } from "react-icons/io";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import Footer from "../../../components/Footer";
 import userApiInstace from "../../../utils/ApiInstance/userApiInstance";
+import Swal from "sweetalert2";
 import "./index.css";
 
 function UserProfileLayout() {
@@ -86,7 +87,41 @@ function UserProfileLayout() {
     }
   };
 
-  const handleUpdateAvatar = () => { };
+  const handleUpdateAvatar = async (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append("URL", file); // "URL" field for the file
+    formData.append("Name", "avatar_" + user.userName); // Add the file name
+
+    try {
+      const response = await userApiInstace.patch("/avatar", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (response.status === 200) {
+        setAvatar(response.data._data.avatar); // Update the avatar on success
+
+        Swal.fire({
+          title: "Success",
+          text: "Update avatar successfully.",
+          icon: "success",
+          showConfirmButton: false,
+          timer: 1500,
+        }).then(() => {
+          fetchUserData();
+        });
+      } else {
+        throw new Error("Fetch API failed");
+      }
+    } catch (error) {
+      console.error("Upload avatar failed:", error);
+    }
+  };
 
   return (
     <div className="mt-[2rem]">

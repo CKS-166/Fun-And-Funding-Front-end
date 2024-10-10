@@ -41,7 +41,7 @@ function OwnerProjectCard({ project }) {
                         <span className="ml-[1rem] bg-[#1BAA64] text-[0.75rem] text-[#EAEAEA] px-[0.5rem] py-[0.25rem] rounded">
                             Funding
                         </span>
-                        <span className="ml-[1rem] bg-[#2F3645] text-[0.75rem] text-[#EAEAEA] px-[0.5rem] py-[0.25rem] rounded">
+                        <span className="ml-[1rem] bg-[#FABC3F] text-[0.75rem] text-[#F5F7F8] px-[0.5rem] py-[0.25rem] rounded">
                             Marketing
                         </span>
                     </div>

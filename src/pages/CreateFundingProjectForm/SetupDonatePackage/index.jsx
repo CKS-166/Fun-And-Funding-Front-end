@@ -1,11 +1,11 @@
 import { Paper } from "@mui/material"
+import axios from "axios"
 import { useEffect, useState } from "react"
 import { useNavigate, useOutletContext } from "react-router"
+import EmptyIcon from '../../../assets/images/image_empty.png'
 import FormDivider from "../../../components/CreateProject/ProjectForm/Divider"
 import NavigateButton from "../../../components/CreateProject/ProjectForm/NavigateButton"
 import PackageModal from "./PackageModal"
-import EmptyIcon from '../../../assets/images/image_empty.png'
-import axios from "axios"
 
 const SetupDonatePackage = () => {
 
@@ -90,13 +90,18 @@ const SetupDonatePackage = () => {
     //append categories
     console.log(projectData.categories[0]);
     // for (let i = 0; i < projectData.categories.length; i++) {
-      formData.append(`Categories[0]`, projectData.categories);
+    formData.append(`Categories[0]`, projectData.categories);
     // }
     // Add other files (e.g., Funding Files)
     for (let i = 0; i < projectData.fundingFiles.length; i++) {
       formData.append(`FundingFiles[${i}].Name`, projectData.fundingFiles[i].name);
       formData.append(`FundingFiles[${i}].URL`, projectData.fundingFiles[i].url); // The actual file
-      formData.append(`FundingFiles[${i}].Filetype`,  projectData.fundingFiles[i].filetype); // Example file type
+      formData.append(`FundingFiles[${i}].Filetype`, projectData.fundingFiles[i].filetype); // Example file type
+    }
+
+    console.log("FormData contents:");
+    for (let pair of formData.entries()) {
+      console.log(pair[0], pair[1]);
     }
 
     try {

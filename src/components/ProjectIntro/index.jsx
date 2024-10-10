@@ -4,7 +4,7 @@ const ProjectIntro = ({intro}) => {
   return (
     <Box>
         <Box className="w-[800px] p-[45px]">
-            {intro ? <Typography>{intro}</Typography> : <Typography>Project Introduction for this project has not been published</Typography>}
+            {intro ? <div dangerouslySetInnerHTML={{ __html: intro }} /> : <Typography>Project Introduction for this project has not been published</Typography>}
             
         </Box>
     </Box>

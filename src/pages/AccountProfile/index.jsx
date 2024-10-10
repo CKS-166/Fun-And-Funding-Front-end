@@ -1,10 +1,13 @@
+import { useEffect, useState } from "react";
+import { useNavigate, useOutletContext } from "react-router-dom";
+import dayjs from "dayjs";
+import Cookies from "js-cookie";
+import Swal from "sweetalert2";
+import userApiInstace from "../../utils/userApiInstance";
 import {
-  Edit as EditIcon,
-  Visibility,
-  VisibilityOff,
-} from "@mui/icons-material";
-import {
+  Backdrop,
   Button,
+  CircularProgress,
   FormControl,
   Grid2,
   IconButton,
@@ -13,31 +16,42 @@ import {
   MenuItem,
   Paper,
   Select,
-  TextField
+  TextField,
+  Typography,
+  Modal,
+  Box,
 } from "@mui/material";
+// import { Modal as BaseModal, Modal } from "@mui/base/Modal";
 import { styled } from "@mui/material/styles";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import dayjs from "dayjs";
-import Cookies from "js-cookie";
-import { useEffect, useState } from "react";
+import {
+  Edit as EditIcon,
+  Visibility,
+  VisibilityOff,
+  ArrowForward,
+} from "@mui/icons-material";
 import {
   FaAddressCard,
   FaBirthdayCake,
   FaLock,
+  FaUser,
+  FaPhone,
   FaTransgenderAlt,
-  FaUser
+  FaHome,
 } from "react-icons/fa";
 import { GoHomeFill } from "react-icons/go";
 import { ImBin2 } from "react-icons/im";
 import {
   MdEmail,
-  MdSwitchAccount
+  MdOutlineTransgender,
+  MdSwitchAccount,
+  MdPassword,
 } from "react-icons/md";
 import { PiPasswordFill } from "react-icons/pi";
-import { useNavigate } from "react-router";
-import userApiInstace from "../../utils/ApiInstance/userApiInstance";
+import { RiProfileFill } from "react-icons/ri";
+import QuillEditor from "../../components/AccountProfile/QuillEditor";
 
 //date variables
 const today = dayjs();
@@ -147,6 +161,8 @@ function AccountProfile() {
   // const { setIsLoading } = useOutletContext();
   const [isEditProfile, setIsEditProfile] = useState(false);
   const [isEditPassword, setIsEditPassword] = useState(false);
+
+  //user profile
   const [selectedGender, setSelectedGender] = useState("");
   const [userEmail, setUserEmail] = useState("");
   const [accountName, setAccountName] = useState("");
@@ -154,13 +170,34 @@ function AccountProfile() {
   const [userBirthDate, setUserBirthDate] = useState(null);
   const [userPhone, setUserPhone] = useState("");
   const [userAddress, setUserAddress] = useState("");
+  const [userBio, setUserBio] = useState("");
   const [user, setUser] = useState(null);
+  const navigate = useNavigate();
+
   const [isShowPassword, setIsShowPassword] = useState(false);
   const [isShowChangedPassword, setIsShowChangedPassword] = useState(false);
   const [isShowConfirmPassword, setIsShowConfirmPassword] = useState(false);
 
-  const navigate = useNavigate();
-  const token = Cookies.get("_auth");
+  //password
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+
+  //avatar
+  const [avatar, setAvatar] = useState(null);
+  const [avatarName, setAvatarName] = useState(null);
+
+  //modal
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => {
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  // const token = Cookies.get("_auth");
+  const token =
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6ImY4OWJmMjFkLTlmOTQtNDY2OS04MzdiLTdkNThmMjE4Y2EzZSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWUiOiJEbyBZb28gTGltIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvZW1haWxhZGRyZXNzIjoiZG95b29saW1AZ21haWwuY29tIiwianRpIjoiSmNtRjh1ajJJU3ZlTDVGdnZOazRwbnA4eHJoSU56OC0xNjE0MjI1NjI0IiwiYXBpX2tleSI6IkpjbUY4dWoySVN2ZUw1RnZ2Tms0cG5wOHhyaElOejgiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJCYWNrZXIiLCJleHAiOjE3Mjg5MTk4MDgsImlzcyI6IkFQUE9UQVBBWSIsImF1ZCI6Imh0dHA6Ly9sb2NhbGhvc3Q6NzIzNSJ9.qR99g7vFzi0Cs2lIcvON3ei0bfucUm3NNBBLz4WgAxM";
 
   //functions
 
@@ -170,7 +207,65 @@ function AccountProfile() {
   };
 
   //update profile
-  const handleUpdateProfile = () => { };
+  const handleUpdateProfile = () => {
+    // setIsLoading(true);
+
+    const userUpdateRequest = {
+      fullName: accountName,
+      userName: userName,
+      userPhone: userPhone,
+      dayOfBirth:
+        userBirthDate == null
+          ? null
+          : `${userBirthDate.get("year")} - ${
+              userBirthDate.get("month") + 1 < 10
+                ? `0${userBirthDate.get("month") + 1}`
+                : userBirthDate.get("month") + 1
+            } - ${userBirthDate.get("date")}`,
+      address: userAddress,
+      gender: Object.keys(genderMapping).find(
+        (key) => genderMapping[key] === selectedGender
+      ),
+      bio: userBio,
+      userStatus: user.userStatus,
+    };
+
+    //fetch update profile api
+    userApiInstace
+      .patch("/info", userUpdateRequest, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then((response) => {
+        if (response.status === 200) {
+          Swal.fire({
+            title: "Success",
+            text: "Update profile successfully.",
+            icon: "success",
+            showConfirmButton: false,
+            timer: 1500,
+          }).then(() => {
+            setTimeout();
+          });
+        } else {
+          Swal.fire({
+            title: "Error",
+            text: "Update profile failed.",
+            icon: "error",
+            showConfirmButton: false,
+            timer: 1500,
+          }).then(() => {
+            setTimeout();
+          });
+        }
+      })
+      .catch((error) => {
+        console.error("Update profile failed:", error);
+      })
+      .finally(() => {
+        setIsEditProfile(false);
+        // setIsLoading(false);
+      });
+  };
 
   //edit pass
   const handleEditPassword = () => {
@@ -178,7 +273,7 @@ function AccountProfile() {
   };
 
   //update pass
-  const handleUpdatePassword = () => { };
+  const handleUpdatePassword = () => {};
 
   //show pass
   const handleClickShowPassword = () => setIsShowPassword((prev) => !prev);
@@ -196,9 +291,7 @@ function AccountProfile() {
     userApiInstace
       .get("/info", {
         // headers: { Authorization: `Bearer ${token}` },
-        headers: {
-          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjY0YjQ3MzM1LTg2MjAtNDlhMi1iOGMxLWY0YWYzYTRkOGZkMSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWUiOiJEbyBZb28gTGltIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvZW1haWxhZGRyZXNzIjoicXV5ZGllbTIwMTVAZ21haWwuY29tIiwianRpIjoiSmNtRjh1ajJJU3ZlTDVGdnZOazRwbnA4eHJoSU56OC0xNjE0MjI1NjI0IiwiYXBpX2tleSI6IkpjbUY4dWoySVN2ZUw1RnZ2Tms0cG5wOHhyaElOejgiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJCYWNrZXIiLCJleHAiOjE3Mjg1NjQyOTksImlzcyI6IkFQUE9UQVBBWSIsImF1ZCI6Imh0dHA6Ly9sb2NhbGhvc3Q6NzIzNSJ9.xzqIUkSgBNm_uzVx4iu2yQzR7_iVusNPaAEAy7HaHc0`,
-        },
+        headers: { Authorization: `Bearer ${token}` },
       })
       .then((response) => {
         const userData = response.data._data;
@@ -212,8 +305,9 @@ function AccountProfile() {
           userData.gender == null ? "" : genderMapping[userData.gender]
         );
         setUserBirthDate(
-          userBirthDate.isValid() ? dayjs(userData.dayOfBirth) : ""
+          userData.dayOfBirth ? dayjs(userData.dayOfBirth) : null
         );
+        setUserBio(userData.bio || "");
       })
       .catch((error) => {
         console.error("Error fetching user profile:", error);
@@ -338,9 +432,9 @@ function AccountProfile() {
               <CustomTextField
                 label="Email"
                 variant="outlined"
-                value={user?.email || ""}
+                value={userEmail}
                 fullWidth
-                disabled={!isEditProfile}
+                disabled={true}
                 slotProps={{
                   input: {
                     startAdornment: (
@@ -356,9 +450,12 @@ function AccountProfile() {
               <CustomTextField
                 label="Username"
                 variant="outlined"
-                value={user?.userName || ""}
+                value={userName}
                 fullWidth
                 disabled={!isEditProfile}
+                onChange={(e) => {
+                  setUserName(e.target.value);
+                }}
                 slotProps={{
                   input: {
                     startAdornment: (
@@ -374,9 +471,12 @@ function AccountProfile() {
               <CustomTextField
                 label="Full Name"
                 variant="outlined"
-                value={user?.fullName || ""}
+                value={accountName}
                 fullWidth
                 disabled={!isEditProfile}
+                onChange={(e) => {
+                  setAccountName(e.target.value);
+                }}
                 slotProps={{
                   input: {
                     startAdornment: (
@@ -431,7 +531,9 @@ function AccountProfile() {
                   value={selectedGender || ""}
                   placeholder={"Gender"}
                   label="Gender"
-                  onChange={() => { }}
+                  onChange={(e) => {
+                    setSelectedGender(e.target.value);
+                  }}
                   startAdornment={
                     <InputAdornment position="start" sx={{ ml: "0.4rem" }}>
                       <FaTransgenderAlt style={{ color: "#2F3645" }} />
@@ -453,9 +555,12 @@ function AccountProfile() {
               <CustomTextField
                 label="Address"
                 variant="outlined"
-                value={user?.address || ""}
+                value={userAddress}
                 fullWidth
                 disabled={!isEditProfile}
+                onChange={(e) => {
+                  setUserAddress(e.target.value);
+                }}
                 slotProps={{
                   input: {
                     startAdornment: (
@@ -464,6 +569,26 @@ function AccountProfile() {
                       </InputAdornment>
                     ),
                   },
+                }}
+              />
+            </Grid2>
+            <Grid2 size={12} marginBottom={6}>
+              <div className="flex gap-[1rem] items-center mb-16">
+                <RiProfileFill
+                  style={{ color: "#2F3645", fontSize: "1.4rem" }}
+                />
+                <h1 className="text-[1rem] text-left font-bold text-[#2F3645]">
+                  Bio
+                </h1>
+              </div>
+              <QuillEditor
+                className="w-full !important"
+                value={userBio}
+                data={userBio}
+                setData={setUserBio}
+                isEnabled={isEditProfile}
+                onChange={(e) => {
+                  setUserBio(e.target.value);
                 }}
               />
             </Grid2>
@@ -501,7 +626,7 @@ function AccountProfile() {
                 <Button
                   variant="contained"
                   startIcon={<EditIcon />}
-                  onClick={handleEditPassword}
+                  onClick={handleOpen}
                   sx={{
                     color: "#2F3645",
                     backgroundColor: "#F5F7F8",
@@ -620,7 +745,7 @@ function AccountProfile() {
               <CustomTextField
                 label="Confirm Password"
                 variant="outlined"
-                type="password"
+                type={isShowConfirmPassword ? "text" : "password"}
                 value={""}
                 fullWidth
                 disabled={!isEditPassword}
@@ -655,6 +780,106 @@ function AccountProfile() {
           </Grid2>
         </div>
       </Paper>
+
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-title"
+        aria-describedby="modal-description"
+        sx={{
+          display: "flex", // Enable Flexbox on the Modal itself
+          justifyContent: "center", // Center horizontally
+          alignItems: "center", // Center vertically
+        }}
+      >
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column", // Ensure items stack vertically
+            justifyContent: "center", // Center content within the box
+            alignItems: "center", // Center content within the box
+            height: "40vh",
+            padding: 8,
+            backgroundColor: "#F5F7F8",
+            margin: "auto",
+            width: "45%",
+            borderRadius: 1,
+          }}
+        >
+          <Typography
+            sx={{
+              fontWeight: "600",
+              fontSize: "1.5rem",
+              color: "#2F3645",
+              textAlign: "center",
+              marginBottom: "2rem",
+            }}
+          >
+            Enter your password to continue
+          </Typography>
+
+          <Grid2
+            container
+            columnSpacing={4}
+            rowSpacing={0}
+            sx={{
+              width: "100%",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Grid2 size={9}>
+              <CustomTextField
+                label="Password"
+                variant="outlined"
+                type={isShowPassword ? "text" : "password"}
+                sx={{ width: "100%" }}
+                slotProps={{
+                  input: {
+                    endAdornment: (
+                      <InputAdornment position="end" sx={{ mr: "0.4rem" }}>
+                        <IconButton
+                          sx={{ outline: "none !important" }}
+                          aria-label="toggle password visibility"
+                          onClick={handleClickShowPassword}
+                          edge="end"
+                        >
+                          {isShowPassword ? <VisibilityOff /> : <Visibility />}
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  },
+                }}
+              />
+            </Grid2>
+            <Grid2 size={3}>
+              <Button
+                variant="text"
+                endIcon={<ArrowForward />}
+                onClick={() => {}}
+                sx={{
+                  color: "#2F3645",
+                  backgroundColor: "#F5F7F8",
+                  textTransform: "none !important",
+                  "&:hover": {
+                    color: "#1BAA64",
+                  },
+                  "&:active": {
+                    outline: "none !important",
+                  },
+                  "&:focus": {
+                    outline: "none !important",
+                  },
+                  fontWeight: "bold",
+                  height: "51px",
+                }}
+              >
+                Continue
+              </Button>
+            </Grid2>
+          </Grid2>
+        </Box>
+      </Modal>
     </>
   );
 }

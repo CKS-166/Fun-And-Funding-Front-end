@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
+import './index.css';
 
 const QuillEditor = ({ introductionData, setIntroductionData }) => {
+    const quillRef = useRef(null);
     const [content, setContent] = useState('');
 
     const handleChange = (value) => {
@@ -28,8 +30,9 @@ const QuillEditor = ({ introductionData, setIntroductionData }) => {
             const data = await res.json();
             const imageUrl = data.url;
 
-            const range = this.quill.getSelection();
-            this.quill.insertEmbed(range.index, 'image', imageUrl);
+            const quillEditor = quillRef.current.getEditor();
+            const range = quillEditor.getSelection();
+            quillEditor.insertEmbed(range.index, 'image', imageUrl);
         };
     };
 
@@ -43,7 +46,7 @@ const QuillEditor = ({ introductionData, setIntroductionData }) => {
                 ['link', 'image'],
             ],
             handlers: {
-                // image: imageHandler,
+
             },
         },
     };
@@ -58,15 +61,15 @@ const QuillEditor = ({ introductionData, setIntroductionData }) => {
     return (
         <div className='w-[70%]'>
             <ReactQuill
+                ref={quillRef}
                 value={introductionData}
                 onChange={handleChange}
                 modules={modules}
                 formats={formats}
                 theme="snow"
-                className='h-[20rem]'
+                className='h-fit'
             />
         </div>
-
     );
 };
 

@@ -1,12 +1,10 @@
-import { useEffect, useState } from "react";
-import { useNavigate, useOutletContext } from "react-router";
-import dayjs from "dayjs";
-import Cookies from "js-cookie";
-import userApiInstace from "../../utils/userApiInstance";
 import {
-  Backdrop,
+  Edit as EditIcon,
+  Visibility,
+  VisibilityOff,
+} from "@mui/icons-material";
+import {
   Button,
-  CircularProgress,
   FormControl,
   Grid2,
   IconButton,
@@ -15,35 +13,31 @@ import {
   MenuItem,
   Paper,
   Select,
-  TextField,
+  TextField
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import {
-  Edit as EditIcon,
-  Visibility,
-  VisibilityOff,
-} from "@mui/icons-material";
+import dayjs from "dayjs";
+import Cookies from "js-cookie";
+import { useEffect, useState } from "react";
 import {
   FaAddressCard,
   FaBirthdayCake,
   FaLock,
-  FaUser,
-  FaPhone,
   FaTransgenderAlt,
-  FaHome,
+  FaUser
 } from "react-icons/fa";
 import { GoHomeFill } from "react-icons/go";
 import { ImBin2 } from "react-icons/im";
 import {
   MdEmail,
-  MdOutlineTransgender,
-  MdSwitchAccount,
-  MdPassword,
+  MdSwitchAccount
 } from "react-icons/md";
 import { PiPasswordFill } from "react-icons/pi";
+import { useNavigate } from "react-router";
+import userApiInstace from "../../utils/ApiInstance/userApiInstance";
 
 //date variables
 const today = dayjs();
@@ -176,7 +170,7 @@ function AccountProfile() {
   };
 
   //update profile
-  const handleUpdateProfile = () => {};
+  const handleUpdateProfile = () => { };
 
   //edit pass
   const handleEditPassword = () => {
@@ -184,7 +178,7 @@ function AccountProfile() {
   };
 
   //update pass
-  const handleUpdatePassword = () => {};
+  const handleUpdatePassword = () => { };
 
   //show pass
   const handleClickShowPassword = () => setIsShowPassword((prev) => !prev);
@@ -437,7 +431,7 @@ function AccountProfile() {
                   value={selectedGender || ""}
                   placeholder={"Gender"}
                   label="Gender"
-                  onChange={() => {}}
+                  onChange={() => { }}
                   startAdornment={
                     <InputAdornment position="start" sx={{ ml: "0.4rem" }}>
                       <FaTransgenderAlt style={{ color: "#2F3645" }} />

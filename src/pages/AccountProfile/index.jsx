@@ -11,7 +11,7 @@ import {
   Paper,
   Select,
   TextField,
-  Typography
+  Typography,
 } from "@mui/material";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
@@ -34,14 +34,11 @@ import {
   FaBirthdayCake,
   FaLock,
   FaTransgenderAlt,
-  FaUser
+  FaUser,
 } from "react-icons/fa";
 import { GoHomeFill } from "react-icons/go";
 import { ImBin2 } from "react-icons/im";
-import {
-  MdEmail,
-  MdSwitchAccount
-} from "react-icons/md";
+import { MdEmail, MdSwitchAccount } from "react-icons/md";
 import { PiPasswordFill } from "react-icons/pi";
 import { RiProfileFill } from "react-icons/ri";
 import QuillEditor from "../../components/AccountProfile/QuillEditor";
@@ -172,6 +169,7 @@ function AccountProfile() {
   const [isShowConfirmPassword, setIsShowConfirmPassword] = useState(false);
 
   //password
+  const [password, setPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
@@ -210,10 +208,11 @@ function AccountProfile() {
       dayOfBirth:
         userBirthDate == null
           ? null
-          : `${userBirthDate.get("year")} - ${userBirthDate.get("month") + 1 < 10
-            ? `0${userBirthDate.get("month") + 1}`
-            : userBirthDate.get("month") + 1
-          } - ${userBirthDate.get("date")}`,
+          : `${userBirthDate.get("year")} - ${
+              userBirthDate.get("month") + 1 < 10
+                ? `0${userBirthDate.get("month") + 1}`
+                : userBirthDate.get("month") + 1
+            } - ${userBirthDate.get("date")}`,
       address: userAddress,
       gender: Object.keys(genderMapping).find(
         (key) => genderMapping[key] === selectedGender
@@ -264,8 +263,108 @@ function AccountProfile() {
     setIsEditPassword(!isEditPassword);
   };
 
+  //validate pass
+  const handleValidatePassword = async () => {
+    try {
+      const response = await userApiInstace.get(
+        `/password?password=${password}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      if (response.status === 200) {
+        handleClose();
+        setIsEditPassword(true);
+      }
+    } catch (error) {
+      if (error.response) {
+        // Logs the error response object to inspect it.
+        console.log(error.response);
+
+        if (error.response.status === 400) {
+          handleClose();
+
+          Swal.fire({
+            title: "Error",
+            text: error.response.data.message,
+            icon: "error",
+            showConfirmButton: false,
+            timer: 1500,
+          });
+        } else {
+          Swal.fire({
+            title: "Error",
+            text: "Something went wrong. Please try again.",
+            icon: "error",
+            showConfirmButton: true,
+          });
+        }
+      } else {
+        console.error("Validate password failed: ", error);
+      }
+    }
+  };
+
   //update pass
-  const handleUpdatePassword = () => { };
+  const handleUpdatePassword = async () => {
+    try {
+      //request
+      const request = {
+        oldPassword: password,
+        newPassword: newPassword,
+        confirmPassword: confirmPassword,
+      };
+
+      //response
+      const response = await userApiInstace.patch("/password", request, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      if (response.status === 200) {
+        Swal.fire({
+          title: "Success",
+          text: "Update password successfully.",
+          icon: "success",
+          showConfirmButton: false,
+          timer: 1500,
+        }).then(() => {
+          setIsEditPassword(false);
+          setPassword("");
+          setNewPassword("");
+          setConfirmPassword("");
+
+          navigate("/home");
+        });
+      }
+    } catch (error) {
+      if (error.response) {
+        // Logs the error response object to inspect it.
+        console.log(error.response);
+
+        if (error.response.status === 400) {
+          handleClose();
+
+          Swal.fire({
+            title: "Error",
+            text: error.response.data.message,
+            icon: "error",
+            showConfirmButton: false,
+            timer: 1500,
+          });
+        } else {
+          Swal.fire({
+            title: "Error",
+            text: "Something went wrong. Please try again.",
+            icon: "error",
+            showConfirmButton: true,
+          });
+        }
+      } else {
+        console.error("Update password failed: ", error);
+      }
+    }
+  };
 
   //show pass
   const handleClickShowPassword = () => setIsShowPassword((prev) => !prev);
@@ -705,6 +804,9 @@ function AccountProfile() {
                 type={isShowChangedPassword ? "text" : "password"}
                 fullWidth
                 disabled={!isEditPassword}
+                required={true}
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
                 slotProps={{
                   input: {
                     startAdornment: (
@@ -738,9 +840,11 @@ function AccountProfile() {
                 label="Confirm Password"
                 variant="outlined"
                 type={isShowConfirmPassword ? "text" : "password"}
-                value={""}
                 fullWidth
                 disabled={!isEditPassword}
+                required={true}
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
                 slotProps={{
                   input: {
                     startAdornment: (
@@ -826,6 +930,8 @@ function AccountProfile() {
                 variant="outlined"
                 type={isShowPassword ? "text" : "password"}
                 sx={{ width: "100%" }}
+                required={true}
+                onChange={(e) => setPassword(e.target.value)}
                 slotProps={{
                   input: {
                     endAdornment: (
@@ -848,7 +954,7 @@ function AccountProfile() {
               <Button
                 variant="text"
                 endIcon={<ArrowForward />}
-                onClick={() => { }}
+                onClick={handleValidatePassword}
                 sx={{
                   color: "#2F3645",
                   backgroundColor: "#F5F7F8",

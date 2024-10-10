@@ -1,53 +1,46 @@
-import { useEffect, useState } from "react";
-import { useNavigate, useOutletContext } from "react-router-dom";
-import dayjs from "dayjs";
-import Cookies from "js-cookie";
-import Swal from "sweetalert2";
-import userApiInstace from "../../utils/userApiInstance";
 import {
-  Backdrop,
+  Box,
   Button,
-  CircularProgress,
   FormControl,
   Grid2,
   IconButton,
   InputAdornment,
   InputLabel,
   MenuItem,
+  Modal,
   Paper,
   Select,
   TextField,
-  Typography,
-  Modal,
-  Box,
+  Typography
 } from "@mui/material";
+import dayjs from "dayjs";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
+import userApiInstace from "../../utils/ApiInstance/userApiInstance";
 // import { Modal as BaseModal, Modal } from "@mui/base/Modal";
+import {
+  ArrowForward,
+  Edit as EditIcon,
+  Visibility,
+  VisibilityOff,
+} from "@mui/icons-material";
 import { styled } from "@mui/material/styles";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import {
-  Edit as EditIcon,
-  Visibility,
-  VisibilityOff,
-  ArrowForward,
-} from "@mui/icons-material";
-import {
   FaAddressCard,
   FaBirthdayCake,
   FaLock,
-  FaUser,
-  FaPhone,
   FaTransgenderAlt,
-  FaHome,
+  FaUser
 } from "react-icons/fa";
 import { GoHomeFill } from "react-icons/go";
 import { ImBin2 } from "react-icons/im";
 import {
   MdEmail,
-  MdOutlineTransgender,
-  MdSwitchAccount,
-  MdPassword,
+  MdSwitchAccount
 } from "react-icons/md";
 import { PiPasswordFill } from "react-icons/pi";
 import { RiProfileFill } from "react-icons/ri";
@@ -217,11 +210,10 @@ function AccountProfile() {
       dayOfBirth:
         userBirthDate == null
           ? null
-          : `${userBirthDate.get("year")} - ${
-              userBirthDate.get("month") + 1 < 10
-                ? `0${userBirthDate.get("month") + 1}`
-                : userBirthDate.get("month") + 1
-            } - ${userBirthDate.get("date")}`,
+          : `${userBirthDate.get("year")} - ${userBirthDate.get("month") + 1 < 10
+            ? `0${userBirthDate.get("month") + 1}`
+            : userBirthDate.get("month") + 1
+          } - ${userBirthDate.get("date")}`,
       address: userAddress,
       gender: Object.keys(genderMapping).find(
         (key) => genderMapping[key] === selectedGender
@@ -273,7 +265,7 @@ function AccountProfile() {
   };
 
   //update pass
-  const handleUpdatePassword = () => {};
+  const handleUpdatePassword = () => { };
 
   //show pass
   const handleClickShowPassword = () => setIsShowPassword((prev) => !prev);
@@ -856,7 +848,7 @@ function AccountProfile() {
               <Button
                 variant="text"
                 endIcon={<ArrowForward />}
-                onClick={() => {}}
+                onClick={() => { }}
                 sx={{
                   color: "#2F3645",
                   backgroundColor: "#F5F7F8",

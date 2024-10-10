@@ -5,34 +5,23 @@ const initialProject = {
   name: "",
   description: "",
   introduction: "",
-  startDate: null,
-  endDate: null,
+  startDate: "",
+  endDate: "",
   target: 0,
   balance: 0,
   status: null,
-  bankAccount: {
-    id: "",
-    createdDate: null,
-    bankNumber: "",
-    bankCode: "",
-  },
-  packages: [],
-  fundingFiles: [],
-  email: null,
-  user: {
-    id: "",
-    createdDate: null,
-    userName: "",
-    email: "",
-    bio: null,
-    fullName: "",
-    avatar: null,
-    address: "",
-    gender: null,
-    dayOfBirth: null,
-    userStatus: null,
-    wallet: null,
-  },
+  bankAccount: { BankNumber: "", BankCode: "" },
+  packages: [
+    {
+      id: "",
+      name: "",
+      requiredAmount: 0,
+      limitQuantity: 0,
+      rewardItems: [
+        { id: "", name: "", description: "", quantity: 0, imageFile: null },
+      ],
+    },
+  ],
 };
 
 const ProjectContext = createContext({

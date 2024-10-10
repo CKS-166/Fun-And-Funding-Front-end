@@ -1,5 +1,3 @@
-import { useEffect, useState, useRef } from "react";
-import userApiInstace from "../../../utils/userApiInstance";
 import CameraAltIcon from "@mui/icons-material/CameraAlt";
 import {
   Box,
@@ -12,13 +10,13 @@ import {
   Paper,
 } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { FaClipboardList } from "react-icons/fa";
 import { FaBookBookmark, FaFolderOpen, FaUserTie } from "react-icons/fa6";
 import { IoMdWallet } from "react-icons/io";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
-import ktm from "../../../assets/images/ktm.jpg";
 import Footer from "../../../components/Footer";
+import userApiInstace from "../../../utils/ApiInstance/userApiInstance";
 import "./index.css";
 
 function UserProfileLayout() {
@@ -88,7 +86,7 @@ function UserProfileLayout() {
     }
   };
 
-  const handleUpdateAvatar = () => {};
+  const handleUpdateAvatar = () => { };
 
   return (
     <div className="mt-[2rem]">

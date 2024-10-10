@@ -158,7 +158,7 @@ function BasicInformation() {
                     className='basic-info-subtitle'
                     sx={{ width: '70%', }}
                 >
-                    This field CANNOT be changed.
+                    This field <span className='font-bold'>CANNOT</span> be changed.
                 </Typography>
                 <FormControl sx={{ width: '70%' }} variant="outlined">
                     <Select

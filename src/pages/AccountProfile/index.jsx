@@ -1,50 +1,44 @@
-import { useEffect, useState } from "react";
-import { useNavigate, useOutletContext } from "react-router-dom";
-import dayjs from "dayjs";
-import Cookies from "js-cookie";
-import Swal from "sweetalert2";
-import userApiInstace from "../../utils/userApiInstance";
 import {
-  Backdrop,
+  Box,
   Button,
-  CircularProgress,
   FormControl,
   Grid2,
   IconButton,
   InputAdornment,
   InputLabel,
   MenuItem,
+  Modal,
   Paper,
   Select,
   TextField,
   Typography,
 } from "@mui/material";
+import dayjs from "dayjs";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
+import userApiInstace from "../../utils/ApiInstance/userApiInstance";
+// import { Modal as BaseModal, Modal } from "@mui/base/Modal";
+import {
+  ArrowForward,
+  Edit as EditIcon,
+  Visibility,
+  VisibilityOff,
+} from "@mui/icons-material";
 import { styled } from "@mui/material/styles";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import {
-  Edit as EditIcon,
-  Visibility,
-  VisibilityOff,
-} from "@mui/icons-material";
-import {
   FaAddressCard,
   FaBirthdayCake,
   FaLock,
-  FaUser,
-  FaPhone,
   FaTransgenderAlt,
-  FaHome,
+  FaUser,
 } from "react-icons/fa";
 import { GoHomeFill } from "react-icons/go";
 import { ImBin2 } from "react-icons/im";
-import {
-  MdEmail,
-  MdOutlineTransgender,
-  MdSwitchAccount,
-  MdPassword,
-} from "react-icons/md";
+import { MdEmail, MdSwitchAccount } from "react-icons/md";
 import { PiPasswordFill } from "react-icons/pi";
 import { RiProfileFill } from "react-icons/ri";
 import QuillEditor from "../../components/AccountProfile/QuillEditor";
@@ -157,6 +151,8 @@ function AccountProfile() {
   // const { setIsLoading } = useOutletContext();
   const [isEditProfile, setIsEditProfile] = useState(false);
   const [isEditPassword, setIsEditPassword] = useState(false);
+
+  //user profile
   const [selectedGender, setSelectedGender] = useState("");
   const [userEmail, setUserEmail] = useState("");
   const [accountName, setAccountName] = useState("");
@@ -166,14 +162,33 @@ function AccountProfile() {
   const [userAddress, setUserAddress] = useState("");
   const [userBio, setUserBio] = useState("");
   const [user, setUser] = useState(null);
+  const navigate = useNavigate();
+
   const [isShowPassword, setIsShowPassword] = useState(false);
   const [isShowChangedPassword, setIsShowChangedPassword] = useState(false);
   const [isShowConfirmPassword, setIsShowConfirmPassword] = useState(false);
 
-  const navigate = useNavigate();
+  //password
+  const [password, setPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+
+  //avatar
+  const [avatar, setAvatar] = useState(null);
+  const [avatarName, setAvatarName] = useState(null);
+
+  //modal
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => {
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   // const token = Cookies.get("_auth");
   const token =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6ImY4OWJmMjFkLTlmOTQtNDY2OS04MzdiLTdkNThmMjE4Y2EzZSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWUiOiJEbyBZb28gTGltIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvZW1haWxhZGRyZXNzIjoiZG95b29saW1AZ21haWwuY29tIiwianRpIjoiSmNtRjh1ajJJU3ZlTDVGdnZOazRwbnA4eHJoSU56OC0xNjE0MjI1NjI0IiwiYXBpX2tleSI6IkpjbUY4dWoySVN2ZUw1RnZ2Tms0cG5wOHhyaElOejgiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJCYWNrZXIiLCJleHAiOjE3Mjg4MTM3OTksImlzcyI6IkFQUE9UQVBBWSIsImF1ZCI6Imh0dHA6Ly9sb2NhbGhvc3Q6NzIzNSJ9.hqLjvpV3y3gC-bY7KIUnkvdbj5I9StuDsQz6CBvrh-I";
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6ImY4OWJmMjFkLTlmOTQtNDY2OS04MzdiLTdkNThmMjE4Y2EzZSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWUiOiJEbyBZb28gTGltIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvZW1haWxhZGRyZXNzIjoiZG95b29saW1AZ21haWwuY29tIiwianRpIjoiSmNtRjh1ajJJU3ZlTDVGdnZOazRwbnA4eHJoSU56OC0xNjE0MjI1NjI0IiwiYXBpX2tleSI6IkpjbUY4dWoySVN2ZUw1RnZ2Tms0cG5wOHhyaElOejgiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJCYWNrZXIiLCJleHAiOjE3Mjg5MTk4MDgsImlzcyI6IkFQUE9UQVBBWSIsImF1ZCI6Imh0dHA6Ly9sb2NhbGhvc3Q6NzIzNSJ9.qR99g7vFzi0Cs2lIcvON3ei0bfucUm3NNBBLz4WgAxM";
 
   //functions
 
@@ -222,6 +237,16 @@ function AccountProfile() {
           }).then(() => {
             setTimeout();
           });
+        } else {
+          Swal.fire({
+            title: "Error",
+            text: "Update profile failed.",
+            icon: "error",
+            showConfirmButton: false,
+            timer: 1500,
+          }).then(() => {
+            setTimeout();
+          });
         }
       })
       .catch((error) => {
@@ -238,8 +263,108 @@ function AccountProfile() {
     setIsEditPassword(!isEditPassword);
   };
 
+  //validate pass
+  const handleValidatePassword = async () => {
+    try {
+      const response = await userApiInstace.get(
+        `/password?password=${password}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      if (response.status === 200) {
+        handleClose();
+        setIsEditPassword(true);
+      }
+    } catch (error) {
+      if (error.response) {
+        // Logs the error response object to inspect it.
+        console.log(error.response);
+
+        if (error.response.status === 400) {
+          handleClose();
+
+          Swal.fire({
+            title: "Error",
+            text: error.response.data.message,
+            icon: "error",
+            showConfirmButton: false,
+            timer: 1500,
+          });
+        } else {
+          Swal.fire({
+            title: "Error",
+            text: "Something went wrong. Please try again.",
+            icon: "error",
+            showConfirmButton: true,
+          });
+        }
+      } else {
+        console.error("Validate password failed: ", error);
+      }
+    }
+  };
+
   //update pass
-  const handleUpdatePassword = () => {};
+  const handleUpdatePassword = async () => {
+    try {
+      //request
+      const request = {
+        oldPassword: password,
+        newPassword: newPassword,
+        confirmPassword: confirmPassword,
+      };
+
+      //response
+      const response = await userApiInstace.patch("/password", request, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      if (response.status === 200) {
+        Swal.fire({
+          title: "Success",
+          text: "Update password successfully.",
+          icon: "success",
+          showConfirmButton: false,
+          timer: 1500,
+        }).then(() => {
+          setIsEditPassword(false);
+          setPassword("");
+          setNewPassword("");
+          setConfirmPassword("");
+
+          navigate("/home");
+        });
+      }
+    } catch (error) {
+      if (error.response) {
+        // Logs the error response object to inspect it.
+        console.log(error.response);
+
+        if (error.response.status === 400) {
+          handleClose();
+
+          Swal.fire({
+            title: "Error",
+            text: error.response.data.message,
+            icon: "error",
+            showConfirmButton: false,
+            timer: 1500,
+          });
+        } else {
+          Swal.fire({
+            title: "Error",
+            text: "Something went wrong. Please try again.",
+            icon: "error",
+            showConfirmButton: true,
+          });
+        }
+      } else {
+        console.error("Update password failed: ", error);
+      }
+    }
+  };
 
   //show pass
   const handleClickShowPassword = () => setIsShowPassword((prev) => !prev);
@@ -592,7 +717,7 @@ function AccountProfile() {
                 <Button
                   variant="contained"
                   startIcon={<EditIcon />}
-                  onClick={handleEditPassword}
+                  onClick={handleOpen}
                   sx={{
                     color: "#2F3645",
                     backgroundColor: "#F5F7F8",
@@ -679,6 +804,9 @@ function AccountProfile() {
                 type={isShowChangedPassword ? "text" : "password"}
                 fullWidth
                 disabled={!isEditPassword}
+                required={true}
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
                 slotProps={{
                   input: {
                     startAdornment: (
@@ -711,10 +839,12 @@ function AccountProfile() {
               <CustomTextField
                 label="Confirm Password"
                 variant="outlined"
-                type="password"
-                value={""}
+                type={isShowConfirmPassword ? "text" : "password"}
                 fullWidth
                 disabled={!isEditPassword}
+                required={true}
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
                 slotProps={{
                   input: {
                     startAdornment: (
@@ -746,6 +876,108 @@ function AccountProfile() {
           </Grid2>
         </div>
       </Paper>
+
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-title"
+        aria-describedby="modal-description"
+        sx={{
+          display: "flex", // Enable Flexbox on the Modal itself
+          justifyContent: "center", // Center horizontally
+          alignItems: "center", // Center vertically
+        }}
+      >
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column", // Ensure items stack vertically
+            justifyContent: "center", // Center content within the box
+            alignItems: "center", // Center content within the box
+            height: "40vh",
+            padding: 8,
+            backgroundColor: "#F5F7F8",
+            margin: "auto",
+            width: "45%",
+            borderRadius: 1,
+          }}
+        >
+          <Typography
+            sx={{
+              fontWeight: "600",
+              fontSize: "1.5rem",
+              color: "#2F3645",
+              textAlign: "center",
+              marginBottom: "2rem",
+            }}
+          >
+            Enter your password to continue
+          </Typography>
+
+          <Grid2
+            container
+            columnSpacing={4}
+            rowSpacing={0}
+            sx={{
+              width: "100%",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Grid2 size={9}>
+              <CustomTextField
+                label="Password"
+                variant="outlined"
+                type={isShowPassword ? "text" : "password"}
+                sx={{ width: "100%" }}
+                required={true}
+                onChange={(e) => setPassword(e.target.value)}
+                slotProps={{
+                  input: {
+                    endAdornment: (
+                      <InputAdornment position="end" sx={{ mr: "0.4rem" }}>
+                        <IconButton
+                          sx={{ outline: "none !important" }}
+                          aria-label="toggle password visibility"
+                          onClick={handleClickShowPassword}
+                          edge="end"
+                        >
+                          {isShowPassword ? <VisibilityOff /> : <Visibility />}
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  },
+                }}
+              />
+            </Grid2>
+            <Grid2 size={3}>
+              <Button
+                variant="text"
+                endIcon={<ArrowForward />}
+                onClick={handleValidatePassword}
+                sx={{
+                  color: "#2F3645",
+                  backgroundColor: "#F5F7F8",
+                  textTransform: "none !important",
+                  "&:hover": {
+                    color: "#1BAA64",
+                  },
+                  "&:active": {
+                    outline: "none !important",
+                  },
+                  "&:focus": {
+                    outline: "none !important",
+                  },
+                  fontWeight: "bold",
+                  height: "51px",
+                }}
+              >
+                Continue
+              </Button>
+            </Grid2>
+          </Grid2>
+        </Box>
+      </Modal>
     </>
   );
 }

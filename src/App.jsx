@@ -32,12 +32,13 @@ import TestMileReq from "./pages/TestCR/testMileReq";
 import TestUpdate from "./pages/TestCR/testUpdate";
 import TestDetail from "./pages/TestDetail";
 import TestUpdateReq from "./pages/TestCR/testUpdateReq";
-//
+
 import BankAccount from "./pages/UpdateProject/ProjectEditor/BankAccount";
 import BasicInformation from "./pages/UpdateProject/ProjectEditor/BasicInformation";
 import Media from "./pages/UpdateProject/ProjectEditor/Media";
 import Packages from "./pages/UpdateProject/ProjectEditor/Packages";
 import ProjectPreview from "./pages/UpdateProject/ProjectPreview";
+
 function App() {
   return (
     <>
@@ -75,11 +76,11 @@ function App() {
         </Route>
 
         <Route element={<UpdateFundingProjectLayout />}>
-          <Route path="/account/projects/update/preview" element={<ProjectPreview />} />
-          <Route path="/account/projects/update/basic-info" element={<BasicInformation />} />
-          <Route path="/account/projects/update/bank-account" element={<BankAccount />} />
-          <Route path="/account/projects/update/donation-packages" element={<Packages />} />
-          <Route path="/account/projects/update/media-files" element={<Media />} />
+          <Route path="/account/projects/update/:id/preview" element={<ProjectPreview />} />
+          <Route path="/account/projects/update/:id/basic-info" element={<BasicInformation />} />
+          <Route path="/account/projects/update/:id/bank-account" element={<BankAccount />} />
+          <Route path="/account/projects/update/:id/donation-packages" element={<Packages />} />
+          <Route path="/account/projects/update/:id/media-files" element={<Media />} />
         </Route>
 
         <Route path="/funding-detail/:id" element={<ProjectDetail />} />

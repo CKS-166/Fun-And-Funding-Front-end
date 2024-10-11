@@ -1,6 +1,5 @@
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import BallotIcon from "@mui/icons-material/Ballot";
 import LogoutIcon from "@mui/icons-material/Logout";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
@@ -28,7 +27,6 @@ import { useLocation, useNavigate } from "react-router-dom";
 import homeLogo from "../../assets/images/logo-alt.png";
 import defaultLogo from "../../assets/images/logo-text.png";
 import AuthDialog from "../Popup";
-// Functions to handle opening and closing the modal
 
 const FunFundingAppBar = () => {
   const navigate = useNavigate();
@@ -44,30 +42,25 @@ const FunFundingAppBar = () => {
   ];
 
   const profileMenu = [
-    { label: "Tài khoản", route: "/profile", icon: <AccountCircleIcon /> },
+    { label: "Account", route: "/account/profile", icon: <AccountCircleIcon /> },
     {
-      label: "Ví của tôi",
+      label: "My wallet",
       route: "/my-wallet",
       icon: <AccountBalanceWalletIcon />,
     },
-    {
-      label: "Dự án của tôi",
-      route: "/profile/projects",
-      icon: <BallotIcon />,
-    },
-    { label: "Đăng xuất", route: "logout", icon: <LogoutIcon /> },
+    { label: "Logout", route: "logout", icon: <LogoutIcon /> },
   ];
 
   const [anchorElProfile, setAnchorElProfile] = useState(null);
   const [user, setUser] = useState(null);
-  const [tabValue, setTabValue] = useState(0);
+  const [tabValue, setTabValue] = useState(null);
 
   useEffect(() => {
     const activePage = pages.find((page) => page.route === location.pathname);
     if (activePage) {
       setTabValue(activePage.index);
     } else {
-      setTabValue(-1);
+      setTabValue(4);
     }
   }, [location.pathname]);
 
@@ -158,6 +151,7 @@ const FunFundingAppBar = () => {
               value={tabValue}
               onChange={handleTabChange}
               sx={{ flexGrow: 1, display: "flex" }}
+              error="false"
             >
               {pages.map((page, index) => (
                 <Tab
@@ -174,6 +168,7 @@ const FunFundingAppBar = () => {
                         : "#2F3645",
                     fontWeight: "700 !important",
                   }}
+                  error="false"
                 />
               ))}
             </Tabs>
@@ -251,7 +246,7 @@ const FunFundingAppBar = () => {
                 px: "3rem",
                 fontSize: "1.2rem",
               }}
-              className="poiner-cursor" // Inline style to ensure pointer cursor
+              className="poiner-cursor"
               onClick={openAuthDialog}
             >
               Sign In

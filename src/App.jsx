@@ -27,8 +27,12 @@ import HomePage from "./pages/HomePage";
 import ProjectDetail from "./pages/ProjectDetail";
 import PublicProfile from "./pages/PublicProfile";
 import TestCR from "./pages/TestCR";
+//test api
+import TestMileReq from "./pages/TestCR/testMileReq";
 import TestUpdate from "./pages/TestCR/testUpdate";
 import TestDetail from "./pages/TestDetail";
+import TestUpdateReq from "./pages/TestCR/testUpdateReq";
+//
 import BankAccount from "./pages/UpdateProject/ProjectEditor/BankAccount";
 import BasicInformation from "./pages/UpdateProject/ProjectEditor/BasicInformation";
 import Media from "./pages/UpdateProject/ProjectEditor/Media";
@@ -81,6 +85,8 @@ function App() {
         <Route path="/funding-detail/:id" element={<ProjectDetail />} />
         <Route path="/test" element={<TestCR />} />
         <Route path="/test-update" element={<TestUpdate />} />
+        <Route path="/test-mile-req" element={<TestMileReq />} />
+        <Route path="/test-update-req" element={<TestUpdateReq />} />
 
         <Route path="/test-detail" element={<TestDetail />} />
         <Route path="*" element={<Navigate to="/funding-detail" />} />

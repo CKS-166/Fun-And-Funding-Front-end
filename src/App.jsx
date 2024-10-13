@@ -45,6 +45,7 @@ function App() {
       <FunFundingAppBar />
       <Routes>
         <Route element={<UserLayout />}>
+          <Route path="*" element={<Navigate to="/home" />} />
           <Route path="/" element={<Navigate to="/home" />} />
           <Route path="/home" element={<HomePage />} />
           <Route path="/about-us" element={<AboutUs />} />
@@ -90,7 +91,6 @@ function App() {
         <Route path="/test-update-req" element={<TestUpdateReq />} />
 
         <Route path="/test-detail" element={<TestDetail />} />
-        <Route path="*" element={<Navigate to="/funding-detail" />} />
 
         <Route element={<UserProfileLayout />}>
           <Route path="/account/profile" element={<AccountProfile />} />

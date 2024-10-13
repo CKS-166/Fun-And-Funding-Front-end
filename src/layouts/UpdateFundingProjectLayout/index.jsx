@@ -22,7 +22,10 @@ function UpdateFundingProjectLayout() {
     const [isLoading, setIsLoading] = useState(true);
     const [loadingStatus, setLoadingStatus] = useState(0);
 
-    const handleSaveAll = async () => {
+    console.log(project);
+
+    const handleSaveAll = async (event) => {
+        event.preventDefault();
         try {
             setIsLoading(true);
             setLoadingStatus(2);
@@ -34,6 +37,10 @@ function UpdateFundingProjectLayout() {
             formData.append('Name', project.name);
             formData.append('Description', project.description);
             formData.append('Introduction', project.introduction);
+            formData.append('StartDate', project.startDate);
+            formData.append('EndDate', project.endDate);
+            formData.append('Target', project.target);
+            formData.append('Balance', project.balance);
 
             if (project.bankAccount) {
                 formData.append('BankAccount.BankNumber', project.bankAccount.bankNumber);
@@ -61,9 +68,9 @@ function UpdateFundingProjectLayout() {
 
             if (project.fundingFiles) {
                 project.fundingFiles.forEach((file, index) => {
-                    formData.append(`FundingFiles[${index}].Name`, file[index].name);
-                    formData.append(`FundingFiles[${index}].URL`, file[index].url);
-                    formData.append(`FundingFiles[${index}].Filetype`, file[index].filetype);
+                    formData.append(`FundingFiles[${index}].Name`, file.name);
+                    formData.append(`FundingFiles[${index}].URL`, file);
+                    formData.append(`FundingFiles[${index}].Filetype`, file.filetype);
                 });
             }
 
@@ -80,6 +87,7 @@ function UpdateFundingProjectLayout() {
 
             if (response.status === 200) {
                 console.log('Project saved successfully.');
+                console.log(response);
             } else {
                 console.error(`Unexpected status code: ${response.error}`);
             }
@@ -133,14 +141,14 @@ function UpdateFundingProjectLayout() {
         setIsMilestoneExpanded(!isMilestoneExpanded);
     };
 
-    const getActiveEditor = (link) => {
+    const getActiveEditor = (id) => {
         const matchedEditor = editorList.find((item) => location.pathname.includes(item.link(id)));
-        return matchedEditor ? matchedEditor.name : '';
+        return matchedEditor ? `Project Editor / ${matchedEditor.name}` : '';
     };
 
-    const getActiveMilestone = () => {
-        const matchedMilestone = milestoneList.find((item) => location.pathname.includes(item.link));
-        return matchedMilestone ? matchedMilestone.name : '';
+    const getActiveMilestone = (id) => {
+        const matchedMilestone = milestoneList.find((item) => location.pathname.includes(item.link(id)));
+        return matchedMilestone ? `Project Milestone / ${matchedMilestone.name}` : '';
     };
 
     const handleNavigation = (link) => {
@@ -149,6 +157,14 @@ function UpdateFundingProjectLayout() {
 
     const isEditorActive = editorList.some((item) => location.pathname.includes(item.link(id)));
     const isMilestoneActive = milestoneList.some((item) => location.pathname.includes(item.link));
+
+    const getActiveSection = (id) => {
+        const activeEditor = getActiveEditor(id);
+        const activeMilestone = getActiveMilestone(id);
+        if (activeEditor) return activeEditor;
+        if (activeMilestone) return activeMilestone;
+        return 'Unknown Section';
+    };
 
     return (
         <ProjectContext.Provider value={{ project, edited, isLoading, loadingStatus, setProject, setIsEdited, setIsLoading, setLoadingStatus }}>
@@ -315,7 +331,7 @@ function UpdateFundingProjectLayout() {
                                             width: '100%',
                                         }}
                                     >
-                                        Project Editor / {getActiveEditor(location.pathname)}
+                                        {getActiveSection(id)}
                                     </Typography>
                                 </div>
                                 <div className='flex justify-between gap-[1.5rem] items-center w-fit'>
@@ -334,7 +350,7 @@ function UpdateFundingProjectLayout() {
                                         <Button variant='outlined' color='error' disabled={!edited} sx={{ backgroundColor: 'transparent', textTransform: 'none' }} onClick={() => handleDiscardAll()}>
                                             Discard All Changes
                                         </Button>
-                                        <Button variant='contained' disabled={!edited} sx={{ backgroundColor: '#1BAA64', textTransform: 'none' }} onClick={() => handleSaveAll()}>
+                                        <Button variant='contained' disabled={!edited} sx={{ backgroundColor: '#1BAA64', textTransform: 'none' }} onClick={(event) => handleSaveAll(event)}>
                                             Save All Changes
                                         </Button>
                                     </div>

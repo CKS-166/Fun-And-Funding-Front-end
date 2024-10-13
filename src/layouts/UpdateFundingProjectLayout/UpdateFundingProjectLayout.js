@@ -18,9 +18,24 @@ export const editorList = [
 ];
 
 export const milestoneList = [
-  { name: "Milestone 1", link: "/account/projects/update/milestone1" },
-  { name: "Milestone 2", link: "/account/projects/update/milestone2" },
-  { name: "Milestone 3", link: "/account/projects/update/milestone3" },
-  { name: "Milestone 4", link: "/account/projects/update/milestone4" },
-  { name: "Milestone 5", link: "/account/projects/update/milestone5" },
+  {
+    name: "Milestone 1",
+    link: (id) => `/account/projects/update/${id}/milestone1`,
+  },
+  {
+    name: "Milestone 2",
+    link: (id) => `/account/projects/update/${id}/milestone2`,
+  },
+  {
+    name: "Milestone 3",
+    link: (id) => `/account/projects/update/${id}/milestone3`,
+  },
+  {
+    name: "Milestone 4",
+    link: (id) => `/account/projects/update/${id}/milestone4`,
+  },
+  {
+    name: "Milestone 5",
+    link: (id) => `/account/projects/update/${id}/milestone5`,
+  },
 ];

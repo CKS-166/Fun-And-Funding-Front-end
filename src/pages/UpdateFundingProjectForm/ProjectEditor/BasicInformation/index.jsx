@@ -74,7 +74,7 @@ function BasicInformation() {
     };
 
     return (
-        <div className='w-full pb-[4rem]'>
+        <div className='w-full pb-[3rem]'>
             <div className='basic-info-section !mb-[2rem]'>
                 <Typography
                     sx={{

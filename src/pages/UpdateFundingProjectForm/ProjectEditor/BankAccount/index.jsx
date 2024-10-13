@@ -153,9 +153,8 @@ function BankAccount() {
             const updatedProject = {
                 ...project,
                 bankAccount: {
-                    ...project.bankAccount,
                     bankNumber: bankAccountNumber,
-                    bankCode: selectedBank?.code || project.bankAccount.bankCode,
+                    bankCode: String(selectedBank?.bin || project.bankAccount.bankCode),
                 },
             };
             setProject(updatedProject);
@@ -188,7 +187,7 @@ function BankAccount() {
     };
 
     return (
-        <div className='w-full pb-[5rem]'>
+        <div className='w-full pb-[3rem]'>
             <div className='basic-info-section !mb-[2rem]'>
                 <Typography
                     sx={{

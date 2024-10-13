@@ -10,7 +10,7 @@ const initialProject = {
   target: 0,
   balance: 0,
   status: null,
-  bankAccount: { BankNumber: "", BankCode: "" },
+  bankAccount: { bankNumber: "", bankCode: "" },
   packages: [
     {
       id: "",
@@ -22,6 +22,7 @@ const initialProject = {
       ],
     },
   ],
+  fundingFiles: [],
 };
 
 const ProjectContext = createContext({

@@ -34,3 +34,7 @@
 .custom-update-textfield .MuiOutlinedInput-root.Mui-focused fieldset {
     border-color: #2F3645;
 }
+
+.custom-update-filepond {
+    width: 70%;
+}

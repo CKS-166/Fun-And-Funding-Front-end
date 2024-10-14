@@ -77,11 +77,26 @@ function App() {
         </Route>
 
         <Route element={<UpdateFundingProjectLayout />}>
-          <Route path="/account/projects/update/:id/preview" element={<ProjectPreview />} />
-          <Route path="/account/projects/update/:id/basic-info" element={<BasicInformation />} />
-          <Route path="/account/projects/update/:id/bank-account" element={<BankAccount />} />
-          <Route path="/account/projects/update/:id/donation-packages" element={<DonationPackages />} />
-          <Route path="/account/projects/update/:id/media-files" element={<Media />} />
+          <Route
+            path="/account/projects/update/:id/preview"
+            element={<ProjectPreview />}
+          />
+          <Route
+            path="/account/projects/update/:id/basic-info"
+            element={<BasicInformation />}
+          />
+          <Route
+            path="/account/projects/update/:id/bank-account"
+            element={<BankAccount />}
+          />
+          <Route
+            path="/account/projects/update/:id/donation-packages"
+            element={<DonationPackages />}
+          />
+          <Route
+            path="/account/projects/update/:id/media-files"
+            element={<Media />}
+          />
         </Route>
 
         <Route path="/funding-detail/:id" element={<ProjectDetail />} />
@@ -97,7 +112,7 @@ function App() {
           <Route path="/account/projects" element={<AccountProject />} />
         </Route>
         <Route element={<PublicProfileLayout />}>
-          <Route path="/profile" element={<PublicProfile />} />
+          <Route path="/profile/:id" element={<PublicProfile />} />
         </Route>
       </Routes>
     </>

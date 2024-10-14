@@ -36,7 +36,7 @@ const QuillEditor = ({ data, setData, isEnabled }) => {
   const modules = {
     toolbar: {
       container: [
-        [{ header: "1" }, { header: "2" }, { font: [] }],
+        [{ header: "1" }, { header: "2" }],
         [{ size: [] }],
         ["bold", "italic", "underline", "strike", "blockquote"],
         [{ list: "ordered" }, { list: "bullet" }],
@@ -50,7 +50,6 @@ const QuillEditor = ({ data, setData, isEnabled }) => {
 
   const formats = [
     "header",
-    "font",
     "size",
     "bold",
     "italic",

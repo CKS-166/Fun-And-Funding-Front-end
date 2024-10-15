@@ -7,7 +7,7 @@ import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 import PortraitIcon from "@mui/icons-material/Portrait";
 import logo from "../../assets/OnlyLogo.png";
 import { ToastContainer, toast } from "react-toastify";
-import authApiInstace from "../../utils/ApiInstance/authApiInstance";
+import authApiInstace from "../../utils/ApiInstance/authApiInstance"; // Import ToastContainer
 
 function OwnerForm({ onClose, onOpenLogin, onBack }) {
   const [email, setEmail] = useState("");
@@ -16,18 +16,25 @@ function OwnerForm({ onClose, onOpenLogin, onBack }) {
   const [password, setPassword] = useState("");
   const [confirmPassword, setconfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const notify = (message) => {
-    toast.warn(message, {
-      position: "top-right", // Positioning the toast
-      autoClose: 3000, // Auto close after 3 seconds
+  const notify = (message, type) => {
+    const options = {
+      position: "top-right",
+      autoClose: 3000,
       closeOnClick: true,
       pauseOnHover: true,
       draggable: true,
       style: {
-        backgroundColor: "#f8d7da", // Custom background color for warning
-        color: "#721c24", // Custom text color for warning
+        backgroundColor: "#ffffff",
+        color: "#000000",
+        fontWeight: "bold",
       },
-    });
+    };
+
+    if (type === "warn") {
+      toast.warn(message, options);
+    } else if (type === "success") {
+      toast.success(message, options);
+    }
   };
   const handleLoginClick = () => {
     onOpenLogin(); // Switch to the LoginForm without closing the dialog
@@ -59,13 +66,16 @@ function OwnerForm({ onClose, onOpenLogin, onBack }) {
       confirmPassword: confirmPassword,
     };
     // Add your form submission logic here
-    authApiInstace.post("/backer", jsonData).then((res) => {
+    authApiInstace.post("/game-owner", jsonData).then((res) => {
       if (!res.data._isSuccess) {
-        notify(`${res.data._message[0] || "Register failed"}`);
+        notify(`${res.data._message[0] || "Register failed"}`, "warn");
         console.log("Register failed:", res.data._message);
       } else {
-        notify(`${res.data._message[0] || "Register success"}`);
-        console.log("Register success:", res.data._message);
+        notify(`${"Register success, please login"}`, "success");
+        console.log("Register success, please login");
+        setTimeout(() => {
+          handleLoginClick(); // Navigate to LoginForm
+        }, 3000);
       }
     });
   };

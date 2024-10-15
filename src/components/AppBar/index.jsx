@@ -32,6 +32,9 @@ import Cookies from "js-cookie";
 import Aos from "aos";
 import "aos/dist/aos.css";
 import userApiInstace from "../../utils/ApiInstance/userApiInstance";
+import useSignOut from "react-auth-kit/hooks/useSignOut";
+import Swal from "sweetalert2";
+
 const FunFundingAppBar = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -115,6 +118,30 @@ const FunFundingAppBar = () => {
 
   const handleCloseProfileMenu = () => {
     setAnchorElProfile(null);
+  };
+  const signOut = useSignOut();
+  const handleProfileMenuClick = (route) => {
+    if (route === "logout") {
+      Swal.fire({
+        title: "Warning?",
+        text: "Do You Want To Logout?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#FBB03B",
+        cancelButtonColor: "D8D8D8",
+        confirmButtonText: "Yes!",
+        cancelButtonText: "No!",
+        reverseButtons: true,
+      }).then((result) => {
+        if (result.isConfirmed) {
+          signOut();
+          window.location.href = "/home";
+        }
+      });
+    } else {
+      navigate(route);
+    }
+    handleCloseProfileMenu();
   };
 
   const isPage =
@@ -267,7 +294,8 @@ const FunFundingAppBar = () => {
                 {profileMenu.map((menuItem) => (
                   <MenuItem
                     key={menuItem.label}
-                    onClick={() => navigate(menuItem.route)}
+                    //onClick={() => navigate(menuItem.route)}
+                    onClick={() => handleProfileMenuClick(menuItem.route)}
                   >
                     <ListItemIcon>{menuItem.icon}</ListItemIcon>
                     <ListItemText>{menuItem.label}</ListItemText>

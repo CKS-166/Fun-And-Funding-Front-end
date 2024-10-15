@@ -8,6 +8,7 @@ import PortraitIcon from "@mui/icons-material/Portrait";
 import logo from "../../assets/OnlyLogo.png";
 import authApiInstace from "../../utils/ApiInstance/authApiInstance";
 import { ToastContainer, toast } from "react-toastify"; // Import ToastContainer
+import { Navigate, useNavigate } from "react-router";
 function BackerForm({ onClose, onOpenLogin, onBack }) {
   const [email, setEmail] = useState("");
   const [userName, setUserName] = useState("");
@@ -15,18 +16,26 @@ function BackerForm({ onClose, onOpenLogin, onBack }) {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const notify = (message) => {
-    toast.warn(message, {
-      position: "top-right", // Positioning the toast
-      autoClose: 3000, // Auto close after 3 seconds
+  const Navigate = useNavigate();
+  const notify = (message, type) => {
+    const options = {
+      position: "top-right",
+      autoClose: 3000,
       closeOnClick: true,
       pauseOnHover: true,
       draggable: true,
       style: {
-        backgroundColor: "#f8d7da", // Custom background color for warning
-        color: "#721c24", // Custom text color for warning
+        backgroundColor: "#ffffff",
+        color: "#000000",
+        fontWeight: "bold",
       },
-    });
+    };
+
+    if (type === "warn") {
+      toast.warn(message, options);
+    } else if (type === "success") {
+      toast.success(message, options);
+    }
   };
   const handleLoginClick = () => {
     onOpenLogin(); // Switch to the LoginForm without closing the dialog
@@ -50,11 +59,14 @@ function BackerForm({ onClose, onOpenLogin, onBack }) {
     // Add your form submission logic here
     authApiInstace.post("/backer", jsonData).then((res) => {
       if (!res.data._isSuccess) {
-        notify(`${res.data._message[0] || "Register failed"}`);
+        notify(`${res.data._message[0] || "Register failed"}`, "warn");
         console.log("Register failed:", res.data._message);
       } else {
-        notify(`${res.data._message[0] || "Register success"}`);
-        console.log("Register success:", res.data._message);
+        notify(`${"Register success, please login"}`, "success");
+        console.log("Register success, please login");
+        setTimeout(() => {
+          handleLoginClick(); // Navigate to LoginForm
+        }, 3000);
       }
     });
   };

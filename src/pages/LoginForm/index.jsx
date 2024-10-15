@@ -4,10 +4,32 @@ import HttpsIcon from "@mui/icons-material/Https";
 import InputField from "../../components/InputField";
 import { FaGoogle } from "react-icons/fa";
 import logo from "../../assets/OnlyLogo.png";
+import useSignIn from "react-auth-kit/hooks/useSignIn";
+import { useNavigate } from "react-router-dom";
+import authApiInstance from "../../utils/ApiInstance/authApiInstance";
+import { jwtDecode } from "jwt-decode";
+import Swal from "sweetalert2";
+import Cookies from "js-cookie";
+import { ToastContainer, toast } from "react-toastify"; // Import ToastContainer
+import "react-toastify/dist/ReactToastify.css";
+import "./index.css"; // Import toast styles
+
+function setCookie(name, value, expiresIn) {
+  var now = new Date();
+  var time = now.getTime() + 7 * 60 * 60 * 1000;
+  var expireTime = time + 1000 * expiresIn;
+  now.setTime(expireTime);
+  const cookieString = `${name}=${value}; expires=${now.toUTCString()}; path=/`;
+  document.cookie = cookieString;
+}
+
 function LoginForm({ onClose, onOpenRoleSelection }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+
+  const signIn = useSignIn();
+  const navigate = useNavigate();
 
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
@@ -19,8 +41,88 @@ function LoginForm({ onClose, onOpenRoleSelection }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Email:", email);
-    console.log("Password:", password);
+    const jsonData = {
+      email: email,
+      password: password,
+    };
+
+    const notify = (message) => {
+      toast.warn(message, {
+        position: "top-right", // Positioning the toast
+        autoClose: 3000, // Auto close after 3 seconds
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        style: {
+          backgroundColor: "#f8d7da", // Custom background color for warning
+          color: "#721c24", // Custom text color for warning
+        },
+      });
+    };
+
+    authApiInstance
+      .post("/login", jsonData)
+      .then((res) => {
+        if (!res.data._isSuccess) {
+          notify(`${res.data._message[0] || "Login failed"}`);
+          console.log("Login failed:", res.data._message);
+        } else {
+          const decodedToken = jwtDecode(res.data._data);
+          const userRole = decodedToken.role;
+
+          signIn({
+            auth: {
+              token: res.data._data,
+              type: "Bearer",
+            },
+            expiresIn: 3600,
+            tokenType: "Bearer",
+            userState: { email: jsonData.email, role: userRole },
+          });
+          onClose();
+          Swal.fire({
+            title: "Success",
+            text: "Login successful",
+            icon: "success",
+            showConfirmButton: false,
+            timer: 1500,
+            willOpen: () => {
+              // Add custom styles
+              const popup = Swal.getPopup();
+              popup.style.backgroundColor = "#1BAA64"; // Custom background color
+              popup.style.color = "#fff"; // Custom text color
+              popup.style.borderRadius = "10px"; // Custom border radius
+              popup.style.padding = "20px"; // Custom padding
+            },
+            customClass: {
+              popup: "custom-swal-popup", // Custom class for the popup
+              title: "custom-swal-title", // Custom class for the title
+              icon: "custom-swal-icon", // Custom class for the icon
+              htmlContainer: "custom-swal-html", // Custom class for the content
+            },
+          }).then(() => {
+            // This will execute after Swal closes
+            navigate("/home");
+          });
+
+          setCookie("_auth", Cookies.get("_auth"), 3600);
+          navigate("/home");
+        }
+      })
+      .catch((error) => {
+        if (error.response) {
+          const errorMessage =
+            error.response.data.message || "Invalid login details.";
+          notify(`${errorMessage}`);
+          console.log("Error response:", error.response);
+        } else if (error.request) {
+          notify("No response from server. Please try again.");
+          console.log("Request error:", error.request);
+        } else {
+          notify("An error occurred. Please try again.");
+          console.log("Error:", error.message);
+        }
+      });
   };
 
   const togglePasswordVisibility = () => {
@@ -30,15 +132,13 @@ function LoginForm({ onClose, onOpenRoleSelection }) {
   return (
     <div className="fixed inset-0 flex justify-center items-center bg-gray-800 bg-opacity-75 z-50">
       <div className="bg-white p-10 rounded-3xl relative shadow-lg w-[720px]">
-        {/* Close Button */}
         <button
           onClick={onClose}
           className="absolute top-4 text-[#1BAA64] right-4 text-xl"
         >
-          &times; {/* X Symbol */}
+          &times;
         </button>
 
-        {/* Logo and Welcome Message */}
         <div className="flex flex-col items-center mb-6">
           <img
             src={logo}
@@ -52,7 +152,6 @@ function LoginForm({ onClose, onOpenRoleSelection }) {
         </div>
 
         <form onSubmit={handleSubmit}>
-          {/* Google Sign In Button */}
           <div className="flex justify-between gap-4 mb-6">
             <button
               type="button"
@@ -63,16 +162,15 @@ function LoginForm({ onClose, onOpenRoleSelection }) {
             </button>
           </div>
 
-          {/* OR Divider */}
           <div className="flex items-center justify-center my-4">
             <div className="w-full h-px bg-gray-300"></div>
             <span className="px-4 text-gray-500">or</span>
             <div className="w-full h-px bg-gray-300"></div>
           </div>
 
-          {/* Email Input */}
           <InputField
             label="Email"
+            name="email"
             id="email-input"
             formControlStyles={{ width: "100%" }}
             value={email}
@@ -80,10 +178,10 @@ function LoginForm({ onClose, onOpenRoleSelection }) {
             placeholder="Enter email"
           />
 
-          {/* Password Input */}
           <InputField
             label="Password"
             id="password-input"
+            name="password"
             startIcon={<HttpsIcon />}
             formControlStyles={{ width: "100%" }}
             value={password}
@@ -94,7 +192,6 @@ function LoginForm({ onClose, onOpenRoleSelection }) {
             togglePasswordVisibility={togglePasswordVisibility}
           />
 
-          {/* Forgot Password */}
           <div className="flex justify-end mt-3">
             <a
               href="/forgot-password"
@@ -104,7 +201,6 @@ function LoginForm({ onClose, onOpenRoleSelection }) {
             </a>
           </div>
 
-          {/* Sign In Button */}
           <button
             type="submit"
             className="w-full bg-green-500 text-white py-3 rounded-lg mt-6 hover:bg-green-600 transition-all duration-200"
@@ -113,7 +209,6 @@ function LoginForm({ onClose, onOpenRoleSelection }) {
           </button>
         </form>
 
-        {/* Sign Up */}
         <div className="text-center mt-4 text-sm text-gray-500">
           Do not have an account?{" "}
           <button
@@ -125,6 +220,15 @@ function LoginForm({ onClose, onOpenRoleSelection }) {
           </button>
         </div>
       </div>
+      <ToastContainer
+        position="bottom-left" // Set the position for the Toast notifications
+        autoClose={3000} // Automatically close after 3 seconds
+        hideProgressBar={false} // Show progress bar
+        closeOnClick
+        pauseOnHover
+        draggable
+        pauseOnFocusLoss
+      />
     </div>
   );
 }

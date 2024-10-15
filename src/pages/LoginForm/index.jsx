@@ -54,8 +54,8 @@ function LoginForm({ onClose, onOpenRoleSelection }) {
         pauseOnHover: true,
         draggable: true,
         style: {
-          backgroundColor: "#f8d7da", // Custom background color for warning
-          color: "#721c24", // Custom text color for warning
+          backgroundColor: "#ffffff", // Custom background color for warning
+          color: "#000000", // Custom text color for warning
         },
       });
     };

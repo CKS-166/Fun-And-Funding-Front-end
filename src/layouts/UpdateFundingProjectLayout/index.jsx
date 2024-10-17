@@ -152,6 +152,7 @@ function UpdateFundingProjectLayout() {
     };
 
     const handleNavigation = (link) => {
+        console.log(link)
         navigate(link);
     };
 

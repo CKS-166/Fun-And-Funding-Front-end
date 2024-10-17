@@ -1,7 +1,12 @@
 import { Link } from "react-router-dom";
-
+import Button from '@mui/material/Button';
+import React, { useState } from "react";
+import CreatorContract from "../../CreatorContract";
 const ProjectPlanCard = ({ option, title, brief, bullets, buttonText, commission }) => {
+  const [modalOpen, setModalOpen] = useState(false);
 
+  const handleOpen = () => setModalOpen(true);
+  const handleClose = () => setModalOpen(false);
   const words = brief.split(" ");
 
   return (
@@ -17,7 +22,8 @@ const ProjectPlanCard = ({ option, title, brief, bullets, buttonText, commission
             <li key={index}>{bullet}</li>
           ))}
         </ul>
-        <Link to='/request-funding-project/basic-info' className='inline-block bg-primary-green text-white font-bold py-3 px-4 mb-4 rounded' type='button'>{buttonText}</Link>
+        <Link onClick={handleOpen} className='inline-block bg-primary-green text-white font-bold py-3 px-4 mb-4 rounded' type='button'>{buttonText}</Link>
+        <CreatorContract open={modalOpen} handleClose={handleClose} />
         <hr />
         <div className='py-3 font-semibold'>
           Fee: {commission}

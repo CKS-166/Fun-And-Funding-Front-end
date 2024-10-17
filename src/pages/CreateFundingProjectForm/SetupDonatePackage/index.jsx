@@ -66,8 +66,8 @@ const SetupDonatePackage = () => {
     formData.append('Target', projectData.target);
     formData.append('Balance', 0);
     // Append Bank Account information
-    formData.append('BankAccount.BankNumber', projectData.bankAccount.BankNumber);
-    formData.append('BankAccount.BankCode', projectData.bankAccount.BankCode);
+    formData.append('BankAccount.BankNumber', projectData.bankAccount.bankNumber);
+    formData.append('BankAccount.BankCode', projectData.bankAccount.bankCode);
     // Append packages and reward items
     projectData.packages.forEach((packageData, index) => {
       formData.append(`Packages[${index}].Name`, packageData.name);
@@ -102,7 +102,7 @@ const SetupDonatePackage = () => {
     for (let pair of formData.entries()) {
       console.log(pair[0], pair[1]);
     }
-    const sampleToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjBmOGE1NTc3LTA5MTQtNGQ0NS1hOWRiLTEwOTBhMjJhYTFjZCIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWUiOiJwYW9wYW8iLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJCYW9DYW80OTRAZ21haWwuY29tIiwianRpIjoiSmNtRjh1ajJJU3ZlTDVGdnZOazRwbnA4eHJoSU56OC0xNjE0MjI1NjI0IiwiYXBpX2tleSI6IkpjbUY4dWoySVN2ZUw1RnZ2Tms0cG5wOHhyaElOejgiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJHYW1lT3duZXIiLCJleHAiOjE3MjkzMjY5ODQsImlzcyI6IkFQUE9UQVBBWSIsImF1ZCI6Imh0dHA6Ly9sb2NhbGhvc3Q6NzIzNSJ9.CnnSCURERkECabvF_arhfVIgOuQZSb5pdlNQ00hEv_A'
+    const sampleToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6Ijg0MGNhZjdhLTVlMmYtNGIwOS05ZDEwLWIwMTRjZWIzOWRkYiIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWUiOiJwYW9wYW8iLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJiYW9jYW80OTRAZ21haWwuY29tIiwianRpIjoiSmNtRjh1ajJJU3ZlTDVGdnZOazRwbnA4eHJoSU56OC0xNjE0MjI1NjI0IiwiYXBpX2tleSI6IkpjbUY4dWoySVN2ZUw1RnZ2Tms0cG5wOHhyaElOejgiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJHYW1lT3duZXIiLCJleHAiOjE3Mjk1ODM0NjQsImlzcyI6IkFQUE9UQVBBWSIsImF1ZCI6Imh0dHA6Ly9sb2NhbGhvc3Q6NzIzNSJ9.YLd1o5ThLuqz6yOT8lTeMVRKtJCiuwX-_0mL4nGRGK8'
     try {
       const response = await axios.post('https://localhost:7044/api/funding-projects', formData, {
         headers: {

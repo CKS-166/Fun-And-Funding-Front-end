@@ -50,6 +50,7 @@ const SetupBankAccount = () => {
         bankNumber: bankAccountNumber
       }
     }))
+    console.log(selectedBank, bankAccountNumber, ownerName)
     navigate('/request-funding-project/setup-donate-package')
   }
 

@@ -26,7 +26,11 @@ import ProjectIntro from '../../components/ProjectIntro';
 import UpdatesSection from '../../components/UpdatesSection';
 import './index.css';
 import DOMPurify from 'dompurify';
-const ProjectDetail = () => {
+import RequestMilestoneModal from '../../components/RequestMilestoneModal';
+import { set } from 'react-hook-form';
+const ProjectDetail = ({isOwner}) => {
+  //sample owwner
+  isOwner = true
   //sample data
   const { id } = useParams();
   console.log(id);
@@ -41,6 +45,43 @@ const ProjectDetail = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [daysLeft, setDaysLeft] = useState(0);
   const [saniIntro, setSaniIntro] = useState('');
+  const [milestones, setMilestones] = useState([]);
+  const [firstMilestone, setFirstMilestone] = useState({});
+  // project status
+  const processing = 2
+  const fundedSuccessful = 3
+  // status logic onclick
+  const handleRequestMilestone = () => {
+    console.log('a');
+  }
+  const handleUpdateProject = () => {
+    setIsModalOpen(true);
+    console.log('b');
+  }
+
+  const handleProcess = () => {
+    const fixStatus = projectData.status
+    switch (fixStatus) {
+      case processing:
+        return handleUpdateProject()
+      case fundedSuccessful:
+        return handleRequestMilestone()
+    }
+  }
+  //fetch milestones
+  const fetchMilestones = async () => {
+    try{
+      axios.get(`https://localhost:7044/api/milestone/group-latest-milestone`)
+        .then(response => {
+          setMilestones(response.data._data);
+          let first = response.data._data.find(milestone => milestone.milestoneOrder === 1);
+          setFirstMilestone(first);
+          console.log(response.data._data)
+      })
+    }catch(error){
+      console.error('Error fetching milestones:', error);
+    }
+  }
   //fetch project data
   const fetchProject = async () => {
     try {
@@ -67,10 +108,12 @@ const ProjectDetail = () => {
   };
   useEffect(() => {
     fetchProject();
+    fetchMilestones();
   }, [id]);
 
   console.log(projectData);
 
+  //handleTab
   const handleTabValue = (event, newValue) => {
     setTabValue(newValue);
   }
@@ -87,7 +130,15 @@ const ProjectDetail = () => {
       backgroundColor: "#1BAA64",
     },
   }));
+  //handle modal
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
+  const handleOpen = () => setIsModalOpen(true);
+  const handleClose = () => 
+    {
+      setIsModalOpen(false)
+      console.log(isModalOpen);
+    };
 
   return (
     <Box>
@@ -155,11 +206,15 @@ const ProjectDetail = () => {
                           width: "100%", whiteSpace: "nowrap"
                           , background: "#1BAA64", fontWeight: "bold", py: 1
                         }}
+                        onClick={() => handleProcess()}
                         className="like-btn"
                       >
-                        Back this project
+                        {isOwner ? 
+                        <Typography>{projectData.status == processing ? 'Update Project' : 'Request Milestone Disbursement'}</Typography> : 
+                        <Typography>Back this project</Typography>}
+                       
                       </Button>
-
+                      <RequestMilestoneModal milestone={firstMilestone} open={isModalOpen} handleClose={() => handleClose()} projectId={projectData.id}/>
                       <Grid container spacing={2} sx={{ marginTop: '20px' }}>
                         <Grid size={6}>
                           <Button variant="contained"

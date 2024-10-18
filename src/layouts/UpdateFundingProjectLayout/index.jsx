@@ -156,7 +156,7 @@ function UpdateFundingProjectLayout() {
     };
 
     const isEditorActive = editorList.some((item) => location.pathname.includes(item.link(id)));
-    const isMilestoneActive = milestoneList.some((item) => location.pathname.includes(item.link));
+    const isMilestoneActive = milestoneList.some((item) => location.pathname.includes(item.link(id)));
 
     const getActiveSection = (id) => {
         const activeEditor = getActiveEditor(id);
@@ -278,9 +278,9 @@ function UpdateFundingProjectLayout() {
                                                 <ListItem
                                                     button
                                                     key={item.name}
-                                                    onClick={() => handleNavigation(item.link)}
+                                                    onClick={() => handleNavigation(item.link(id))}
                                                     sx={{
-                                                        backgroundColor: location.pathname.includes(item.link) ? '#88D1AE' : 'transparent',
+                                                        backgroundColor: location.pathname.includes(item.link(id)) ? '#88D1AE' : 'transparent',
                                                         '&:hover': {
                                                             backgroundColor: '#88D1AE',
                                                             '& .MuiListItemText-root': {
@@ -292,7 +292,7 @@ function UpdateFundingProjectLayout() {
                                                     <ListItemText
                                                         primary={item.name}
                                                         sx={{
-                                                            color: location.pathname.includes(item.link) ? '#F5F7F8' : '#F5F7F8',
+                                                            color: location.pathname.includes(item.link(id)) ? '#F5F7F8' : '#F5F7F8',
                                                             fontSize: '1rem',
                                                             fontWeight: '600',
                                                             height: '2rem',

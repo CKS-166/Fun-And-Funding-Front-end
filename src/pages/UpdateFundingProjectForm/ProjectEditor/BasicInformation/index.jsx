@@ -9,7 +9,7 @@ function BasicInformation() {
     const { id } = useParams();
     const { project, setProject, setIsEdited, setIsLoading, setLoadingStatus } = useContext(ProjectContext);
 
-    const [categories, setCategories] = useState(["Adventure", "Board Game"]);
+    const [categories, setCategories] = useState([]);
     const [basicInfoEdited, setBasicInfoEdited] = useState(false);
 
     const [name, setName] = useState(project.name || '');
@@ -21,6 +21,10 @@ function BasicInformation() {
         setName(project.name);
         setDescription(project.description);
         setIntro(project.introduction);
+        if (project.categories && Array.isArray(project.categories)) {
+            const categoryNames = project.categories.map(category => category.name);
+            setSelectedCategory(categoryNames);
+        }
     }, [id, project]);
 
     const handleChangeName = (event) => {
@@ -36,6 +40,7 @@ function BasicInformation() {
     };
 
     const handleChangeIntroduction = (newIntro) => {
+        console.log(newIntro);
         const updatedIntro = newIntro;
         setIntro(updatedIntro);
         checkIfEdited(name, description, updatedIntro);
@@ -59,6 +64,7 @@ function BasicInformation() {
             ...project,
             name: name,
             description: description,
+            introduction: intro,
         };
         setProject(updatedProject);
         setIsEdited(true);
@@ -70,6 +76,7 @@ function BasicInformation() {
     const handleDiscardAll = async () => {
         setName(project.name || '');
         setDescription(project.description || '');
+        setIntro(project.introduction || '');
         setBasicInfoEdited(false);
     };
 
@@ -164,7 +171,7 @@ function BasicInformation() {
                     <Select
                         multiple
                         disabled
-                        value={categories}
+                        value={selectedCategory}
                         renderValue={(selected) => {
                             if (selected.length === 0) {
                                 return <span style={{ color: '#989a9a' }}>Project category...</span>;

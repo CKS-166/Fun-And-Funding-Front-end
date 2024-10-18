@@ -4,7 +4,7 @@ import { Box, Button, Divider, IconButton, Table, TableBody, TableCell, TableHea
 import React, { useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import EmptyIcon from '../../../../assets/images/image_empty.png';
-import ktm from '../../../../assets/images/ktm.jpg';
+import NoImage from '../../../../assets/images/no-image.png';
 import ProjectContext from '../../../../layouts/UpdateFundingProjectLayout/UpdateFundingProjectContext';
 import EditPackageModal from './EditPackageModal';
 import './index.css';
@@ -83,7 +83,7 @@ function Packages() {
     const handleUpdatePackage = (updatedPackage) => {
         setIsLoading(true);
         setLoadingStatus(2);
-        console.log(updatedPackage)
+        console.log(updatedPackage);
         if (updatedPackage.id) {
             const updatedPackages = projectPackages.map(pkg =>
                 pkg.id === updatedPackage.id ? updatedPackage : pkg
@@ -178,7 +178,11 @@ function Packages() {
                                         }}
                                     >
                                         <TableCell component="th" scope="row" align="left" sx={{ pl: '1.5rem !important', border: 'none' }}>
-                                            <img className='w-[5rem] h-[5rem] object-cover rounded-[0.25rem]' src={ktm} alt={row.name} />
+                                            {row.url ? (
+                                                <img className='w-[5rem] h-[5rem] object-cover rounded-[0.25rem]' src={row.url} alt={row.name} />
+                                            ) : (
+                                                <img className='w-[5rem] h-[5rem] object-cover rounded-[0.25rem]' src={NoImage} alt='No Image Available' />
+                                            )}
                                         </TableCell>
                                         <TableCell component="th" scope="row" align="left" sx={{ fontWeight: '500', border: 'none' }}>
                                             {row.name}

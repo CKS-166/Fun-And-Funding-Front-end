@@ -37,6 +37,10 @@ import BankAccount from "./pages/UpdateFundingProjectForm/ProjectEditor/BankAcco
 import BasicInformation from "./pages/UpdateFundingProjectForm/ProjectEditor/BasicInformation";
 import DonationPackages from "./pages/UpdateFundingProjectForm/ProjectEditor/DonationPackages";
 import Media from "./pages/UpdateFundingProjectForm/ProjectEditor/Media";
+import Milestone1 from "./pages/UpdateFundingProjectForm/ProjectMilestone/Milestone1";
+import Milestone2 from "./pages/UpdateFundingProjectForm/ProjectMilestone/Milestone2";
+import Milestone3 from "./pages/UpdateFundingProjectForm/ProjectMilestone/Milestone3";
+import Milestone4 from "./pages/UpdateFundingProjectForm/ProjectMilestone/Milestone4";
 import ProjectPreview from "./pages/UpdateFundingProjectForm/ProjectPreview";
 
 function App() {
@@ -77,26 +81,17 @@ function App() {
         </Route>
 
         <Route element={<UpdateFundingProjectLayout />}>
-          <Route
-            path="/account/projects/update/:id/preview"
-            element={<ProjectPreview />}
-          />
-          <Route
-            path="/account/projects/update/:id/basic-info"
-            element={<BasicInformation />}
-          />
-          <Route
-            path="/account/projects/update/:id/bank-account"
-            element={<BankAccount />}
-          />
-          <Route
-            path="/account/projects/update/:id/donation-packages"
-            element={<DonationPackages />}
-          />
-          <Route
-            path="/account/projects/update/:id/media-files"
-            element={<Media />}
-          />
+          <Route path="/account/projects/update/:id/preview" element={<ProjectPreview />} />
+
+          <Route path="/account/projects/update/:id/basic-info" element={<BasicInformation />} />
+          <Route path="/account/projects/update/:id/bank-account" element={<BankAccount />} />
+          <Route path="/account/projects/update/:id/donation-packages" element={<DonationPackages />} />
+          <Route path="/account/projects/update/:id/media-files" element={<Media />} />
+
+          <Route path="/account/projects/update/:id/milestone1" element={<Milestone1 />} />
+          <Route path="/account/projects/update/:id/milestone2" element={<Milestone2 />} />
+          <Route path="/account/projects/update/:id/milestone3" element={<Milestone3 />} />
+          <Route path="/account/projects/update/:id/milestone4" element={<Milestone4 />} />
         </Route>
 
         <Route path="/funding-detail/:id" element={<ProjectDetail />} />

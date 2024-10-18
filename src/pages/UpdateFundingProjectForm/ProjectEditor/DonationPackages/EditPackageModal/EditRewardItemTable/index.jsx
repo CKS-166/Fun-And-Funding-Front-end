@@ -9,7 +9,7 @@ import React, { useEffect, useState } from 'react';
 function EditRewardItemTable({ rewardItems: initialRewardItems, onUpdateRewardItems }) {
     const [isAdding, setIsAdding] = useState(false);
     const [rewardItems, setRewardItems] = useState([]);
-    const [newItem, setNewItem] = useState({ name: '', quantity: 1, description: '', image: null });
+    const [newItem, setNewItem] = useState({ name: '', quantity: 1, description: '', imageUrl: null });
     const [editingItemIndex, setEditingItemIndex] = useState(null);
     const [editedItem, setEditedItem] = useState(null);
 
@@ -26,15 +26,16 @@ function EditRewardItemTable({ rewardItems: initialRewardItems, onUpdateRewardIt
             ...rewardItems,
             { ...newItem, newlyAdded: true },
         ];
+        console.log(updatedRewardItems);
         setRewardItems(updatedRewardItems);
         setIsAdding(false);
-        setNewItem({ name: '', quantity: 1, description: '', image: null });
+        setNewItem({ name: '', quantity: 1, description: '', imageUrl: null });
         onUpdateRewardItems(updatedRewardItems);
     };
 
     const handleCancelRewardItem = () => {
         setIsAdding(false);
-        setNewItem({ name: '', quantity: 1, description: '', image: null });
+        setNewItem({ name: '', quantity: 1, description: '', imageUrl: null });
     };
 
     const handleEditClick = (index) => {
@@ -67,11 +68,10 @@ function EditRewardItemTable({ rewardItems: initialRewardItems, onUpdateRewardIt
         const reader = new FileReader();
 
         reader.onloadend = () => {
-            const newImage = reader.result;
             if (isEditing) {
-                setEditedItem((prevItem) => ({ ...prevItem, image: newImage }));
+                setEditedItem((prevItem) => ({ ...prevItem, imageUrl: URL.createObjectURL(file), imageFile: file }));
             } else {
-                setNewItem((prevNewItem) => ({ ...prevNewItem, image: newImage }));
+                setNewItem((prevNewItem) => ({ ...prevNewItem, imageUrl: URL.createObjectURL(file), imageFile: file }));
             }
         };
 
@@ -94,8 +94,8 @@ function EditRewardItemTable({ rewardItems: initialRewardItems, onUpdateRewardIt
                 >
                     <TableHead sx={{ backgroundColor: '#2F3645 !important', borderTopLeftRadius: '0.625rem', borderTopRightRadius: '0.625rem' }}>
                         <TableRow>
-                            <TableCell align="left" className='package-table-cell' sx={{ pl: '1.5rem !important', bgcolor: 'transparent', width: '20%' }}>Image</TableCell>
-                            <TableCell align="left" className='package-table-cell' sx={{ bgcolor: 'transparent', width: '20%' }}>Name</TableCell>
+                            <TableCell align="left" className='package-table-cell' sx={{ pl: '1.5rem !important', bgcolor: 'transparent', width: '15%' }}>Image</TableCell>
+                            <TableCell align="left" className='package-table-cell' sx={{ bgcolor: 'transparent', width: '25%' }}>Name</TableCell>
                             <TableCell align="left" className='package-table-cell' sx={{ bgcolor: 'transparent', width: '27.5%' }}>Description</TableCell>
                             <TableCell align="left" className='package-table-cell' sx={{ bgcolor: 'transparent', width: '12.5%' }}>Quantity</TableCell>
                             <TableCell align="left" className='package-table-cell' sx={{ bgcolor: 'transparent', width: '20%' }}>Action</TableCell>
@@ -113,16 +113,16 @@ function EditRewardItemTable({ rewardItems: initialRewardItems, onUpdateRewardIt
                                 >
                                     <TableCell component="th" scope="row" align="left" sx={{ pl: '1.5rem !important', width: '10%' }}>
                                         {editingItemIndex === index ? (
-                                            editedItem.image ? (
+                                            editedItem.imageUrl ? (
                                                 <div className="relative w-[5rem] h-[5rem]">
                                                     <img
                                                         className="w-full h-full object-cover rounded-[0.25rem]"
-                                                        src={editedItem.image}
+                                                        src={editedItem.imageUrl}
                                                         alt={editedItem.name}
                                                     />
                                                     <button
-                                                        onClick={() => setEditedItem({ ...editedItem, image: null })}
-                                                        className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 rounded-[0.25rem] opacity-0 hover:opacity-100 transition-opacity"
+                                                        onClick={() => setEditedItem({ ...editedItem, imageUrl: null, imageFile: null })}
+                                                        className="absolute inset-0 flex items-center justify-center bg-[#2F3645] bg-opacity-50 rounded-[0.25rem] opacity-0 hover:opacity-100 transition-opacity"
                                                         title="Remove Image"
                                                     >
                                                         <CancelIcon className="text-white" />
@@ -139,7 +139,7 @@ function EditRewardItemTable({ rewardItems: initialRewardItems, onUpdateRewardIt
                                                 </label>
                                             )
                                         ) : (
-                                            <img className='w-[5rem] h-[5rem] object-cover rounded-[0.25rem]' src={row.image} alt={row.name} />
+                                            <img className='w-[5rem] h-[5rem] object-cover rounded-[0.25rem]' src={row.imageUrl} alt={row.name} />
                                         )}
                                     </TableCell>
                                     {editingItemIndex === index ? (
@@ -160,7 +160,7 @@ function EditRewardItemTable({ rewardItems: initialRewardItems, onUpdateRewardIt
                                                     className="custom-update-textfield"
                                                 />
                                             </TableCell>
-                                            <TableCell sx={{ width: '10%' }} align="left">
+                                            <TableCell sx={{ width: '10%', textAlign: 'center' }}>
                                                 <TextField
                                                     value={editedItem.quantity}
                                                     onChange={(e) => setEditedItem({ ...editedItem, quantity: parseFloat(e.target.value) })}
@@ -193,16 +193,11 @@ function EditRewardItemTable({ rewardItems: initialRewardItems, onUpdateRewardIt
                                         <>
                                             <TableCell align="left">{row.name}</TableCell>
                                             <TableCell align="left">{row.description}</TableCell>
-                                            <TableCell align="left">{row.quantity}</TableCell>
+                                            <TableCell align="left" sx={{ textAlign: 'center' }}>{row.quantity}</TableCell>
                                             <TableCell align="left">
                                                 <Tooltip title="Edit" placement="bottom">
                                                     <IconButton onClick={() => handleEditClick(index)}>
                                                         <EditIcon />
-                                                    </IconButton>
-                                                </Tooltip>
-                                                <Tooltip title="Delete" placement="bottom">
-                                                    <IconButton onClick={() => handleDeleteItem(index)}>
-                                                        <DeleteIcon />
                                                     </IconButton>
                                                 </Tooltip>
                                             </TableCell>
@@ -214,10 +209,10 @@ function EditRewardItemTable({ rewardItems: initialRewardItems, onUpdateRewardIt
                         {isAdding && (
                             <TableRow sx={{ backgroundColor: '#F5F7F8' }}>
                                 <TableCell component="th" scope="row" align="left" sx={{ pl: '1.5rem !important', width: '10%' }}>
-                                    {newItem.image ? (
+                                    {newItem.imageUrl ? (
                                         <div className="relative w-[5rem] h-[5rem]">
-                                            <img className="w-full h-full object-cover rounded-[0.25rem]" src={newItem.image} alt={newItem.name} />
-                                            <button onClick={() => setNewItem({ ...newItem, image: null })} className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 rounded-[0.25rem] opacity-0 hover:opacity-100 transition-opacity" title="Remove Image">
+                                            <img className="w-full h-full object-cover rounded-[0.25rem]" src={newItem.imageUrl} alt={newItem.name} />
+                                            <button onClick={() => setNewItem({ ...newItem, imageUrl: null })} className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 rounded-[0.25rem] opacity-0 hover:opacity-100 transition-opacity" title="Remove Image">
                                                 <CancelIcon className="text-white" />
                                             </button>
                                         </div>
@@ -248,7 +243,7 @@ function EditRewardItemTable({ rewardItems: initialRewardItems, onUpdateRewardIt
                                         className="custom-update-textfield"
                                     />
                                 </TableCell>
-                                <TableCell sx={{ width: '10%' }} align="left">
+                                <TableCell sx={{ width: '10%', textAlign: 'center' }} align="left">
                                     <TextField
                                         value={newItem.quantity}
                                         onChange={(e) => setNewItem({ ...newItem, quantity: e.target.value })}

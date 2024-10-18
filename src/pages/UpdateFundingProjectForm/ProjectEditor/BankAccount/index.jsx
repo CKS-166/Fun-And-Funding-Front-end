@@ -38,9 +38,8 @@ function BankAccount() {
             const response = await axios.get("https://api.httzip.com/api/bank/list");
             if (response.data.code === 200) {
                 const bankList = response.data.data;
-                const bankCode = String(project.bankAccount.bankCode).trim();
-                const foundBank = bankList.find(record => String(record.bin).trim() === bankCode);
-
+                const bankCode = project.bankAccount.bankCode;
+                const foundBank = bankList.find(record => record.code === bankCode);
                 if (foundBank) {
                     setSelectedBank(foundBank);
                     const bankAccountResponse = await axios.post(
@@ -154,7 +153,7 @@ function BankAccount() {
                 ...project,
                 bankAccount: {
                     bankNumber: bankAccountNumber,
-                    bankCode: String(selectedBank?.bin || project.bankAccount.bankCode),
+                    bankCode: selectedBank?.code || project.bankAccount.bankCode,
                 },
             };
             setProject(updatedProject);

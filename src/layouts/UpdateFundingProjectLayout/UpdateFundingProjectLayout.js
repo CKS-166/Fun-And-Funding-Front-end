@@ -34,8 +34,4 @@ export const milestoneList = [
     name: "Milestone 4",
     link: (id) => `/account/projects/update/${id}/milestone4`,
   },
-  {
-    name: "Milestone 5",
-    link: (id) => `/account/projects/update/${id}/milestone5`,
-  },
 ];

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import LogoutIcon from "@mui/icons-material/Logout";
@@ -20,13 +21,19 @@ import {
   Tabs,
   Toolbar,
   Tooltip,
-  Typography
+  Typography,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import homeLogo from "../../assets/images/logo-alt.png";
 import defaultLogo from "../../assets/images/logo-text.png";
 import AuthDialog from "../Popup";
+import Cookies from "js-cookie";
+import Aos from "aos";
+import "aos/dist/aos.css";
+import userApiInstace from "../../utils/ApiInstance/userApiInstance";
+import useSignOut from "react-auth-kit/hooks/useSignOut";
+import Swal from "sweetalert2";
 
 const FunFundingAppBar = () => {
   const navigate = useNavigate();
@@ -34,6 +41,38 @@ const FunFundingAppBar = () => {
   const [isAuthDialogOpen, setIsAuthDialogOpen] = useState(false);
   const openAuthDialog = () => setIsAuthDialogOpen(true);
   const closeAuthDialog = () => setIsAuthDialogOpen(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [name, setName] = useState("");
+
+  const isLogined = Cookies.get("_auth") !== undefined;
+  const token = Cookies.get("_auth");
+
+  useEffect(() => {
+    Aos.init({ duration: 2000 });
+    setIsLoggedIn(isLogined);
+    if (isLogined) {
+      fetchUser();
+    }
+  }, [isLogined]);
+
+  const fetchUser = async () => {
+    try {
+      const res = await userApiInstace.get("/info", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      console.log(res);
+      if (res.data._statusCode == 200) {
+        const user = res.data._data;
+
+        setName(user.fullName);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   const pages = [
     { label: "Home", route: "/home", index: 0 },
     { label: "Crowdfunding", route: "/crowdfunding", index: 1 },
@@ -42,7 +81,11 @@ const FunFundingAppBar = () => {
   ];
 
   const profileMenu = [
-    { label: "Account", route: "/account/profile", icon: <AccountCircleIcon /> },
+    {
+      label: "Account",
+      route: "/account/profile",
+      icon: <AccountCircleIcon />,
+    },
     {
       label: "My wallet",
       route: "/my-wallet",
@@ -75,6 +118,30 @@ const FunFundingAppBar = () => {
 
   const handleCloseProfileMenu = () => {
     setAnchorElProfile(null);
+  };
+  const signOut = useSignOut();
+  const handleProfileMenuClick = (route) => {
+    if (route === "logout") {
+      Swal.fire({
+        title: "Warning?",
+        text: "Do You Want To Logout?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#FBB03B",
+        cancelButtonColor: "D8D8D8",
+        confirmButtonText: "Yes!",
+        cancelButtonText: "No!",
+        reverseButtons: true,
+      }).then((result) => {
+        if (result.isConfirmed) {
+          signOut();
+          window.location.href = "/home";
+        }
+      });
+    } else {
+      navigate(route);
+    }
+    handleCloseProfileMenu();
   };
 
   const isPage =
@@ -164,8 +231,8 @@ const FunFundingAppBar = () => {
                         ? "#1BAA64"
                         : "#F5F7F8"
                       : tabValue === index
-                        ? "#1BAA64"
-                        : "#2F3645",
+                      ? "#1BAA64"
+                      : "#2F3645",
                     fontWeight: "700 !important",
                   }}
                   error="false"
@@ -173,7 +240,7 @@ const FunFundingAppBar = () => {
               ))}
             </Tabs>
           </Box>
-          {true ? (
+          {isLogined ? (
             <Box
               sx={{ maxWidth: "100%", display: "flex", alignItems: "center" }}
             >
@@ -221,14 +288,14 @@ const FunFundingAppBar = () => {
                 onClose={handleCloseProfileMenu}
               >
                 <MenuItem>
-                  <Typography>{user?.accountName}</Typography>
-                  <Typography>{user?.userEmail}</Typography>
+                  <Typography>{name}</Typography>
                 </MenuItem>
                 <Divider />
                 {profileMenu.map((menuItem) => (
                   <MenuItem
                     key={menuItem.label}
-                    onClick={() => navigate(menuItem.route)}
+                    //onClick={() => navigate(menuItem.route)}
+                    onClick={() => handleProfileMenuClick(menuItem.route)}
                   >
                     <ListItemIcon>{menuItem.icon}</ListItemIcon>
                     <ListItemText>{menuItem.label}</ListItemText>

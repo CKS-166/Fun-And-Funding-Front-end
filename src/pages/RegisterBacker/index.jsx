@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 import { useState } from "react";
 import HttpsIcon from "@mui/icons-material/Https";
@@ -5,30 +6,69 @@ import InputField from "../../components/InputField";
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 import PortraitIcon from "@mui/icons-material/Portrait";
 import logo from "../../assets/OnlyLogo.png";
-
+import authApiInstace from "../../utils/ApiInstance/authApiInstance";
+import { ToastContainer, toast } from "react-toastify"; // Import ToastContainer
+import { Navigate, useNavigate } from "react-router";
 function BackerForm({ onClose, onOpenLogin, onBack }) {
   const [email, setEmail] = useState("");
-  const [accountName, setAccountName] = useState("");
+  const [userName, setUserName] = useState("");
   const [fullName, setFullName] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const Navigate = useNavigate();
+  const notify = (message, type) => {
+    const options = {
+      position: "top-right",
+      autoClose: 3000,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      style: {
+        backgroundColor: "#ffffff",
+        color: "#000000",
+        fontWeight: "bold",
+      },
+    };
 
+    if (type === "warn") {
+      toast.warn(message, options);
+    } else if (type === "success") {
+      toast.success(message, options);
+    }
+  };
   const handleLoginClick = () => {
     onOpenLogin(); // Switch to the LoginForm without closing the dialog
   };
 
   const handleEmailChange = (e) => setEmail(e.target.value);
-  const handleAccountChange = (e) => setAccountName(e.target.value);
+  const handleAccountChange = (e) => setUserName(e.target.value);
   const handleFullNameChange = (e) => setFullName(e.target.value);
   const handlePasswordChange = (e) => setPassword(e.target.value);
   const handleConfirmPasswordChange = (e) => setConfirmPassword(e.target.value);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Email:", email);
-    console.log("Password:", password);
+    const jsonData = {
+      email: email,
+      userName: userName,
+      fullName: fullName,
+      password: password,
+      confirmPassword: confirmPassword,
+    };
     // Add your form submission logic here
+    authApiInstace.post("/backer", jsonData).then((res) => {
+      if (!res.data._isSuccess) {
+        notify(`${res.data._message[0] || "Register failed"}`, "warn");
+        console.log("Register failed:", res.data._message);
+      } else {
+        notify(`${"Register success, please login"}`, "success");
+        console.log("Register success, please login");
+        setTimeout(() => {
+          handleLoginClick(); // Navigate to LoginForm
+        }, 3000);
+      }
+    });
   };
 
   const togglePasswordVisibility = () => setShowPassword(!showPassword);
@@ -77,7 +117,7 @@ function BackerForm({ onClose, onOpenLogin, onBack }) {
                 startIcon={<PortraitIcon />}
                 id="account-input"
                 formControlStyles={{ width: "100%" }}
-                value={accountName}
+                value={userName}
                 onChange={handleAccountChange}
                 placeholder="Enter Account Name"
               />
@@ -157,6 +197,15 @@ function BackerForm({ onClose, onOpenLogin, onBack }) {
           </button>
         </div>
       </div>
+      <ToastContainer
+        position="bottom-left" // Set the position for the Toast notifications
+        autoClose={3000} // Automatically close after 3 seconds
+        hideProgressBar={false} // Show progress bar
+        closeOnClick
+        pauseOnHover
+        draggable
+        pauseOnFocusLoss
+      />
     </div>
   );
 }

@@ -107,7 +107,7 @@ function App() {
           <Route path="/account/projects" element={<AccountProject />} />
         </Route>
         <Route element={<PublicProfileLayout />}>
-          <Route path="/profile" element={<PublicProfile />} />
+          <Route path="/profile/:id" element={<PublicProfile />} />
         </Route>
       </Routes>
     </>

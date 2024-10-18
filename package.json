@@ -17,6 +17,7 @@
     "@mui/lab": "^6.0.0-beta.9",
     "@mui/material": "^6.1.0",
     "@mui/x-date-pickers": "^7.18.0",
+    "aos": "^2.3.4",
     "axios": "^1.7.7",
     "dayjs": "^1.11.13",
     "dompurify": "^3.1.7",
@@ -26,8 +27,10 @@
     "filepond-plugin-image-preview": "^4.6.12",
     "fun-and-funding-front-end": "file:",
     "js-cookie": "^3.0.5",
+    "jwt-decode": "^4.0.0",
     "react": "18.3.1",
     "react-18-image-lightbox": "^5.1.4",
+    "react-auth-kit": "^3.1.3",
     "react-dom": "18.3.1",
     "react-filepond": "^7.1.2",
     "react-hook-form": "^7.53.0",
@@ -37,7 +40,8 @@
     "react-responsive-carousel": "^3.2.23",
     "react-router": "^6.26.2",
     "react-router-dom": "^6.26.2",
-    "sweetalert2": "^11.14.1"
+    "react-toastify": "^10.0.6",
+    "sweetalert2": "^11.14.3"
   },
   "devDependencies": {
     "@eslint/js": "9.9.0",

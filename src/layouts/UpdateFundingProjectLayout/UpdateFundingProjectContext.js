@@ -31,7 +31,27 @@ const initialProject = {
       ],
     },
   ],
-  fundingFiles: [],
+  fundingFiles: [
+    {
+      id: "",
+      name: "",
+      url: "",
+      urlFile: null,
+      filetype: 0,
+      isDeleted: null,
+    },
+  ],
+  existedFile: [
+    {
+      id: "",
+      name: "",
+      url: "",
+      urlFile: null,
+      filetype: 0,
+      isDeleted: null,
+      newlyAdded: null,
+    },
+  ],
 };
 
 const ProjectContext = createContext({

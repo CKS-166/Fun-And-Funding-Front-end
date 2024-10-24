@@ -75,7 +75,7 @@ function OwnerForm({ onClose, onOpenLogin, onBack }) {
         console.log("Register success, please login");
         setTimeout(() => {
           handleLoginClick(); // Navigate to LoginForm
-        }, 3000);
+        }, 1000);
       }
     });
   };
@@ -116,9 +116,7 @@ function OwnerForm({ onClose, onOpenLogin, onBack }) {
           <h2 className="text-4xl font-bold text-gray-800">
             Create an Game Owner account
           </h2>
-          <p className="text-gray-500 mt-1">
-            Browse thousands of games and projects for free
-          </p>
+          <p className="text-gray-500 mt-1">Turn Game Ideas into Reality!</p>
         </div>
         <div className="flex items-center justify-center w-full space-x-4">
           {/* Account name Input */}

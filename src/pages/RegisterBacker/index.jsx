@@ -42,7 +42,7 @@ function BackerForm({ onClose, onOpenLogin, onBack }) {
   };
 
   const handleEmailChange = (e) => setEmail(e.target.value);
-  const handleAccountChange = (e) => setUserName(e.target.value);
+  const handleUserChange = (e) => setUserName(e.target.value);
   const handleFullNameChange = (e) => setFullName(e.target.value);
   const handlePasswordChange = (e) => setPassword(e.target.value);
   const handleConfirmPasswordChange = (e) => setConfirmPassword(e.target.value);
@@ -75,7 +75,7 @@ function BackerForm({ onClose, onOpenLogin, onBack }) {
 
   return (
     <div className="fixed inset-0 flex justify-center items-center bg-gray-800 bg-opacity-75 z-50">
-      <div className="bg-white p-10 rounded-3xl relative shadow-lg w-[720px]">
+      <div className="bg-white p-10 rounded-3xl relative shadow-lg w-[45rem]">
         {/* Close Button */}
         <button
           onClick={onClose}
@@ -94,16 +94,12 @@ function BackerForm({ onClose, onOpenLogin, onBack }) {
           Back
         </button>
         {/* Logo and Welcome Message */}
-        <div className="flex flex-col items-center mb-6">
-          <img
-            src={logo}
-            alt="Logo"
-            className="w-[78px] h-[88px] mb-[2.5rem]"
-          />
-          <h2 className="text-4xl font-bold text-gray-800">
+        <div className="flex flex-col items-center">
+          <img src={logo} alt="Logo" className="w-[78px] h-[88px] mb-[1rem]" />
+          <h2 className="text-[2.5rem] font-bold text-gray-800">
             Create a Backer account
           </h2>
-          <p className="text-gray-500 mt-1">
+          <p className="text-gray-500 mt-[0.375rem] mb-[1.5rem]">
             Browse thousands of games and projects for free
           </p>
         </div>
@@ -113,13 +109,13 @@ function BackerForm({ onClose, onOpenLogin, onBack }) {
             {/* Account name Input */}
             <div className="w-full">
               <InputField
-                label="Account Name"
+                label="User Name"
                 startIcon={<PortraitIcon />}
-                id="account-input"
+                id="user-input"
                 formControlStyles={{ width: "100%" }}
                 value={userName}
-                onChange={handleAccountChange}
-                placeholder="Enter Account Name"
+                onChange={handleUserChange}
+                placeholder="Enter User Name"
               />
             </div>
 

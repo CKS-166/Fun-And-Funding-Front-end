@@ -144,7 +144,7 @@ function LoginForm({ onClose, onOpenRoleSelection }) {
           <h2 className="text-4xl font-bold text-gray-800 mb-1.5">
             Welcome back
           </h2>
-          <p className="text-gray-500 mt-1 mb-[1.75rem]">
+          <p className="text-gray-500 mt-1">
             Please choose your sign in method
           </p>
         </div>
@@ -166,7 +166,7 @@ function LoginForm({ onClose, onOpenRoleSelection }) {
             <div className="w-full h-px bg-gray-300"></div>
           </div>
 
-          <div className="flex flex-col gap-4 mb-2">
+          <div className="flex flex-col gap-4">
             <InputField
               label="Email"
               name="email"
@@ -190,7 +190,7 @@ function LoginForm({ onClose, onOpenRoleSelection }) {
             />
           </div>
 
-          <div className="flex justify-end mt-2">
+          <div className="flex justify-end mt-[1rem]">
             <a
               href="/forgot-password"
               className="text-sm text-gray-500 hover:text-gray-800"

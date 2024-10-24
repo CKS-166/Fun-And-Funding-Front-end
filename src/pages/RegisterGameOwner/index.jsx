@@ -87,12 +87,12 @@ function OwnerForm({ onClose, onOpenLogin, onBack }) {
     <div className="fixed inset-0 flex justify-center items-center bg-gray-800 bg-opacity-75 z-50">
       <form
         onSubmit={handleSubmit}
-        className="bg-white p-10 rounded-3xl relative shadow-lg w-[720px] "
+        className="bg-white p-10 rounded-3xl relative shadow-lg w-[45rem] "
       >
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute text-[#1BAA64] top-4 right-4  text-xl"
+          className="absolute text-[#1BAA64] top-4 right-4 text-xl"
         >
           &times; {/* X Symbol */}
         </button>
@@ -111,12 +111,14 @@ function OwnerForm({ onClose, onOpenLogin, onBack }) {
           <img
             src={logo} // Adjust the path of your logo
             alt="Logo"
-            className="w-[78px] h-[88px] mb-[2.5rem]"
+            className="w-[78px] h-[88px] mb-[1rem]"
           />
           <h2 className="text-4xl font-bold text-gray-800">
             Create an Game Owner account
           </h2>
-          <p className="text-gray-500 mt-1">Turn Game Ideas into Reality!</p>
+          <p className="text-gray-500 mt-[0.375rem]">
+            Turn Game Ideas into Reality!
+          </p>
         </div>
         <div className="flex items-center justify-center w-full space-x-4">
           {/* Account name Input */}

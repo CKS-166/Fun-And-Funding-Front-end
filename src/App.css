@@ -22,3 +22,11 @@ body {
     font-family: GuthenBloots;
     src: url('/src/assets/fonts/GuthenBloots.ttf');
 }
+
+.scrollbar-hidden {
+    scrollbar-width: none;
+}
+
+.scrollbar-hidden::-webkit-scrollbar {
+    display: none;
+}

@@ -45,6 +45,7 @@ import ProjectPreview from "./pages/UpdateFundingProjectForm/ProjectPreview";
 import MilestoneForm from "./pages/TestCR/MilestoneForm";
 import AccountWallet from "./pages/AccountWallet"
 import Chat from "./pages/Chat";
+import Milestone from "./pages/Milestones";
 
 //context
 import { ChatProvider } from "./contexts/ChatContext";
@@ -160,6 +161,7 @@ function App() {
           </Route>
 
           <Route path="/chat/:senderId/:receiverId" element={<Chat />} />
+          <Route path="/milestones" element={<Milestone />} />
         </Routes>
       </ChatProvider>
     </>

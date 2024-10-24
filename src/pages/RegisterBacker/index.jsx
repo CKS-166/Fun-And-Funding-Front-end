@@ -66,7 +66,7 @@ function BackerForm({ onClose, onOpenLogin, onBack }) {
         console.log("Register success, please login");
         setTimeout(() => {
           handleLoginClick(); // Navigate to LoginForm
-        }, 3000);
+        }, 1000);
       }
     });
   };

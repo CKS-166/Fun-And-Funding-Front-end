@@ -9,9 +9,9 @@ function RoleCard({ Img, Title, Description, onClick }) {
   return (
     <Card>
       {/* Attach the onClick prop to CardActionArea */}
-      <CardActionArea onClick={onClick}>
+      <CardActionArea className="w-[15.625rem]" onClick={onClick}>
         <CardMedia
-          sx={{ height: "12.5rem !important", mt: "1rem" }}
+          sx={{ height: "12.5rem !important", mt: "1rem", width: "100%" }}
           component="img"
           alt={`${Title} image`}
           image={Img}

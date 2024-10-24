@@ -6,6 +6,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 import Swal from 'sweetalert2';
 import './index.css'
+import projectMilestoneApiInstance from '../../utils/ApiInstance/projectMilestoneApiInstance';
 const RequestMilestoneModal = ({ open, handleClose, milestone, projectId }) => {
   const modalStyle = {
     position: "absolute",
@@ -26,20 +27,39 @@ const RequestMilestoneModal = ({ open, handleClose, milestone, projectId }) => {
       setAlert(true); // Show alert if no date selected
       return;
     }
-    axios.post("https://localhost:7044/api/project-milestones", {
-      "createdDate": startDate,
-      "status": 0,
-      "milestoneId": milestone.id,
-      "fundingProjectId": projectId
-    }).then(res => {
-      console.log(res.data);
+    try {
+      projectMilestoneApiInstance.post("",{
+        "createdDate": startDate,
+        "status": 0,
+        "milestoneId": milestone.id,
+        "fundingProjectId": projectId
+      })
+      .then(res => {
+        console.log(res);
+        Swal.fire({
+          title: `Request for ${milestone.milestoneName} sent!`,
+          text: "The waiting process can take 2-5 days. Thank you for your patience.Please check your email for more details.",
+          icon: "success"
+        });
+        handleClose();
+      })
+      .catch(error => {
+        handleClose();
+        console.log(error)
+        Swal.fire({
+          title: "Error",
+          text: error.response.data.message,
+          icon: "error"
+        });
+      });
+    } catch (error) {
+      console.log(error);
       Swal.fire({
-        title: `Request for ${milestone.milestoneName} sent!`,
-        text: "The waiting process can take 2-5 days. Thank you for your patience.Please check your email for more details.",        
-        icon: "success"
-    });
-      handleClose();
-    })
+        title: "Error",
+        text: error.message,
+        icon: "error"
+      });
+    }
     console.log("Start Date:", startDate.format("YYYY-MM-DD"));
     // Close the modal after submitting
   };

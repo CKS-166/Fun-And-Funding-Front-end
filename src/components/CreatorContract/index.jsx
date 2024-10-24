@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import { Link } from "react-router-dom";
 import { useNavigate } from 'react-router-dom';
+import contractApiInstace from '../../utils/ApiInstance/contractApiInstance';
 import {
     Modal,
     Box,
@@ -12,8 +13,12 @@ import {
     Stack
 } from '@mui/material';
 import Swal from 'sweetalert2';
+import Cookies from "js-cookie";
+
 
 const CreatorContract = ({ open, handleClose }) => {
+    const token = Cookies.get('_auth');
+    console.log(token)
     const navigate = useNavigate();
     const modalStyle = {
         position: "absolute",
@@ -32,12 +37,33 @@ const CreatorContract = ({ open, handleClose }) => {
         setIsChecked(event.target.checked);
     };
 
-    const handleAccept = () => {
-        if (isChecked) {
-            handleClose();
-            navigate('/request-funding-project/basic-info')
-        } else {
+    const handleAccept = async () => {
+        if (!isChecked) {
             alert('Please accept the terms and conditions before proceeding.');
+            return;
+        }
+    
+        try {
+            const response = await contractApiInstace.post(
+                '', 
+                {},  // Empty request body (if not needed)
+                {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json',
+                    }
+                }
+            );
+    
+            if (response.status === 200) {
+                handleClose();
+                navigate('/request-funding-project/basic-info');
+            } else {
+                alert('Something went wrong.');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Failed to authorize. Please try again.');
         }
     };
 

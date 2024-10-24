@@ -28,6 +28,8 @@ import './index.css';
 import DOMPurify from 'dompurify';
 import RequestMilestoneModal from '../../components/RequestMilestoneModal';
 import { set } from 'react-hook-form';
+import fundingProjectApiInstance from '../../utils/ApiInstance/fundingProjectApiInstance';
+import milestoneApiInstace from '../../utils/ApiInstance/milestoneApiInstance';
 const ProjectDetail = ({isOwner}) => {
   //sample owwner
   isOwner = true
@@ -52,10 +54,12 @@ const ProjectDetail = ({isOwner}) => {
   const fundedSuccessful = 3
   // status logic onclick
   const handleRequestMilestone = () => {
+    setIsModalOpen(true);
+    console.log(firstMilestone)
     console.log('a');
   }
   const handleUpdateProject = () => {
-    setIsModalOpen(true);
+    
     console.log('b');
   }
 
@@ -71,7 +75,7 @@ const ProjectDetail = ({isOwner}) => {
   //fetch milestones
   const fetchMilestones = async () => {
     try{
-      axios.get(`https://localhost:7044/api/milestone/group-latest-milestone`)
+      milestoneApiInstace.get(`/group-latest-milestone`)
         .then(response => {
           setMilestones(response.data._data);
           let first = response.data._data.find(milestone => milestone.milestoneOrder === 1);
@@ -85,7 +89,7 @@ const ProjectDetail = ({isOwner}) => {
   //fetch project data
   const fetchProject = async () => {
     try {
-      const { data } = await axios.get(`https://localhost:7044/api/funding-projects/${id}`)
+      const { data } = await fundingProjectApiInstance.get(`/${id}`)
         .then(response => {
           setProjectData(response.data._data);
           setIsLoading(true);
@@ -214,7 +218,7 @@ const ProjectDetail = ({isOwner}) => {
                         <Typography>Back this project</Typography>}
                        
                       </Button>
-                      <RequestMilestoneModal milestone={firstMilestone} open={isModalOpen} handleClose={() => handleClose()} projectId={projectData.id}/>
+                      {firstMilestone && <RequestMilestoneModal milestone={firstMilestone} open={isModalOpen} handleClose={() => handleClose()} projectId={projectData.id}/>} 
                       <Grid container spacing={2} sx={{ marginTop: '20px' }}>
                         <Grid size={6}>
                           <Button variant="contained"
@@ -349,7 +353,7 @@ const ProjectDetail = ({isOwner}) => {
                 <Box sx={{ display: "flex", flexDirection: "row", width: "100%", marginTop: '80px' }}>
                   <Box sx={{ marginRight: '150px' }}>
                     <Box>
-                      <CommentSection isBacker={true} />
+                      <CommentSection isBacker={true} projectId={projectData.id}/>
                     </Box>
                   </Box>
                   <Box>

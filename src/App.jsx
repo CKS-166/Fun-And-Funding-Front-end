@@ -42,7 +42,7 @@ import Milestone2 from "./pages/UpdateFundingProjectForm/ProjectMilestone/Milest
 import Milestone3 from "./pages/UpdateFundingProjectForm/ProjectMilestone/Milestone3";
 import Milestone4 from "./pages/UpdateFundingProjectForm/ProjectMilestone/Milestone4";
 import ProjectPreview from "./pages/UpdateFundingProjectForm/ProjectPreview";
-
+import MilestoneForm from "./pages/TestCR/MilestoneForm";
 function App() {
   return (
     <>
@@ -94,14 +94,14 @@ function App() {
           <Route path="/account/projects/update/:id/milestone4" element={<Milestone4 />} />
         </Route>
 
-        <Route path="/funding-detail/:id" element={<ProjectDetail />} />
+        <Route path="/funding-project/:id" element={<ProjectDetail />} />
         <Route path="/test" element={<TestCR />} />
         <Route path="/test-update" element={<TestUpdate />} />
         <Route path="/test-mile-req" element={<TestMileReq />} />
         <Route path="/test-update-req" element={<TestUpdateReq />} />
 
         <Route path="/test-detail" element={<TestDetail />} />
-
+        <Route path="/test-milestone-form" element={<MilestoneForm />} />
         <Route element={<UserProfileLayout />}>
           <Route path="/account/profile" element={<AccountProfile />} />
           <Route path="/account/projects" element={<AccountProject />} />

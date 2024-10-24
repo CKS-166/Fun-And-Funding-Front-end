@@ -6,9 +6,10 @@ import EmptyIcon from '../../../assets/images/image_empty.png'
 import FormDivider from "../../../components/CreateProject/ProjectForm/Divider"
 import NavigateButton from "../../../components/CreateProject/ProjectForm/NavigateButton"
 import PackageModal from "./PackageModal"
-
+import fundingProjectApiInstace from "../../../utils/ApiInstance/fundingProjectApiInstance"
+import Cookies from "js-cookie";
 const SetupDonatePackage = () => {
-
+  const token = Cookies.get("_auth");
   const { setFormIndex, setProjectData, projectData } = useOutletContext()
   const { thumbnail, projectVideo, projectImages } = useOutletContext();
   console.log(thumbnail);
@@ -102,9 +103,9 @@ const SetupDonatePackage = () => {
     for (let pair of formData.entries()) {
       console.log(pair[0], pair[1]);
     }
-    const sampleToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6Ijg0MGNhZjdhLTVlMmYtNGIwOS05ZDEwLWIwMTRjZWIzOWRkYiIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWUiOiJwYW9wYW8iLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJiYW9jYW80OTRAZ21haWwuY29tIiwianRpIjoiSmNtRjh1ajJJU3ZlTDVGdnZOazRwbnA4eHJoSU56OC0xNjE0MjI1NjI0IiwiYXBpX2tleSI6IkpjbUY4dWoySVN2ZUw1RnZ2Tms0cG5wOHhyaElOejgiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJHYW1lT3duZXIiLCJleHAiOjE3Mjk1ODM0NjQsImlzcyI6IkFQUE9UQVBBWSIsImF1ZCI6Imh0dHA6Ly9sb2NhbGhvc3Q6NzIzNSJ9.YLd1o5ThLuqz6yOT8lTeMVRKtJCiuwX-_0mL4nGRGK8'
+    const sampleToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6ImIzNTIzZGU1LWYxZDItNGNjOS04MzA2LWZhNGMwZWM2ZDI4YyIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWUiOiJwYW9wYW8iLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJiYW9jYW80OTRAZ21haWwuY29tIiwianRpIjoiSmNtRjh1ajJJU3ZlTDVGdnZOazRwbnA4eHJoSU56OC0xNjE0MjI1NjI0IiwiYXBpX2tleSI6IkpjbUY4dWoySVN2ZUw1RnZ2Tms0cG5wOHhyaElOejgiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJHYW1lT3duZXIiLCJleHAiOjE3MzAxMTA5MTgsImlzcyI6IkFQUE9UQVBBWSIsImF1ZCI6Imh0dHA6Ly9sb2NhbGhvc3Q6NzIzNSJ9.N1ZlRrWx4X8g76LmAPXhw4PfFisI_jImQ9QNO_3oako'
     try {
-      const response = await axios.post('https://localhost:7044/api/funding-projects', formData, {
+      const response = await fundingProjectApiInstace.post("",formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
           'Authorization' : `Bearer ${sampleToken}`

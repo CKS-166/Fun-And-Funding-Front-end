@@ -30,7 +30,7 @@ const PackageReward = ({ packageList, reloadDetail }) => {
   const handlePackageDonate = async (item) => {
     setIsLoading(true);
     let donateBody = {
-      userId: "8C94B07C-209B-4E11-A1B6-BC59E0B29976",
+      userId: "b3523de5-f1d2-4cc9-8306-fa4c0ec6d28c",
       packageId: item.id,
       donateAmount: item.requiredAmount,
     };

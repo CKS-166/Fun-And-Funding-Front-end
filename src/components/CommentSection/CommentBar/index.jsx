@@ -2,7 +2,9 @@ import React from 'react'
 import { Typography, Avatar, Box } from '@mui/material';
 import Grid from '@mui/material/Grid2';
 import './index.css'
-function CommentBar() {
+function CommentBar({comment}) {
+    const date = new Date(comment.createDate); 
+    const formattedDate = date.toLocaleDateString();
     return (
         <Box sx={{
             background: '#FFFFFF', height: '170px'
@@ -10,13 +12,15 @@ function CommentBar() {
             border: '1px solid rgba(0, 0, 0, 0.3)'
         }}>
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <Avatar sx={{ width: '60px', height: '60px', marginRight: '10px' }}>H</Avatar>
+                <Avatar sx={{ width: '60px', height: '60px', marginRight: '10px' }}>
+                    {comment.avatarUrl ? <img src={comment.avatarUrl} style={{ width: '60px', height: '60px' }} /> : 'H'}
+                </Avatar>
                 <Box sx={{ marginRight: '10px' }}>
                     <Typography sx={{ fontSize: '18px', fontWeight: '500' }}>
-                        SuperIdol123
+                        {comment.username}
                     </Typography>
                     <Typography sx={{ fontSize: '14px', fontWeight: '400', color: '#1BAA64' }}>
-                        9/9/2024
+                        {formattedDate}
                     </Typography>
                 </Box>
                 <Box sx={{
@@ -30,8 +34,7 @@ function CommentBar() {
             </Box>
             <Box>
                 <Typography sx={{ fontSize: '12px', fontWeight: '400',margin : '10px 0' }}>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut 
-                aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit
+                    {comment.content}
                 </Typography>
             </Box>
         </Box>

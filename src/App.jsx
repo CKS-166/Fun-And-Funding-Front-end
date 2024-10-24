@@ -46,6 +46,7 @@ import Chat from "./pages/Chat";
 
 //context
 import { ChatProvider } from "./contexts/ChatContext";
+import ChatLayout from "./layouts/ChatLayout";
 
 function App() {
   return (
@@ -142,7 +143,9 @@ function App() {
             <Route path="/profile/:id" element={<PublicProfile />} />
           </Route>
 
-          <Route path="/chat/:senderId/:receiverId" element={<Chat />} />
+          <Route element={<ChatLayout />}>
+            <Route path="/chat/:senderId/:receiverId" element={<Chat />} />
+          </Route>
         </Routes>
       </ChatProvider>
     </>

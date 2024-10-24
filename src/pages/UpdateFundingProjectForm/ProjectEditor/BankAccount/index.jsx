@@ -30,8 +30,6 @@ function BankAccount() {
         })
     };
 
-    console.log(project);
-
     const checkInitialBankAccount = async () => {
         try {
             setIsLoading(true);
@@ -191,7 +189,7 @@ function BankAccount() {
                 <Typography
                     sx={{
                         color: '#2F3645',
-                        fontSize: '1.25rem',
+                        fontSize: '1.5rem',
                         fontWeight: '700',
                         userSelect: 'none',
                         marginBottom: '1rem',
@@ -257,7 +255,7 @@ function BankAccount() {
                     )}
                 />
             </div>
-            <div className='basic-info-section'>
+            <div className='basic-info-section !mb-0'>
                 <Typography
                     className='basic-info-title'
                     sx={{ width: '70%', }}

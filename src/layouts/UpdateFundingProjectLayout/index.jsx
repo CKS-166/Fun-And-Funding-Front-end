@@ -121,7 +121,21 @@ function UpdateFundingProjectLayout() {
             const response = await fundingProjectApiInstace.get(`/${id}`);
             if (response && response.data) {
                 const project = response.data._data;
-                setProject(project);
+                const existedFile = project.fundingFiles.map(file => ({
+                    id: file.id,
+                    name: file.name,
+                    url: file.url,
+                    urlFile: null,
+                    filetype: file.filetype,
+                    isDeleted: file.isDeleted,
+                    newlyAdded: false,
+                }));
+
+                setProject({
+                    ...project,
+                    fundingFiles: null,
+                    existedFile: existedFile,
+                });
             } else {
                 console.error('No project data found');
             }

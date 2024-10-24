@@ -43,57 +43,96 @@ import Milestone3 from "./pages/UpdateFundingProjectForm/ProjectMilestone/Milest
 import Milestone4 from "./pages/UpdateFundingProjectForm/ProjectMilestone/Milestone4";
 import ProjectPreview from "./pages/UpdateFundingProjectForm/ProjectPreview";
 import MilestoneForm from "./pages/TestCR/MilestoneForm";
+import Chat from "./pages/Chat";
+
+//context
+import { ChatProvider } from "./contexts/ChatContext";
+
+
 function App() {
   return (
     <>
       <FunFundingAppBar />
-      <Routes>
-        <Route element={<UserLayout />}>
-          <Route path="*" element={<Navigate to="/home" />} />
-          <Route path="/" element={<Navigate to="/home" />} />
-          <Route path="/home" element={<HomePage />} />
-          <Route path="/about-us" element={<AboutUs />} />
-          <Route path="/project-detail" element={<ProjectDetail />} />
-        </Route>
+      <ChatProvider>
+        <Routes>
+          <Route element={<UserLayout />}>
+            <Route path="*" element={<Navigate to="/home" />} />
+            <Route path="/" element={<Navigate to="/home" />} />
+            <Route path="/home" element={<HomePage />} />
+            <Route path="/about-us" element={<AboutUs />} />
+            <Route path="/project-detail" element={<ProjectDetail />} />
+          </Route>
 
-        <Route path="choose-project-plan" element={<ChoosePlan />} />
-        <Route element={<CreateFundingProjectLayout />}>
-          <Route
-            path="request-funding-project/basic-info"
-            element={<BasicInfo />}
-          />
-          <Route
-            path="request-funding-project/introduction"
-            element={<Introduction />}
-          />
-          <Route
-            path="request-funding-project/project-media"
-            element={<ProjectMedia />}
-          />
-          <Route
-            path="request-funding-project/setup-bank-account"
-            element={<SetupBankAccount />}
-          />
-          <Route
-            path="request-funding-project/setup-donate-package"
-            element={<SetupDonatePackage />}
-          />
-        </Route>
+          <Route path="choose-project-plan" element={<ChoosePlan />} />
+          <Route element={<CreateFundingProjectLayout />}>
+            <Route
+              path="request-funding-project/basic-info"
+              element={<BasicInfo />}
+            />
+            <Route
+              path="request-funding-project/introduction"
+              element={<Introduction />}
+            />
+            <Route
+              path="request-funding-project/project-media"
+              element={<ProjectMedia />}
+            />
+            <Route
+              path="request-funding-project/setup-bank-account"
+              element={<SetupBankAccount />}
+            />
+            <Route
+              path="request-funding-project/setup-donate-package"
+              element={<SetupDonatePackage />}
+            />
+          </Route>
 
-        <Route element={<UpdateFundingProjectLayout />}>
-          <Route path="/account/projects/update/:id/preview" element={<ProjectPreview />} />
+          <Route element={<UpdateFundingProjectLayout />}>
+            <Route
+              path="/account/projects/update/:id/preview"
+              element={<ProjectPreview />}
+            />
 
-          <Route path="/account/projects/update/:id/basic-info" element={<BasicInformation />} />
-          <Route path="/account/projects/update/:id/bank-account" element={<BankAccount />} />
-          <Route path="/account/projects/update/:id/donation-packages" element={<DonationPackages />} />
-          <Route path="/account/projects/update/:id/media-files" element={<Media />} />
+            <Route
+              path="/account/projects/update/:id/basic-info"
+              element={<BasicInformation />}
+            />
+            <Route
+              path="/account/projects/update/:id/bank-account"
+              element={<BankAccount />}
+            />
+            <Route
+              path="/account/projects/update/:id/donation-packages"
+              element={<DonationPackages />}
+            />
+            <Route
+              path="/account/projects/update/:id/media-files"
+              element={<Media />}
+            />
 
-          <Route path="/account/projects/update/:id/milestone1" element={<Milestone1 />} />
-          <Route path="/account/projects/update/:id/milestone2" element={<Milestone2 />} />
-          <Route path="/account/projects/update/:id/milestone3" element={<Milestone3 />} />
-          <Route path="/account/projects/update/:id/milestone4" element={<Milestone4 />} />
-        </Route>
+            <Route
+              path="/account/projects/update/:id/milestone1"
+              element={<Milestone1 />}
+            />
+            <Route
+              path="/account/projects/update/:id/milestone2"
+              element={<Milestone2 />}
+            />
+            <Route
+              path="/account/projects/update/:id/milestone3"
+              element={<Milestone3 />}
+            />
+            <Route
+              path="/account/projects/update/:id/milestone4"
+              element={<Milestone4 />}
+            />
+          </Route>
 
+          <Route path="/funding-detail/:id" element={<ProjectDetail />} />
+          <Route path="/test" element={<TestCR />} />
+          <Route path="/test-update" element={<TestUpdate />} />
+          <Route path="/test-mile-req" element={<TestMileReq />} />
+          <Route path="/test-update-req" element={<TestUpdateReq />} />
         <Route path="/funding-project/:id" element={<ProjectDetail />} />
         <Route path="/test" element={<TestCR />} />
         <Route path="/test-update" element={<TestUpdate />} />
@@ -109,7 +148,10 @@ function App() {
         <Route element={<PublicProfileLayout />}>
           <Route path="/profile/:id" element={<PublicProfile />} />
         </Route>
-      </Routes>
+
+          <Route path="/chat/:senderId/:receiverId" element={<Chat />} />
+        </Routes>
+      </ChatProvider>
     </>
   );
 }

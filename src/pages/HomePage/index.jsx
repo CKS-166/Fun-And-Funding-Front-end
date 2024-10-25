@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 /* eslint-disable no-unused-vars */
 import ArrowForwardOutlinedIcon from "@mui/icons-material/ArrowForwardOutlined";
 import CheckIcon from "@mui/icons-material/Check";
@@ -25,14 +26,16 @@ import HomeFundingCardList from "../../components/HomeFundingCardList";
 import HomeMarketingCardList from "../../components/HomeMarketingCardList";
 import TopBackerList from "../../components/TopBackerList";
 import TopTestimonialList from "../../components/TopTestimonialList";
-
+// import ReportForm from "../../components/ReportPopUp";
 import "./index.css";
 
 function HomePage() {
   //const [checkIsLogin, setCheckIsLogin] = useState(false);
   const [mailSending, isMailSending] = useState(false);
   const [sendingSuccess, isSendingSuccess] = useState(false);
-
+  const [openReportForm, setOpenReportForm] = useState(false);
+  const handleOpenReportForm = () => setOpenReportForm(true);
+  const handleCloseReportForm = () => setOpenReportForm(false);
   const handleSendEmail = () => {
     isMailSending(true);
     setTimeout(() => {
@@ -42,6 +45,9 @@ function HomePage() {
   };
   return (
     <div className="mt-[-6.4rem]">
+      {/* <Button onClick={handleOpenReportForm}>Click to open ReportForm</Button> */}
+      {/* <ReportForm isOpen={openReportForm} onClose={handleCloseReportForm} /> */}
+
       <BannerCarousel />
       <div className="flex flex-col justify-center px-[6rem] pt-[7.5rem] pb-[3.75rem]">
         <div className="flex justify-between gap-[4rem] mb-[2.5rem]">

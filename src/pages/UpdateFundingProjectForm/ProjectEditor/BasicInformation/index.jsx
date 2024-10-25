@@ -86,7 +86,7 @@ function BasicInformation() {
                 <Typography
                     sx={{
                         color: '#2F3645',
-                        fontSize: '1.25rem',
+                        fontSize: '1.5rem',
                         fontWeight: '700',
                         userSelect: 'none',
                         width: '70%',

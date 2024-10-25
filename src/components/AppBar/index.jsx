@@ -38,9 +38,11 @@ import Swal from "sweetalert2";
 const FunFundingAppBar = () => {
   const navigate = useNavigate();
   const location = useLocation();
+
   const [isAuthDialogOpen, setIsAuthDialogOpen] = useState(false);
   const openAuthDialog = () => setIsAuthDialogOpen(true);
   const closeAuthDialog = () => setIsAuthDialogOpen(false);
+
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [name, setName] = useState("");
 

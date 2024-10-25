@@ -9,8 +9,8 @@ import fundingProjectApiInstace from '../../utils/ApiInstance/fundingProjectApiI
 import './index.css';
 import LoadingProjectBackDrop from './LoadingProjectBackdrop';
 import ProjectContext from './UpdateFundingProjectContext';
-import { editorList, milestoneList } from './UpdateFundingProjectLayout';
-
+import { editorList } from './UpdateFundingProjectLayout';
+import milestoneApiInstace from '../../utils/ApiInstance/milestoneApiInstance';
 function UpdateFundingProjectLayout() {
     const { id } = useParams();
     const navigate = useNavigate();
@@ -21,9 +21,15 @@ function UpdateFundingProjectLayout() {
     const [project, setProject] = useState({});
     const [isLoading, setIsLoading] = useState(true);
     const [loadingStatus, setLoadingStatus] = useState(0);
-
+    const [milestoneList, setMilestoneList] = useState([]);
     console.log(project);
 
+    //fetch milestones
+    const fetchMilestones = async () => {
+        await milestoneApiInstace.get(`/group-latest-milestone`).then(response => {
+            setMilestoneList(response.data._data);
+        })
+    }
     const handleSaveAll = async (event) => {
         event.preventDefault();
         try {
@@ -106,6 +112,7 @@ function UpdateFundingProjectLayout() {
 
     useEffect(() => {
         fetchProject();
+        fetchMilestones();
     }, [id]);
 
     const fetchProject = async () => {
@@ -114,7 +121,21 @@ function UpdateFundingProjectLayout() {
             const response = await fundingProjectApiInstace.get(`/${id}`);
             if (response && response.data) {
                 const project = response.data._data;
-                setProject(project);
+                const existedFile = project.fundingFiles.map(file => ({
+                    id: file.id,
+                    name: file.name,
+                    url: file.url,
+                    urlFile: null,
+                    filetype: file.filetype,
+                    isDeleted: file.isDeleted,
+                    newlyAdded: false,
+                }));
+
+                setProject({
+                    ...project,
+                    fundingFiles: null,
+                    existedFile: existedFile,
+                });
             } else {
                 console.error('No project data found');
             }
@@ -142,22 +163,22 @@ function UpdateFundingProjectLayout() {
     };
 
     const getActiveEditor = (id) => {
-        const matchedEditor = editorList.find((item) => location.pathname.includes(item.link(id)));
+        const matchedEditor = editorList.find((item) => location.pathname.includes(item.id));
         return matchedEditor ? `Project Editor / ${matchedEditor.name}` : '';
     };
 
     const getActiveMilestone = (id) => {
-        const matchedMilestone = milestoneList.find((item) => location.pathname.includes(item.link(id)));
-        return matchedMilestone ? `Project Milestone / ${matchedMilestone.name}` : '';
+        const matchedMilestone = milestoneList.find((item) => location.pathname.includes(item.id));
+        return matchedMilestone ? `Project Milestone / ${matchedMilestone.milestoneName}` : '';
     };
 
     const handleNavigation = (link) => {
         console.log(link)
-        navigate(link);
+        navigate(`/account/projects/update/${link}/milestone1`);
     };
 
-    const isEditorActive = editorList.some((item) => location.pathname.includes(item.link(id)));
-    const isMilestoneActive = milestoneList.some((item) => location.pathname.includes(item.link(id)));
+    const isEditorActive = editorList.some((item) => location.pathname.includes(item.id));
+    const isMilestoneActive = milestoneList.some((item) => location.pathname.includes(item.id));
 
     const getActiveSection = (id) => {
         const activeEditor = getActiveEditor(id);
@@ -235,7 +256,7 @@ function UpdateFundingProjectLayout() {
                                                     key={item.name}
                                                     onClick={() => handleNavigation(item.link(id))}
                                                     sx={{
-                                                        backgroundColor: location.pathname.includes(item.link(id)) ? '#88D1AE' : 'transparent',
+                                                        backgroundColor: location.pathname.includes(item.id) ? '#88D1AE' : 'transparent',
                                                         '&:hover': {
                                                             backgroundColor: '#88D1AE',
                                                             '& .MuiListItemText-root': {
@@ -247,7 +268,7 @@ function UpdateFundingProjectLayout() {
                                                     <ListItemText
                                                         primary={item.name}
                                                         sx={{
-                                                            color: location.pathname.includes(item.link(id)) ? '#F5F7F8' : '#F5F7F8',
+                                                            color: location.pathname.includes(item.id) ? '#F5F7F8' : '#F5F7F8',
                                                             fontSize: '1rem',
                                                             fontWeight: '600',
                                                             height: '2rem',
@@ -279,9 +300,9 @@ function UpdateFundingProjectLayout() {
                                                 <ListItem
                                                     button
                                                     key={item.name}
-                                                    onClick={() => handleNavigation(item.link(id))}
+                                                    onClick={() => handleNavigation(item.id)}
                                                     sx={{
-                                                        backgroundColor: location.pathname.includes(item.link(id)) ? '#88D1AE' : 'transparent',
+                                                        backgroundColor: location.pathname.includes(item.id) ? '#88D1AE' : 'transparent',
                                                         '&:hover': {
                                                             backgroundColor: '#88D1AE',
                                                             '& .MuiListItemText-root': {
@@ -291,9 +312,9 @@ function UpdateFundingProjectLayout() {
                                                     }}
                                                 >
                                                     <ListItemText
-                                                        primary={item.name}
+                                                        primary={item.milestoneName}
                                                         sx={{
-                                                            color: location.pathname.includes(item.link(id)) ? '#F5F7F8' : '#F5F7F8',
+                                                            color: location.pathname.includes(item.id) ? '#F5F7F8' : '#F5F7F8',
                                                             fontSize: '1rem',
                                                             fontWeight: '600',
                                                             height: '2rem',

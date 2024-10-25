@@ -23,7 +23,7 @@ function setCookie(name, value, expiresIn) {
   document.cookie = cookieString;
 }
 
-function LoginForm({ onClose, onOpenRoleSelection }) {
+function LoginForm({ onClose, onOpenRoleSelection, onOpenForgotPassword }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -89,8 +89,8 @@ function LoginForm({ onClose, onOpenRoleSelection }) {
             willOpen: () => {
               // Add custom styles
               const popup = Swal.getPopup();
-              popup.style.backgroundColor = "#1BAA64"; // Custom background color
-              popup.style.color = "#fff"; // Custom text color
+              popup.style.backgroundColor = "#ffffff"; // Custom background color
+              popup.style.color = "#000000"; // Custom text color
               popup.style.borderRadius = "10px"; // Custom border radius
               popup.style.padding = "20px"; // Custom padding
             },
@@ -131,31 +131,29 @@ function LoginForm({ onClose, onOpenRoleSelection }) {
 
   return (
     <div className="fixed inset-0 flex justify-center items-center bg-gray-800 bg-opacity-75 z-50">
-      <div className="bg-white p-10 rounded-3xl relative shadow-lg w-[720px]">
+      <div className="py-10 px-10 bg-white rounded-3xl relative shadow-lg w-[45rem]">
         <button
           onClick={onClose}
-          className="absolute top-4 text-[#1BAA64] right-4 text-xl"
+          className="absolute top-4 right-4 text-[#1BAA64] text-xl"
         >
           &times;
         </button>
 
         <div className="flex flex-col items-center mb-6">
-          <img
-            src={logo}
-            alt="Logo"
-            className="w-[78px] h-[88px] mb-[2.5rem]"
-          />
-          <h2 className="text-4xl font-bold text-gray-800">Welcome back</h2>
+          <img src={logo} alt="Logo" className="w-[4.875rem] h-[5.5rem] mb-4" />
+          <h2 className="text-4xl font-bold text-gray-800 mb-1.5">
+            Welcome back
+          </h2>
           <p className="text-gray-500 mt-1">
             Please choose your sign in method
           </p>
         </div>
 
         <form onSubmit={handleSubmit}>
-          <div className="flex justify-between gap-4 mb-6">
+          <div className="flex flex-col gap-4 mb-6">
             <button
               type="button"
-              className="flex items-center justify-center gap-2 w-full py-2 bg-white border border-gray-300 rounded-md shadow-sm text-gray-600 hover:bg-gray-50 transition-all duration-200"
+              className="flex items-center justify-center gap-2 w-full py-3 bg-white border border-gray-300 rounded-md shadow-sm text-gray-600 hover:bg-gray-50 transition-all duration-200"
             >
               <FaGoogle className="text-xl" style={{ color: "#4285F4" }} />
               Google
@@ -168,37 +166,37 @@ function LoginForm({ onClose, onOpenRoleSelection }) {
             <div className="w-full h-px bg-gray-300"></div>
           </div>
 
-          <InputField
-            label="Email"
-            name="email"
-            id="email-input"
-            formControlStyles={{ width: "100%" }}
-            value={email}
-            onChange={handleEmailChange}
-            placeholder="Enter email"
-          />
+          <div className="flex flex-col gap-4">
+            <InputField
+              label="Email"
+              name="email"
+              id="email-input"
+              value={email}
+              onChange={handleEmailChange}
+              placeholder="Enter email"
+            />
 
-          <InputField
-            label="Password"
-            id="password-input"
-            name="password"
-            startIcon={<HttpsIcon />}
-            formControlStyles={{ width: "100%" }}
-            value={password}
-            onChange={handlePasswordChange}
-            placeholder="Enter password"
-            isPassword={true}
-            showPassword={showPassword}
-            togglePasswordVisibility={togglePasswordVisibility}
-          />
+            <InputField
+              label="Password"
+              id="password-input"
+              name="password"
+              startIcon={<HttpsIcon />}
+              value={password}
+              onChange={handlePasswordChange}
+              placeholder="Enter password"
+              isPassword={true}
+              showPassword={showPassword}
+              togglePasswordVisibility={togglePasswordVisibility}
+            />
+          </div>
 
-          <div className="flex justify-end mt-3">
-            <a
-              href="/forgot-password"
+          <div className="flex justify-end mt-[1rem]">
+            <button
+              onClick={onOpenForgotPassword}
               className="text-sm text-gray-500 hover:text-gray-800"
             >
               Forgot password?
-            </a>
+            </button>
           </div>
 
           <button
@@ -221,9 +219,9 @@ function LoginForm({ onClose, onOpenRoleSelection }) {
         </div>
       </div>
       <ToastContainer
-        position="bottom-left" // Set the position for the Toast notifications
-        autoClose={3000} // Automatically close after 3 seconds
-        hideProgressBar={false} // Show progress bar
+        position="bottom-left"
+        autoClose={3000}
+        hideProgressBar={false}
         closeOnClick
         pauseOnHover
         draggable

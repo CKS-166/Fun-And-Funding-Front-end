@@ -1,12 +1,12 @@
 .custom-swal-popup {
-    background-color: #1BAA64; /* Custom background color */
-    color: #fff; /* Custom text color */
+    background-color: #ffffff; /* Custom background color */
+    color: #1BAA64; /* Custom text color */
     border-radius: 10px; /* Custom border radius */
     padding: 20px;   /* Custom padding */
   }
   
   .custom-swal-title {
-    color: #fff; /* Customize title color */
+    color: #000000; /* Customize title color */
   }
   
   .custom-swal-icon {

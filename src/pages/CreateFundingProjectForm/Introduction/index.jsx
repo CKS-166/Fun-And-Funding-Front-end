@@ -17,6 +17,19 @@ const Introduction = () => {
       ...prev,
       'introduction': introductionData
     }))
+
+    const handleBeforeUnload = (event) => {
+      event.returnValue = "you sure?"
+      console.log(event.returnValue)
+      return "you sure?";
+    }
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return (() => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    })
+
   }, [introductionData])
 
   useEffect(() => {

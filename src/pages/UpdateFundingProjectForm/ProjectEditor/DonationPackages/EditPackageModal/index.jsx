@@ -260,25 +260,25 @@ function EditPackageModal({ open, pkg, handleClose, handleUpdatePackage, isNewPa
                                 <Typography className='edit-package-modal-title'>
                                     Image<span className='text-[#1BAA64]'>*</span>
                                 </Typography>
-                                <label
-                                    className="flex flex-col items-center justify-center w-full h-[18rem] border-2 border-[#2F3645] border-dashed rounded-lg cursor-pointer bg-[#EAEAEA] dark:hover:border-[#92979F] dark:hover:bg-[#F0F1F2]"
-                                >
-                                    {imageUrl ? (
-                                        <div className="relative w-full h-[17.8rem]">
-                                            <img
-                                                src={imageUrl}
-                                                alt="Package preview"
-                                                className="w-full h-[17.8rem] object-cover rounded-lg"
-                                            />
-                                            <button
-                                                className="absolute inset-0 flex items-center justify-center bg-[#2F3645] bg-opacity-50 rounded-[0.25rem] opacity-0 hover:opacity-100 transition-opacity"
-                                                title="Change Image"
-                                                onClick={() => document.getElementById('fileInput').click()}
-                                            >
-                                                <ChangeCircleIcon className="text-[#F5F7F9] !w-[4rem] !h-[4rem]" />
-                                            </button>
-                                        </div>
-                                    ) : (
+                                {imageUrl ? (
+                                    <div className="relative w-full h-[17.8rem]">
+                                        <img
+                                            src={imageUrl}
+                                            alt="Package preview"
+                                            className="w-full h-[17.8rem] object-cover rounded-lg"
+                                        />
+                                        <button
+                                            className="absolute inset-0 flex items-center justify-center bg-[#2F3645] bg-opacity-50 rounded-[0.25rem] opacity-0 hover:opacity-100 transition-opacity"
+                                            title="Change Image"
+                                            onClick={() => document.getElementById('fileInput').click()}
+                                        >
+                                            <ChangeCircleIcon className="text-[#F5F7F9] !w-[4rem] !h-[4rem]" />
+                                        </button>
+                                    </div>
+                                ) : (
+                                    <label
+                                        className="flex flex-col items-center justify-center w-full h-[18rem] border-2 border-[#2F3645] border-dashed rounded-lg cursor-pointer bg-[#EAEAEA] dark:hover:border-[#92979F] dark:hover:bg-[#F0F1F2]"
+                                    >
                                         <div className="flex flex-col items-center justify-center pt-5 pb-6">
                                             <svg
                                                 className="w-8 h-8 mb-4 text-gray-500"
@@ -295,20 +295,20 @@ function EditPackageModal({ open, pkg, handleClose, handleUpdatePackage, isNewPa
                                                     d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5A5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
                                                 />
                                             </svg>
-                                            <p className="mb-2 text-sm text-gray-500">Click to upload</p>
+                                            <p className="mb-2 text-sm text-gray-500 font-semibold">Click to upload</p>
                                             <p className="text-xs text-gray-500">
                                                 SVG, PNG, JPG or GIF (max. 800x400px)
                                             </p>
                                         </div>
-                                    )}
-                                    <input
-                                        type="file"
-                                        id="fileInput"
-                                        className="hidden"
-                                        accept="image/*"
-                                        onChange={(e) => handleChangeImageUrl(e)}
-                                    />
-                                </label>
+                                    </label>
+                                )}
+                                <input
+                                    type="file"
+                                    id="fileInput"
+                                    className="hidden"
+                                    accept="image/*"
+                                    onChange={(e) => handleChangeImageUrl(e)}
+                                />
                             </Grid2>
                             <Grid2 size={7.5}>
                                 <Typography className='edit-package-modal-title'>

@@ -6,10 +6,21 @@ import InputField from "../../components/InputField";
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 import PortraitIcon from "@mui/icons-material/Portrait";
 import logo from "../../assets/OnlyLogo.png";
-import authApiInstace from "../../utils/ApiInstance/authApiInstance";
+import authApiInstace from "../../utils/apiInstance/authApiInstance";
 import { ToastContainer, toast } from "react-toastify"; // Import ToastContainer
 import { Navigate, useNavigate } from "react-router";
-function BackerForm({ onClose, onOpenLogin, onBack }) {
+
+function setCookie(name, value, expiresIn) {
+  var now = new Date();
+  var time = now.getTime() + 7 * 60 * 60 * 1000;
+  var expireTime = time + 1000 * expiresIn;
+  now.setTime(expireTime);
+  console.log(now);
+  console.log(now.toUTCString());
+  const cookieString = `${name}=${value}; expires=${now.toUTCString()}; path=/`;
+  document.cookie = cookieString;
+}
+function BackerForm({ onClose, onOpenLogin, onBack, onOpenOTPForm }) {
   const [email, setEmail] = useState("");
   const [userName, setUserName] = useState("");
   const [fullName, setFullName] = useState("");
@@ -40,9 +51,12 @@ function BackerForm({ onClose, onOpenLogin, onBack }) {
   const handleLoginClick = () => {
     onOpenLogin(); // Switch to the LoginForm without closing the dialog
   };
+  const handleOTPClick = () => {
+    onOpenOTPForm(); // Switch to the LoginForm without closing the dialog
+  };
 
   const handleEmailChange = (e) => setEmail(e.target.value);
-  const handleAccountChange = (e) => setUserName(e.target.value);
+  const handleUserChange = (e) => setUserName(e.target.value);
   const handleFullNameChange = (e) => setFullName(e.target.value);
   const handlePasswordChange = (e) => setPassword(e.target.value);
   const handleConfirmPasswordChange = (e) => setConfirmPassword(e.target.value);
@@ -63,10 +77,8 @@ function BackerForm({ onClose, onOpenLogin, onBack }) {
         console.log("Register failed:", res.data._message);
       } else {
         notify(`${"Register success, please login"}`, "success");
-        console.log("Register success, please login");
-        setTimeout(() => {
-          handleLoginClick(); // Navigate to LoginForm
-        }, 3000);
+        setCookie("_username", userName, 7);
+        handleOTPClick(); // Navigate to LoginForm
       }
     });
   };
@@ -75,7 +87,7 @@ function BackerForm({ onClose, onOpenLogin, onBack }) {
 
   return (
     <div className="fixed inset-0 flex justify-center items-center bg-gray-800 bg-opacity-75 z-50">
-      <div className="bg-white p-10 rounded-3xl relative shadow-lg w-[720px]">
+      <div className="bg-white p-10 rounded-3xl relative shadow-lg w-[45rem]">
         {/* Close Button */}
         <button
           onClick={onClose}
@@ -94,16 +106,12 @@ function BackerForm({ onClose, onOpenLogin, onBack }) {
           Back
         </button>
         {/* Logo and Welcome Message */}
-        <div className="flex flex-col items-center mb-6">
-          <img
-            src={logo}
-            alt="Logo"
-            className="w-[78px] h-[88px] mb-[2.5rem]"
-          />
-          <h2 className="text-4xl font-bold text-gray-800">
+        <div className="flex flex-col items-center">
+          <img src={logo} alt="Logo" className="w-[78px] h-[88px] mb-[1rem]" />
+          <h2 className="text-[2.5rem] font-bold text-gray-800">
             Create a Backer account
           </h2>
-          <p className="text-gray-500 mt-1">
+          <p className="text-gray-500 mt-[0.375rem] mb-[1.5rem]">
             Browse thousands of games and projects for free
           </p>
         </div>
@@ -113,13 +121,13 @@ function BackerForm({ onClose, onOpenLogin, onBack }) {
             {/* Account name Input */}
             <div className="w-full">
               <InputField
-                label="Account Name"
+                label="User Name"
                 startIcon={<PortraitIcon />}
-                id="account-input"
+                id="user-input"
                 formControlStyles={{ width: "100%" }}
                 value={userName}
-                onChange={handleAccountChange}
-                placeholder="Enter Account Name"
+                onChange={handleUserChange}
+                placeholder="Enter User Name"
               />
             </div>
 

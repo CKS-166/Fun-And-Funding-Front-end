@@ -173,8 +173,8 @@ const BasicInfo = () => {
                     message: "Goal amount must be at least 10,000 VND"
                   }
                 })}
-                error={!!errors.goalAmount}
-                helperText={errors.goalAmount?.message}
+                error={!!errors.target}
+                helperText={errors.target?.message}
               />
             </Grid2>
           </Grid2>

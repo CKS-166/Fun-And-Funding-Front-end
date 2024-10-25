@@ -6,10 +6,21 @@ import InputField from "../../components/InputField";
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 import PortraitIcon from "@mui/icons-material/Portrait";
 import logo from "../../assets/OnlyLogo.png";
-import authApiInstace from "../../utils/ApiInstance/authApiInstance";
+import authApiInstace from "../../utils/apiInstance/authApiInstance";
 import { ToastContainer, toast } from "react-toastify"; // Import ToastContainer
 import { Navigate, useNavigate } from "react-router";
-function BackerForm({ onClose, onOpenLogin, onBack }) {
+
+function setCookie(name, value, expiresIn) {
+  var now = new Date();
+  var time = now.getTime() + 7 * 60 * 60 * 1000;
+  var expireTime = time + 1000 * expiresIn;
+  now.setTime(expireTime);
+  console.log(now);
+  console.log(now.toUTCString());
+  const cookieString = `${name}=${value}; expires=${now.toUTCString()}; path=/`;
+  document.cookie = cookieString;
+}
+function BackerForm({ onClose, onOpenLogin, onBack, onOpenOTPForm }) {
   const [email, setEmail] = useState("");
   const [userName, setUserName] = useState("");
   const [fullName, setFullName] = useState("");
@@ -40,6 +51,9 @@ function BackerForm({ onClose, onOpenLogin, onBack }) {
   const handleLoginClick = () => {
     onOpenLogin(); // Switch to the LoginForm without closing the dialog
   };
+  const handleOTPClick = () => {
+    onOpenOTPForm(); // Switch to the LoginForm without closing the dialog
+  };
 
   const handleEmailChange = (e) => setEmail(e.target.value);
   const handleUserChange = (e) => setUserName(e.target.value);
@@ -63,10 +77,8 @@ function BackerForm({ onClose, onOpenLogin, onBack }) {
         console.log("Register failed:", res.data._message);
       } else {
         notify(`${"Register success, please login"}`, "success");
-        console.log("Register success, please login");
-        setTimeout(() => {
-          handleLoginClick(); // Navigate to LoginForm
-        }, 1000);
+        setCookie("_username", userName, 7);
+        handleOTPClick(); // Navigate to LoginForm
       }
     });
   };

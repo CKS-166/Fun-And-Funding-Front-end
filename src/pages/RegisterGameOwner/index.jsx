@@ -7,9 +7,18 @@ import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 import PortraitIcon from "@mui/icons-material/Portrait";
 import logo from "../../assets/OnlyLogo.png";
 import { ToastContainer, toast } from "react-toastify";
-import authApiInstace from "../../utils/ApiInstance/authApiInstance"; // Import ToastContainer
-
-function OwnerForm({ onClose, onOpenLogin, onBack }) {
+import authApiInstance from "../../utils/apiInstance/authApiInstance";
+function setCookie(name, value, expiresIn) {
+  var now = new Date();
+  var time = now.getTime() + 7 * 60 * 60 * 1000;
+  var expireTime = time + 1000 * expiresIn;
+  now.setTime(expireTime);
+  console.log(now);
+  console.log(now.toUTCString());
+  const cookieString = `${name}=${value}; expires=${now.toUTCString()}; path=/`;
+  document.cookie = cookieString;
+}
+function OwnerForm({ onClose, onOpenLogin, onBack, onOpenOTPForm }) {
   const [email, setEmail] = useState("");
   const [userName, setUserName] = useState("");
   const [fullName, setFullName] = useState("");
@@ -39,6 +48,9 @@ function OwnerForm({ onClose, onOpenLogin, onBack }) {
   const handleLoginClick = () => {
     onOpenLogin(); // Switch to the LoginForm without closing the dialog
   };
+  const handleOTPClick = () => {
+    onOpenOTPForm(); // Switch to the LoginForm without closing the dialog
+  };
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
   };
@@ -66,16 +78,15 @@ function OwnerForm({ onClose, onOpenLogin, onBack }) {
       confirmPassword: confirmPassword,
     };
     // Add your form submission logic here
-    authApiInstace.post("/game-owner", jsonData).then((res) => {
+    authApiInstance.post("/game-owner", jsonData).then((res) => {
       if (!res.data._isSuccess) {
         notify(`${res.data._message[0] || "Register failed"}`, "warn");
         console.log("Register failed:", res.data._message);
       } else {
         notify(`${"Register success, please login"}`, "success");
         console.log("Register success, please login");
-        setTimeout(() => {
-          handleLoginClick(); // Navigate to LoginForm
-        }, 1000);
+        setCookie("_username", userName, 7);
+        handleOTPClick();
       }
     });
   };

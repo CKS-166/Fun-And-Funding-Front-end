@@ -278,6 +278,7 @@ function EditPackageModal({ open, pkg, handleClose, handleUpdatePackage, isNewPa
                                 ) : (
                                     <label
                                         className="flex flex-col items-center justify-center w-full h-[18rem] border-2 border-[#2F3645] border-dashed rounded-lg cursor-pointer bg-[#EAEAEA] dark:hover:border-[#92979F] dark:hover:bg-[#F0F1F2]"
+                                        onClick={() => document.getElementById('fileInput').click()}
                                     >
                                         <div className="flex flex-col items-center justify-center pt-5 pb-6">
                                             <svg
@@ -318,6 +319,7 @@ function EditPackageModal({ open, pkg, handleClose, handleUpdatePackage, isNewPa
                                     value={name}
                                     onChange={handleChangeName}
                                     error={nameError}
+                                    placeholder='Your package name goes here...'
                                     helperText={nameError ? "Package name is required" : ""}
                                     className="custom-update-textfield"
                                     variant="outlined"
@@ -393,6 +395,7 @@ function EditPackageModal({ open, pkg, handleClose, handleUpdatePackage, isNewPa
                                     value={description}
                                     onChange={handleChangeDescription}
                                     error={descriptionError}
+                                    placeholder='Your description goes here...'
                                     helperText={descriptionError ? "Description is required" : ""}
                                     className="custom-update-textfield"
                                     variant="outlined"

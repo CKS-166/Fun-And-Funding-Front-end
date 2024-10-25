@@ -174,7 +174,7 @@ function UpdateFundingProjectLayout() {
 
     const handleNavigation = (link) => {
         console.log(link)
-        navigate(`/account/projects/update/$${link}/milestone1`);
+        navigate(`/account/projects/update/${link}/milestone1`);
     };
 
     const isEditorActive = editorList.some((item) => location.pathname.includes(item.id));

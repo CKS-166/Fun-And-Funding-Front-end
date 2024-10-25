@@ -10,6 +10,7 @@ const MilestoneForm = () => {
   const [files, setFiles] = useState({}); // Store multiple files by requirement ID
   const [createdMilestoneId, setCreatedMilestoneId] = useState(null); // Store the created milestone ID
   const [isEditing, setIsEditing] = useState(false);
+
   const fetchFixedMilestone = async () => {   
     axios
     .get("https://localhost:7044/api/milestone/group-latest-milestone")

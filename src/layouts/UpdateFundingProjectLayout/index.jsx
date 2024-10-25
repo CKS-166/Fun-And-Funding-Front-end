@@ -6,11 +6,11 @@ import { Outlet, useLocation } from 'react-router';
 import { useNavigate, useParams } from 'react-router-dom';
 import 'sweetalert2';
 import fundingProjectApiInstace from '../../utils/ApiInstance/fundingProjectApiInstance';
+import milestoneApiInstace from '../../utils/ApiInstance/milestoneApiInstance';
 import './index.css';
 import LoadingProjectBackDrop from './LoadingProjectBackdrop';
 import ProjectContext from './UpdateFundingProjectContext';
 import { editorList } from './UpdateFundingProjectLayout';
-import milestoneApiInstace from '../../utils/ApiInstance/milestoneApiInstance';
 function UpdateFundingProjectLayout() {
     const { id } = useParams();
     const navigate = useNavigate();
@@ -43,14 +43,11 @@ function UpdateFundingProjectLayout() {
             formData.append('Name', project.name);
             formData.append('Description', project.description);
             formData.append('Introduction', project.introduction);
-            formData.append('StartDate', project.startDate);
-            formData.append('EndDate', project.endDate);
-            formData.append('Target', project.target);
-            formData.append('Balance', project.balance);
 
-            if (project.bankAccount) {
-                formData.append('BankAccount.BankNumber', project.bankAccount.bankNumber);
-                formData.append('BankAccount.BankCode', project.bankAccount.bankCode);
+            if (project.wallet.bankAccount) {
+                formData.append('BankAccount.Id', project.wallet.bankAccount.id);
+                formData.append('BankAccount.BankNumber', project.wallet.bankAccount.bankNumber);
+                formData.append('BankAccount.BankCode', project.wallet.bankAccount.bankCode);
             }
 
             project.packages.forEach((packageItem, index) => {
@@ -59,10 +56,11 @@ function UpdateFundingProjectLayout() {
                 formData.append(`Packages[${index}].RequiredAmount`, packageItem.requiredAmount);
                 formData.append(`Packages[${index}].Description`, packageItem.description);
                 formData.append(`Packages[${index}].LimitQuantity`, packageItem.limitQuantity);
-                if (packageItem.imageFile) {
-                    formData.append(`Packages[${index}].ImageFile`, packageItem.imageFile);
+                if (packageItem.updatedImage) {
+                    formData.append(`Packages[${index}].UpdatedImage`, packageItem.updatedImage);
                 }
                 packageItem.rewardItems.forEach((reward, rewardIndex) => {
+                    formData.append(`Packages[${index}].RewardItems[${rewardIndex}].Id`, reward.id);
                     formData.append(`Packages[${index}].RewardItems[${rewardIndex}].Name`, reward.name);
                     formData.append(`Packages[${index}].RewardItems[${rewardIndex}].Description`, reward.description);
                     formData.append(`Packages[${index}].RewardItems[${rewardIndex}].Quantity`, reward.quantity);
@@ -74,9 +72,20 @@ function UpdateFundingProjectLayout() {
 
             if (project.fundingFiles) {
                 project.fundingFiles.forEach((file, index) => {
+                    formData.append(`FundingFiles[${index}].Id`, file.id);
                     formData.append(`FundingFiles[${index}].Name`, file.name);
-                    formData.append(`FundingFiles[${index}].URL`, file);
+                    formData.append(`FundingFiles[${index}].UrlFile`, file.urlFile);
                     formData.append(`FundingFiles[${index}].Filetype`, file.filetype);
+                    formData.append(`FundingFiles[${index}].IsDeleted`, file.isDeleted);
+                });
+            }
+            if (project.existedFile) {
+                project.existedFile.forEach((file, index) => {
+                    formData.append(`ExistedFile[${index}].Id`, file.id);
+                    formData.append(`ExistedFile[${index}].Name`, file.name);
+                    formData.append(`ExistedFile[${index}].Url`, file.url);
+                    formData.append(`ExistedFile[${index}].Filetype`, file.filetype);
+                    formData.append(`ExistedFile[${index}].IsDeleted`, file.isDeleted);
                 });
             }
 
@@ -94,6 +103,7 @@ function UpdateFundingProjectLayout() {
             if (response.status === 200) {
                 console.log('Project saved successfully.');
                 console.log(response);
+                setIsEdited(false);
             } else {
                 console.error(`Unexpected status code: ${response.error}`);
             }
@@ -107,7 +117,13 @@ function UpdateFundingProjectLayout() {
 
 
     const handleDiscardAll = async () => {
-        console.log('Discard all changes.');
+        setIsLoading(true);
+        setLoadingStatus(4);
+        fetchProject();
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        setIsEdited(false);
+        setIsLoading(false);
+        setLoadingStatus(0);
     };
 
     useEffect(() => {
@@ -163,22 +179,26 @@ function UpdateFundingProjectLayout() {
     };
 
     const getActiveEditor = (id) => {
-        const matchedEditor = editorList.find((item) => location.pathname.includes(item.id));
+        const matchedEditor = editorList.find((item) => location.pathname.includes(item.link(id)));
         return matchedEditor ? `Project Editor / ${matchedEditor.name}` : '';
     };
 
     const getActiveMilestone = (id) => {
-        const matchedMilestone = milestoneList.find((item) => location.pathname.includes(item.id));
+        const matchedMilestone = milestoneList.find(() => location.pathname.includes(id));
         return matchedMilestone ? `Project Milestone / ${matchedMilestone.milestoneName}` : '';
     };
 
-    const handleNavigation = (link) => {
+    const handleMilestoneNavigation = (link) => {
         console.log(link)
         navigate(`/account/projects/update/$${link}/milestone1`);
     };
 
-    const isEditorActive = editorList.some((item) => location.pathname.includes(item.id));
-    const isMilestoneActive = milestoneList.some((item) => location.pathname.includes(item.id));
+    const handleNavigation = (link) => {
+        navigate(link);
+    };
+
+    const isEditorActive = editorList.some((item) => location.pathname.includes(item.link(id)));
+    const isMilestoneActive = milestoneList.some((item) => location.pathname.includes(item.link(id)));
 
     const getActiveSection = (id) => {
         const activeEditor = getActiveEditor(id);
@@ -256,7 +276,7 @@ function UpdateFundingProjectLayout() {
                                                     key={item.name}
                                                     onClick={() => handleNavigation(item.link(id))}
                                                     sx={{
-                                                        backgroundColor: location.pathname.includes(item.id) ? '#88D1AE' : 'transparent',
+                                                        backgroundColor: location.pathname.includes(item.link(id)) ? '#88D1AE' : 'transparent',
                                                         '&:hover': {
                                                             backgroundColor: '#88D1AE',
                                                             '& .MuiListItemText-root': {
@@ -268,7 +288,7 @@ function UpdateFundingProjectLayout() {
                                                     <ListItemText
                                                         primary={item.name}
                                                         sx={{
-                                                            color: location.pathname.includes(item.id) ? '#F5F7F8' : '#F5F7F8',
+                                                            color: location.pathname.includes(item.link(id)) ? '#F5F7F8' : '#F5F7F8',
                                                             fontSize: '1rem',
                                                             fontWeight: '600',
                                                             height: '2rem',
@@ -300,7 +320,7 @@ function UpdateFundingProjectLayout() {
                                                 <ListItem
                                                     button
                                                     key={item.name}
-                                                    onClick={() => handleNavigation(item.id)}
+                                                    onClick={() => handleMilestoneNavigation(item.id)}
                                                     sx={{
                                                         backgroundColor: location.pathname.includes(item.id) ? '#88D1AE' : 'transparent',
                                                         '&:hover': {

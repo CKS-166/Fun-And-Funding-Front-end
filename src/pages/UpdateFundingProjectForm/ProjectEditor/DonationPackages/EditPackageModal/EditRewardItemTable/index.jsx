@@ -21,12 +21,19 @@ function EditRewardItemTable({ rewardItems: initialRewardItems, onUpdateRewardIt
         setRewardItems(initialRewardItems);
     }, [initialRewardItems]);
 
+    const generateGUID = () => {
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+            const r = Math.random() * 16 | 0;
+            const v = c === 'x' ? r : (r & 0x3 | 0x8);
+            return v.toString(16);
+        });
+    };
+
     const handleSaveRewardItem = () => {
         const updatedRewardItems = [
             ...rewardItems,
-            { ...newItem, newlyAdded: true },
+            { ...newItem, newlyAdded: true, id: generateGUID() },
         ];
-        console.log(updatedRewardItems);
         setRewardItems(updatedRewardItems);
         setIsAdding(false);
         setNewItem({ name: '', quantity: 1, description: '', imageUrl: null });
@@ -147,6 +154,7 @@ function EditRewardItemTable({ rewardItems: initialRewardItems, onUpdateRewardIt
                                             <TableCell component="th" scope="row" align="left" sx={{ width: '25%' }}>
                                                 <TextField
                                                     value={editedItem.name}
+                                                    placeholder='Name...'
                                                     onChange={(e) => setEditedItem({ ...editedItem, name: e.target.value })}
                                                     fullWidth
                                                     className="custom-update-textfield"
@@ -155,6 +163,7 @@ function EditRewardItemTable({ rewardItems: initialRewardItems, onUpdateRewardIt
                                             <TableCell component="th" scope="row" align="left" sx={{ width: '35%' }}>
                                                 <TextField
                                                     value={editedItem.description}
+                                                    placeholder='Description...'
                                                     onChange={(e) => setEditedItem({ ...editedItem, description: e.target.value })}
                                                     fullWidth
                                                     className="custom-update-textfield"
@@ -230,6 +239,7 @@ function EditRewardItemTable({ rewardItems: initialRewardItems, onUpdateRewardIt
                                 <TableCell component="th" scope="row" align="left" sx={{ width: '25%' }}>
                                     <TextField
                                         value={newItem.name}
+                                        placeholder='Name...'
                                         onChange={(e) => setNewItem({ ...newItem, name: e.target.value })}
                                         fullWidth
                                         className="custom-update-textfield"
@@ -238,6 +248,7 @@ function EditRewardItemTable({ rewardItems: initialRewardItems, onUpdateRewardIt
                                 <TableCell component="th" scope="row" align="left" sx={{ width: '35%' }}>
                                     <TextField
                                         value={newItem.description}
+                                        placeholder='Description...'
                                         onChange={(e) => setNewItem({ ...newItem, description: e.target.value })}
                                         fullWidth
                                         className="custom-update-textfield"

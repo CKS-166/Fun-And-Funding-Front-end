@@ -5,7 +5,8 @@ import LoginForm from "../../pages/LoginForm";
 import RoleForm from "../../pages/RoleForm";
 import BackerForm from "../../pages/RegisterBacker";
 import OwnerForm from "../../pages/RegisterGameOwner";
-
+import ForgotPasswordForm from "../../pages/ForgotPassword";
+import OTPVerfication from "../../pages/OTPVerfication";
 const AuthDialog = ({ isOpen, onClose }) => {
   const [currentForm, setCurrentForm] = useState("login");
 
@@ -26,6 +27,12 @@ const AuthDialog = ({ isOpen, onClose }) => {
   const openBackerForm = () => {
     setCurrentForm("backer"); // Switch to BackerForm
   };
+  const openOTPForm = () => {
+    setCurrentForm("otp");
+  };
+  const openForgotPasswordForm = () => {
+    setCurrentForm("forgotPassword"); // Switch to ForgotPasswordForm
+  };
 
   const closeDialog = () => {
     onClose(); // This will close the entire dialog
@@ -38,12 +45,17 @@ const AuthDialog = ({ isOpen, onClose }) => {
   return (
     <Dialog open={isOpen} onClose={closeDialog}>
       {currentForm === "login" && (
-        <LoginForm onClose={closeDialog} onOpenRoleSelection={goBackRole} />
+        <LoginForm
+          onClose={closeDialog}
+          onOpenRoleSelection={goBackRole}
+          onOpenForgotPassword={openForgotPasswordForm}
+        />
       )}
       {currentForm === "backer" && (
         <BackerForm
           onClose={closeDialog}
-          onOpenLogin={openLoginForm} // Switch to login when Sign In is clicked
+          onOpenLogin={openLoginForm}
+          onOpenOTPForm={openOTPForm}
           onBack={goBackRole}
         />
       )}
@@ -59,8 +71,15 @@ const AuthDialog = ({ isOpen, onClose }) => {
         <OwnerForm
           onClose={closeDialog}
           onOpenLogin={openLoginForm}
+          onOpenOTPForm={openOTPForm}
           onBack={goBackRole}
         />
+      )}
+      {currentForm === "forgotPassword" && (
+        <ForgotPasswordForm onClose={closeDialog} onBack={openLoginForm} />
+      )}
+      {currentForm === "otp" && (
+        <OTPVerfication onClose={closeDialog} onOpenLogin={openLoginForm} />
       )}
     </Dialog>
   );

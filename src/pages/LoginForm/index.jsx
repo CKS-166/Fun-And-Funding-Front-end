@@ -23,7 +23,7 @@ function setCookie(name, value, expiresIn) {
   document.cookie = cookieString;
 }
 
-function LoginForm({ onClose, onOpenRoleSelection }) {
+function LoginForm({ onClose, onOpenRoleSelection, onOpenForgotPassword }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -191,12 +191,12 @@ function LoginForm({ onClose, onOpenRoleSelection }) {
           </div>
 
           <div className="flex justify-end mt-[1rem]">
-            <a
-              href="/forgot-password"
+            <button
+              onClick={onOpenForgotPassword}
               className="text-sm text-gray-500 hover:text-gray-800"
             >
               Forgot password?
-            </a>
+            </button>
           </div>
 
           <button

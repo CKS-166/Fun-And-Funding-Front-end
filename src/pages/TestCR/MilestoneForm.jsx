@@ -48,7 +48,7 @@ const MilestoneForm = () => {
   // Fetch the latest milestone with its requirements
   useEffect(() => {
    fetchFixedMilestone();
-  //  getMilestoneData();
+   getMilestoneData();
   }, []);
 
   // Handle input changes for a specific requirement

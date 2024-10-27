@@ -26,8 +26,10 @@ function UpdateFundingProjectLayout() {
 
     //fetch milestones
     const fetchMilestones = async () => {
+        setIsLoading(true);
         await milestoneApiInstace.get(`/group-latest-milestone`).then(response => {
             setMilestoneList(response.data._data);
+            setIsLoading(false);
         })
     }
     const handleSaveAll = async (event) => {
@@ -188,10 +190,12 @@ function UpdateFundingProjectLayout() {
         return matchedMilestone ? `Project Milestone / ${matchedMilestone.milestoneName}` : '';
     };
 
-    const handleMilestoneNavigation = (link) => {
-        console.log(link)
-        navigate(`/account/projects/update/${link}/milestone1`);
-    };
+    const handleNavigation = (milestoneId,index) => {
+        // console.log(id)
+        navigate(`/account/projects/update/${project.id}/milestone1`, { state: { milestoneId } });
+        if(index == 1){
+            navigate(`/account/projects/update/${project.id}/milestone2`, { state: { milestoneId } });
+        }
 
     const handleNavigation = (link) => {
         navigate(link);
@@ -316,11 +320,11 @@ function UpdateFundingProjectLayout() {
                                     </Typography>
                                     <Collapse in={isMilestoneExpanded} timeout="auto" unmountOnExit>
                                         <List component="nav">
-                                            {milestoneList.map((item) => (
+                                            {milestoneList.map((item, index) => (
                                                 <ListItem
                                                     button
                                                     key={item.name}
-                                                    onClick={() => handleMilestoneNavigation(item.id)}
+                                                    onClick={() => handleNavigation(item.id, index)}
                                                     sx={{
                                                         backgroundColor: location.pathname.includes(item.id) ? '#88D1AE' : 'transparent',
                                                         '&:hover': {

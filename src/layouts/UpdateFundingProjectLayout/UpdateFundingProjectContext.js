@@ -10,7 +10,15 @@ const initialProject = {
   target: 0,
   balance: 0,
   status: null,
-  bankAccount: { bankNumber: "", bankCode: "" },
+  wallet: {
+    id: "",
+    balance: 0,
+    bankAccount: {
+      id: "",
+      bankNumber: "",
+      bankCode: "",
+    },
+  },
   packages: [
     {
       id: "",

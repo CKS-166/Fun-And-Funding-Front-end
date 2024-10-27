@@ -18,8 +18,8 @@ function BankAccount() {
 
     useEffect(() => {
         fetchBank();
-        if (project.bankAccount) {
-            setBankAccountNumber(project.bankAccount.bankNumber);
+        if (project.wallet) {
+            setBankAccountNumber(project.wallet.bankAccount.bankNumber);
             checkInitialBankAccount();
         }
     }, [id, project]);
@@ -36,7 +36,7 @@ function BankAccount() {
             const response = await axios.get("https://api.httzip.com/api/bank/list");
             if (response.data.code === 200) {
                 const bankList = response.data.data;
-                const bankCode = project.bankAccount.bankCode;
+                const bankCode = project.wallet.bankAccount.bankCode;
                 const foundBank = bankList.find(record => record.code === bankCode);
                 if (foundBank) {
                     setSelectedBank(foundBank);
@@ -44,7 +44,7 @@ function BankAccount() {
                         "https://api.httzip.com/api/bank/id-lookup-prod",
                         {
                             "bank": foundBank.code,
-                            "account": project.bankAccount.bankNumber
+                            "account": project.wallet.bankAccount.bankNumber
                         },
                         {
                             headers: {
@@ -71,7 +71,7 @@ function BankAccount() {
     };
 
     const checkBankAccount = async (choosenBank, accountNumber) => {
-        if (project.bankAccount) {
+        if (project.wallet.bankAccount) {
             try {
                 setIsLoading(true);
                 setLoadingStatus(3);
@@ -125,10 +125,10 @@ function BankAccount() {
     };
 
     const checkIfEdited = (updatedSelectedBank, updatedBankAccount) => {
-        if (project.bankAccount) {
+        if (project.wallet.bankAccount) {
             if (
-                updatedSelectedBank.bankCode !== project.bankAccount.bankCode ||
-                updatedBankAccount !== project.bankAccount.bankNumber
+                updatedSelectedBank.bankCode !== project.wallet.bankAccount.bankCode ||
+                updatedBankAccount !== project.wallet.bankAccount.bankNumber
             ) {
                 isChecked(false);
             } else {
@@ -138,7 +138,7 @@ function BankAccount() {
     };
 
     const handleCheckBankAccount = () => {
-        if (project.bankAccount) {
+        if (project.wallet.bankAccount) {
             checkBankAccount(selectedBank, bankAccountNumber);
         }
     }
@@ -149,10 +149,14 @@ function BankAccount() {
             setIsLoading(true);
             const updatedProject = {
                 ...project,
-                bankAccount: {
-                    bankNumber: bankAccountNumber,
-                    bankCode: selectedBank?.code || project.bankAccount.bankCode,
-                },
+                wallet: {
+                    ...project.wallet,
+                    bankAccount: {
+                        ...project.wallet.bankAccount,
+                        bankNumber: bankAccountNumber,
+                        bankCode: selectedBank?.code || project.wallet.bankAccount.bankCode,
+                    },
+                }
             };
             setProject(updatedProject);
             setIsEdited(true);
@@ -172,7 +176,7 @@ function BankAccount() {
         try {
             setLoadingStatus(4);
             setIsLoading(true);
-            setBankAccountNumber(project.bankAccount.bankNumber || '');
+            setBankAccountNumber(project.wallet.bankAccount.bankNumber || '');
             checkInitialBankAccount();
             setBankAccountEdited(false);
         } catch (error) {

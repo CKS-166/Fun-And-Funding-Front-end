@@ -49,9 +49,9 @@ import Milestone from "./pages/Milestones";
 
 //context
 import { ChatProvider } from "./contexts/ChatContext";
+import ChatLayout from "./layouts/ChatLayout";
 import AdminDashboardLayout from "./layouts/AdminDashboardLayout";
 import Dashboard from "./pages/AdminPages/Dashboard";
-
 
 function App() {
   const location = useLocation()
@@ -160,7 +160,10 @@ function App() {
             <Route path="/profile/:id" element={<PublicProfile />} />
           </Route>
 
-          <Route path="/chat/:senderId/:receiverId" element={<Chat />} />
+          <Route element={<ChatLayout />}>
+            <Route path="/chat/:senderId/:receiverId" element={<Chat />} />
+          </Route>
+
           <Route path="/milestones" element={<Milestone />} />
         </Routes>
       </ChatProvider>

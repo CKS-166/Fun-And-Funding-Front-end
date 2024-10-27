@@ -28,45 +28,55 @@ function Media() {
     }, [id, project]);
 
     const fetchMedia = () => {
-        if (project.existedFile) {
-            const videoFile = project.existedFile.filter(file => file.filetype === 1);
-            console.log(videoFile);
+        const allFiles = [
+            ...(project.existedFile || []),
+            ...(project.fundingFiles || []),
+        ];
+
+        console.log("Hihi");
+
+        if (allFiles.length > 0) {
+            const videoFile = allFiles.filter(file => file.filetype === 1);
             let videoData = videoFile.length > 0 ?
                 videoFile.map(file => ({
                     id: file.id,
                     url: file.url,
                     urlType: file.urlType,
                     isDeleted: file.isDeleted,
-                    fileType: file.filetype,
+                    filetype: file.filetype,
                     newlyAdded: file.newlyAdded
                 })) : [];
             setProjectVideo(videoData);
 
-            const thumbnailFile = project.existedFile.filter(file => file.filetype === 2);
+            const thumbnailFile = allFiles.filter(file => file.filetype === 2);
+            console.log(allFiles);
+            console.log(thumbnailFile);
             let thumbnailData = thumbnailFile.length > 0 ?
                 thumbnailFile.map(file => ({
                     id: file.id,
                     url: file.url,
                     urlType: file.urlType,
                     isDeleted: file.isDeleted,
-                    fileType: file.filetype,
+                    filetype: file.filetype,
                     newlyAdded: file.newlyAdded
                 })) : [];
             setThumbnail(thumbnailData);
 
-            const imageFiles = project.existedFile.filter(file => file.filetype === 4);
+            const imageFiles = allFiles.filter(file => file.filetype === 4);
             let imageData = imageFiles.length > 0 ?
                 imageFiles.map(file => ({
                     id: file.id,
                     url: file.url,
                     urlType: file.urlType,
                     isDeleted: file.isDeleted,
-                    fileType: file.filetype,
+                    filetype: file.filetype,
                     newlyAdded: file.newlyAdded
                 })) : [];
             setProjectImages(imageData);
         }
     }
+
+    console.log(thumbnail);
 
     const generateGUID = () => {
         return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
@@ -92,6 +102,7 @@ function Media() {
 
                 const newThumbnail = {
                     id: generateGUID(),
+                    name: "Project Thumbnail",
                     url: URL.createObjectURL(file),
                     urlFile: file,
                     isDeleted: false,
@@ -129,6 +140,7 @@ function Media() {
 
                 const newVideo = {
                     id: generateGUID(),
+                    name: "Project Video",
                     url: URL.createObjectURL(file),
                     urlFile: file,
                     isDeleted: false,
@@ -154,6 +166,7 @@ function Media() {
         if (file) {
             const newImage = {
                 id: generateGUID(),
+                name: "Project Bonus Image",
                 url: URL.createObjectURL(file),
                 urlFile: file,
                 filetype: 4,
@@ -252,9 +265,6 @@ function Media() {
         setIsLoading(false);
         setLoadingStatus(0);
     };
-
-    console.log(thumbnail);
-    console.log(projectImages);
 
     const handleDiscardAll = () => {
         fetchMedia();

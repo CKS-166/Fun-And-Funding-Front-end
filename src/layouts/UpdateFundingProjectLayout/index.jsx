@@ -22,7 +22,7 @@ function UpdateFundingProjectLayout() {
     const [isLoading, setIsLoading] = useState(true);
     const [loadingStatus, setLoadingStatus] = useState(0);
     const [milestoneList, setMilestoneList] = useState([]);
-    console.log(project);
+    // console.log(project);
 
     //fetch milestones
     const fetchMilestones = async () => {
@@ -181,7 +181,7 @@ function UpdateFundingProjectLayout() {
     };
 
     const getActiveEditor = (id) => {
-        const matchedEditor = editorList.find((item) => location.pathname.includes(item.link(id)));
+        const matchedEditor = editorList.find((item) => location.pathname.includes(item.id));
         return matchedEditor ? `Project Editor / ${matchedEditor.name}` : '';
     };
 
@@ -190,19 +190,20 @@ function UpdateFundingProjectLayout() {
         return matchedMilestone ? `Project Milestone / ${matchedMilestone.milestoneName}` : '';
     };
 
-    const handleNavigation = (milestoneId,index) => {
+    const handleMilestoneNavigation = (milestoneId,index) => {
         // console.log(id)
         navigate(`/account/projects/update/${project.id}/milestone1`, { state: { milestoneId } });
         if(index == 1){
             navigate(`/account/projects/update/${project.id}/milestone2`, { state: { milestoneId } });
         }
+    };
 
     const handleNavigation = (link) => {
         navigate(link);
     };
 
     const isEditorActive = editorList.some((item) => location.pathname.includes(item.link(id)));
-    const isMilestoneActive = milestoneList.some((item) => location.pathname.includes(item.link(id)));
+    const isMilestoneActive = milestoneList.some((item) => location.pathname.includes(item.id));
 
     const getActiveSection = (id) => {
         const activeEditor = getActiveEditor(id);
@@ -324,7 +325,7 @@ function UpdateFundingProjectLayout() {
                                                 <ListItem
                                                     button
                                                     key={item.name}
-                                                    onClick={() => handleNavigation(item.id, index)}
+                                                    onClick={() => handleMilestoneNavigation(item.id, index)}
                                                     sx={{
                                                         backgroundColor: location.pathname.includes(item.id) ? '#88D1AE' : 'transparent',
                                                         '&:hover': {

@@ -8,7 +8,7 @@ import { MuiOtpInput } from "mui-one-time-password-input";
 import React, { useEffect, useRef, useState } from "react";
 import Countdown from "react-countdown";
 import { ToastContainer, toast } from "react-toastify";
-import authApiInstance from "../../utils/apiInstance/authApiInstance";
+import authApiInstance from "../../utils/ApiInstance/authApiInstance";
 import logo from "../../assets/OnlyLogo.png";
 import "./index.css";
 

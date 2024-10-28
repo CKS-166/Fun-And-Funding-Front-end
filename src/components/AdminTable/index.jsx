@@ -1,5 +1,3 @@
-/* eslint-disable react/prop-types */
-/* eslint-disable no-unused-vars */
 import * as React from "react";
 import PropTypes from "prop-types";
 import { useTheme } from "@mui/material/styles";
@@ -18,6 +16,7 @@ import FirstPageIcon from "@mui/icons-material/FirstPage";
 import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
 import LastPageIcon from "@mui/icons-material/LastPage";
+import { Button } from "@mui/material";
 
 function TablePaginationActions(props) {
   const theme = useTheme();
@@ -88,32 +87,12 @@ TablePaginationActions.propTypes = {
   rowsPerPage: PropTypes.number.isRequired,
 };
 
-function createData(name, calories, fat) {
-  return { name, calories, fat };
-}
-
-const rows = [
-  createData("Cupcake", 305, 3.7),
-  createData("Donut", 452, 25.0),
-  createData("Eclair", 262, 16.0),
-  createData("Frozen yoghurt", 159, 6.0),
-  createData("Gingerbread", 356, 16.0),
-  createData("Honeycomb", 408, 3.2),
-  createData("Ice cream sandwich", 237, 9.0),
-  createData("Jelly Bean", 375, 0.0),
-  createData("KitKat", 518, 26.0),
-  createData("Lollipop", 392, 0.2),
-  createData("Marshmallow", 318, 0),
-  createData("Nougat", 360, 19.0),
-  createData("Oreo", 437, 18.0),
-].sort((a, b) => (a.calories < b.calories ? -1 : 1));
-
-export default function CustomPaginationActionsTable({ data }) {
+export default function CustomPaginationActionsTable({ data, handleRowClick }) {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
   const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - data.length) : 0;
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -124,72 +103,72 @@ export default function CustomPaginationActionsTable({ data }) {
     setPage(0);
   };
 
+  // Dynamically get the columns based on the keys of the first data item
+  const columns = data.length > 0 ? Object.keys(data[1]) : [];
+  const filteredColumns = columns.filter((col) => col !== "Id");
+
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 500 }} aria-label="custom pagination table">
         <TableHead>
           <TableRow>
             <TableCell sx={{ backgroundColor: "#f5f5f5", fontWeight: "bold" }}>
-              Name
+              No
             </TableCell>
-            <TableCell
-              align="right"
-              sx={{ backgroundColor: "#f5f5f5", fontWeight: "bold" }}
-            >
-              Calories
-            </TableCell>
-            <TableCell
-              align="right"
-              sx={{ backgroundColor: "#f5f5f5", fontWeight: "bold" }}
-            >
-              Fat&nbsp;(g)
+            {filteredColumns.map((column) => (
+              <TableCell
+                key={column}
+                sx={{ backgroundColor: "#f5f5f5", fontWeight: "bold" }}
+              >
+                {column}
+              </TableCell>
+            ))}
+            <TableCell sx={{ backgroundColor: "#f5f5f5", fontWeight: "bold" }}>
+              ACTION
             </TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {(rowsPerPage > 0
-            ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-            : rows
-          ).map((row, index) => (
+            ? data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+            : data
+          ).map((row, rowIndex) => (
             <TableRow
-              key={row.name}
+              key={row.Id || rowIndex} // Use row.Id as the key
               sx={{
-                backgroundColor: index % 2 === 1 ? "#f9f9f9" : "white",
+                backgroundColor: rowIndex % 2 === 1 ? "#f9f9f9" : "white",
               }}
             >
               <TableCell component="th" scope="row">
-                {row.name}
+                {rowIndex + 1}
               </TableCell>
-              <TableCell style={{ width: 160 }} align="right">
-                {row.calories}
-              </TableCell>
-              <TableCell style={{ width: 160 }} align="right">
-                {row.fat}
+              {filteredColumns.map((column) => (
+                <TableCell key={column} component="th" scope="row">
+                  {String(row[column])}{" "}
+                  {/* Ensure to access the correct column */}
+                </TableCell>
+              ))}
+              <TableCell>
+                <Button onClick={() => handleRowClick(row.Id)}>ACTION</Button>{" "}
+                {/* Pass the ID here */}
               </TableCell>
             </TableRow>
           ))}
           {emptyRows > 0 && (
             <TableRow style={{ height: 53 * emptyRows }}>
-              <TableCell colSpan={6} />
+              <TableCell colSpan={columns.length} />
             </TableRow>
           )}
         </TableBody>
+
         <TableFooter>
           <TableRow>
             <TablePagination
               rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
-              colSpan={3}
-              count={rows.length}
+              colSpan={columns.length}
+              count={data.length}
               rowsPerPage={rowsPerPage}
               page={page}
-              slotProps={{
-                select: {
-                  inputProps: {
-                    "aria-label": "rows per page",
-                  },
-                  native: true,
-                },
-              }}
               onPageChange={handleChangePage}
               onRowsPerPageChange={handleChangeRowsPerPage}
               ActionsComponent={TablePaginationActions}
@@ -200,3 +179,8 @@ export default function CustomPaginationActionsTable({ data }) {
     </TableContainer>
   );
 }
+
+CustomPaginationActionsTable.propTypes = {
+  data: PropTypes.arrayOf(PropTypes.object).isRequired,
+  handleRowClick: PropTypes.func.isRequired,
+};

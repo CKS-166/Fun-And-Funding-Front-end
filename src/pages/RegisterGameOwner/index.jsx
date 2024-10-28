@@ -7,7 +7,8 @@ import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 import PortraitIcon from "@mui/icons-material/Portrait";
 import logo from "../../assets/OnlyLogo.png";
 import { ToastContainer, toast } from "react-toastify";
-import authApiInstance from "../../utils/apiInstance/authApiInstance";
+import authApiInstance from "../../utils/ApiInstance/authApiInstance";
+
 function setCookie(name, value, expiresIn) {
   var now = new Date();
   var time = now.getTime() + 7 * 60 * 60 * 1000;

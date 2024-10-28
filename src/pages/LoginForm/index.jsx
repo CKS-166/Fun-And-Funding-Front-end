@@ -192,6 +192,7 @@ function LoginForm({ onClose, onOpenRoleSelection, onOpenForgotPassword }) {
 
           <div className="flex justify-end mt-[1rem]">
             <button
+              type="button"
               onClick={onOpenForgotPassword}
               className="text-sm text-gray-500 hover:text-gray-800"
             >

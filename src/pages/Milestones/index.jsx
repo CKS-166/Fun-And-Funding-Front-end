@@ -1,16 +1,12 @@
 /* eslint-disable no-unused-vars */
 import React from "react";
-import "./index.css";
-import AdminTable from "../../components/AdminTable";
-function Milestone() {
+
+function AdmnWithdraw() {
   return (
-    <>
-      <h1 className="text-3xl font-bold mb-6 text-center text-[#1BAA64]">
-        Milestones Management
-      </h1>
-      <AdminTable></AdminTable>
-    </>
+    <div>
+      <h1>Admin Withdraw</h1>
+    </div>
   );
 }
 
-export default Milestone;
+export default AdmnWithdraw;

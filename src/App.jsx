@@ -43,9 +43,9 @@ import Milestone3 from "./pages/UpdateFundingProjectForm/ProjectMilestone/Milest
 import Milestone4 from "./pages/UpdateFundingProjectForm/ProjectMilestone/Milestone4";
 import ProjectPreview from "./pages/UpdateFundingProjectForm/ProjectPreview";
 import MilestoneForm from "./pages/TestCR/MilestoneForm";
-import AccountWallet from "./pages/AccountWallet"
+//import AccountWallet from "./pages/AccountWallet"
 import Chat from "./pages/Chat";
-import Milestone from "./pages/Milestones";
+import AdminWithdrawRequest from "./pages/AdminWithdrawRequest";
 
 //context
 import { ChatProvider } from "./contexts/ChatContext";
@@ -54,8 +54,8 @@ import AdminDashboardLayout from "./layouts/AdminDashboardLayout";
 import Dashboard from "./pages/AdminPages/Dashboard";
 
 function App() {
-  const location = useLocation()
-  const hideAppBar = location.pathname.includes("admin-dashboard")
+  const location = useLocation();
+  const hideAppBar = location.pathname.includes("admin-dashboard");
 
   return (
     <>
@@ -69,7 +69,6 @@ function App() {
             <Route path="/about-us" element={<AboutUs />} />
             <Route path="/project-detail" element={<ProjectDetail />} />
           </Route>
-
           <Route path="choose-project-plan" element={<ChoosePlan />} />
           <Route element={<CreateFundingProjectLayout />}>
             <Route
@@ -93,7 +92,6 @@ function App() {
               element={<SetupDonatePackage />}
             />
           </Route>
-
           <Route element={<UpdateFundingProjectLayout />}>
             <Route
               path="/account/projects/update/:id/preview"
@@ -134,11 +132,14 @@ function App() {
               element={<Milestone4 />}
             />
           </Route>
-
+          z
           <Route element={<AdminDashboardLayout />}>
             <Route path="/admin-dashboard/dashboard" element={<Dashboard />} />
+            <Route
+              path="/admin-dashboard/withdraw-table"
+              element={<AdminWithdrawRequest />}
+            />
           </Route>
-
           <Route path="/funding-detail/:id" element={<ProjectDetail />} />
           <Route path="/test" element={<TestCR />} />
           <Route path="/test-update" element={<TestUpdate />} />
@@ -149,7 +150,6 @@ function App() {
           <Route path="/test-update" element={<TestUpdate />} />
           <Route path="/test-mile-req" element={<TestMileReq />} />
           <Route path="/test-update-req" element={<TestUpdateReq />} />
-
           <Route path="/test-detail" element={<TestDetail />} />
           <Route path="/test-milestone-form" element={<MilestoneForm />} />
           <Route element={<UserProfileLayout />}>
@@ -159,12 +159,9 @@ function App() {
           <Route element={<PublicProfileLayout />}>
             <Route path="/profile/:id" element={<PublicProfile />} />
           </Route>
-
           <Route element={<ChatLayout />}>
             <Route path="/chat/:senderId/:receiverId" element={<Chat />} />
           </Route>
-
-          <Route path="/milestones" element={<Milestone />} />
         </Routes>
       </ChatProvider>
     </>

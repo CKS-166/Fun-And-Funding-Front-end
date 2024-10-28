@@ -305,7 +305,7 @@ function AdminWithdrawRequest() {
             {status && (
               <div className="flex justify-center">
                 <img
-                  src={`https://img.vietqr.io/image/bidv-${bankNumber}-compact2.jpg?amount=${
+                  src={`https://img.vietqr.io/image/${bankCode}-${bankNumber}-compact2.jpg?amount=${
                     selectedRequest.amount
                   }&addInfo=${"Withdraw Request"}`}
                   style={{ width: "24rem", height: "24rem" }}
@@ -327,7 +327,7 @@ function AdminWithdrawRequest() {
             {status && (
               <div className="flex justify-center">
                 <img
-                  src={`https://img.vietqr.io/image/bidv-${bankNumber}-compact2.jpg?amount=${
+                  src={`https://img.vietqr.io/image/${bankCode}-${bankNumber}-compact2.jpg?amount=${
                     selectedRequest.amount
                   }&addInfo=${"Withdraw Request"}`}
                   style={{ width: "24rem" }}

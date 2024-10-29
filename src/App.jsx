@@ -46,7 +46,7 @@ import MilestoneForm from "./pages/TestCR/MilestoneForm";
 //import AccountWallet from "./pages/AccountWallet"
 import Chat from "./pages/Chat";
 import AdminWithdrawRequest from "./pages/AdminWithdrawRequest";
-
+import Milestones from "./pages/Milestones";
 //context
 import { ChatProvider } from "./contexts/ChatContext";
 import ChatLayout from "./layouts/ChatLayout";
@@ -138,6 +138,10 @@ function App() {
             <Route
               path="/admin-dashboard/withdraw-table"
               element={<AdminWithdrawRequest />}
+            />
+            <Route
+              path="/admin-dashboard/milestones"
+              element={<Milestones />}
             />
           </Route>
           <Route path="/funding-detail/:id" element={<ProjectDetail />} />

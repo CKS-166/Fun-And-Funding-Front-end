@@ -30,7 +30,7 @@ import RequestMilestoneModal from '../../components/RequestMilestoneModal';
 import { set } from 'react-hook-form';
 import fundingProjectApiInstance from '../../utils/ApiInstance/fundingProjectApiInstance';
 import milestoneApiInstace from '../../utils/ApiInstance/milestoneApiInstance';
-const ProjectDetail = ({isOwner}) => {
+const ProjectDetail = ({ isOwner }) => {
   //sample owwner
   isOwner = true
   //sample data
@@ -59,7 +59,7 @@ const ProjectDetail = ({isOwner}) => {
     console.log('a');
   }
   const handleUpdateProject = () => {
-    
+
     console.log('b');
   }
 
@@ -74,15 +74,15 @@ const ProjectDetail = ({isOwner}) => {
   }
   //fetch milestones
   const fetchMilestones = async () => {
-    try{
+    try {
       milestoneApiInstace.get(`/group-latest-milestone`)
         .then(response => {
           setMilestones(response.data._data);
           let first = response.data._data.find(milestone => milestone.milestoneOrder === 1);
           setFirstMilestone(first);
           console.log(response.data._data)
-      })
-    }catch(error){
+        })
+    } catch (error) {
       console.error('Error fetching milestones:', error);
     }
   }
@@ -119,8 +119,9 @@ const ProjectDetail = ({isOwner}) => {
 
   //handleTab
   const handleTabValue = (event, newValue) => {
-    setTabValue(newValue);
-  }
+    const validValues = ["1", "2", "3", "4", "5"];
+    setTabValue(validValues.includes(newValue) ? newValue : "1"); // Default to "Introduction"
+  };
   const BorderLinearProgress = styled(LinearProgress)(() => ({
     height: 15,
     borderRadius: 40,
@@ -138,11 +139,10 @@ const ProjectDetail = ({isOwner}) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleOpen = () => setIsModalOpen(true);
-  const handleClose = () => 
-    {
-      setIsModalOpen(false)
-      console.log(isModalOpen);
-    };
+  const handleClose = () => {
+    setIsModalOpen(false)
+    console.log(isModalOpen);
+  };
 
   return (
     <Box>
@@ -213,12 +213,12 @@ const ProjectDetail = ({isOwner}) => {
                         onClick={() => handleProcess()}
                         className="like-btn"
                       >
-                        {isOwner ? 
-                        <Typography>{projectData.status == processing ? 'Update Project' : 'Request Milestone Disbursement'}</Typography> : 
-                        <Typography>Back this project</Typography>}
-                       
+                        {isOwner ?
+                          <Typography>{projectData.status == processing ? 'Update Project' : 'Request Milestone Disbursement'}</Typography> :
+                          <Typography>Back this project</Typography>}
+
                       </Button>
-                      {firstMilestone && <RequestMilestoneModal milestone={firstMilestone} open={isModalOpen} handleClose={() => handleClose()} projectId={projectData.id}/>} 
+                      {firstMilestone && <RequestMilestoneModal milestone={firstMilestone} open={isModalOpen} handleClose={() => handleClose()} projectId={projectData.id} />}
                       <Grid container spacing={2} sx={{ marginTop: '20px' }}>
                         <Grid size={6}>
                           <Button variant="contained"
@@ -331,7 +331,7 @@ const ProjectDetail = ({isOwner}) => {
             <Container maxWidth={tabValue === '2' ? 'false' : 'lg'} className="flex flex-row "
 
             >
-              {tabValue === "1" ? (
+              {tabValue === "1" && (
                 <Box sx={{ display: "flex", flexDirection: "row", width: "100%", marginTop: '80px' }}>
                   <Box sx={{ marginRight: '150px' }}>
                     <Box>
@@ -345,24 +345,32 @@ const ProjectDetail = ({isOwner}) => {
                   </Box>
                 </Box>
 
-              ) : tabValue === "2" ? (
-                <Container maxWidth="1400px">
-                  <PackageReward packageList={projectData.packages} reloadDetail={fetchProject} />
-                </Container>
-              ) : tabValue === "3" ? (
-                <Box sx={{ display: "flex", flexDirection: "row", width: "100%", marginTop: '80px' }}>
-                  <Box sx={{ marginRight: '150px' }}>
-                    <Box>
-                      <CommentSection isBacker={true} projectId={projectData.id}/>
+              )}
+              {
+                tabValue === "2" && (
+                  <Container maxWidth="1400px">
+                    <PackageReward packageList={projectData.packages} reloadDetail={fetchProject} />
+                  </Container>
+                )
+              }
+              {
+                tabValue === "3" && (
+                  <Box sx={{ display: "flex", flexDirection: "row", width: "100%", marginTop: '80px' }}>
+                    <Box sx={{ marginRight: '150px' }}>
+                      <Box>
+                        <CommentSection isBacker={true} projectId={projectData.id} />
+                      </Box>
                     </Box>
-                  </Box>
-                  <Box>
                     <Box>
-                      <PackageSide packageList={projectData.packages} reloadDetail={fetchProject} />
-                    </Box>
+                      <Box>
+                        <PackageSide packageList={projectData.packages} reloadDetail={fetchProject} />
+                      </Box>
 
-                  </Box>
-                </Box>) : tabValue === "4" ? (
+                    </Box>
+                  </Box>)
+              }
+              {
+                tabValue === "4" && (
                   <Box sx={{ display: "flex", flexDirection: "row", width: "100%", marginTop: '80px' }}>
                     <Box sx={{ marginRight: '150px' }}>
                       <Box>
@@ -375,22 +383,27 @@ const ProjectDetail = ({isOwner}) => {
                       </Box>
 
                     </Box>
-                  </Box>) : <Box>
-
-                <Box sx={{ display: "flex", flexDirection: "row", width: "100%", marginTop: '80px' }}>
-                  <Box sx={{ marginRight: '150px' }}>
-                    <Box>
-                      <BackerSection />
-                    </Box>
-                  </Box>
+                  </Box>)
+              }
+              {
+                tabValue === "5" && (
                   <Box>
-                    <Box>
-                      <PackageSide packageList={projectData.packages} />
-                    </Box>
+                    <Box sx={{ display: "flex", flexDirection: "row", width: "100%", marginTop: '80px' }}>
+                      <Box sx={{ marginRight: '150px' }}>
+                        <Box>
+                          <BackerSection />
+                        </Box>
+                      </Box>
+                      <Box>
+                        <Box>
+                          <PackageSide packageList={projectData.packages} />
+                        </Box>
 
+                      </Box>
+                    </Box>
                   </Box>
-                </Box>
-              </Box>}
+                )
+              }
 
             </Container>
 

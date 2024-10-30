@@ -3,7 +3,7 @@ import "./index.css";
 import TaskCard from "../TaskCard";
 import DropItem from "../DropItem";
 
-const TaskColumn = ({ title, icon, tasks, status, handleDelete, setActiveCard, onDrop }) => {
+const TaskColumn = ({ title, icon, tasks, status, handleDelete, setActiveCard, onDrop, updateTask }) => {
     return (
         <section className='task_column'>
             <h2 className='task_column_heading'>
@@ -12,15 +12,16 @@ const TaskColumn = ({ title, icon, tasks, status, handleDelete, setActiveCard, o
             <DropItem onDrop={() => onDrop(status, 0)} />
             {tasks.map(
                 (task, index) =>
-                    task.status === status && (
+                    task.requirementStatus === status && (
                         <React.Fragment key={index}>
                             <TaskCard
                                 key={index}
-                                title={task.task}
-                                tags={task.tags}
+                                title={task.content}
                                 handleDelete={handleDelete}
                                 index={index}
                                 setActiveCard={setActiveCard}
+                                task={tasks[index]}
+                                updateTask={updateTask}
                             />
                             <DropItem onDrop={() => onDrop(status, index + 1)} />
                         </React.Fragment>

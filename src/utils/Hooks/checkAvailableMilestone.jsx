@@ -6,6 +6,7 @@ export const checkAvailableMilestone = async (projectId, milestoneId) => {
             `?projectId=${projectId}&milestoneId=${milestoneId}`
         ).then((res) => res)
         .catch((error) => error);
+    
         if(res.status == 200){
             if(res.data._data.items[0].projectMilestoneRequirements.length > 0
             ){
@@ -24,7 +25,7 @@ export const checkAvailableMilestone = async (projectId, milestoneId) => {
             return {
                 status : 'error',
                 data: [],
-            };;
+            };
         }
         // Return the resolved data
     } catch (error) {

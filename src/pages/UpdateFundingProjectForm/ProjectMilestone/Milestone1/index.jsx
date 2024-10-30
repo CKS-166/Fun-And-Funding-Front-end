@@ -8,8 +8,8 @@ import { checkAvailableMilestone } from "../../../../utils/Hooks/checkAvailableM
 import projectMilestoneApiInstace from "../../../../utils/ApiInstance/projectMilestoneApiInstance";
 import UpdateMilestone from "../UpdateMilestone";
 import MilestoneQuill from "../../../../components/UpdateProject/MilestoneQuill";
-import UploadButton from "../../../../components/UpdateProject/UploadFiles/UploadButton";
 import FileUploadDropdown from "../../../../components/UpdateProject/UploadFiles/FileUploadDropdown";
+import ChangeCircleIcon from '@mui/icons-material/ChangeCircle';
 const MilestoneForm = () => {
   const { id } = useParams(); // Get the project ID from the URL
   console.log(id);
@@ -31,6 +31,7 @@ const MilestoneForm = () => {
     try {
       const data = await checkAvailableMilestone(projectId, id);
       setMilestoneData(data); // Set data after fetching
+      console.log(data);
     } catch (error) {
       console.error('Error fetching milestone data:', error);
     } finally {
@@ -172,7 +173,6 @@ const MilestoneForm = () => {
                 <h3>{req.title}</h3>
                 <p>{req.description}</p>
                 <div className="w-[80%]">
-
                   <>
                   <div className="w-[70%]">
                   <MilestoneQuill
@@ -182,13 +182,15 @@ const MilestoneForm = () => {
                   </div>
                     
 
-                    <Button variant="contained" component="label" onClick={(e) => openDropdown(e, index)}>
+                    <Button variant="contained" component="label" onClick={(e) => openDropdown(e, index)}
+                      sx={{ backgroundColor: '#1BAA64', textTransform: 'none', fontWeight: '600' }} startIcon={<ChangeCircleIcon />}>
                       Upload Files
                       <input
                         type="file"
                         multiple
                         hidden
                         onChange={(e) => handleFilesSelected(Array.from(e.target.files), index)}
+                        
                       />
                     </Button>
 

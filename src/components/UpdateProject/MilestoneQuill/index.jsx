@@ -56,6 +56,12 @@ const MilestoneQuill = ({ value, onChange }) => {
         matchVisual: false,
       },
     };
+    const formats = [
+      'header', 'font', 'size',
+      'bold', 'italic', 'underline', 'strike', 'blockquote',
+      'list', 'bullet',
+      'link', 'image'
+  ];
   
     return (
       <ReactQuill
@@ -64,6 +70,7 @@ const MilestoneQuill = ({ value, onChange }) => {
         theme="snow"
         ref={quillRef}
         modules={modules}
+        formats={formats}
       />
     );
 }

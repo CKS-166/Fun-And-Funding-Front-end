@@ -71,16 +71,21 @@ function BackerForm({ onClose, onOpenLogin, onBack, onOpenOTPForm }) {
       confirmPassword: confirmPassword,
     };
     // Add your form submission logic here
-    authApiInstance.post("/backer", jsonData).then((res) => {
-      if (!res.data._isSuccess) {
-        notify(`${res.data._message[0] || "Register failed"}`, "warn");
-        console.log("Register failed:", res.data._message);
-      } else {
-        notify(`${"Register success, please login"}`, "success");
-        setCookie("_username", userName, 7);
-        handleOTPClick(); // Navigate to LoginForm
-      }
-    });
+    try {
+      authApiInstance.post("/backer", jsonData).then((res) => {
+        if (!res.data._isSuccess) {
+          notify(`${res.data._message[0] || "Register failed"}`, "warn");
+          console.log("Register failed:", res.data._message);
+        } else {
+          notify(`${"Register success, please login"}`, "success");
+          setCookie("_username", userName, 7);
+          handleOTPClick(); // Navigate to LoginForm
+        }
+      });
+    } catch (error) {
+      console.log(error);
+      notify(`${error.message || "Register failed"}`, "warn");
+    }
   };
 
   const togglePasswordVisibility = () => setShowPassword(!showPassword);

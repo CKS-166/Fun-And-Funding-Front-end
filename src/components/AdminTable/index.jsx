@@ -104,7 +104,7 @@ export default function CustomPaginationActionsTable({ data, handleRowClick }) {
   };
 
   // Dynamically get the columns based on the keys of the first data item
-  const columns = data.length > 0 ? Object.keys(data[1]) : [];
+  const columns = data.length > 0 ? Object.keys(data[0]) : [];
   const filteredColumns = columns.filter((col) => col !== "Id");
 
   return (
@@ -112,18 +112,37 @@ export default function CustomPaginationActionsTable({ data, handleRowClick }) {
       <Table sx={{ minWidth: 500 }} aria-label="custom pagination table">
         <TableHead>
           <TableRow>
-            <TableCell sx={{ backgroundColor: "#f5f5f5", fontWeight: "bold" }}>
+            <TableCell
+              sx={{
+                backgroundColor: "#1BAA64",
+                color: "#ffffff",
+                fontWeight: "bold",
+                fontSize: "0.85rem",
+              }}
+            >
               No
             </TableCell>
             {filteredColumns.map((column) => (
               <TableCell
                 key={column}
-                sx={{ backgroundColor: "#f5f5f5", fontWeight: "bold" }}
+                sx={{
+                  backgroundColor: "#1BAA64",
+                  color: "#ffffff",
+                  fontWeight: "bold",
+                  fontSize: "0.85rem",
+                }}
               >
                 {column}
               </TableCell>
             ))}
-            <TableCell sx={{ backgroundColor: "#f5f5f5", fontWeight: "bold" }}>
+            <TableCell
+              sx={{
+                backgroundColor: "#1BAA64",
+                color: "#ffffff",
+                fontWeight: "bold",
+                fontSize: "0.85rem",
+              }}
+            >
               ACTION
             </TableCell>
           </TableRow>
@@ -143,9 +162,23 @@ export default function CustomPaginationActionsTable({ data, handleRowClick }) {
                 {rowIndex + 1}
               </TableCell>
               {filteredColumns.map((column) => (
-                <TableCell key={column} component="th" scope="row">
-                  {String(row[column])}{" "}
-                  {/* Ensure to access the correct column */}
+                <TableCell
+                  key={column}
+                  component="th"
+                  scope="row"
+                  sx={{
+                    color:
+                      column === "Status" && row[column] === "Rejected"
+                        ? "red"
+                        : column === "Status" && row[column] === "Processing"
+                        ? "blue"
+                        : column === "Status" && row[column] === "Approved"
+                        ? "green"
+                        : "inherit",
+                    fontWeight: column === "Status" ? "bold" : "normal",
+                  }}
+                >
+                  {String(row[column])}
                 </TableCell>
               ))}
               <TableCell>

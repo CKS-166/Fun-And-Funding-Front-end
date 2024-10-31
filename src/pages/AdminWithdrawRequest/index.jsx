@@ -83,7 +83,9 @@ function AdminWithdrawRequest() {
   const [bankCode, setBankCode] = useState("");
   const [status, setStatus] = useState(0);
 
-  const openProcessDialog = () => setIsProcessDialogOpen(true);
+  const openProcessDialog = () => {
+    setIsProcessDialogOpen(true);
+  };
   const closeProcessDialog = () => setIsProcessDialogOpen(false);
 
   const openDialog = () => setIsDialogOpen(true);
@@ -145,9 +147,6 @@ function AdminWithdrawRequest() {
           }).then(async (result) => {
             if (result.isConfirmed) {
               await fetchProcessWithdraw(id);
-              fetchWithdrawRequest();
-              notify("Request Processed", "success");
-              openProcessDialog();
             } else {
               console.log("Request Not Processed");
             }
@@ -195,7 +194,6 @@ function AdminWithdrawRequest() {
   const fetchProcessWithdraw = async (id) => {
     try {
       const token = Cookies.get("_auth");
-      console.log("Token:", token);
       const res = await withdrawApiInstance.patch(
         `/${id}/process`,
         {},
@@ -205,12 +203,16 @@ function AdminWithdrawRequest() {
           },
         }
       );
-      if (res.data._data._isSuccess === false) {
+      console.log(res.data);
+      if (res.data._isSuccess === false) {
         notify(res.data._data._message, "error");
       }
       setBankCode(res.data._data.bankCode);
       setBankNumber(res.data._data.bankNumber);
-      notify(res.data._data._message, "success");
+      setStatus(1);
+      openDialog();
+      fetchWithdrawRequest();
+      notify("Request Processed", "success");
     } catch (error) {
       console.error("Fetch error:", error.message || error);
     }

@@ -11,7 +11,7 @@ import TimerIcon from "@mui/icons-material/Timer";
 import FormatListNumberedIcon from "@mui/icons-material/FormatListNumbered";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 
-function CreateMilestone({ setDataLoad }) {
+function CreateMilestone({ setDataLoad, notify }) {
   const [openDialog, setOpenDialog] = useState(false);
   const [milestone, setMilestone] = useState({
     milestoneName: "",
@@ -69,9 +69,9 @@ function CreateMilestone({ setDataLoad }) {
         },
       });
       setDataLoad(true);
-      console.log("Milestone created successfully");
+      notify("Milestone updated successfully", "success");
     } catch (error) {
-      console.error("Error creating milestone:", error);
+      notify("something wrong", "error");
     }
   };
 

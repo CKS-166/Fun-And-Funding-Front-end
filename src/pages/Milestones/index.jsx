@@ -40,7 +40,7 @@ function Milestones() {
         Milestone Management
       </h1>
       <CreateMilestone setDataLoad={setDataLoad} notify={notify} />
-      <TableMilestones dataLoad={dataLoad} setDataLoad={setDataLoad} />
+      <TableMilestones dataLoad={dataLoad} notify={notify} />
       <ToastContainer
         position="bottom-left"
         autoClose={3000}

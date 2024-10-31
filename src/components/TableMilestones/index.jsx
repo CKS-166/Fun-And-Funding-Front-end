@@ -48,7 +48,7 @@ const columns = [
   { id: "updateDate", label: "Update Date", minWidth: 200, align: "center" },
 ];
 
-function MilestoneTable({ dataLoad, setDataLoad }) {
+function MilestoneTable({ dataLoad, notify }) {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [openRows, setOpenRows] = React.useState({});
@@ -70,7 +70,9 @@ function MilestoneTable({ dataLoad, setDataLoad }) {
 
       if (res.data._isSuccess) {
         setDataReload(res.data._data);
+        console.log("success");
       }
+      console.log(res.data._data);
     } catch (error) {
       console.error("Error fetching milestone data:", error);
     }
@@ -107,7 +109,7 @@ function MilestoneTable({ dataLoad, setDataLoad }) {
   };
   const handleChange = (e) => {
     const { name, value } = e.target;
-    console.log(`Input changed: ${name} = ${value}`); // Log changes for debugging
+    // Log changes for debugging
     setAddRequirementJson((prev) => ({
       ...prev,
       [name]: value,
@@ -145,7 +147,6 @@ function MilestoneTable({ dataLoad, setDataLoad }) {
   const handleSubmit = async (e) => {
     e.preventDefault(); // Prevent default form submission
     await fetchUpdateRequirement(selectedRequirementId, title, description);
-
     closeDialog();
   };
 
@@ -167,7 +168,7 @@ function MilestoneTable({ dataLoad, setDataLoad }) {
         }
       );
       fetchMilestoneData();
-      console.log("Requirement updated successfully");
+      notify("Requirement updated successfully", "success");
     } catch (error) {
       console.error("Error updating requirement:", error);
     }
@@ -196,9 +197,10 @@ function MilestoneTable({ dataLoad, setDataLoad }) {
       console.log("API Response:", response.data); // Log the response
       fetchMilestoneData();
       onCloseAddRequirementForm();
-      console.log("Requirement added successfully");
+      notify("Requirement add successfully", "success");
     } catch (error) {
       console.error("Error adding requirement:", error.response || error);
+      notify("Something wrongs", "error");
     } finally {
       // Reset state after the operation
       setAddRequirementJson({}); // Resetting the state here if needed

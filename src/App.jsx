@@ -33,8 +33,18 @@ import TestUpdate from "./pages/TestCR/testUpdate";
 import TestUpdateReq from "./pages/TestCR/testUpdateReq";
 import TestDetail from "./pages/TestDetail";
 
+import { Backdrop, CircularProgress } from "@mui/material";
+import { CartProvider } from "./contexts/CartContext";
+import { ChatProvider } from "./contexts/ChatContext";
+import { useLoading } from "./contexts/LoadingContext";
+import AdminDashboardLayout from "./layouts/AdminDashboardLayout";
+import ChatLayout from "./layouts/ChatLayout";
+import AccountWallet from "./pages/AccountWallet";
+import AdminMilestone from "./pages/AdminPages/AdminMilestone";
+import Dashboard from "./pages/AdminPages/Dashboard";
+import AdminWithdrawRequest from "./pages/AdminWithdrawRequest";
 import Chat from "./pages/Chat";
-import Milestone from "./pages/Milestones";
+import Milestones from "./pages/Milestones";
 import MilestoneForm from "./pages/TestCR/MilestoneForm";
 import BankAccount from "./pages/UpdateFundingProjectForm/ProjectEditor/BankAccount";
 import BasicInformation from "./pages/UpdateFundingProjectForm/ProjectEditor/BasicInformation";
@@ -45,20 +55,6 @@ import Milestone2 from "./pages/UpdateFundingProjectForm/ProjectMilestone/Milest
 import Milestone3 from "./pages/UpdateFundingProjectForm/ProjectMilestone/Milestone3";
 import Milestone4 from "./pages/UpdateFundingProjectForm/ProjectMilestone/Milestone4";
 import ProjectPreview from "./pages/UpdateFundingProjectForm/ProjectPreview";
-import MilestoneForm from "./pages/TestCR/MilestoneForm";
-import Chat from "./pages/Chat";
-import AdminWithdrawRequest from "./pages/AdminWithdrawRequest";
-import Milestones from "./pages/Milestones";
-import { CartProvider } from "./contexts/CartContext";
-import { ChatProvider } from "./contexts/ChatContext";
-import AdminDashboardLayout from "./layouts/AdminDashboardLayout";
-import ChatLayout from "./layouts/ChatLayout";
-import Dashboard from "./pages/AdminPages/Dashboard";
-import CheckoutCart from "./pages/CheckoutCart";
-import { Backdrop, CircularProgress } from "@mui/material";
-import { useLoading } from "./contexts/LoadingContext";
-import AdminMilestone from "./pages/AdminPages/AdminMilestone";
-import AccountWallet from "./pages/AccountWallet";
 
 function App() {
   const location = useLocation();
@@ -68,54 +64,54 @@ function App() {
 
   return (
     <>
-                  <CartProvider>
-      {!hideAppBar && <FunFundingAppBar />}
+      <CartProvider>
+        {!hideAppBar && <FunFundingAppBar />}
 
-      <Backdrop
-        sx={(theme) => ({ color: '#fff', zIndex: theme.zIndex.drawer + 1 })}
-        open={isLoading}
-      >
-        <CircularProgress color="inherit" />
-      </Backdrop>
+        <Backdrop
+          sx={(theme) => ({ color: '#fff', zIndex: theme.zIndex.drawer + 1 })}
+          open={isLoading}
+        >
+          <CircularProgress color="inherit" />
+        </Backdrop>
 
-      <ChatProvider>
-        <Routes>
-          <Route element={<UserLayout />}>
-            <Route path="*" element={<Navigate to="/home" />} />
-            <Route path="/" element={<Navigate to="/home" />} />
-            <Route path="/home" element={<HomePage />} />
-            <Route path="/about-us" element={<AboutUs />} />
-            <Route path="/project-detail" element={<ProjectDetail />} />
-          </Route>
-          <Route path="choose-project-plan" element={<ChoosePlan />} />
-          <Route element={<CreateFundingProjectLayout />}>
-            <Route
-              path="request-funding-project/basic-info"
-              element={<BasicInfo />}
-            />
-            <Route
-              path="request-funding-project/introduction"
-              element={<Introduction />}
-            />
-            <Route
-              path="request-funding-project/project-media"
-              element={<ProjectMedia />}
-            />
-            <Route
-              path="request-funding-project/setup-bank-account"
-              element={<SetupBankAccount />}
-            />
-            <Route
-              path="request-funding-project/setup-donate-package"
-              element={<SetupDonatePackage />}
-            />
-          </Route>
-          <Route element={<UpdateFundingProjectLayout />}>
-            <Route
-              path="/account/projects/update/:id/preview"
-              element={<ProjectPreview />}
-            />
-                <Route
+        <ChatProvider>
+          <Routes>
+            <Route element={<UserLayout />}>
+              <Route path="*" element={<Navigate to="/home" />} />
+              <Route path="/" element={<Navigate to="/home" />} />
+              <Route path="/home" element={<HomePage />} />
+              <Route path="/about-us" element={<AboutUs />} />
+              <Route path="/project-detail" element={<ProjectDetail />} />
+            </Route>
+            <Route path="choose-project-plan" element={<ChoosePlan />} />
+            <Route element={<CreateFundingProjectLayout />}>
+              <Route
+                path="request-funding-project/basic-info"
+                element={<BasicInfo />}
+              />
+              <Route
+                path="request-funding-project/introduction"
+                element={<Introduction />}
+              />
+              <Route
+                path="request-funding-project/project-media"
+                element={<ProjectMedia />}
+              />
+              <Route
+                path="request-funding-project/setup-bank-account"
+                element={<SetupBankAccount />}
+              />
+              <Route
+                path="request-funding-project/setup-donate-package"
+                element={<SetupDonatePackage />}
+              />
+            </Route>
+            <Route element={<UpdateFundingProjectLayout />}>
+              <Route
+                path="/account/projects/update/:id/preview"
+                element={<ProjectPreview />}
+              />
+              <Route
                 path="/account/projects/update/:id/preview"
                 element={<ProjectPreview />}
               />
@@ -154,62 +150,45 @@ function App() {
                 element={<Milestone4 />}
               />
             </Route>
-            <Route
-              path="/account/projects/update/:id/milestone1"
-              element={<Milestone1 />}
-            />
-            <Route
-              path="/account/projects/update/:id/milestone2"
-              element={<Milestone2 />}
-            />
-            <Route
-              path="/account/projects/update/:id/milestone3"
-              element={<Milestone3 />}
-            />
-            <Route
-              path="/account/projects/update/:id/milestone4"
-              element={<Milestone4 />}
-            />
-          </Route>
-          
-          <Route element={<AdminDashboardLayout />}>
-            <Route path="/admin-dashboard/dashboard" element={<Dashboard />} />
-            <Route
-              path="/admin-dashboard/withdraw-table"
-              element={<AdminWithdrawRequest />}
-            />
-            <Route
-              path="/admin-dashboard/milestones"
-              element={<Milestones />}
-            />
-            <Route path="/admin-dashboard/milestone-request" element={<AdminMilestone />} />
-          </Route>
-          <Route path="/funding-detail/:id" element={<ProjectDetail />} />
-          <Route path="/test" element={<TestCR />} />
-          <Route path="/test-update" element={<TestUpdate />} />
-          <Route path="/test-mile-req" element={<TestMileReq />} />
-          <Route path="/test-update-req" element={<TestUpdateReq />} />
-          <Route path="/funding-project/:id" element={<ProjectDetail />} />
-          <Route path="/test" element={<TestCR />} />
-          <Route path="/test-update" element={<TestUpdate />} />
-          <Route path="/test-mile-req" element={<TestMileReq />} />
-          <Route path="/test-update-req" element={<TestUpdateReq />} />
-          <Route path="/test-detail" element={<TestDetail />} />
-          <Route path="/test-milestone-form" element={<MilestoneForm />} />
-          <Route element={<UserProfileLayout />}>
-            <Route path="/account/profile" element={<AccountProfile />} />
-            <Route path="/account/projects" element={<AccountProject />} />
-            <Route path="/account/wallet" element={<AccountWallet />} />
-          </Route>
-          <Route element={<PublicProfileLayout />}>
-            <Route path="/profile/:id" element={<PublicProfile />} />
-          </Route>
-          <Route element={<ChatLayout />}>
-            <Route path="/chat/:senderId/:receiverId" element={<Chat />} />
-          </Route>
-        </Routes>
-      </ChatProvider>
-</CartProvider>
+
+            <Route element={<AdminDashboardLayout />}>
+              <Route path="/admin-dashboard/dashboard" element={<Dashboard />} />
+              <Route
+                path="/admin-dashboard/withdraw-table"
+                element={<AdminWithdrawRequest />}
+              />
+              <Route
+                path="/admin-dashboard/milestones"
+                element={<Milestones />}
+              />
+              <Route path="/admin-dashboard/milestone-request" element={<AdminMilestone />} />
+            </Route>
+            <Route path="/funding-detail/:id" element={<ProjectDetail />} />
+            <Route path="/test" element={<TestCR />} />
+            <Route path="/test-update" element={<TestUpdate />} />
+            <Route path="/test-mile-req" element={<TestMileReq />} />
+            <Route path="/test-update-req" element={<TestUpdateReq />} />
+            <Route path="/funding-project/:id" element={<ProjectDetail />} />
+            <Route path="/test" element={<TestCR />} />
+            <Route path="/test-update" element={<TestUpdate />} />
+            <Route path="/test-mile-req" element={<TestMileReq />} />
+            <Route path="/test-update-req" element={<TestUpdateReq />} />
+            <Route path="/test-detail" element={<TestDetail />} />
+            <Route path="/test-milestone-form" element={<MilestoneForm />} />
+            <Route element={<UserProfileLayout />}>
+              <Route path="/account/profile" element={<AccountProfile />} />
+              <Route path="/account/projects" element={<AccountProject />} />
+              <Route path="/account/wallet" element={<AccountWallet />} />
+            </Route>
+            <Route element={<PublicProfileLayout />}>
+              <Route path="/profile/:id" element={<PublicProfile />} />
+            </Route>
+            <Route element={<ChatLayout />}>
+              <Route path="/chat/:senderId/:receiverId" element={<Chat />} />
+            </Route>
+          </Routes>
+        </ChatProvider>
+      </CartProvider>
     </>
   );
 }

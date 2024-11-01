@@ -1,7 +1,7 @@
-import React, { useState, useCallback } from "react";
-import { Button, Modal, TextField, FormControl, Select, MenuItem, Box } from "@mui/material";
-import { FilePond } from "react-filepond";
+import { Box, Button, FormControl, MenuItem, Modal, Select, TextField } from "@mui/material";
 import "filepond/dist/filepond.min.css";
+import React, { useCallback, useState } from "react";
+import { FilePond } from "react-filepond";
 import { FaPlus } from "react-icons/fa";
 const TaskForm = ({ onAddTask, projectId, milestoneId, requirementId }) => {
   const [isModalOpen, setModalOpen] = useState(false);
@@ -44,7 +44,6 @@ const TaskForm = ({ onAddTask, projectId, milestoneId, requirementId }) => {
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    transform: "translate(-50%, -50%)",
     width: "50vw",
     maxHeight: "80vh",
     overflowY: "auto",
@@ -82,14 +81,16 @@ const TaskForm = ({ onAddTask, projectId, milestoneId, requirementId }) => {
       resetFormData();
     } catch (error) {
       console.log(error);
-      
+
     }
   };
 
   return (
     <>
-      <Box sx={{ display: 'flex', padding: '0px 20px', marginTop: '20px', 
-        justifyContent: 'space-between' }}>
+      <Box sx={{
+        display: 'flex', padding: '0px 20px', marginTop: '20px',
+        justifyContent: 'space-between'
+      }}>
         <Box sx={{
           display: 'flex', justifyContent: 'flex-start'
           , marginBottom: '10px'
@@ -150,7 +151,7 @@ const TaskForm = ({ onAddTask, projectId, milestoneId, requirementId }) => {
               onupdatefiles={handleFilesChange}
               allowMultiple
             />
-            <Box sx={{display : 'flex', alignItems : 'center', justifyContent : 'space-between', marginTop : '20px'}}>
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '20px' }}>
               <Button type="submit" variant="contained" component="label"
                 sx={{ backgroundColor: '#1BAA64', textTransform: 'none', fontWeight: '600' }}
                 onClick={(e) => handleSubmit(e)}>
@@ -160,8 +161,8 @@ const TaskForm = ({ onAddTask, projectId, milestoneId, requirementId }) => {
                 variant="contained" component="label"
                 sx={{ backgroundColor: '#1BAA64', textTransform: 'none', fontWeight: '600' }}
                 type="button" onClick={handleCloseModal}>
-                  Cancel
-                </Button>
+                Cancel
+              </Button>
             </Box>
 
           </form>

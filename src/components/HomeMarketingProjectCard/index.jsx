@@ -19,7 +19,7 @@ const BorderLinearProgress = styled(LinearProgress)(() => ({
     },
 }));
 
-function MarketingProjectCard() {
+function HomeMarketingProjectCard() {
     return (
         <Card sx={{ width: '22.75rem', borderRadius: '0.625rem', backgroundColor: '#F5F7F8', position: 'relative' }}>
             <CardMedia
@@ -65,10 +65,10 @@ function MarketingProjectCard() {
                             <Chip label="PC" sx={{ borderRadius: '0.313rem', fontSize: '0.875rem' }} />
                         </div>
                         <div>
-                            <Typography sx={{ color: '#2F3645', fontWeight: '700', mb: '0.5rem', width: 'full', fontSize: '1.5rem', textAlign: 'right' }}>
+                            <Typography sx={{ color: 'var(--black)', fontWeight: '700', mb: '0.5rem', width: 'full', fontSize: '1.5rem', textAlign: 'right' }}>
                                 VND
                             </Typography>
-                            <Typography sx={{ fontWeight: '700', width: 'fit-content', fontSize: '1.5rem', color: '#1BAA64', textAlign: 'right' }}>
+                            <Typography sx={{ fontWeight: '700', width: 'fit-content', fontSize: '1.5rem', color: 'var(--primary-green)', textAlign: 'right' }}>
                                 100.000
                             </Typography>
                         </div>
@@ -79,4 +79,4 @@ function MarketingProjectCard() {
     )
 }
 
-export default MarketingProjectCard
+export default HomeMarketingProjectCard

@@ -19,7 +19,7 @@ const BorderLinearProgress = styled(LinearProgress)(() => ({
     },
 }));
 
-function FundingProjectCard() {
+function HomeFundingProjectCard() {
     return (
         <Card sx={{ width: '22.75rem', borderRadius: '0.625rem', backgroundColor: '#F5F7F8', position: 'relative' }}>
             <CardMedia
@@ -91,4 +91,4 @@ function FundingProjectCard() {
     );
 }
 
-export default FundingProjectCard
+export default HomeFundingProjectCard

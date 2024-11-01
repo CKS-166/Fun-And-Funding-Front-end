@@ -11,6 +11,7 @@ import './index.css';
 import LoadingProjectBackDrop from './LoadingProjectBackdrop';
 import ProjectContext from './UpdateFundingProjectContext';
 import { editorList } from './UpdateFundingProjectLayout';
+
 function UpdateFundingProjectLayout() {
     const { id } = useParams();
     const navigate = useNavigate();

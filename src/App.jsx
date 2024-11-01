@@ -33,6 +33,9 @@ import TestUpdate from "./pages/TestCR/testUpdate";
 import TestUpdateReq from "./pages/TestCR/testUpdateReq";
 import TestDetail from "./pages/TestDetail";
 
+import Chat from "./pages/Chat";
+import Milestone from "./pages/Milestones";
+import MilestoneForm from "./pages/TestCR/MilestoneForm";
 import BankAccount from "./pages/UpdateFundingProjectForm/ProjectEditor/BankAccount";
 import BasicInformation from "./pages/UpdateFundingProjectForm/ProjectEditor/BasicInformation";
 import DonationPackages from "./pages/UpdateFundingProjectForm/ProjectEditor/DonationPackages";
@@ -43,15 +46,15 @@ import Milestone3 from "./pages/UpdateFundingProjectForm/ProjectMilestone/Milest
 import Milestone4 from "./pages/UpdateFundingProjectForm/ProjectMilestone/Milestone4";
 import ProjectPreview from "./pages/UpdateFundingProjectForm/ProjectPreview";
 import MilestoneForm from "./pages/TestCR/MilestoneForm";
-//import AccountWallet from "./pages/AccountWallet"
 import Chat from "./pages/Chat";
 import AdminWithdrawRequest from "./pages/AdminWithdrawRequest";
 import Milestones from "./pages/Milestones";
-//context
+import { CartProvider } from "./contexts/CartContext";
 import { ChatProvider } from "./contexts/ChatContext";
-import ChatLayout from "./layouts/ChatLayout";
 import AdminDashboardLayout from "./layouts/AdminDashboardLayout";
+import ChatLayout from "./layouts/ChatLayout";
 import Dashboard from "./pages/AdminPages/Dashboard";
+import CheckoutCart from "./pages/CheckoutCart";
 import { Backdrop, CircularProgress } from "@mui/material";
 import { useLoading } from "./contexts/LoadingContext";
 import AdminMilestone from "./pages/AdminPages/AdminMilestone";
@@ -65,6 +68,7 @@ function App() {
 
   return (
     <>
+                  <CartProvider>
       {!hideAppBar && <FunFundingAppBar />}
 
       <Backdrop
@@ -111,24 +115,45 @@ function App() {
               path="/account/projects/update/:id/preview"
               element={<ProjectPreview />}
             />
+                <Route
+                path="/account/projects/update/:id/preview"
+                element={<ProjectPreview />}
+              />
 
-            <Route
-              path="/account/projects/update/:id/basic-info"
-              element={<BasicInformation />}
-            />
-            <Route
-              path="/account/projects/update/:id/bank-account"
-              element={<BankAccount />}
-            />
-            <Route
-              path="/account/projects/update/:id/donation-packages"
-              element={<DonationPackages />}
-            />
-            <Route
-              path="/account/projects/update/:id/media-files"
-              element={<Media />}
-            />
+              <Route
+                path="/account/projects/update/:id/basic-info"
+                element={<BasicInformation />}
+              />
+              <Route
+                path="/account/projects/update/:id/bank-account"
+                element={<BankAccount />}
+              />
+              <Route
+                path="/account/projects/update/:id/donation-packages"
+                element={<DonationPackages />}
+              />
+              <Route
+                path="/account/projects/update/:id/media-files"
+                element={<Media />}
+              />
 
+              <Route
+                path="/account/projects/update/:id/milestone1"
+                element={<Milestone1 />}
+              />
+              <Route
+                path="/account/projects/update/:id/milestone2"
+                element={<Milestone2 />}
+              />
+              <Route
+                path="/account/projects/update/:id/milestone3"
+                element={<Milestone3 />}
+              />
+              <Route
+                path="/account/projects/update/:id/milestone4"
+                element={<Milestone4 />}
+              />
+            </Route>
             <Route
               path="/account/projects/update/:id/milestone1"
               element={<Milestone1 />}
@@ -146,7 +171,7 @@ function App() {
               element={<Milestone4 />}
             />
           </Route>
-          z
+          
           <Route element={<AdminDashboardLayout />}>
             <Route path="/admin-dashboard/dashboard" element={<Dashboard />} />
             <Route
@@ -184,6 +209,7 @@ function App() {
           </Route>
         </Routes>
       </ChatProvider>
+</CartProvider>
     </>
   );
 }

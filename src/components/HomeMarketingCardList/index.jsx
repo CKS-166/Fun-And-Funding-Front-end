@@ -1,12 +1,12 @@
 import React from 'react';
-import MarketingProjectCard from '../MarketingProjectCard';
+import HomeMarketingProjectCard from '../HomeMarketingProjectCard';
 
 function HomeMarketingCardList() {
     const cards = [1, 2, 3];
     return (
         <div className='flex justify-center w-full gap-[4rem]'>
             {cards.map((card, index) => (
-                <MarketingProjectCard key={index} />
+                <HomeMarketingProjectCard key={index} />
             ))}
         </div>
     )

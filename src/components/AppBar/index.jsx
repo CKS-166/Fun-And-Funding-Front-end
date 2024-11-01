@@ -90,7 +90,7 @@ const FunFundingAppBar = () => {
     },
     {
       label: "My wallet",
-      route: "/my-wallet",
+      route: "/account/wallet",
       icon: <AccountBalanceWalletIcon />,
     },
     { label: "Logout", route: "logout", icon: <LogoutIcon /> },
@@ -233,8 +233,8 @@ const FunFundingAppBar = () => {
                         ? "#1BAA64"
                         : "#F5F7F8"
                       : tabValue === index
-                      ? "#1BAA64"
-                      : "#2F3645",
+                        ? "#1BAA64"
+                        : "#2F3645",
                     fontWeight: "700 !important",
                   }}
                   error="false"

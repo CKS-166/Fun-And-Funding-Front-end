@@ -52,14 +52,27 @@ import { ChatProvider } from "./contexts/ChatContext";
 import ChatLayout from "./layouts/ChatLayout";
 import AdminDashboardLayout from "./layouts/AdminDashboardLayout";
 import Dashboard from "./pages/AdminPages/Dashboard";
+import { Backdrop, CircularProgress } from "@mui/material";
+import { useLoading } from "./contexts/LoadingContext";
+import AdminMilestone from "./pages/AdminPages/AdminMilestone";
 
 function App() {
   const location = useLocation();
   const hideAppBar = location.pathname.includes("admin-dashboard");
 
+  const { isLoading, setIsLoading } = useLoading()
+
   return (
     <>
       {!hideAppBar && <FunFundingAppBar />}
+
+      <Backdrop
+        sx={(theme) => ({ color: '#fff', zIndex: theme.zIndex.drawer + 1 })}
+        open={isLoading}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
+
       <ChatProvider>
         <Routes>
           <Route element={<UserLayout />}>
@@ -143,6 +156,7 @@ function App() {
               path="/admin-dashboard/milestones"
               element={<Milestones />}
             />
+            <Route path="/admin-dashboard/milestone-request" element={<AdminMilestone />} />
           </Route>
           <Route path="/funding-detail/:id" element={<ProjectDetail />} />
           <Route path="/test" element={<TestCR />} />
@@ -159,6 +173,7 @@ function App() {
           <Route element={<UserProfileLayout />}>
             <Route path="/account/profile" element={<AccountProfile />} />
             <Route path="/account/projects" element={<AccountProject />} />
+            <Route path="/account/wallet" element={<AccountWallet />} />
           </Route>
           <Route element={<PublicProfileLayout />}>
             <Route path="/profile/:id" element={<PublicProfile />} />

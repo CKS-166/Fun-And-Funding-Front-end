@@ -78,7 +78,7 @@ const RewardItemTable = ({ packageData, setPackageData }) => {
     <>
       <div className="relative overflow-x-auto sm:rounded-lg">
         <table className="w-full text-sm text-left rtl:text-right text-gray-600">
-          <thead className="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
+          <thead className="text-xs text-gray-700 uppercase bg-gray-100">
             <tr>
               <th scope="col" className="py-3 text-center w-[15%]">Item image</th>
               <th scope="col" className="py-3 text-center w-[25%]">Name</th>
@@ -90,11 +90,11 @@ const RewardItemTable = ({ packageData, setPackageData }) => {
           <tbody>
             {packageData.rewardItems?.map((item, index) => (
               editingIndex === index ? (
-                <tr key={index} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                <tr key={index} className="bg-white border-b hover:bg-gray-50 ">
                   <td className="px-2 py-4 flex justify-center">
-                    <label className="flex items-center justify-center w-[3rem] h-[3rem] border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
+                    <label className="flex items-center justify-center w-[3rem] h-[3rem] border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 ">
                       <div className="flex items-center justify-center pt-5 pb-6">
-                        <svg className="w-8 h-8 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+                        <svg className="w-8 h-8 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
                           <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
                         </svg>
                       </div>
@@ -134,30 +134,30 @@ const RewardItemTable = ({ packageData, setPackageData }) => {
                   <td className="px-2 py-4 text-center">
                     <button
                       onClick={handleSaveEdit}
-                      className="mr-2 font-medium text-green-600 dark:text-green-500 hover:underline"
+                      className="mr-2 font-medium text-green-600 hover:underline"
                     >
                       Save
                     </button>
                     <button
                       onClick={() => handleDeleteItem(index)}
-                      className="mr-2 font-medium text-red-600 dark:text-red-500 hover:underline"
+                      className="mr-2 font-medium text-red-600 hover:underline"
                     >
                       Delete
                     </button>
                     <button
                       onClick={handleCancelEdit}
-                      className="font-medium text-gray-600 dark:text-gray-500 hover:underline"
+                      className="font-medium text-gray-600 hover:underline"
                     >
                       Cancel
                     </button>
                   </td>
                 </tr>
               ) : (
-                <tr key={index} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                <tr key={index} className="bg-white border-b hover:bg-gray-50 ">
                   <td className="px-2 py-4 flex justify-center">
-                    <label className="flex items-center justify-center w-[3rem] h-[3rem] border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
+                    <label className="flex items-center justify-center w-[3rem] h-[3rem] border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 ">
                       <div className="flex items-center justify-center pt-5 pb-6">
-                        <svg className="w-8 h-8 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+                        <svg className="w-8 h-8 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
                           <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
                         </svg>
                       </div>
@@ -169,7 +169,7 @@ const RewardItemTable = ({ packageData, setPackageData }) => {
                   <td className="px-2 py-4 text-center">
                     <button
                       onClick={() => handleEditItemClick(index)}
-                      className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                      className="font-medium text-blue-600 hover:underline"
                     >
                       Edit
                     </button>
@@ -178,11 +178,11 @@ const RewardItemTable = ({ packageData, setPackageData }) => {
               )
             ))}
             {isAdding ? (
-              <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+              <tr className="bg-white border-b hover:bg-gray-50 ">
                 <td className="px-2 py-4 flex justify-center">
-                  <label className="flex items-center justify-center w-[3rem] h-[3rem] border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
+                  <label className="flex items-center justify-center w-[3rem] h-[3rem] border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 ">
                     <div className="flex items-center justify-center pt-5 pb-6">
-                      <svg className="w-8 h-8 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+                      <svg className="w-8 h-8 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
                       </svg>
                     </div>
@@ -222,24 +222,24 @@ const RewardItemTable = ({ packageData, setPackageData }) => {
                 <td className="px-2 py-4 text-center">
                   <button
                     onClick={handleConfirmAdd}
-                    className="mr-2 font-medium text-green-600 dark:text-green-500 hover:underline"
+                    className="mr-2 font-medium text-green-600 hover:underline"
                   >
                     Add
                   </button>
                   <button
                     onClick={handleCancelAdd}
-                    className="font-medium text-red-600 dark:text-red-500 hover:underline"
+                    className="font-medium text-red-600 hover:underline"
                   >
                     Cancel
                   </button>
                 </td>
               </tr>
             ) : (
-              <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+              <tr className="bg-white border-b hover:bg-gray-50 ">
                 <td colSpan={5} className="py-4 text-center">
                   <button
                     onClick={handleAddItemClick}
-                    className="px-4 py-2 font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                    className="px-4 py-2 font-medium text-blue-600 hover:underline"
                   >
                     Add item
                   </button>

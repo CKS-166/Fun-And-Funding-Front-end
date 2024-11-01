@@ -4,6 +4,7 @@ import ReactDOM from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import App from "./App.jsx";
 import "./index.css";
+import { LoadingProvider } from "./contexts/LoadingContext.jsx";
 
 const store = createStore({
   authName: "_auth",
@@ -15,7 +16,9 @@ const store = createStore({
 ReactDOM.createRoot(document.getElementById("root")).render(
   <AuthProvider store={store}>
     <BrowserRouter>
-      <App />
+      <LoadingProvider>
+        <App />
+      </LoadingProvider>
     </BrowserRouter>
   </AuthProvider>
 );

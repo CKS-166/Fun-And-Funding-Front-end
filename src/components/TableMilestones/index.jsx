@@ -307,7 +307,7 @@ function MilestoneTable({ dataLoad, notify }) {
                             <button
                               type="button"
                               onClick={() => handleAddRequirement(milestone.id)}
-                              className="w-[20rem] bg-green-500 text-white py-3 rounded-lg mb-4  hover:bg-green-600 transition-all duration-20"
+                              className="w-[12rem] bg-green-500 text-white py-3 rounded-lg mb-4  hover:bg-green-600 transition-all duration-20"
                             >
                               Create Requirement
                             </button>

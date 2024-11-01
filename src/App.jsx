@@ -55,6 +55,7 @@ import Dashboard from "./pages/AdminPages/Dashboard";
 import { Backdrop, CircularProgress } from "@mui/material";
 import { useLoading } from "./contexts/LoadingContext";
 import AdminMilestone from "./pages/AdminPages/AdminMilestone";
+import AccountWallet from "./pages/AccountWallet";
 
 function App() {
   const location = useLocation();

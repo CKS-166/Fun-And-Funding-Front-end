@@ -6,8 +6,11 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 import Swal from 'sweetalert2';
 import './index.css'
+import { IoMdClose } from "react-icons/io";
 import projectMilestoneApiInstance from '../../utils/ApiInstance/projectMilestoneApiInstance';
-const RequestMilestoneModal = ({ open, handleClose, milestone, projectId }) => {
+import zIndex from '@mui/material/styles/zIndex';
+import { ToastContainer, toast } from "react-toastify";
+const RequestMilestoneModal = ({ open, handleClose, milestone, projectId, handleCloseBackdrop }) => {
   const modalStyle = {
     position: "absolute",
     top: "50%",
@@ -18,6 +21,7 @@ const RequestMilestoneModal = ({ open, handleClose, milestone, projectId }) => {
     boxShadow: 24,
     p: 4,
     borderRadius: "8px",
+    zIndex : 9999
   };
   const [startDate, setStartDate] = useState(null);
   const [alert, setAlert] = useState(false);
@@ -36,6 +40,7 @@ const RequestMilestoneModal = ({ open, handleClose, milestone, projectId }) => {
       })
       .then(res => {
         console.log(res);
+        handleCloseBackdrop();
         Swal.fire({
           title: `Request for ${milestone.milestoneName} sent!`,
           text: "The waiting process can take 2-5 days. Thank you for your patience.Please check your email for more details.",
@@ -67,8 +72,10 @@ const RequestMilestoneModal = ({ open, handleClose, milestone, projectId }) => {
   return (
     <Modal open={open} onClose={handleClose} sx={{ margin: '20px 0' }}>
       <Box sx={modalStyle}>
-        <Typography variant="h5" gutterBottom>
-          {milestone.milestoneName}
+        <Typography variant="h5" gutterBottom 
+        sx={{display :'flex', alignItems: 'center', justifyContent: 'space-between'}}>
+          <span>{milestone.milestoneName}</span>
+          <IoMdClose onClick={handleClose} style={{cursor: 'pointer'}}/>
         </Typography>
 
         <Typography variant="body1" gutterBottom>

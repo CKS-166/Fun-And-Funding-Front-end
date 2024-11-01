@@ -50,8 +50,6 @@ function Chat() {
     };
 
     webSocket.onmessage = (event) => {
-      console.log("Received message from server:", event.data);
-
       const response = JSON.parse(event.data);
 
       setReceivedMessage(response); // Optionally update the receivedMessage state
@@ -104,7 +102,6 @@ function Chat() {
 
   return (
     <div>
-      <h1>WebSocket Test</h1>
       <div>
         {messages
           .slice()

@@ -23,12 +23,14 @@ function UpdateFundingProjectLayout() {
     const [isLoading, setIsLoading] = useState(true);
     const [loadingStatus, setLoadingStatus] = useState(0);
     const [milestoneList, setMilestoneList] = useState([]);
-    console.log(project);
+    // console.log(project);
 
     //fetch milestones
     const fetchMilestones = async () => {
+        setIsLoading(true);
         await milestoneApiInstace.get(`/group-latest-milestone`).then(response => {
             setMilestoneList(response.data._data);
+            setIsLoading(false);
         })
     }
     const handleSaveAll = async (event) => {
@@ -132,6 +134,10 @@ function UpdateFundingProjectLayout() {
         fetchMilestones();
     }, [id]);
 
+    const handleNavigatePreview = (id) => {
+        navigate(`/account/projects/update//${id}/preview`);
+    };
+
     const fetchProject = async () => {
         try {
             setIsLoading(true);
@@ -180,7 +186,7 @@ function UpdateFundingProjectLayout() {
     };
 
     const getActiveEditor = (id) => {
-        const matchedEditor = editorList.find((item) => location.pathname.includes(item.link(id)));
+        const matchedEditor = editorList.find((item) => location.pathname.includes(item.id));
         return matchedEditor ? `Project Editor / ${matchedEditor.name}` : '';
     };
 
@@ -189,9 +195,12 @@ function UpdateFundingProjectLayout() {
         return matchedMilestone ? `Project Milestone / ${matchedMilestone.milestoneName}` : '';
     };
 
-    const handleMilestoneNavigation = (link) => {
-        console.log(link)
-        navigate(`/account/projects/update/${link}/milestone1`);
+    const handleMilestoneNavigation = (milestoneId,index) => {
+        // console.log(id)
+        navigate(`/account/projects/update/${project.id}/milestone1`, { state: { milestoneId } });
+        if(index == 1){
+            navigate(`/account/projects/update/${project.id}/milestone2`, { state: { milestoneId } });
+        }
     };
 
     const handleNavigation = (link) => {
@@ -199,7 +208,7 @@ function UpdateFundingProjectLayout() {
     };
 
     const isEditorActive = editorList.some((item) => location.pathname.includes(item.link(id)));
-    const isMilestoneActive = milestoneList.some((item) => location.pathname.includes(item.link(id)));
+    const isMilestoneActive = milestoneList.some((item) => location.pathname.includes(item.id));
 
     const getActiveSection = (id) => {
         const activeEditor = getActiveEditor(id);
@@ -211,7 +220,7 @@ function UpdateFundingProjectLayout() {
 
     return (
         <ProjectContext.Provider value={{ project, edited, isLoading, loadingStatus, setProject, setIsEdited, setIsLoading, setLoadingStatus }}>
-            <LoadingProjectBackDrop isLoading={isLoading} loadingStatus={loadingStatus} />
+            {/* <LoadingProjectBackDrop isLoading={isLoading} loadingStatus={loadingStatus} /> */}
             <Container sx={{ mx: '0', px: '0 !important', width: '100% !important', maxWidth: '100% !important' }}>
                 <Grid2 container>
                     <Grid2
@@ -254,7 +263,8 @@ function UpdateFundingProjectLayout() {
                             </div>
                             <div>
                                 <div className='mt-[2rem]'>
-                                    <Typography className='update-project-section'>
+                                    <Typography className='update-project-section' 
+                                    onClick={() => navigate(`/account/projects/update/${project.id}/preview`)} >
                                         Project Preview
                                     </Typography>
                                 </div>
@@ -317,11 +327,11 @@ function UpdateFundingProjectLayout() {
                                     </Typography>
                                     <Collapse in={isMilestoneExpanded} timeout="auto" unmountOnExit>
                                         <List component="nav">
-                                            {milestoneList.map((item) => (
+                                            {milestoneList.map((item, index) => (
                                                 <ListItem
                                                     button
                                                     key={item.name}
-                                                    onClick={() => handleMilestoneNavigation(item.id)}
+                                                    onClick={() => handleMilestoneNavigation(item.id, index)}
                                                     sx={{
                                                         backgroundColor: location.pathname.includes(item.id) ? '#88D1AE' : 'transparent',
                                                         '&:hover': {

@@ -55,7 +55,7 @@ const FunFundingAppBar = () => {
     },
     {
       label: "My wallet",
-      route: "/my-wallet",
+      route: "/account/wallet",
       icon: <AccountBalanceWalletIcon />,
     },
     { label: "Logout", route: "logout", icon: <LogoutIcon /> },

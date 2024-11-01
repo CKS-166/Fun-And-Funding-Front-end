@@ -1,35 +1,55 @@
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import axios from "axios";
-import { useParams } from 'react-router-dom';
+import { useParams, useLocation } from 'react-router-dom';
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import { Box, Button, Divider, FormControl, MenuItem, Select, TextField, Typography } from '@mui/material';
+import { Backdrop, CircularProgress, Box, Button, Divider, FormControl, MenuItem, Select, TextField, Typography } from '@mui/material';
 import { checkAvailableMilestone } from "../../../../utils/Hooks/checkAvailableMilestone";
 import projectMilestoneApiInstace from "../../../../utils/ApiInstance/projectMilestoneApiInstance";
 import UpdateMilestone from "../UpdateMilestone";
 import MilestoneQuill from "../../../../components/UpdateProject/MilestoneQuill";
+import FileUploadDropdown from "../../../../components/UpdateProject/UploadFiles/FileUploadDropdown";
+import ChangeCircleIcon from '@mui/icons-material/ChangeCircle';
+import milestoneApiInstace from "../../../../utils/ApiInstance/milestoneApiInstance";
+import BackdropRequestMilestone from "../../../../components/UpdateProject/BackdropRequestMilestone";
+import Swal from "sweetalert2";
 const MilestoneForm = () => {
   const { id } = useParams(); // Get the project ID from the URL
   console.log(id);
+  const projectId = id;
+  const location = useLocation();
+  const milestoneId = location.state?.milestoneId;
+  console.log(milestoneId);
   const [milestone, setMilestone] = useState(null);
   const [formDataArray, setFormDataArray] = useState([]);
   const [milestoneData, setMilestoneData] = useState(null);
-  const sampleProjectId = "4127aeab-4133-4699-e201-08dcf350af22"; // Replace with real project ID
-
+  const [isLoading, setIsLoading] = useState(false);
+  const [uploadedFiles, setUploadedFiles] = useState([]);
+  const [dropdownAnchorEl, setDropdownAnchorEl] = useState(null);
+  const [anchorEls, setAnchorEls] = useState({})
+  const [isBackdropHidden, setIsBackdropHidden] = useState(false);
   //check available project milestone
   const getMilestoneData = async (id) => {
+    setIsLoading(true); // Start loading when data fetch begins
     try {
-      const data = await checkAvailableMilestone(sampleProjectId, id);
-      setMilestoneData(data);
+      const data = await checkAvailableMilestone(projectId, id);
+      setMilestoneData(data); // Set data after fetching
       console.log(data);
+      if (data.status === 'create' || data.status === 'edit') {
+        setIsLoading(false)
+      } else {
+        setIsBackdropHidden(true)
+      }
     } catch (error) {
-      console.error("Error fetching milestone data:", error);
+      console.error('Error fetching milestone data:', error);
+    } finally {
+      setIsLoading(false); // Stop loading once data fetch is complete
     }
   };
   const fetchFixedMilestone = async () => {
     try {
-      const response = await axios.get(
-        "https://localhost:7044/api/milestone/group-latest-milestone"
+      const response = await milestoneApiInstace.get(
+        "/group-latest-milestone"
       );
       if (response.data._isSuccess) {
         const milestoneData = response.data._data[0];
@@ -37,11 +57,11 @@ const MilestoneForm = () => {
         // Initialize formDataArray for requirements
         const initialFormData = milestoneData.requirements.map((req) => ({
           requirementId: req.id,
-          content: "", // Initial content
+          content: " ", // Initial content
           requirementStatus: 0,
           updateDate: new Date(),
           milestoneId: milestoneData.id,
-          fundingProjectId: sampleProjectId,
+          fundingProjectId: projectId,
           requirementFiles: [],
         }));
         setFormDataArray(initialFormData);
@@ -51,62 +71,22 @@ const MilestoneForm = () => {
     }
   };
 
+  const handleBackdropClose = () => {
+    setIsBackdropHidden(false);
+  };
+
   useEffect(() => {
     fetchFixedMilestone();
-    getMilestoneData(id);
-  }, []);
+    getMilestoneData(milestoneId);
+  }, [milestoneId]);
 
+  // console.log(milestoneData);
   // Handle Quill input changes for each requirement
   const handleQuillChange = (value, index) => {
     const updatedFormData = [...formDataArray];
     updatedFormData[index].content = value;
     setFormDataArray(updatedFormData);
   };
-  const imageHandler = useCallback(() => {
-    const input = document.createElement("input");
-    input.setAttribute("type", "file");
-    input.setAttribute("accept", "image/*");
-    input.click();
-    input.onchange = async () => {
-      const file = input.files[0];
-      const formData = new FormData();
-      formData.append('file', file);
-
-      const res = await axios.post(
-        "https://localhost:7044/api/storage",
-        formData
-      );
-      const imageUrl = res.data;
-      const quill = reactQuillRef.current;
-      if (quill) {
-        const range = quill.getEditorSelection();
-        range && quill.getEditor().insertEmbed(range.index, "image", imageUrl);
-      }
-
-      console.log(res)
-    };
-  }, []);
-  const modules = {
-    toolbar: {
-      container: [
-        [{ 'header': [3, 4, 5, 6, false] }],
-        ['bold', 'italic', 'underline', 'strike', 'blockquote', 'code'],
-        [{ color: [] }, { background: [] }],
-        [{ 'list': 'ordered' }, { 'list': 'bullet' }, { 'indent': '-1' }, { 'indent': '+1' }],
-        ['link', 'image'],
-        ['clean']
-      ],
-      handlers: {
-        image: imageHandler
-      }
-    },
-    clipboard: {
-      // toggle to add extra line breaks when pasting HTML:
-      matchVisual: false,
-    }
-  };
-  const reactQuillRef = useRef(null);
-
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -127,23 +107,71 @@ const MilestoneForm = () => {
       });
     });
 
-    // try {
-    //   await axios.post(
-    //     "https://localhost:7044/api/project-milestone-requirements",
-    //     data,
-    //     { headers: { "Content-Type": "multipart/form-data" } }
-    //   );
-    //   alert("Requirements submitted successfully!");
-    // } catch (error) {
-    //   console.error("Error submitting requirements:", error);
-    //   alert("Failed to submit requirements.");
-    // }
+    try {
+      await axios.post(
+        "https://localhost:7044/api/project-milestone-requirements",
+        data,
+        { headers: { "Content-Type": "multipart/form-data" } }
+      );
+      alert("Requirements submitted successfully!");
+    } catch (error) {
+      console.error("Error submitting requirements:", error);
+      alert("Failed to submit requirements.");
+    } finally {
+      getMilestoneData(milestoneId);
+    }
   };
+
+  //dropdown files
+  const [anchorEl, setAnchorEl] = useState(null); // Tracks dropdown state
+  const [currentIndex, setCurrentIndex] = useState(null); // Tracks which requirement files are open
+
+
+  const handleFilesSelected = (selectedFiles, index) => {
+    const updatedFormData = [...formDataArray];
+    updatedFormData[index].requirementFiles = [
+      ...updatedFormData[index].requirementFiles,
+      ...selectedFiles,
+    ];
+    setFormDataArray(updatedFormData);
+  };
+
+  const openDropdown = (event, index) => {
+    setAnchorEls((prev) => ({
+      ...prev,
+      [index]: event.currentTarget,
+    }));
+  };
+
+  const closeDropdown = (index) => {
+    setAnchorEls((prev) => ({
+      ...prev,
+      [index]: null,
+    }));
+  };
+
+  const handleRemoveFile = (fileIndex) => {
+    const updatedFormData = [...formDataArray];
+    updatedFormData[currentIndex].requirementFiles.splice(fileIndex, 1);
+    setFormDataArray(updatedFormData);
+  };
+
 
   if (!milestone) return <p>Loading milestone...</p>;
 
   return (
-    <div>
+    <div style={{position : 'relative'}}>
+      {milestoneData && milestone && !isLoading
+        && <BackdropRequestMilestone
+          isHidden={isBackdropHidden}
+          projectId={projectId}
+          milestone={milestone}
+          status={milestoneData.status}
+          onCloseBackdrop={handleBackdropClose} />}
+      {/* Backdrop with loading spinner */}
+      <Backdrop sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }} open={false}>
+        <CircularProgress color="inherit" />
+      </Backdrop>
       <div className='basic-info-section'>
         <Typography
           className='basic-info-title'
@@ -157,39 +185,54 @@ const MilestoneForm = () => {
         >
           {milestone.description}
         </Typography>
-        <form onSubmit={handleSubmit}>
-          {milestone.requirements.map((req, index) => (
-            <div key={req.id} style={{ marginBottom: "20px" }}>
-              <h3>{req.title}</h3>
-              <p>{req.description}</p>
-              <div className="w-[80%]">
-                {milestoneData && milestoneData.status !== 'create' ? (
+        {!isLoading && milestoneData && milestoneData.status == 'create' ? (
+          <form onSubmit={handleSubmit}>
+            {milestone.requirements.map((req, index) => (
+              <div key={req.id} style={{ marginBottom: "20px" }}>
+                <h3>{req.title}</h3>
+                <p>{req.description}</p>
+                <div className="w-[80%]">
                   <>
-                  <MilestoneQuill
-                  value={formDataArray[index]?.content || ""}
-                  onChange={(value) => handleQuillChange(value, index)}
-                />
+                    <div className="w-[70%]">
+                      <MilestoneQuill
+                        value={formDataArray[index]?.content || " "}
+                        onChange={(value) => handleQuillChange(value, index)}
+                      />
+                    </div>
 
-                <input
-                  type="file"
-                  multiple
-                  onChange={(e) => {
-                    const selectedFiles = Array.from(e.target.files);
-                    const updatedFormData = [...formDataArray];
-                    updatedFormData[index].requirementFiles = selectedFiles;
-                    setFormDataArray(updatedFormData);
-                  }}
-                />
+
+                    <Button variant="contained" component="label" onClick={(e) => openDropdown(e, index)}
+                      sx={{ backgroundColor: '#1BAA64', textTransform: 'none', fontWeight: '600' }} startIcon={<ChangeCircleIcon />}>
+                      Upload Files
+                      <input
+                        type="file"
+                        multiple
+                        hidden
+                        onChange={(e) => handleFilesSelected(Array.from(e.target.files), index)}
+
+                      />
+                    </Button>
+                    {formDataArray[index] && formDataArray[index].requirementFiles && (
+                      <FileUploadDropdown
+                        uploadedFiles={formDataArray[index].requirementFiles}
+                        anchorEl={anchorEls[index]}
+                        onClose={() => closeDropdown(index)}
+                        onRemoveFile={(fileIndex) =>
+                          handleRemoveFile(fileIndex, index)
+                        }
+                        requirementFiles={[]}
+                      />
+                    )}
+
                   </>
-                ) : <UpdateMilestone milestones={milestoneData &&milestoneData.data[0].projectMilestoneRequirements}/>}
-                
+                </div>
+
               </div>
+            ))}
 
-            </div>
-          ))}
-
-          <button type="submit">Save</button>
-        </form>
+            <button type="submit">Save</button>
+          </form>
+        ) : <UpdateMilestone render={() => getMilestoneData(milestoneId)} milestones={milestoneData?.data[0]?.projectMilestoneRequirements} />}
       </div>
     </div>
   );

@@ -1,156 +1,157 @@
-import React, { useState, useRef, useCallback, useEffect } from "react";
-import ReactQuill from "react-quill";
-import "react-quill/dist/quill.snow.css";
-import { Button } from "@mui/material";
+import React, { useState, useEffect } from "react";
+import { Button, Backdrop, CircularProgress, Box } from "@mui/material";
 import axios from "axios";
+import MilestoneQuill from "../../../../components/UpdateProject/MilestoneQuill";
+import UploadButton from "../../../../components/UpdateProject/UploadFiles/UploadButton";
+import FileUploadDropdown from "../../../../components/UpdateProject/UploadFiles/FileUploadDropdown";
+import ChangeCircleIcon from '@mui/icons-material/ChangeCircle';
 
-const UpdateMilestone = ({ milestones }) => {
-    console.log(milestones)
-  const [milestoneData, setMilestoneData] = useState(
-    milestones.map((milestone) => ({
-      id: milestone.id,
-      updateDate: new Date().toISOString(),
-      content: milestone.content || "",
-      requirementStatus: milestone.requirementStatus || 0,
-      requirementFiles: milestone.requirementFiles || [],
-      addedFiles: [],
-    }))
-  );
-
-  // Array of refs for each Quill editor
-  const quillRefs = useRef([]);
-
-  // Ensure refs are properly initialized for each milestone
+const UpdateMilestone = ({ milestones, render }) => {
+  
+  const [milestoneData, setMilestoneData] = useState([]);
+  const [anchorEls, setAnchorEls] = useState({});
+  const [loading, setLoading] = useState(true);
+  console.log(milestones)
   useEffect(() => {
-    quillRefs.current = quillRefs.current.slice(0, milestoneData.length);
-  }, [milestoneData]);
+    if (milestones && milestones.length > 0) {
+      // Initialize milestone data if milestones are available
+      const initialData = milestones.map((milestone) => ({
+        id: milestone.id,
+        updateDate: new Date().toISOString(),
+        content: milestone.content || "",
+        requirementStatus: milestone.requirementStatus || 0,
+        requirementFiles: milestone.requirementFiles || [],
+        addedFiles: [],
+      }));
+      setMilestoneData(initialData);
+      setLoading(false); // Data is loaded, stop loading
+    } else if (milestones && milestones.length === 0) {
+      setLoading(false); // No milestones found, stop loading
+    }
+  }, [milestones]);
 
-  // Handle Quill content change
   const handleQuillChange = (value, index) => {
     const updatedMilestones = [...milestoneData];
     updatedMilestones[index].content = value;
     setMilestoneData(updatedMilestones);
   };
 
-  // Custom image handler with ref handling
-  const imageHandler = useCallback((index) => {
-    const input = document.createElement("input");
-    input.setAttribute("type", "file");
-    input.setAttribute("accept", "image/*");
-    input.click();
-
-    input.onchange = async () => {
-      const file = input.files[0];
-      const formData = new FormData();
-      formData.append("file", file);
-
-      try {
-        const res = await axios.post(
-          "https://localhost:7044/api/storage",
-          formData
-        );
-        const imageUrl = res.data;
-
-        const quill = quillRefs.current[index]?.getEditor();
-        if (quill) {
-          quill.focus();
-          const range = quill.getSelection(true);
-
-          if (range) {
-            quill.insertEmbed(range.index, "image", imageUrl);
-            quill.setSelection(range.index + 1);
-          }
-        }
-      } catch (error) {
-        console.error("Image upload failed:", error);
-      }
-    };
-  }, []);
-
-  // Configure Quill modules with handlers
-  const getQuillModules = (index) => ({
-    toolbar: {
-      container: [
-        [{ header: [3, 4, 5, 6, false] }],
-        ["bold", "italic", "underline", "strike", "blockquote", "code"],
-        [{ color: [] }, { background: [] }],
-        [{ list: "ordered" }, { list: "bullet" }, { indent: "-1" }, { indent: "+1" }],
-        ["link", "image"],
-        ["clean"],
-      ],
-      handlers: {
-        image: () => imageHandler(index),
-      },
-    },
-    clipboard: {
-      matchVisual: false,
-    },
-  });
-
-  const handleFileChange = (index, e) => {
-    const files = Array.from(e.target.files);
+  const handleFilesSelected = (selectedFiles, index) => {
     const updatedMilestones = [...milestoneData];
-    updatedMilestones[index].addedFiles.push(...files);
+    updatedMilestones[index].addedFiles.push(...selectedFiles);
+    setMilestoneData(updatedMilestones);
+  };
+
+  const openDropdown = (event, index) => {
+    setAnchorEls((prev) => ({
+      ...prev,
+      [index]: event.currentTarget,
+    }));
+  };
+
+  const closeDropdown = (index) => {
+    setAnchorEls((prev) => ({
+      ...prev,
+      [index]: null,
+    }));
+  };
+
+  const handleRemoveFile = (fileIndex, milestoneIndex, fileSource) => {
+    const updatedMilestones = [...milestoneData];
+    if (fileSource === "addedFiles") {
+      updatedMilestones[milestoneIndex].addedFiles.splice(fileIndex, 1);
+    } else if (fileSource === "requirementFiles") {
+      updatedMilestones[milestoneIndex].requirementFiles[fileIndex].IsDeleted = true;
+    }
     setMilestoneData(updatedMilestones);
   };
 
   const handleSubmit = async (e) => {
+    setLoading(true);
     e.preventDefault();
-
-    const payloadArray = milestoneData.map((milestone) => {
-      const formData = new FormData();
-      formData.append("id", milestone.id);
-      formData.append("updateDate", milestone.updateDate);
-      formData.append("content", milestone.content);
-      formData.append("requirementStatus", milestone.requirementStatus);
-
-      milestone.requirementFiles.forEach((file) =>
-        formData.append("requirementFiles", JSON.stringify(file))
-      );
-
-      milestone.addedFiles.forEach((file) => formData.append("addedFiles", file));
-      return formData;
+    const data = new FormData();
+    milestoneData.forEach((milestone, i) => {
+      data.append(`request[${i}].Id`, milestone.id);
+      data.append(`request[${i}].RequirementStatus`, milestone.requirementStatus);
+      data.append(`request[${i}].UpdateDate`, milestone.updateDate);
+      data.append(`request[${i}].Content`, milestone.content);
+      milestone.requirementFiles.forEach((file, fileIndex) => {
+        data.append(`request[${i}].RequirementFiles[${fileIndex}].Id`, file.id);
+        data.append(`request[${i}].RequirementFiles[${fileIndex}].URL`, file.url);
+        data.append(`request[${i}].RequirementFiles[${fileIndex}].Name`, file.name);
+      });
+      milestone.addedFiles.forEach((file, fileIndex) => {
+        data.append(`request[${i}].AddedFiles[${fileIndex}].URL`, file);
+        data.append(`request[${i}].AddedFiles[${fileIndex}].Name`, file.name);
+        data.append(`request[${i}].AddedFiles[${fileIndex}].Filetype`, 0);
+      });
     });
+    console.log(milestoneData);
 
     try {
-      await axios.post(
-        "https://localhost:7044/api/project-milestone-requirements/update",
-        payloadArray,
-        { headers: { "Content-Type": "multipart/form-data" } }
-      );
+      await axios.put("https://localhost:7044/api/project-milestone-requirements", data, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
       alert("Milestones updated successfully!");
     } catch (error) {
       console.error("Failed to update milestones:", error);
       alert("Error updating milestones.");
+    }finally {
+      setLoading(false);
+      render();
     }
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      {milestoneData.map((milestone, index) => (
-        <div key={milestone.id} style={{ marginBottom: "20px" }}>
-          <h3>{milestones[index].description}</h3>
+    <>
+      {/* <Backdrop sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }} open={loading}>
+        <CircularProgress color="inherit" />
+      </Backdrop> */}
+      
+      {!loading && milestones && milestones.length === 0 && <h2>No milestones found.</h2>}
+      
+      {!loading && milestones && milestones.length > 0 && (
+        <form onSubmit={handleSubmit}>
+          {milestoneData.map((milestone, index) => (
+            <div key={milestone.id} style={{ marginBottom: "20px" }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width:'70%', marginBottom : '20px' }}>
+                <h3 style={{ fontWeight: '600' }}>{milestones[index].reqDescription}</h3>
+                <Button variant="contained" component="label" onClick={(e) => openDropdown(e, index)}
+                sx={{ backgroundColor: '#1BAA64', textTransform: 'none', fontWeight: '600' }} startIcon={<ChangeCircleIcon />}>
+                Additional Files
+                <input
+                  type="file"
+                  multiple
+                  hidden
+                  onChange={(e) => handleFilesSelected(Array.from(e.target.files), index)}
+                />
+              </Button>
+              </Box>
+             
+              <div className="w-[70%]">
+              <MilestoneQuill
+                value={milestone.content}
+                onChange={(value) => handleQuillChange(value, index)}
+              />
+              </div>
+              
 
-          <ReactQuill
-            value={milestone.content}
-            onChange={(value) => handleQuillChange(value, index)}
-            theme="snow"
-            ref={(el) => (quillRefs.current[index] = el)}
-            modules={getQuillModules(index)}
-          />
+              <FileUploadDropdown
+                uploadedFiles={milestone.addedFiles}
+                requirementFiles={milestone.requirementFiles}
+                anchorEl={anchorEls[index]}
+                onClose={() => closeDropdown(index)}
+                onRemoveFile={(fileIndex, fileSource) => handleRemoveFile(fileIndex, index, fileSource)}
+              />
+            </div>
+          ))}
 
-          <input
-            type="file"
-            multiple
-            onChange={(e) => handleFileChange(index, e)}
-          />
-        </div>
-      ))}
-
-      <Button type="submit" variant="contained" color="primary">
-        Update Milestones
-      </Button>
-    </form>
+          <Button type="submit" variant="contained" color="primary">
+            Update Milestones
+          </Button>
+        </form>
+      )}
+    </>
   );
 };
 

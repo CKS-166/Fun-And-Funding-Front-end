@@ -6,9 +6,9 @@ import InputField from "../../components/InputField";
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 import PortraitIcon from "@mui/icons-material/Portrait";
 import logo from "../../assets/OnlyLogo.png";
-import authApiInstace from "../../utils/apiInstance/authApiInstance";
 import { ToastContainer, toast } from "react-toastify"; // Import ToastContainer
 import { Navigate, useNavigate } from "react-router";
+import authApiInstance from "../../utils/ApiInstance/authApiInstance";
 
 function setCookie(name, value, expiresIn) {
   var now = new Date();
@@ -71,16 +71,21 @@ function BackerForm({ onClose, onOpenLogin, onBack, onOpenOTPForm }) {
       confirmPassword: confirmPassword,
     };
     // Add your form submission logic here
-    authApiInstace.post("/backer", jsonData).then((res) => {
-      if (!res.data._isSuccess) {
-        notify(`${res.data._message[0] || "Register failed"}`, "warn");
-        console.log("Register failed:", res.data._message);
-      } else {
-        notify(`${"Register success, please login"}`, "success");
-        setCookie("_username", userName, 7);
-        handleOTPClick(); // Navigate to LoginForm
-      }
-    });
+    try {
+      authApiInstance.post("/backer", jsonData).then((res) => {
+        if (!res.data._isSuccess) {
+          notify(`${res.data._message[0] || "Register failed"}`, "warn");
+          console.log("Register failed:", res.data._message);
+        } else {
+          notify(`${"Register success, please login"}`, "success");
+          setCookie("_username", userName, 7);
+          handleOTPClick(); // Navigate to LoginForm
+        }
+      });
+    } catch (error) {
+      console.log(error);
+      notify(`${error.message || "Register failed"}`, "warn");
+    }
   };
 
   const togglePasswordVisibility = () => setShowPassword(!showPassword);

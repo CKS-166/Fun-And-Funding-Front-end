@@ -7,7 +7,8 @@ import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 import PortraitIcon from "@mui/icons-material/Portrait";
 import logo from "../../assets/OnlyLogo.png";
 import { ToastContainer, toast } from "react-toastify";
-import authApiInstance from "../../utils/apiInstance/authApiInstance";
+import authApiInstance from "../../utils/ApiInstance/authApiInstance";
+
 function setCookie(name, value, expiresIn) {
   var now = new Date();
   var time = now.getTime() + 7 * 60 * 60 * 1000;
@@ -77,18 +78,23 @@ function OwnerForm({ onClose, onOpenLogin, onBack, onOpenOTPForm }) {
       password: password,
       confirmPassword: confirmPassword,
     };
+    try {
+      authApiInstance.post("/game-owner", jsonData).then((res) => {
+        if (!res.data._isSuccess) {
+          notify(`${res.data._message[0] || "Register failed"}`, "warn");
+          console.log("Register failed:", res.data._message);
+        } else {
+          notify(`${"Register success, please login"}`, "success");
+          console.log("Register success, please login");
+          setCookie("_username", userName, 7);
+          handleOTPClick();
+        }
+      });
+    } catch (error) {
+      console.log(error);
+      notify(`${error.message || "Register failed"}`, "warn");
+    }
     // Add your form submission logic here
-    authApiInstance.post("/game-owner", jsonData).then((res) => {
-      if (!res.data._isSuccess) {
-        notify(`${res.data._message[0] || "Register failed"}`, "warn");
-        console.log("Register failed:", res.data._message);
-      } else {
-        notify(`${"Register success, please login"}`, "success");
-        console.log("Register success, please login");
-        setCookie("_username", userName, 7);
-        handleOTPClick();
-      }
-    });
   };
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);

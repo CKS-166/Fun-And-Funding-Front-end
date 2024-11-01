@@ -104,9 +104,9 @@ const UpdateMilestone = ({ milestones, render }) => {
 
   return (
     <>
-      <Backdrop sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }} open={loading}>
+      {/* <Backdrop sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }} open={loading}>
         <CircularProgress color="inherit" />
-      </Backdrop>
+      </Backdrop> */}
       
       {!loading && milestones && milestones.length === 0 && <h2>No milestones found.</h2>}
       
@@ -114,17 +114,9 @@ const UpdateMilestone = ({ milestones, render }) => {
         <form onSubmit={handleSubmit}>
           {milestoneData.map((milestone, index) => (
             <div key={milestone.id} style={{ marginBottom: "20px" }}>
-              <Box>
-              <h3>{milestones[index].reqDescription}</h3>
-              </Box>
-             
-              <div className="w-[70%]">
-              <MilestoneQuill
-                value={milestone.content}
-                onChange={(value) => handleQuillChange(value, index)}
-              />
-              </div>
-              <Button variant="contained" component="label" onClick={(e) => openDropdown(e, index)}
+              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width:'70%', marginBottom : '20px' }}>
+                <h3 style={{ fontWeight: '600' }}>{milestones[index].reqDescription}</h3>
+                <Button variant="contained" component="label" onClick={(e) => openDropdown(e, index)}
                 sx={{ backgroundColor: '#1BAA64', textTransform: 'none', fontWeight: '600' }} startIcon={<ChangeCircleIcon />}>
                 Additional Files
                 <input
@@ -134,6 +126,15 @@ const UpdateMilestone = ({ milestones, render }) => {
                   onChange={(e) => handleFilesSelected(Array.from(e.target.files), index)}
                 />
               </Button>
+              </Box>
+             
+              <div className="w-[70%]">
+              <MilestoneQuill
+                value={milestone.content}
+                onChange={(value) => handleQuillChange(value, index)}
+              />
+              </div>
+              
 
               <FileUploadDropdown
                 uploadedFiles={milestone.addedFiles}

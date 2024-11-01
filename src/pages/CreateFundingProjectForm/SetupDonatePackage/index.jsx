@@ -8,6 +8,8 @@ import NavigateButton from "../../../components/CreateProject/ProjectForm/Naviga
 import PackageModal from "./PackageModal"
 import fundingProjectApiInstace from "../../../utils/ApiInstance/fundingProjectApiInstance"
 import Cookies from "js-cookie";
+import {Backdrop, CircularProgress} from "@mui/material"
+import Swal from "sweetalert2"
 const SetupDonatePackage = () => {
   const token = Cookies.get("_auth");
   const { setFormIndex, setProjectData, projectData } = useOutletContext()
@@ -18,6 +20,8 @@ const SetupDonatePackage = () => {
 
   const [projectPackages, setProjectPackages] = useState([])
   const [selectedPackage, setSelectedPackage] = useState(null)
+
+  const [isLoading, setIsLoading] = useState(false)
 
   const handleOpenAddPackage = () => {
     setSelectedPackage(null);
@@ -103,23 +107,39 @@ const SetupDonatePackage = () => {
     for (let pair of formData.entries()) {
       console.log(pair[0], pair[1]);
     }
-    const sampleToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6ImIzNTIzZGU1LWYxZDItNGNjOS04MzA2LWZhNGMwZWM2ZDI4YyIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWUiOiJwYW9wYW8iLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJiYW9jYW80OTRAZ21haWwuY29tIiwianRpIjoiSmNtRjh1ajJJU3ZlTDVGdnZOazRwbnA4eHJoSU56OC0xNjE0MjI1NjI0IiwiYXBpX2tleSI6IkpjbUY4dWoySVN2ZUw1RnZ2Tms0cG5wOHhyaElOejgiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJHYW1lT3duZXIiLCJleHAiOjE3MzAxMTA5MTgsImlzcyI6IkFQUE9UQVBBWSIsImF1ZCI6Imh0dHA6Ly9sb2NhbGhvc3Q6NzIzNSJ9.N1ZlRrWx4X8g76LmAPXhw4PfFisI_jImQ9QNO_3oako'
+    
     try {
+      setIsLoading(true);
       const response = await fundingProjectApiInstace.post("",formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
-          'Authorization' : `Bearer ${sampleToken}`
+          'Authorization' : `Bearer ${token}`
         },
       });
       console.log(response.data);
     } catch (error) {
+      Swal.fire({
+        title: "Error",
+        text: error.message,
+        icon: "error"
+      });
       console.error('Error creating project:', error);
+    }finally{
+      Swal.fire({
+        title: `Your funding project request has been sent!`,
+        text: "The waiting process can take 2-5 days. Thank you for your patience.Please check your email for more details.",
+        icon: "success"
+      });
+      setIsLoading(false);
     }
     console.log(projectData);
   }
 
   return (
     <>
+    <Backdrop sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }} open={false}>
+        <CircularProgress color="inherit" />
+      </Backdrop>
       <Paper elevation={1} className="bg-white w-full overflow-hidden]">
         <div className="bg-primary-green text-white flex justify-center items-center h-[3rem] text-xl font-semibold mb-4">
           Setup project donate packages

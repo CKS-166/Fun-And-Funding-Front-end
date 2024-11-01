@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from "react";
 import "./index.css";
-import { Modal, TextField, Button, ImageList, ImageListItem, Select, MenuItem } from "@mui/material";
+import { Modal, TextField, Button, ImageList, ImageListItem, Box } from "@mui/material";
 import { FilePond } from "react-filepond";
 import "filepond/dist/filepond.min.css";
 import Lightbox from 'react-18-image-lightbox';
 import 'react-18-image-lightbox/style.css';
 import ReactPlayer from "react-player";
 import Grid from '@mui/material/Grid2';
-
-const TaskCard = ({ task, title, handleDelete, index, setActiveCard, updateTask }) => {
+import { FaRegCheckCircle } from "react-icons/fa";
+const TaskCard = ({ task, title, handleDelete, index, setActiveCard, updateTask, isAction }) => {
+  isAction = true;
   const [isModalOpen, setModalOpen] = useState(false);
   const [formData, setFormData] = useState({ ...task, addedFiles: [] });
   const [images, setImages] = useState(task.requirementFiles.filter((file) => file.file === 6 && !file.isDeleted));
@@ -90,15 +91,26 @@ const TaskCard = ({ task, title, handleDelete, index, setActiveCard, updateTask 
 
   return (
     <>
-      <article
-        className="task_card"
-        draggable
-        onClick={handleOpenModal}
-        onDragStart={() => setActiveCard(index)}
-        onDragEnd={() => setActiveCard(null)}
-      >
-        <p className="task_text">{title}</p>
-      </article>
+      <Box sx={{ padding: '0 4px', margin: '0 4px' }}>
+        <article
+          className="task_card"
+          draggable={isAction} // Enable dragging only if isAction is true
+          onClick={handleOpenModal}
+          onDragStart={() => isAction && setActiveCard(index)} // Only set active card if draggable
+          onDragEnd={() => isAction && setActiveCard(null)}
+        >
+
+          <p className="task_text">
+            <FaRegCheckCircle />
+            <span style={{ marginLeft: '0.5rem' }}>{title}</span>
+          </p>
+          {images.length > 0 && (
+            <img src={images[0].url} loading="lazy" alt={`Image ${index}`}
+              style={{ height: '10rem', width: '100%', objectFit: 'cover' }} />
+          )}
+        </article>
+      </Box>
+
 
       <Modal
         open={isModalOpen}

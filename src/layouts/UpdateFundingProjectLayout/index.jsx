@@ -133,6 +133,10 @@ function UpdateFundingProjectLayout() {
         fetchMilestones();
     }, [id]);
 
+    const handleNavigatePreview = (id) => {
+        navigate(`/account/projects/update//${id}/preview`);
+    };
+
     const fetchProject = async () => {
         try {
             setIsLoading(true);
@@ -215,7 +219,7 @@ function UpdateFundingProjectLayout() {
 
     return (
         <ProjectContext.Provider value={{ project, edited, isLoading, loadingStatus, setProject, setIsEdited, setIsLoading, setLoadingStatus }}>
-            <LoadingProjectBackDrop isLoading={isLoading} loadingStatus={loadingStatus} />
+            {/* <LoadingProjectBackDrop isLoading={isLoading} loadingStatus={loadingStatus} /> */}
             <Container sx={{ mx: '0', px: '0 !important', width: '100% !important', maxWidth: '100% !important' }}>
                 <Grid2 container>
                     <Grid2
@@ -258,7 +262,8 @@ function UpdateFundingProjectLayout() {
                             </div>
                             <div>
                                 <div className='mt-[2rem]'>
-                                    <Typography className='update-project-section'>
+                                    <Typography className='update-project-section' 
+                                    onClick={() => navigate(`/account/projects/update/${project.id}/preview`)} >
                                         Project Preview
                                     </Typography>
                                 </div>

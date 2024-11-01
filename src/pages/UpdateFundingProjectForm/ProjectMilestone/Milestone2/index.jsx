@@ -6,8 +6,11 @@ import { useParams, useLocation } from 'react-router-dom';
 import milestoneApiInstace from '../../../../utils/ApiInstance/milestoneApiInstance';
 import { checkAvailableMilestone } from "../../../../utils/Hooks/checkAvailableMilestone";
 import BackdropRequestMilestone from '../../../../components/UpdateProject/BackdropRequestMilestone';
-import { Typography } from '@mui/material';
+import { Typography, Box } from '@mui/material';
 import axios from "axios";
+import Grid from '@mui/material/Grid2';
+import { set } from 'react-hook-form';
+import Swal from 'sweetalert2';
 function Milestone2() {
     const { id } = useParams(); // Get the project ID from the URL
     console.log(id);
@@ -41,6 +44,11 @@ function Milestone2() {
             setMilestoneData(data); // Set data after fetching
             console.log(data);
             setTasks(data.data[0].projectMilestoneRequirements)
+            if(data.status === 'create' || data.status === 'edit'){
+                setIsBackdropHidden(false)
+            }else{
+                setIsBackdropHidden(true)
+            }
             console.log(tasks)
         } catch (error) {
             console.error('Error fetching milestone data:', error);
@@ -132,6 +140,11 @@ function Milestone2() {
             getMilestoneData(milestoneId); // Re-fetch the Kanban board data after adding a task
         } catch (error) {
             console.error("Error adding task:", error);
+            Swal.fire({
+                title: "Error",
+                text: error.response.data.message,
+                icon: "error"
+              });
         }
     };
     //handle update task
@@ -149,11 +162,12 @@ function Milestone2() {
             setIsLoading(false);
         }
     };
-
+    if (!milestone) return <p>Loading milestone...</p>;
+    console.log(isLoading)
     return (
         <>
-            {milestoneData && milestone && milestoneData.data.length == 0
-                && !isLoading && <BackdropRequestMilestone
+            {milestoneData && milestone && !isLoading 
+            && <BackdropRequestMilestone
                     isHidden={isBackdropHidden}
                     projectId={projectId}
                     milestone={milestone}
@@ -163,7 +177,7 @@ function Milestone2() {
                     className='basic-info-title'
                     sx={{ width: '70%', }}
                 >
-                  {milestone.milestoneName} 
+                    {milestone.milestoneName}
                 </Typography>
                 <Typography
                     className='basic-info-subtitle'
@@ -171,45 +185,52 @@ function Milestone2() {
                 >
                     {milestone.description}
                 </Typography>
-                <div className="app">
+                <Box>
                     {milestone && milestone.requirements.map((req) => (
                         <>
-                            <div>{req.description}  <span className='text-[#1BAA64]'>*</span></div> 
+                            <Typography sx={{ fontWeight: 600 }}>{req.description}  <span className='text-[#1BAA64]'>*</span></Typography>
                             <TaskForm onAddTask={handleAddTask} projectId={projectId} milestoneId={milestoneId} requirementId={req.id} />
-                            <main className="app_main">
-                                <TaskColumn
-                                    title="To do"
-                                    tasks={tasks}
-                                    status={0}
-                                    handleDelete={handleDelete}
-                                    setActiveCard={setActiveCard}
-                                    onDrop={handleDropCard}
-                                    updateTask={handleUpdateTask}
-                                />
-                                <TaskColumn
-                                    title="Doing"
-                                    tasks={tasks}
-                                    status={1}
-                                    handleDelete={handleDelete}
-                                    setActiveCard={setActiveCard}
-                                    onDrop={handleDropCard}
-                                    updateTask={handleUpdateTask}
-                                />
-                                <TaskColumn
-                                    title="Done"
-                                    tasks={tasks}
-                                    status={2}
-                                    handleDelete={handleDelete}
-                                    setActiveCard={setActiveCard}
-                                    onDrop={handleDropCard}
-                                    updateTask={handleUpdateTask}
-                                />
-                            </main>
+                            <Grid container spacing={2}>
+                                <Grid size={4} className="app_main">
+                                    <TaskColumn
+                                        className='task-column'
+                                        title="To-do"
+                                        tasks={tasks}
+                                        status={0}
+                                        handleDelete={handleDelete}
+                                        setActiveCard={setActiveCard}
+                                        onDrop={handleDropCard}
+                                        updateTask={handleUpdateTask}
+                                    />
+                                </Grid>
+                                <Grid size={4}>
+                                    <TaskColumn
+                                        title="Doing"
+                                        tasks={tasks}
+                                        status={1}
+                                        handleDelete={handleDelete}
+                                        setActiveCard={setActiveCard}
+                                        onDrop={handleDropCard}
+                                        updateTask={handleUpdateTask}
+                                    />
+                                </Grid>
+                                <Grid size={4}>
+                                    <TaskColumn
+                                        title="Done"
+                                        tasks={tasks}
+                                        status={2}
+                                        handleDelete={handleDelete}
+                                        setActiveCard={setActiveCard}
+                                        onDrop={handleDropCard}
+                                        updateTask={handleUpdateTask}
+                                    />
+                                </Grid>
+                            </Grid>
                         </>
                     ))}
+                </Box>
 
-                </div>
-            </div>
+            </div >
 
         </>
 

@@ -10,6 +10,9 @@ import UpdateMilestone from "../UpdateMilestone";
 import MilestoneQuill from "../../../../components/UpdateProject/MilestoneQuill";
 import FileUploadDropdown from "../../../../components/UpdateProject/UploadFiles/FileUploadDropdown";
 import ChangeCircleIcon from '@mui/icons-material/ChangeCircle';
+import milestoneApiInstace from "../../../../utils/ApiInstance/milestoneApiInstance";
+import BackdropRequestMilestone from "../../../../components/UpdateProject/BackdropRequestMilestone";
+import Swal from "sweetalert2";
 const MilestoneForm = () => {
   const { id } = useParams(); // Get the project ID from the URL
   console.log(id);
@@ -20,11 +23,11 @@ const MilestoneForm = () => {
   const [milestone, setMilestone] = useState(null);
   const [formDataArray, setFormDataArray] = useState([]);
   const [milestoneData, setMilestoneData] = useState(null);
-  const sampleProjectId = "4127aeab-4133-4699-e201-08dcf350af22"; // Replace with real project ID
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [uploadedFiles, setUploadedFiles] = useState([]);
   const [dropdownAnchorEl, setDropdownAnchorEl] = useState(null);
   const [anchorEls, setAnchorEls] = useState({})
+  const [isBackdropHidden, setIsBackdropHidden] = useState(false);
   //check available project milestone
   const getMilestoneData = async (id) => {
     setIsLoading(true); // Start loading when data fetch begins
@@ -32,6 +35,11 @@ const MilestoneForm = () => {
       const data = await checkAvailableMilestone(projectId, id);
       setMilestoneData(data); // Set data after fetching
       console.log(data);
+      if (data.status === 'create' || data.status === 'edit') {
+        setIsLoading(false)
+      } else {
+        setIsBackdropHidden(true)
+      }
     } catch (error) {
       console.error('Error fetching milestone data:', error);
     } finally {
@@ -40,8 +48,8 @@ const MilestoneForm = () => {
   };
   const fetchFixedMilestone = async () => {
     try {
-      const response = await axios.get(
-        "https://localhost:7044/api/milestone/group-latest-milestone"
+      const response = await milestoneApiInstace.get(
+        "/group-latest-milestone"
       );
       if (response.data._isSuccess) {
         const milestoneData = response.data._data[0];
@@ -53,7 +61,7 @@ const MilestoneForm = () => {
           requirementStatus: 0,
           updateDate: new Date(),
           milestoneId: milestoneData.id,
-          fundingProjectId: sampleProjectId,
+          fundingProjectId: projectId,
           requirementFiles: [],
         }));
         setFormDataArray(initialFormData);
@@ -61,6 +69,10 @@ const MilestoneForm = () => {
     } catch (error) {
       console.error("Error fetching milestone:", error);
     }
+  };
+
+  const handleBackdropClose = () => {
+    setIsBackdropHidden(false);
   };
 
   useEffect(() => {
@@ -148,9 +160,16 @@ const MilestoneForm = () => {
   if (!milestone) return <p>Loading milestone...</p>;
 
   return (
-    <div>
+    <div style={{position : 'relative'}}>
+      {milestoneData && milestone && !isLoading
+        && <BackdropRequestMilestone
+          isHidden={isBackdropHidden}
+          projectId={projectId}
+          milestone={milestone}
+          status={milestoneData.status}
+          onCloseBackdrop={handleBackdropClose} />}
       {/* Backdrop with loading spinner */}
-      <Backdrop sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }} open={isLoading}>
+      <Backdrop sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }} open={false}>
         <CircularProgress color="inherit" />
       </Backdrop>
       <div className='basic-info-section'>
@@ -174,13 +193,13 @@ const MilestoneForm = () => {
                 <p>{req.description}</p>
                 <div className="w-[80%]">
                   <>
-                  <div className="w-[70%]">
-                  <MilestoneQuill
-                      value={formDataArray[index]?.content || " "}
-                      onChange={(value) => handleQuillChange(value, index)}
-                    />
-                  </div>
-                    
+                    <div className="w-[70%]">
+                      <MilestoneQuill
+                        value={formDataArray[index]?.content || " "}
+                        onChange={(value) => handleQuillChange(value, index)}
+                      />
+                    </div>
+
 
                     <Button variant="contained" component="label" onClick={(e) => openDropdown(e, index)}
                       sx={{ backgroundColor: '#1BAA64', textTransform: 'none', fontWeight: '600' }} startIcon={<ChangeCircleIcon />}>
@@ -190,18 +209,21 @@ const MilestoneForm = () => {
                         multiple
                         hidden
                         onChange={(e) => handleFilesSelected(Array.from(e.target.files), index)}
-                        
+
                       />
                     </Button>
+                    {formDataArray[index] && formDataArray[index].requirementFiles && (
+                      <FileUploadDropdown
+                        uploadedFiles={formDataArray[index].requirementFiles}
+                        anchorEl={anchorEls[index]}
+                        onClose={() => closeDropdown(index)}
+                        onRemoveFile={(fileIndex) =>
+                          handleRemoveFile(fileIndex, index)
+                        }
+                        requirementFiles={[]}
+                      />
+                    )}
 
-                    <FileUploadDropdown
-                      uploadedFiles={formDataArray[index]?.requirementFiles || []}
-                      anchorEl={anchorEls[index]}
-                      onClose={() => closeDropdown(index)}
-                      onRemoveFile={(fileIndex) =>
-                        handleRemoveFile(fileIndex, index)
-                      }
-                    />
                   </>
                 </div>
 

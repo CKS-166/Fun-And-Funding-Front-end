@@ -3,7 +3,6 @@ import { Button, Modal, TextField, FormControl, Select, MenuItem, Box } from "@m
 import { FilePond } from "react-filepond";
 import "filepond/dist/filepond.min.css";
 import { FaPlus } from "react-icons/fa";
-
 const TaskForm = ({ onAddTask, projectId, milestoneId, requirementId }) => {
   const [isModalOpen, setModalOpen] = useState(false);
   const initialFormData = {
@@ -39,7 +38,23 @@ const TaskForm = ({ onAddTask, projectId, milestoneId, requirementId }) => {
     }));
   }, []);
 
-  //reset 
+  //modal style
+  const style = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    transform: "translate(-50%, -50%)",
+    width: "50vw",
+    maxHeight: "80vh",
+    overflowY: "auto",
+    backgroundColor: "white",
+    borderRadius: "8px",
+    border: '1px solid #1BAA64',
+    boxShadow: 24,
+    p: 4,
+  };
+
   // Reset form data to initial state
   const resetFormData = () => setFormData(initialFormData);
 
@@ -66,53 +81,92 @@ const TaskForm = ({ onAddTask, projectId, milestoneId, requirementId }) => {
       handleCloseModal();
       resetFormData();
     } catch (error) {
-      console.error("Error adding task:", error);
+      console.log(error);
+      
     }
-
   };
 
   return (
     <>
-      <Box sx={{ display: 'flex', justifyContent: 'center', marginBottom: '10px' }}>
-        <Button
-          variant="contained" component="label"
-          sx={{ backgroundColor: '#1BAA64', textTransform: 'none', fontWeight: '600' }}
-          startIcon={<FaPlus />}
-          onClick={handleOpenModal}
-        >
-          Enter Task
-        </Button>
+      <Box sx={{ display: 'flex', padding: '0px 20px', marginTop: '20px', 
+        justifyContent: 'space-between' }}>
+        <Box sx={{
+          display: 'flex', justifyContent: 'flex-start'
+          , marginBottom: '10px'
+        }}>
+          <Button
+            variant="contained" component="label"
+            sx={{ backgroundColor: '#1BAA64', textTransform: 'none', fontWeight: '600' }}
+            startIcon={<FaPlus />}
+            onClick={handleOpenModal}
+          >
+            Enter Task
+          </Button>
+        </Box>
+        <Box sx={{
+          display: 'flex', justifyContent: 'flex-start'
+          , marginBottom: '10px'
+        }}>
+          <Button
+            variant="contained" component="label"
+            sx={{
+              backgroundColor: '#1BAA64', textTransform: 'none', fontWeight: '600'
+              , marginLeft: '30rem'
+            }}
+            startIcon={<FaPlus />}
+
+          >
+            Complete Milestone
+          </Button>
+        </Box>
       </Box>
 
-      <Modal open={isModalOpen} onClose={handleCloseModal}>
-        <form onSubmit={handleSubmit} style={{ padding: "2rem" }}>
-          <TextField
-            label="Content"
-            name="content"
-            fullWidth
-            margin="normal"
-            value={formData.content}
-            onChange={handleChange}
-          />
-          <FormControl fullWidth margin="normal">
-            <Select
-              label="Status"
-              name="requirementStatus"
-              value={formData.requirementStatus}
+
+      <Modal open={isModalOpen} onClose={handleCloseModal} >
+        <Box sx={style}>
+          <form onSubmit={handleSubmit} style={{ padding: "2rem" }}>
+            <TextField
+              label="Content"
+              name="content"
+              fullWidth
+              margin="normal"
+              value={formData.content}
               onChange={handleChange}
-            >
-              <MenuItem value={0}>To Do</MenuItem>
-              <MenuItem value={1}>Doing</MenuItem>
-              <MenuItem value={2}>Done</MenuItem>
-            </Select>
-          </FormControl>
-          <FilePond
-            files={formData.requirementFiles.map(fileObj => fileObj.file)}
-            onupdatefiles={handleFilesChange}
-            allowMultiple
-          />
-          <Button type="submit">Add Task</Button>
-        </form>
+            />
+            <FormControl fullWidth margin="normal">
+              <Select
+                label="Status"
+                name="requirementStatus"
+                value={formData.requirementStatus}
+                onChange={handleChange}
+              >
+                <MenuItem value={0}>To Do</MenuItem>
+                <MenuItem value={1}>Doing</MenuItem>
+                <MenuItem value={2}>Done</MenuItem>
+              </Select>
+            </FormControl>
+            <FilePond
+              files={formData.requirementFiles.map(fileObj => fileObj.file)}
+              onupdatefiles={handleFilesChange}
+              allowMultiple
+            />
+            <Box sx={{display : 'flex', alignItems : 'center', justifyContent : 'space-between', marginTop : '20px'}}>
+              <Button type="submit" variant="contained" component="label"
+                sx={{ backgroundColor: '#1BAA64', textTransform: 'none', fontWeight: '600' }}
+                onClick={(e) => handleSubmit(e)}>
+                Add Task
+              </Button>
+              <Button
+                variant="contained" component="label"
+                sx={{ backgroundColor: '#1BAA64', textTransform: 'none', fontWeight: '600' }}
+                type="button" onClick={handleCloseModal}>
+                  Cancel
+                </Button>
+            </Box>
+
+          </form>
+        </Box>
+
       </Modal>
     </>
   );

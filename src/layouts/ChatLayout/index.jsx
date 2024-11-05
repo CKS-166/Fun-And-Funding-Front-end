@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import { Outlet, useParams, useNavigate } from "react-router-dom";
 import {
   Box,
   Grid2,
@@ -15,15 +15,20 @@ import Cookies from "js-cookie";
 import Swal from "sweetalert2";
 import chatApiInstace from "../../utils/ApiInstance/chatApiInstance";
 import userApiInstace from "../../utils/ApiInstance/userApiInstance";
+import SearchBarChat from "../../components/Chat/SearchBarChat";
+import ContactedUser from "../../components/Chat/ContactedUser";
 
 function ChatLayout() {
   //variables
   //token
   const token = Cookies.get("_auth");
+  const { senderId, receiverId } = useParams();
 
   //hooks
+  const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [contactedUsers, setContactedUsers] = useState([]);
+  const [selectedUserId, setSelectedUserId] = useState(receiverId);
 
   useEffect(() => {
     fetchUserData();
@@ -75,6 +80,12 @@ function ChatLayout() {
       });
   };
 
+  //handle select user
+  const handleUserSelect = (userId) => {
+    setSelectedUserId(userId);
+    navigate(`/chat/${user?.id}/${userId}`);
+  };
+
   return (
     <Container
       sx={{
@@ -96,20 +107,32 @@ function ChatLayout() {
             height: "100% !important",
             overflowY: "auto",
             px: "1.5rem",
-            py: "1rem",
+            py: "1.5rem",
             borderRadius: "0.625rem",
-            boxShadow: "0px 5px 10px rgba(0, 0, 0, 0.25)",
+            boxShadow:
+              "rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;",
           }}
         >
-          {contactedUsers.length > 0 ? (
-            contactedUsers.map((u, index) => (
-              <div key={index}>
-                <p>{u.userId}</p>
-              </div>
-            ))
-          ) : (
-            <p>Let's get in contact with someone...</p>
-          )}
+          <div className="flex flex-col gap-y-4">
+            <div className="w-full">
+              <SearchBarChat />
+            </div>
+            <div className="gap-y-2">
+              {contactedUsers.length > 0 ? (
+                contactedUsers.map((u, index) => (
+                  <div key={index}>
+                    <ContactedUser
+                      user={u}
+                      isSelected={u.userId === selectedUserId}
+                      onSelect={() => handleUserSelect(u.userId)}
+                    />
+                  </div>
+                ))
+              ) : (
+                <p>Let's get in contact with someone...</p>
+              )}
+            </div>
+          </div>
         </Grid2>
         <Grid2
           size={8}
@@ -118,9 +141,10 @@ function ChatLayout() {
             height: "100% !important",
             overflowY: "auto",
             px: "1.5rem",
-            py: "1rem",
+            py: "1.5rem",
             borderRadius: "0.625rem",
-            boxShadow: "0px 5px 10px rgba(0, 0, 0, 0.25)",
+            boxShadow:
+              "rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;",
           }}
           className="scrollbar-hidden"
         >

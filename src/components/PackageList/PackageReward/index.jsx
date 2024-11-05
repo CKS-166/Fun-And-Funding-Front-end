@@ -6,12 +6,11 @@ import './index.css';
 import PackageItem from './PackageItem';
 import axios from 'axios';
 import Swal from 'sweetalert2';
+import Cookies from 'js-cookie';
 const PackageReward = ({ packageList, reloadDetail }) => {
-  const type = "free";
-  const sampleArray = [1, 1, 1, 1];
-  const sampleItemArray = [1, 1, 1, 1, 1, 1];
+  const token = Cookies.get("_auth");
+
   const number = 30000000;
-  const formattedNumber = number.toLocaleString("de-DE");
   const [donatedMoney, setDonatedMoney] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const handleDonateFree = async (item) => {
@@ -38,7 +37,11 @@ const PackageReward = ({ packageList, reloadDetail }) => {
     console.log(donateBody);
     try {
       await axios
-        .post("https://localhost:7044/api/PackageBackers", donateBody)
+        .post("https://localhost:7044/api/PackageBackers", donateBody,{
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
         .then((res) => {
           console.log(res);
           setIsLoading(false);
@@ -51,6 +54,21 @@ const PackageReward = ({ packageList, reloadDetail }) => {
           reloadDetail();
         });
     } catch (error) {
+      setIsLoading(false);
+      if(error.status === 401){
+                    
+        Swal.fire({
+            title: "Donation Failed",
+            text: "Please Login in Backer role",
+            icon: "error"
+        })
+    }else { 
+        Swal.fire({
+            title: "Donation Failed",
+            text: error.response.data._message,
+            icon: "error"
+        })
+    }
       console.log(error);
     }
 

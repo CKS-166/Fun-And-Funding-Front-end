@@ -55,6 +55,7 @@ import Milestone2 from "./pages/UpdateFundingProjectForm/ProjectMilestone/Milest
 import Milestone3 from "./pages/UpdateFundingProjectForm/ProjectMilestone/Milestone3";
 import Milestone4 from "./pages/UpdateFundingProjectForm/ProjectMilestone/Milestone4";
 import ProjectPreview from "./pages/UpdateFundingProjectForm/ProjectPreview";
+import MarketplaceHomePage from "./pages/MarketplaceHomePage";
 
 function App() {
   const location = useLocation();
@@ -82,6 +83,7 @@ function App() {
               <Route path="/home" element={<HomePage />} />
               <Route path="/about-us" element={<AboutUs />} />
               <Route path="/project-detail" element={<ProjectDetail />} />
+              <Route path="/marketplace" element={<MarketplaceHomePage/>}/>
             </Route>
             <Route path="choose-project-plan" element={<ChoosePlan />} />
             <Route element={<CreateFundingProjectLayout />}>
@@ -132,7 +134,6 @@ function App() {
                 path="/account/projects/update/:id/media-files"
                 element={<Media />}
               />
-
               <Route
                 path="/account/projects/update/:id/milestone1"
                 element={<Milestone1 />}

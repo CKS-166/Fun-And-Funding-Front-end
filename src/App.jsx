@@ -153,7 +153,9 @@ function App() {
             </Route>
 
             <Route element={<AdminDashboardLayout />}>
-              <Route path="/admin-dashboard/dashboard" element={<Dashboard />} />
+              <Route
+                path="/admin-dashboard/dashboard"
+                element={<Dashboard />} />
               <Route
                 path="/admin-dashboard/withdraw-table"
                 element={<AdminWithdrawRequest />}
@@ -162,8 +164,13 @@ function App() {
                 path="/admin-dashboard/milestones"
                 element={<Milestones />}
               />
-              <Route path="/admin-dashboard/milestone-request" element={<AdminMilestone />} />
+              <Route
+                path="/admin-dashboard/milestone-request"
+                element={<AdminMilestone />} />
+
             </Route>
+
+
             <Route path="/funding-detail/:id" element={<ProjectDetail />} />
             <Route path="/test" element={<TestCR />} />
             <Route path="/test-update" element={<TestUpdate />} />

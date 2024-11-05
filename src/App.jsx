@@ -61,7 +61,7 @@ function App() {
   const location = useLocation();
   const hideAppBar = location.pathname.includes("admin-dashboard");
 
-  const { isLoading, setIsLoading } = useLoading()
+  const { isLoading, setIsLoading } = useLoading();
 
   return (
     <>
@@ -69,7 +69,7 @@ function App() {
         {!hideAppBar && <FunFundingAppBar />}
 
         <Backdrop
-          sx={(theme) => ({ color: '#fff', zIndex: theme.zIndex.drawer + 1 })}
+          sx={(theme) => ({ color: "#fff", zIndex: theme.zIndex.drawer + 1 })}
           open={isLoading}
         >
           <CircularProgress color="inherit" />
@@ -83,7 +83,7 @@ function App() {
               <Route path="/home" element={<HomePage />} />
               <Route path="/about-us" element={<AboutUs />} />
               <Route path="/project-detail" element={<ProjectDetail />} />
-              <Route path="/marketplace" element={<MarketplaceHomePage/>}/>
+              <Route path="/marketplace" element={<MarketplaceHomePage />} />
             </Route>
             <Route path="choose-project-plan" element={<ChoosePlan />} />
             <Route element={<CreateFundingProjectLayout />}>
@@ -155,7 +155,8 @@ function App() {
             <Route element={<AdminDashboardLayout />}>
               <Route
                 path="/admin-dashboard/dashboard"
-                element={<Dashboard />} />
+                element={<Dashboard />}
+              />
               <Route
                 path="/admin-dashboard/withdraw-table"
                 element={<AdminWithdrawRequest />}
@@ -166,10 +167,9 @@ function App() {
               />
               <Route
                 path="/admin-dashboard/milestone-request"
-                element={<AdminMilestone />} />
-
+                element={<AdminMilestone />}
+              />
             </Route>
-
 
             <Route path="/funding-detail/:id" element={<ProjectDetail />} />
             <Route path="/test" element={<TestCR />} />
@@ -192,7 +192,7 @@ function App() {
               <Route path="/profile/:id" element={<PublicProfile />} />
             </Route>
             <Route element={<ChatLayout />}>
-              <Route path="/chat/:senderId/:receiverId" element={<Chat />} />
+              <Route path="/chat/:receiverId" element={<Chat />} />
             </Route>
           </Routes>
         </ChatProvider>

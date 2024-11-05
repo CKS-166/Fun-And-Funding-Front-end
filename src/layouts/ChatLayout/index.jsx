@@ -22,20 +22,21 @@ function ChatLayout() {
   //variables
   //token
   const token = Cookies.get("_auth");
-  const { senderId, receiverId } = useParams();
+  const { receiverId } = useParams();
 
   //hooks
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [contactedUsers, setContactedUsers] = useState([]);
   const [selectedUserId, setSelectedUserId] = useState(receiverId);
+  const [searchMode, setSearchMode] = useState(false);
 
   useEffect(() => {
     fetchUserData();
   }, []);
 
   useEffect(() => {
-    if (!user) return;
+    if (!user || searchMode) return;
     fetchContactedUsers();
   }, [user, contactedUsers]);
 
@@ -83,7 +84,17 @@ function ChatLayout() {
   //handle select user
   const handleUserSelect = (userId) => {
     setSelectedUserId(userId);
-    navigate(`/chat/${user?.id}/${userId}`);
+    navigate(`/chat/${userId}`);
+  };
+
+  const handleSearchResults = (results) => {
+    if (results.length > 0) {
+      setSearchMode(true); // Enter search mode when search results are shown
+      setContactedUsers(results);
+    } else {
+      setSearchMode(false); // Exit search mode when clearing search
+      fetchContactedUsers(); // Optionally re-fetch the contacted users when search is cleared
+    }
   };
 
   return (
@@ -115,7 +126,10 @@ function ChatLayout() {
         >
           <div className="flex flex-col gap-y-4">
             <div className="w-full">
-              <SearchBarChat />
+              <SearchBarChat
+                onSearchResults={handleSearchResults}
+                userId={user?.id}
+              />
             </div>
             <div className="gap-y-2">
               {contactedUsers.length > 0 ? (

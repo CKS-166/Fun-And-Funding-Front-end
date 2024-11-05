@@ -13,7 +13,6 @@ import {
   Typography
 } from '@mui/material';
 import Grid from '@mui/material/Grid2';
-import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { CiBookmark, CiHeart } from "react-icons/ci";
 import { useParams } from 'react-router-dom';
@@ -30,13 +29,16 @@ import RequestMilestoneModal from '../../components/RequestMilestoneModal';
 import { set } from 'react-hook-form';
 import fundingProjectApiInstance from '../../utils/ApiInstance/fundingProjectApiInstance';
 import milestoneApiInstace from '../../utils/ApiInstance/milestoneApiInstance';
-const ProjectDetail = ({ isOwner }) => {
+import Cookies from 'js-cookie';
+const ProjectDetail = () => {
+
+  const token = Cookies.get("_auth")
   //sample owwner
-  isOwner = true
+  const [isOwner, setIsOwner] = useState(true);
+
   //sample data
   const { id } = useParams();
   console.log(id);
-  const sampleTile = 'Hollow Knight';
   const number = 30000000;
   const formattedNumber = number.toLocaleString('de-DE');
   const backers = 1000;
@@ -65,12 +67,31 @@ const ProjectDetail = ({ isOwner }) => {
 
   const handleProcess = () => {
     const fixStatus = projectData.status
+    
     switch (fixStatus) {
       case processing:
         return handleUpdateProject()
+        break;
       case fundedSuccessful:
         return handleRequestMilestone()
+        break;
+      default:
+        return;
     }
+  }
+  //check project owner 
+  const checkOwner = () => {
+    fundingProjectApiInstance.get("/project-owner", {
+      params: {
+        projectId: id
+      },
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    }).then(response => {
+      // console.log(response.data);
+      setIsOwner(response.data.result._data)
+    })
   }
   //fetch milestones
   const fetchMilestones = async () => {
@@ -100,7 +121,7 @@ const ProjectDetail = ({ isOwner }) => {
           setSaniIntro(sanitizeIntro);
           console.log(sanitizeIntro);
           // Convert milliseconds to days (1 day = 24 * 60 * 60 * 1000 ms)
-          const dayDiff = timeDiff / (1000 * 60 * 60 * 24);
+          const dayDiff = Math.round(timeDiff / (1000 * 60 * 60 * 24));
           setDaysLeft(dayDiff);
         });
       console.log(data)
@@ -113,6 +134,7 @@ const ProjectDetail = ({ isOwner }) => {
   useEffect(() => {
     fetchProject();
     fetchMilestones();
+    checkOwner()
   }, [id]);
 
   console.log(projectData);
@@ -185,7 +207,7 @@ const ProjectDetail = ({ isOwner }) => {
                     <Box>
                       <Box sx={{ display: 'flex', marginTop: '27px', justifyContent: 'space-between' }}>
                         <Typography sx={{ fontSize: '22px', fontWeight: 800 }}>
-                          {projectData.target.toLocaleString('de-DE')} <span style={{ fontSize: '18px', fontWeight: '400' }}>VND</span>
+                          {projectData.balance.toLocaleString('de-DE')} <span style={{ fontSize: '18px', fontWeight: '400' }}>VND</span>
                         </Typography>
                         <Typography sx={{ fontSize: '22px', fontWeight: 800 }}>
                           {backers} <span style={{ fontSize: '18px', fontWeight: '400' }}>backers</span>
@@ -210,7 +232,11 @@ const ProjectDetail = ({ isOwner }) => {
                           width: "100%", whiteSpace: "nowrap"
                           , background: "#1BAA64", fontWeight: "bold", py: 1
                         }}
-                        onClick={() => handleProcess()}
+                        onClick={() => {
+                          if (isOwner) {
+                            handleProcess();
+                          }
+                        }}
                         className="like-btn"
                       >
                         {isOwner ?

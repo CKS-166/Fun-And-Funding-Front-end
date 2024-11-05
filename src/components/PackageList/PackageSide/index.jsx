@@ -6,13 +6,16 @@ import {
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import PackageModal from '../PackageModal';
+import Cookies from 'js-cookie';
 const PackageSide = ({ packageList, reloadDetail }) => {
+    const token = Cookies.get('_auth')
     const fixedPackageList = packageList && packageList.filter((item) => item.packageTypes === 1)
     const [isLoading, setIsLoading] = useState(false)
 
     const [openModal, setOpenModal] = useState(false);
     const [selectedItem, setSelectedItem] = useState(null);
     const handleOpen = (item) => {
+        console.log(item)
         setSelectedItem(item);
         setOpenModal(true);
     };
@@ -22,6 +25,7 @@ const PackageSide = ({ packageList, reloadDetail }) => {
         setSelectedItem(null);
     };
     const handlePackageDonate = async (item) => {
+        console.log(item)
         setIsLoading(true);
             let donateBody =
             {
@@ -32,9 +36,14 @@ const PackageSide = ({ packageList, reloadDetail }) => {
             
             console.log(donateBody)
             try{
-                await axios.post('https://localhost:7044/api/PackageBackers', donateBody).then(res => {
+                await axios.post('https://localhost:7044/api/PackageBackers', donateBody,{
+                    headers : {
+                        Authorization: `Bearer ${token}`
+                    }
+                }).then(res => {
                     console.log(res)
                     setIsLoading(false);
+                    setOpenModal(false);    
                     Swal.fire({
                         title: "Donation Success",
                         text: "Thank you for your donation!",
@@ -44,6 +53,21 @@ const PackageSide = ({ packageList, reloadDetail }) => {
                     reloadDetail()
                 })
             }catch(error){
+                setOpenModal(false);
+                if(error.status === 401){
+                    
+                    Swal.fire({
+                        title: "Donation Failed",
+                        text: "Please Login in Backer role",
+                        icon: "error"
+                    })
+                }else { 
+                    Swal.fire({
+                        title: "Donation Failed",
+                        text: error.response.data._message,
+                        icon: "error"
+                    })
+                }
                 console.log(error)
             }
             
@@ -116,7 +140,7 @@ const PackageSide = ({ packageList, reloadDetail }) => {
                     open={openModal}
                     handleClose={handleClose}
                     item={selectedItem}
-                    onDonate={handlePackageDonate}
+                    onDonate={() => handlePackageDonate(selectedItem)}
                 />
             )}
         </div>

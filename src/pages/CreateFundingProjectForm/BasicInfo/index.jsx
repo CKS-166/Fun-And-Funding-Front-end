@@ -102,7 +102,7 @@ const BasicInfo = () => {
                 <Select
                   label='Category'
                   // {...register("categories", { required: "Category is required" })}
-                  onChange={(e) => setValue("categories", { id: e.target.value })} // Update the category id here
+                  onChange={(e) => setValue("categories", [{ id: e.target.value }])} // Update the category id here
                 >
                   {categories.map((category) => (
                     <MenuItem key={category.id} value={category.id}>{category.name}</MenuItem>

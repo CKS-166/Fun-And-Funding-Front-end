@@ -3,6 +3,10 @@ import payOSApiInstance from "../../utils/ApiInstance/payOSApiInstance"
 import WalletModal from "./WalletModal"
 import { useWalletApi } from "../../utils/Hooks/AccountWallet"
 import TestNotification from "../TestNotification"
+import ProjectMilestoneReviewList from "../../components/ProjectMilestoneBacker/ProjectMilestoneReviewList"
+import ProjectMilestoneReviewForm from "../../components/ProjectMilestoneBacker/ProjectMilestoneReviewForm"
+
+
 
 const AccountWallet = () => {
 
@@ -120,6 +124,9 @@ const AccountWallet = () => {
       </div>
 
       <WalletModal openModal={openModal} modalAddMoney={modalAddMoney} handleCloseModal={handleCloseModal} walletId={data?._data.id} />
+
+      <ProjectMilestoneReviewForm />
+      <ProjectMilestoneReviewList />
 
 
     </>

@@ -10,6 +10,8 @@ import {
   ListItemText,
   Paper,
   Container,
+  Avatar,
+  Typography,
 } from "@mui/material";
 import Cookies from "js-cookie";
 import Swal from "sweetalert2";
@@ -30,9 +32,11 @@ function ChatLayout() {
   const [contactedUsers, setContactedUsers] = useState([]);
   const [selectedUserId, setSelectedUserId] = useState(receiverId);
   const [searchMode, setSearchMode] = useState(false);
+  const [receiver, setReceiver] = useState(null);
 
   useEffect(() => {
     fetchUserData();
+    fetchReceiver(receiverId);
   }, []);
 
   useEffect(() => {
@@ -81,9 +85,24 @@ function ChatLayout() {
       });
   };
 
+  //fetch receiver
+  const fetchReceiver = (userId) => {
+    userApiInstace
+      .get(`/${userId}`)
+      .then((response) => {
+        const data = response.data._data;
+
+        setReceiver(data);
+      })
+      .catch((error) => {
+        console.error("Error fetching user profile:", error);
+      });
+  };
+
   //handle select user
   const handleUserSelect = (userId) => {
     setSelectedUserId(userId);
+    fetchReceiver(userId);
     navigate(`/chat/${userId}`);
   };
 
@@ -154,15 +173,50 @@ function ChatLayout() {
             backgroundColor: "#F5F7F9",
             height: "100% !important",
             overflowY: "auto",
-            px: "1.5rem",
-            py: "1.5rem",
             borderRadius: "0.625rem",
             boxShadow:
               "rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;",
+            position: "relative",
           }}
           className="scrollbar-hidden"
         >
-          <Outlet />
+          <Box
+            sx={{
+              position: "sticky",
+              top: 0,
+              left: 0,
+              right: 0,
+              backgroundColor: "#F5F7F9",
+              px: "1.5rem",
+              py: "1rem",
+              borderTopLeftRadius: "0.625rem",
+              borderTopRightRadius: "0.625rem",
+              boxShadow: "0 1px 2px rgba(0, 0, 0, 0.05)",
+              zIndex: 1000,
+            }}
+          >
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                gap: "1rem",
+                "&:hover": {
+                  cursor: "pointer",
+                },
+                width: "fit-content",
+                borderRadius: "0.625rem",
+              }}
+            >
+              <Avatar alt={receiver?.fullName} src={receiver?.avatar} />
+              <Typography sx={{ fontSize: "1rem", fontWeight: "600" }}>
+                {receiver?.fullName}
+              </Typography>
+            </Box>
+          </Box>
+          <Box sx={{ px: "1.5rem", py: "1rem" }}>
+            <Outlet />
+          </Box>
         </Grid2>
       </Grid2>
     </Container>

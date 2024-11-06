@@ -7,9 +7,11 @@ function ProjectPreview() {
     const { id } = useParams();
     const [project, setProject] = useState(null);
     const [loading, setLoading] = useState(false);
+
     useEffect(() => {
         getProject();
     }, [])
+    // fetch project data
     const getProject = async () => {
         setLoading(true);
         try {
@@ -22,6 +24,7 @@ function ProjectPreview() {
             setLoading(false);
         }
     }
+    //fetch line chart data
     return (
         <>
             <Backdrop sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }} open={loading}>

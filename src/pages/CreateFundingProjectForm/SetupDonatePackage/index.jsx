@@ -93,9 +93,9 @@ const SetupDonatePackage = () => {
     });
     //append categories
     console.log(projectData.categories[0]);
-    // for (let i = 0; i < projectData.categories.length; i++) {
-    formData.append(`Categories[0]`, projectData.categories);
-    // }
+    for (let i = 0; i < projectData.categories.length; i++) {
+    formData.append(`Categories[0].Id`, projectData.categories[i].id);
+    }
     // Add other files (e.g., Funding Files)
     for (let i = 0; i < projectData.fundingFiles.length; i++) {
       formData.append(`FundingFiles[${i}].Name`, projectData.fundingFiles[i].name);

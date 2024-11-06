@@ -174,6 +174,7 @@ function App() {
                 path="/admin-dashboard/commission"
                 element={<CommissionFee />}
               />
+
             </Route>
 
             <Route path="/funding-detail/:id" element={<ProjectDetail />} />
@@ -197,7 +198,7 @@ function App() {
               <Route path="/profile/:id" element={<PublicProfile />} />
             </Route>
             <Route element={<ChatLayout />}>
-              <Route path="/chat/:senderId/:receiverId" element={<Chat />} />
+              <Route path="/chat/:receiverId" element={<Chat />} />
             </Route>
           </Routes>
         </ChatProvider>

@@ -152,7 +152,8 @@ function CommissionFee() {
         console.log(response.data._data);
         notify("Commission fee updated successfully", "success");
         handleUpdateCloseDialog();
-        fetchCommisonFee(); // Refresh data
+        fetchCommisonFee();
+        fetchLatestVersion(); // Refresh data
       }
     } catch (error) {
       console.log(error);
@@ -167,6 +168,7 @@ function CommissionFee() {
         console.log(response.data._data);
         notify("Commision fee created successfully", "success");
         fetchCommisonFee();
+        fetchLatestVersion();
         handleCloseDialog();
       }
     } catch (error) {

@@ -44,6 +44,8 @@ import AdminMilestone from "./pages/AdminPages/AdminMilestone";
 import Dashboard from "./pages/AdminPages/Dashboard";
 import AdminWithdrawRequest from "./pages/AdminWithdrawRequest";
 import Chat from "./pages/Chat";
+import CheckoutCart from "./pages/CheckoutCart";
+import CheckoutSuccess from "./pages/CheckoutCart/CheckoutSuccess";
 import Milestones from "./pages/Milestones";
 import MilestoneForm from "./pages/TestCR/MilestoneForm";
 import BankAccount from "./pages/UpdateFundingProjectForm/ProjectEditor/BankAccount";
@@ -76,9 +78,11 @@ function App() {
 
         <ChatProvider>
           <Routes>
+            <Route path="*" element={<Navigate to="/home" />} />
+            <Route path="/" element={<Navigate to="/home" />} />
             <Route element={<UserLayout />}>
-              <Route path="*" element={<Navigate to="/home" />} />
-              <Route path="/" element={<Navigate to="/home" />} />
+              <Route path="/checkout-cart" element={<CheckoutCart />} />
+              <Route path="/checkout-success" element={<CheckoutSuccess />} />
               <Route path="/home" element={<HomePage />} />
               <Route path="/about-us" element={<AboutUs />} />
               <Route path="/project-detail" element={<ProjectDetail />} />

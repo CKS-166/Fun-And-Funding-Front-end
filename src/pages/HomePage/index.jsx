@@ -5,6 +5,7 @@ import CheckIcon from "@mui/icons-material/Check";
 import MailOutlineIcon from "@mui/icons-material/MailOutline";
 import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
 import {
+  Backdrop,
   Button,
   Card,
   CardContent,
@@ -13,9 +14,9 @@ import {
   InputAdornment,
   Paper,
   TextField,
-  Typography,
+  Typography
 } from "@mui/material";
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { AiFillProject } from "react-icons/ai";
 import Background from "../../assets/images/background-pattern.png";
 import Confetti from "../../assets/images/confetti-background.png";
@@ -26,16 +27,28 @@ import HomeFundingCardList from "../../components/HomeFundingCardList";
 import HomeMarketingCardList from "../../components/HomeMarketingCardList";
 import TopBackerList from "../../components/TopBackerList";
 import TopTestimonialList from "../../components/TopTestimonialList";
-// import ReportForm from "../../components/ReportPopUp";
+import systemWalletApiInstace from "../../utils/ApiInstance/systemWalletApiInstance";
+import userApiInstance from '../../utils/ApiInstance/userApiInstance';
 import "./index.css";
 
 function HomePage() {
-  //const [checkIsLogin, setCheckIsLogin] = useState(false);
   const [mailSending, isMailSending] = useState(false);
   const [sendingSuccess, isSendingSuccess] = useState(false);
   const [openReportForm, setOpenReportForm] = useState(false);
+  const [fetchFundingProject, isFetchFundingProject] = useState(false);
+  const [fetchMarketplaceProject, isFetchMarketplaceProject] = useState(false);
+  const [fetchPlatformStatistic, isFetchPlatformStatistic] = useState(false);
+  const [fetchBackers, isFetchBackers] = useState(false);
+  const [fetchComments, isFetchComments] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const [userStatistic, setUserStatistic] = useState(0);
+  const [projectStatistic, setProjectStatistic] = useState(0);
+  const [profitStatistic, setProfitStatistic] = useState(0);
+
   const handleOpenReportForm = () => setOpenReportForm(true);
   const handleCloseReportForm = () => setOpenReportForm(false);
+
   const handleSendEmail = () => {
     isMailSending(true);
     setTimeout(() => {
@@ -43,11 +56,45 @@ function HomePage() {
       isSendingSuccess(true);
     }, 5000);
   };
+
+  useEffect(() => {
+    fetchStatistic();
+  })
+
+  const fetchStatistic = async () => {
+    try {
+      const userRes = await userApiInstance.get('/number-of-users');
+      if (userRes.data._statusCode == 200) {
+        setUserStatistic(userRes.data._data);
+      }
+      const projectRes = await marketplaceProjectApiInstace.get('/number-of-projects');
+      if (projectRes.data._statusCode == 200) {
+        setProjectStatistic(projectRes.data._data);
+      }
+      const systemRes = await systemWalletApiInstace.get('/platform-revenue');
+      if (systemRes.data._statusCode == 200) {
+        setProfitStatistic(systemRes.data._data);
+      }
+      if (userRes && projectRes && systemRes) {
+        isFetchPlatformStatistic(true);
+      } else {
+        isFetchPlatformStatistic(false);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
   return (
     <div className="mt-[-6.4rem]">
-      {/* <Button onClick={handleOpenReportForm}>Click to open ReportForm</Button> */}
-      {/* <ReportForm isOpen={openReportForm} onClose={handleCloseReportForm} /> */}
-
+      <Backdrop
+        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={isLoading}
+      >
+        <div className='flex flex-col justify-center items-center'>
+          <CircularProgress color="inherit" />
+        </div>
+      </Backdrop>
       <BannerCarousel />
       <div className="flex flex-col justify-center px-[6rem] pt-[7.5rem] pb-[3.75rem]">
         <div className="flex justify-between gap-[4rem] mb-[2.5rem]">
@@ -141,6 +188,7 @@ function HomePage() {
               sx={{ height: "3.875rem" }}
             />
             <Button
+              variant="contained"
               sx={{
                 borderTopRightRadius: "0.625rem",
                 borderBottomRightRadius: "0.625rem",
@@ -210,6 +258,7 @@ function HomePage() {
             marginTop: "4.5rem",
             mx: "auto",
           }}
+          variant="contained"
           endIcon={
             <ArrowForwardOutlinedIcon
               sx={{
@@ -263,6 +312,7 @@ function HomePage() {
             marginTop: "4.5rem",
             mx: "auto",
           }}
+          variant="contained"
           endIcon={
             <ArrowForwardOutlinedIcon
               sx={{
@@ -340,7 +390,7 @@ function HomePage() {
                     color: "#2F3645",
                   }}
                 >
-                  300+
+                  {userStatistic}+
                 </Typography>
                 <div className="flex justify-between align-bottom">
                   <Typography
@@ -403,7 +453,7 @@ function HomePage() {
                     textAlign: "center",
                   }}
                 >
-                  10.000.000
+                  {profitStatistic}
                 </Typography>
                 <Typography
                   sx={{
@@ -449,7 +499,7 @@ function HomePage() {
                     textAlign: "right",
                   }}
                 >
-                  300+
+                  {projectStatistic}+
                 </Typography>
                 <div className="flex justify-between align-bottom">
                   <AiFillProject
@@ -545,7 +595,7 @@ function HomePage() {
         >
           Meet our top backers: the champions fueling our project's success!
         </Typography>
-        <TopBackerList />
+        <TopBackerList fetchBackers={fetchBackers} isFetchBackers={(value) => isFetchBackers(value)} />
       </div>
       <div className="flex flex-col justify-center px-[6rem] py-[3.75rem]">
         <Typography

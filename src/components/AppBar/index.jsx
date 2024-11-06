@@ -108,6 +108,7 @@ const FunFundingAppBar = () => {
       });
       if (res.data._statusCode == 200) {
         const user = res.data._data;
+        setUser(user);
         setName(user.fullName);
       }
     } catch (err) {
@@ -318,7 +319,7 @@ const FunFundingAppBar = () => {
                 </Badge>
                 <Tooltip title="Tài khoản">
                   <IconButton sx={{ p: 0 }} onClick={handleOpenProfileMenu}>
-                    <Avatar alt="User" src={user?.userAvatarUrl} />
+                    <Avatar alt="User" src={user?.avatar} />
                   </IconButton>
                 </Tooltip>
                 <Menu

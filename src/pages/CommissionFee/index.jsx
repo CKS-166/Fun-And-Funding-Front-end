@@ -10,7 +10,8 @@ import PercentIcon from "@mui/icons-material/Percent";
 import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 import FormatListNumberedIcon from "@mui/icons-material/FormatListNumbered";
 import SelectWithIcon from "../../components/SelectionCommision";
-import { set } from "react-hook-form";
+import Chip from "@mui/material/Chip";
+import Stack from "@mui/material/Stack";
 
 const notify = (message, type) => {
   const options = {
@@ -39,7 +40,7 @@ function CommissionFee() {
   const [openDialog, setOpenDialog] = useState(false);
   const [openUpdateDialog, setUpdateDialog] = useState(false);
   const [rate, setRate] = useState();
-  const [type, setType] = useState(3);
+  const [latestType, setLatestType] = useState([]);
   const [selectId, setSelectId] = useState("");
   const [commision, setCommision] = useState({
     rate: "",
@@ -56,11 +57,6 @@ function CommissionFee() {
     setRate(e.target.value);
   };
 
-  const handleLatestChange = (e) => {
-    const newType = e.target.value;
-    setType(newType);
-    fetchLatestVersion(newType);
-  };
   const handleCloseDialog = () => {
     setOpenDialog(false);
   };
@@ -69,13 +65,10 @@ function CommissionFee() {
   };
   const handleChange = (e) => {
     const { name, value } = e.target;
-
-    // Parse the value to the correct type for specific fields
-    const parsedValue = isNaN(value) ? value : Number(value);
-
+    const sanitizedValue = name === "rate" ? value.replace(/,/g, "") : value;
     setCommision((prevCommision) => ({
       ...prevCommision,
-      [name]: parsedValue,
+      [name]: sanitizedValue,
     }));
   };
   const fetchCommisonFee = async () => {
@@ -86,22 +79,22 @@ function CommissionFee() {
       console.log(error);
     }
   };
-  const fetchLatestVersion = async (type) => {
+  const fetchLatestVersion = async () => {
     try {
-      if (type === 3) {
-        fetchCommisonFee();
-      } else {
-        const response = await commissionApiInstance.get(
-          `/applied-commission-fee?type=${type}`
-        );
+      const response = await commissionApiInstance.get(
+        "/list-applied-commission-fee"
+      );
 
-        console.log(response.data._data);
-        if (response.data._isSuccess) {
-          setDataLoad([response.data._data]);
-        }
+      if (response.data._isSuccess && Array.isArray(response.data._data)) {
+        setLatestType(response.data._data); // Set it directly if it's an array
+      } else if (response.data._isSuccess && response.data._data) {
+        // If it's not an array, wrap it in an array
+        setLatestType([response.data._data]);
+      } else {
+        console.error("Unexpected data format:", response.data);
       }
     } catch (error) {
-      console.log(error);
+      console.error("Error fetching latest commission type:", error);
     }
   };
 
@@ -123,12 +116,19 @@ function CommissionFee() {
     "Last Updated": formatDate(data.updateDate),
   }));
 
+  const mappingLatestData =
+    latestType?.map((data) => ({
+      Id: data.id,
+      Rate: data.rate,
+      Version: data.version,
+      Type: data.commissionType === 0 ? "Funding" : "Marketplace",
+      "Last Updated": formatDate(data.updateDate),
+    })) || [];
+
   useEffect(() => {
-    if (type !== undefined) {
-      fetchLatestVersion(type);
-      notify("Commission fee loaded successfully", "success");
-    }
-  }, [type]);
+    fetchLatestVersion();
+    fetchCommisonFee();
+  }, []);
 
   const handleRowClick = async (id) => {
     console.log("Row clicked with ID:", id);
@@ -181,19 +181,6 @@ function CommissionFee() {
         Commission Fee Management
       </h1>
       <div className="flex justify-center flex-col gap-4">
-        <SelectWithIcon
-          name="commissionType"
-          formControlStyles={{}}
-          label="Type"
-          startIcon={<MonetizationOnIcon />}
-          value={type}
-          onChange={handleLatestChange}
-          options={[
-            { value: 0, label: "Funding Commission" },
-            { value: 1, label: "Marketplace Commission" },
-            { value: 3, label: "All Commission" },
-          ]}
-        />
         <button
           type="button"
           className=" font-medium bg-[#1BAA64] text-white py-3 my-4 rounded-lg mt-6 hover:bg-white hover:text-[#1BAA64] border border-[#1BAA64] transition-all duration-200"
@@ -203,6 +190,10 @@ function CommissionFee() {
         </button>
       </div>
 
+      <CustomPaginationActionsTable
+        data={mappingLatestData}
+        handleRowClick={handleRowClick}
+      />
       <CustomPaginationActionsTable
         data={mappingData}
         handleRowClick={handleRowClick}
@@ -226,7 +217,7 @@ function CommissionFee() {
                   placeholder="Rate"
                   inputProps={{
                     inputMode: "decimal",
-                    pattern: "[0-9]*[.,]?[0-9]*",
+                    pattern: "[0-9]*[.]?[0-9]*",
                   }}
                 />
                 <SelectWithIcon
@@ -252,7 +243,7 @@ function CommissionFee() {
                   placeholder="Version"
                   inputProps={{
                     inputMode: "decimal",
-                    pattern: "[0-9]*[.,]?[0-9]*",
+                    pattern: "[0-9]*[.]?[0-9]*",
                   }}
                 />
               </div>
@@ -295,7 +286,7 @@ function CommissionFee() {
                   placeholder="Rate"
                   inputProps={{
                     inputMode: "decimal",
-                    pattern: "[0-9]*[.,]?[0-9]*",
+                    pattern: "[0-9]*[.]?[0-9]*",
                   }}
                 />
               </div>

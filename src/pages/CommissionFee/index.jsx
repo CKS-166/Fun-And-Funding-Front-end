@@ -54,7 +54,9 @@ function CommissionFee() {
     setUpdateDialog(true);
   };
   const handleUpdateChange = (e) => {
-    setRate(e.target.value);
+    const { value } = e.target;
+    const sanitizedValue = value.replace(/,/g, ""); // Remove commas
+    setRate(sanitizedValue);
   };
 
   const handleCloseDialog = () => {
@@ -75,6 +77,7 @@ function CommissionFee() {
     try {
       const response = await commissionApiInstance.get("");
       setDataLoad(response.data._data.items);
+      fetchLatestVersion();
     } catch (error) {
       console.log(error);
     }
@@ -126,9 +129,8 @@ function CommissionFee() {
     })) || [];
 
   useEffect(() => {
-    fetchLatestVersion();
     fetchCommisonFee();
-  }, []);
+  });
 
   const handleRowClick = async (id) => {
     console.log("Row clicked with ID:", id);
@@ -153,7 +155,7 @@ function CommissionFee() {
         notify("Commission fee updated successfully", "success");
         handleUpdateCloseDialog();
         fetchCommisonFee();
-        fetchLatestVersion(); // Refresh data
+        // Refresh data
       }
     } catch (error) {
       console.log(error);

@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import * as React from "react";
 import PropTypes from "prop-types";
 import { useTheme } from "@mui/material/styles";
@@ -87,9 +88,14 @@ TablePaginationActions.propTypes = {
   rowsPerPage: PropTypes.number.isRequired,
 };
 
-export default function CustomPaginationActionsTable({ data, handleRowClick }) {
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+export default function CustomPaginationActionsTable({
+  data,
+  handleRowClick,
+  pageIndex = "0",
+  pageSize = "5",
+}) {
+  const [page, setPage] = React.useState(pageIndex);
+  const [rowsPerPage, setRowsPerPage] = React.useState(pageSize);
 
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - data.length) : 0;

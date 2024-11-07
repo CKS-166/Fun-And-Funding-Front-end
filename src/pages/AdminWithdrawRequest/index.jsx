@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from "react";
 import "./index.css";
@@ -82,6 +83,15 @@ function AdminWithdrawRequest() {
   const [bankNumber, setBankNumber] = useState("");
   const [bankCode, setBankCode] = useState("");
   const [status, setStatus] = useState(0);
+  const [pagination, setPagination] = React.useState({
+    totalItems: 0,
+    totalPages: 0,
+    currentPage: 0,
+    pageSize: 10,
+  });
+  const updatePagination = (updates) => {
+    setPagination((prev) => ({ ...prev, ...updates }));
+  };
 
   const openProcessDialog = () => {
     setIsProcessDialogOpen(true);
@@ -91,18 +101,37 @@ function AdminWithdrawRequest() {
   const openDialog = () => setIsDialogOpen(true);
   const closeDialog = () => setIsDialogOpen(false);
 
-  const fetchWithdrawRequest = async () => {
+  const fetchWithdrawRequest = async (
+    page = pagination.currentPage,
+    pageSize = pagination.pageSize
+  ) => {
     try {
-      const res = await withdrawApiInstance.get("/all");
-      setData(res.data._data);
+      const res = await withdrawApiInstance.get("/all", {
+        params: {
+          pageIndex: page + 1, // Adjust for 1-based index if API uses 1-based pages
+          pageSize: pageSize,
+        },
+      });
+      const { items, totalItems, totalPages } = res.data._data;
+      console.log(res.data._data);
+      setData(res.data._data.items);
+      updatePagination({ totalItems, totalPages, currentPage: page });
     } catch (error) {
       console.error("Fetch error:", error.message || error);
     }
   };
+  const handlePageChange = (newPage) => {
+    fetchWithdrawRequest(newPage, pagination.pageSize);
+  };
+
+  const handlePageSizeChange = (newPageSize) => {
+    updatePagination({ pageSize: newPageSize });
+    fetchWithdrawRequest(0, newPageSize);
+  };
 
   useEffect(() => {
     fetchWithdrawRequest();
-  }, []);
+  }, [pagination.currentPage, pagination.pageSize]);
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -293,7 +322,13 @@ function AdminWithdrawRequest() {
 
       <CustomPaginationActionsTable
         data={mappingData}
-        handleRowClick={handleRowClick}
+        handleRowClick={handleRowClick} // Assuming you have a handler for row clicks
+        totalItems={pagination.totalItems}
+        totalPages={pagination.totalPages}
+        currentPage={pagination.currentPage}
+        pageSize={pagination.pageSize}
+        onPageChange={handlePageChange} // Pass the page change handler
+        onPageSizeChange={handlePageSizeChange} // Pass the page size change handler
       />
       <Dialog open={isProcessDialogOpen} onClose={closeProcessDialog}>
         <div className="fixed inset-0 flex justify-center items-center bg-gray-800 bg-opacity-75 z-50">

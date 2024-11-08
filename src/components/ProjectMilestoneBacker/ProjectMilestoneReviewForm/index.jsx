@@ -3,8 +3,9 @@ import { useEffect, useState } from "react"
 import Cookies from "js-cookie"
 import { useProjectMilestoneBackerApi } from "../../../utils/Hooks/ProjectMilestoneBacker"
 import userApiInstace from "../../../utils/ApiInstance/userApiInstance"
+import projectMilestoneBackerApiInstance from "../../../utils/ApiInstance/projectMilestoneBackerApiInstance"
 
-const ProjectMilestoneReviewForm = () => {
+const ProjectMilestoneReviewForm = ({ pmId }) => {
 
   const [star, setStar] = useState(3.5)
   const [comment, setComment] = useState('')
@@ -31,18 +32,37 @@ const ProjectMilestoneReviewForm = () => {
     fetchUserData()
   }, [])
 
-  const handlePostReview = () => {
-    const { data, error } = useProjectMilestoneBackerApi("/", "POST", {
-      star: star,
-      comment: comment,
-      backerId: "your-backer-id-guid",
-      projectMilestoneId: "your-project-milestone-id-guid"
-    });
+  const handlePostReview = async () => {
+    // const { data, error } = useProjectMilestoneBackerApi("/", "POST", {
+    //   star: star,
+    //   comment: comment,
+    //   backerId: userData?.id,
+    //   projectMilestoneId: pmId
+    // });
+
+    try {
+      const response = await projectMilestoneBackerApiInstance.request({
+        url: '/',
+        method: 'POST',
+        data: {
+
+          star: star,
+          comment: comment,
+          backerId: userData?.id,
+          projectMilestoneId: pmId
+
+        },
+      });
+    } catch (err) {
+      console.log(err);
+    } finally {
+      // setIsLoading(false);
+    }
   }
 
   return (
     <>
-      <div className="bg-gray-50">
+      <div className="bg-gray-50 rounded">
         <div class="w-full mb-4 border border-gray-200 rounded-lg px-5">
           <div className="py-5">
             <div class="flex items-center">
@@ -69,7 +89,7 @@ const ProjectMilestoneReviewForm = () => {
           </div>
 
           <button
-            onClick={handlePostReview}
+            onClick={() => handlePostReview()}
             class="inline-flex items-center my-3 py-2.5 px-4 text-xs font-medium text-center text-white bg-primary-green rounded-lg hover:bg-primary-green/80">
             Post review
           </button>

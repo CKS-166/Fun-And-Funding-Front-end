@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-vars */
 import React from "react";
 import CustomPaginationActionsTable from "../../components/AdminTable";
@@ -47,6 +48,17 @@ function CommissionFee() {
     commissionType: "",
     version: "",
   });
+  const [pagination, setPagination] = React.useState({
+    totalItems: 0,
+    totalPages: 0,
+    currentPage: 0,
+    pageSize: 10,
+  });
+
+  // Update a specific pagination value
+  const updatePagination = (updates) => {
+    setPagination((prev) => ({ ...prev, ...updates }));
+  };
   const handleUpdateCloseDialog = () => {
     setUpdateDialog(false);
   };
@@ -54,7 +66,9 @@ function CommissionFee() {
     setUpdateDialog(true);
   };
   const handleUpdateChange = (e) => {
-    setRate(e.target.value);
+    const { value } = e.target;
+    const sanitizedValue = value.replace(/,/g, ""); // Remove commas
+    setRate(sanitizedValue);
   };
 
   const handleCloseDialog = () => {
@@ -71,13 +85,34 @@ function CommissionFee() {
       [name]: sanitizedValue,
     }));
   };
-  const fetchCommisonFee = async () => {
+  const fetchCommisonFee = async (
+    page = pagination.currentPage,
+    pageSize = pagination.pageSize
+  ) => {
     try {
-      const response = await commissionApiInstance.get("");
-      setDataLoad(response.data._data.items);
+      const response = await commissionApiInstance.get("", {
+        params: {
+          pageIndex: page + 1, // Adjust for 1-based index if API uses 1-based pages
+          pageSize: pageSize,
+        },
+      });
+      const { items, totalItems, totalPages } = response.data._data;
+      setDataLoad(items);
+      updatePagination({ totalItems, totalPages, currentPage: page });
+
+      fetchLatestVersion();
     } catch (error) {
       console.log(error);
     }
+  };
+  // Usage in handlers
+  const handlePageChange = (newPage) => {
+    fetchCommisonFee(newPage, pagination.pageSize);
+  };
+
+  const handlePageSizeChange = (newPageSize) => {
+    updatePagination({ pageSize: newPageSize });
+    fetchCommisonFee(0, newPageSize);
   };
   const fetchLatestVersion = async () => {
     try {
@@ -126,9 +161,8 @@ function CommissionFee() {
     })) || [];
 
   useEffect(() => {
-    fetchLatestVersion();
     fetchCommisonFee();
-  }, []);
+  }, [pagination.currentPage, pagination.pageSize]);
 
   const handleRowClick = async (id) => {
     console.log("Row clicked with ID:", id);
@@ -152,7 +186,8 @@ function CommissionFee() {
         console.log(response.data._data);
         notify("Commission fee updated successfully", "success");
         handleUpdateCloseDialog();
-        fetchCommisonFee(); // Refresh data
+        fetchCommisonFee();
+        // Refresh data
       }
     } catch (error) {
       console.log(error);
@@ -167,6 +202,7 @@ function CommissionFee() {
         console.log(response.data._data);
         notify("Commision fee created successfully", "success");
         fetchCommisonFee();
+        fetchLatestVersion();
         handleCloseDialog();
       }
     } catch (error) {
@@ -196,7 +232,13 @@ function CommissionFee() {
       />
       <CustomPaginationActionsTable
         data={mappingData}
-        handleRowClick={handleRowClick}
+        handleRowClick={handleRowClick} // Assuming you have a handler for row clicks
+        totalItems={pagination.totalItems}
+        totalPages={pagination.totalPages}
+        currentPage={pagination.currentPage}
+        pageSize={pagination.pageSize}
+        onPageChange={handlePageChange} // Pass the page change handler
+        onPageSizeChange={handlePageSizeChange} // Pass the page size change handler
       />
       <Dialog open={openDialog} onClose={handleCloseDialog}>
         <div className="fixed inset-0 flex justify-center items-center bg-gray-800 bg-opacity-75 z-50">

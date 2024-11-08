@@ -9,20 +9,33 @@ const BackdropRequestMilestone = ({ isHidden, milestone, projectId, onCloseBackd
     }
     const handleModalClose = () => {
         setIsModalOpen(false);
+        isHidden = true;
         // onCloseBackdrop(); // Close the Backdrop when modal is closed
     };
+    const checkResponseStatus = (status) => {
+        if (status === null || status === undefined) {
+            throw new Error('Status cannot be null or undefined');
+        }
+
+        switch (status) {
+            case 'completed':
+                return <Typography variant='h4'>Milestone Completed</Typography>;
+            case 'pending':
+                return <Typography variant='h4'>Milestone Pending</Typography>;
+        }
+    }
     return (
         <>
             {/* when milestone not requested */}
-            {status == 'error' && (
+            {status == 'not requested' && (
                 <Backdrop
                     // className="overlay"
-                    sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                    sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1, position :'absolute'}}
                     open={isHidden}
                 >
                     <Button variant="contained"
                         sx={{
-                            width: "100%", whiteSpace: "nowrap"
+                            width: "300px", whiteSpace: "nowrap"
                             , background: "#1BAA64", fontWeight: "bold", py: 1
                         }}
                         onClick={() => handleProcess()}
@@ -37,19 +50,16 @@ const BackdropRequestMilestone = ({ isHidden, milestone, projectId, onCloseBackd
             )}
 
             {/* when milestone is completed */}
-            {status == 'completed' && (
+            {status !== 'not requested' && (status !== 'pending' || status === 'edit') && (
                 <Backdrop
                     // className="overlay"
                     sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1, position :'absolute' }}
                     open={isHidden}
                 >
-                   
-                        <Typography variant='h4'>Milestone Completed</Typography>
+                    {checkResponseStatus(status)}
                     
                 </Backdrop>
-
-
-            )}
+            )}    
         </>
 
     )

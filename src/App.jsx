@@ -60,6 +60,13 @@ import Milestone2 from "./pages/UpdateFundingProjectForm/ProjectMilestone/Milest
 import Milestone3 from "./pages/UpdateFundingProjectForm/ProjectMilestone/Milestone3";
 import Milestone4 from "./pages/UpdateFundingProjectForm/ProjectMilestone/Milestone4";
 import ProjectPreview from "./pages/UpdateFundingProjectForm/ProjectPreview";
+import MarketplaceHomePage from "./pages/MarketplaceHomePage";
+import CommissionFee from "./pages/CommissionFee";
+import { MarketplaceProjectProvider } from "./contexts/CreateMarketplaceProjectContext";
+import CreateMarketplaceProjectLayout from "./layouts/CreateMarketplaceProjectLayout";
+import MarketplaceProjectBasicInfo from "./pages/CreateMarketplaceProjectForm/MarketplaceProjectBasicInfo";
+import MarketplaceProjectIntroduction from "./pages/CreateMarketplaceProjectForm/MarketplaceProjectIntroduction";
+
 function App() {
   const location = useLocation();
   const hideAppBar = location.pathname.includes("admin-dashboard");
@@ -178,7 +185,6 @@ function App() {
                 path="/admin-dashboard/commission"
                 element={<CommissionFee />}
               />
-
             </Route>
 
             <Route path="/funding-detail/:id" element={<ProjectDetail />} />
@@ -203,6 +209,35 @@ function App() {
             </Route>
             <Route element={<ChatLayout />}>
               <Route path="/chat/:receiverId" element={<Chat />} />
+            </Route>
+
+            <Route
+              element={
+                <MarketplaceProjectProvider>
+                  <CreateMarketplaceProjectLayout />
+                </MarketplaceProjectProvider>
+              }
+            >
+              <Route
+                path="/:id/request-marketplace-project/basic-info"
+                element={<MarketplaceProjectBasicInfo />}
+              />
+              <Route
+                path="/:id/request-marketplace-project/introduction"
+                element={<MarketplaceProjectIntroduction />}
+              />
+              {/* <Route
+                path="request-marketplace-project/project-media"
+                element={<ProjectMedia />}
+              />
+              <Route
+                path="request-marketplace-project/setup-bank-account"
+                element={<SetupBankAccount />}
+              />
+              <Route
+                path="request-marketplace-project/game-content"
+                element={<SetupDonatePackage />}
+              /> */}
             </Route>
           </Routes>
         </ChatProvider>

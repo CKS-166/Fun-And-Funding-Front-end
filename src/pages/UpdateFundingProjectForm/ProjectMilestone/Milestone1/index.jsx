@@ -49,10 +49,11 @@ const MilestoneForm = () => {
   const fetchFixedMilestone = async () => {
     try {
       const response = await milestoneApiInstace.get(
-        "/group-latest-milestone"
+        `/${milestoneId}`
       );
-      if (response.data._isSuccess) {
-        const milestoneData = response.data._data[0];
+      console.log(response.data);
+      if (response.data.result._isSuccess) {
+        const milestoneData = response.data.result._data;
         setMilestone(milestoneData);
         // Initialize formDataArray for requirements
         const initialFormData = milestoneData.requirements.map((req) => ({
@@ -160,7 +161,7 @@ const MilestoneForm = () => {
   if (!milestone) return <p>Loading milestone...</p>;
 
   return (
-    <div style={{position : 'relative'}}>
+    <div >
       {milestoneData && milestone && !isLoading
         && <BackdropRequestMilestone
           isHidden={isBackdropHidden}

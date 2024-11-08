@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable react/prop-types */
 import * as React from "react";
 import PropTypes from "prop-types";
 import { useTheme } from "@mui/material/styles";
@@ -87,23 +89,16 @@ TablePaginationActions.propTypes = {
   rowsPerPage: PropTypes.number.isRequired,
 };
 
-export default function CustomPaginationActionsTable({ data, handleRowClick }) {
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
-
-  const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - data.length) : 0;
-
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
-  };
-
-  // Dynamically get the columns based on the keys of the first data item
+export default function CustomPaginationActionsTable({
+  data,
+  handleRowClick,
+  totalItems = data.length,
+  totalPages,
+  currentPage = 1,
+  pageSize = 0,
+  onPageChange,
+  onPageSizeChange,
+}) {
   const columns = data.length > 0 ? Object.keys(data[0]) : [];
   const filteredColumns = columns.filter((col) => col !== "Id");
 
@@ -148,18 +143,15 @@ export default function CustomPaginationActionsTable({ data, handleRowClick }) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {(rowsPerPage > 0
-            ? data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-            : data
-          ).map((row, rowIndex) => (
+          {data.map((row, rowIndex) => (
             <TableRow
-              key={row.Id || rowIndex} // Use row.Id as the key
+              key={row.Id || rowIndex}
               sx={{
                 backgroundColor: rowIndex % 2 === 1 ? "#f9f9f9" : "white",
               }}
             >
               <TableCell component="th" scope="row">
-                {rowIndex + 1}
+                {currentPage * pageSize + rowIndex + 1}
               </TableCell>
               {filteredColumns.map((column) => (
                 <TableCell
@@ -182,28 +174,23 @@ export default function CustomPaginationActionsTable({ data, handleRowClick }) {
                 </TableCell>
               ))}
               <TableCell>
-                <Button onClick={() => handleRowClick(row.Id)}>ACTION</Button>{" "}
-                {/* Pass the ID here */}
+                <Button onClick={() => handleRowClick(row.Id)}>ACTION</Button>
               </TableCell>
             </TableRow>
           ))}
-          {emptyRows > 0 && (
-            <TableRow style={{ height: 53 * emptyRows }}>
-              <TableCell colSpan={columns.length} />
-            </TableRow>
-          )}
         </TableBody>
 
         <TableFooter>
           <TableRow>
             <TablePagination
-              rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
               colSpan={columns.length}
-              count={data.length}
-              rowsPerPage={rowsPerPage}
-              page={page}
-              onPageChange={handleChangePage}
-              onRowsPerPageChange={handleChangeRowsPerPage}
+              count={totalItems}
+              rowsPerPage={pageSize}
+              page={currentPage}
+              onPageChange={(event, newPage) => onPageChange(newPage)}
+              onRowsPerPageChange={(event) =>
+                onPageSizeChange(parseInt(event.target.value, 10))
+              }
               ActionsComponent={TablePaginationActions}
             />
           </TableRow>
@@ -216,4 +203,10 @@ export default function CustomPaginationActionsTable({ data, handleRowClick }) {
 CustomPaginationActionsTable.propTypes = {
   data: PropTypes.arrayOf(PropTypes.object).isRequired,
   handleRowClick: PropTypes.func.isRequired,
+  totalItems: PropTypes.number.isRequired,
+  totalPages: PropTypes.number.isRequired,
+  currentPage: PropTypes.number.isRequired,
+  pageSize: PropTypes.number.isRequired,
+  onPageChange: PropTypes.func.isRequired,
+  onPageSizeChange: PropTypes.func.isRequired,
 };

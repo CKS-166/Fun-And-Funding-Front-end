@@ -43,10 +43,12 @@ function Milestone2() {
             const data = await checkAvailableMilestone(projectId, id);
             setMilestoneData(data); // Set data after fetching
             console.log(data);
-            setTasks(data.data[0].projectMilestoneRequirements)
+            
             if(data.status === 'create' || data.status === 'edit'){
                 setIsBackdropHidden(false)
+                setTasks(data.data[0].projectMilestoneRequirements)
             }else{
+                console.log("a")
                 setIsBackdropHidden(true)
             }
             console.log(tasks)
@@ -59,7 +61,7 @@ function Milestone2() {
 
     // Handler to close Backdrop
     const handleBackdropClose = () => {
-        setIsBackdropHidden(true);
+        setIsBackdropHidden(false);
     };
     //fetch milestoneData
     useEffect(() => {
@@ -71,7 +73,7 @@ function Milestone2() {
         const newTasks = tasks.filter((task, index) => index !== taskIndex);
         setTasks(newTasks);
     };
-    console.log(activeCard);
+    console.log(isBackdropHidden)
 
     //generate form data
     const generateFormData = (task) => {
@@ -171,6 +173,7 @@ function Milestone2() {
                     isHidden={isBackdropHidden}
                     projectId={projectId}
                     milestone={milestone}
+                    status={milestoneData.status}
                     onCloseBackdrop={handleBackdropClose} />}
             <div className='basic-info-section'>
                 <Typography

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import "@fontsource/poppins";
 import "@fontsource/poppins/300-italic.css";
 import "@fontsource/poppins/300.css";
@@ -44,6 +45,8 @@ import AdminMilestone from "./pages/AdminPages/AdminMilestone";
 import Dashboard from "./pages/AdminPages/Dashboard";
 import AdminWithdrawRequest from "./pages/AdminWithdrawRequest";
 import Chat from "./pages/Chat";
+import CheckoutCart from "./pages/CheckoutCart";
+import CheckoutSuccess from "./pages/CheckoutCart/CheckoutSuccess";
 import Milestones from "./pages/Milestones";
 import MilestoneForm from "./pages/TestCR/MilestoneForm";
 import BankAccount from "./pages/UpdateFundingProjectForm/ProjectEditor/BankAccount";
@@ -56,6 +59,7 @@ import Milestone3 from "./pages/UpdateFundingProjectForm/ProjectMilestone/Milest
 import Milestone4 from "./pages/UpdateFundingProjectForm/ProjectMilestone/Milestone4";
 import ProjectPreview from "./pages/UpdateFundingProjectForm/ProjectPreview";
 import MarketplaceHomePage from "./pages/MarketplaceHomePage";
+import CommissionFee from "./pages/CommissionFee";
 function App() {
   const location = useLocation();
   const hideAppBar = location.pathname.includes("admin-dashboard");
@@ -76,9 +80,11 @@ function App() {
 
         <ChatProvider>
           <Routes>
+            <Route path="*" element={<Navigate to="/home" />} />
+            <Route path="/" element={<Navigate to="/home" />} />
             <Route element={<UserLayout />}>
-              <Route path="*" element={<Navigate to="/home" />} />
-              <Route path="/" element={<Navigate to="/home" />} />
+              <Route path="/checkout-cart" element={<CheckoutCart />} />
+              <Route path="/checkout-success" element={<CheckoutSuccess />} />
               <Route path="/home" element={<HomePage />} />
               <Route path="/about-us" element={<AboutUs />} />
               <Route path="/project-detail" element={<ProjectDetail />} />
@@ -168,6 +174,11 @@ function App() {
                 path="/admin-dashboard/milestone-request"
                 element={<AdminMilestone />}
               />
+              <Route
+                path="/admin-dashboard/commission"
+                element={<CommissionFee />}
+              />
+
             </Route>
 
             <Route path="/funding-detail/:id" element={<ProjectDetail />} />

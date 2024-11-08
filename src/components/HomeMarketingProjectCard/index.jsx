@@ -4,7 +4,6 @@ import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import React from 'react';
 import { FaRegBookmark } from "react-icons/fa6";
-import Media from '../../assets/images/ktm.jpg';
 import './index.css';
 
 const BorderLinearProgress = styled(LinearProgress)(() => ({
@@ -19,13 +18,13 @@ const BorderLinearProgress = styled(LinearProgress)(() => ({
     },
 }));
 
-function HomeMarketingProjectCard() {
+function HomeMarketingProjectCard({ marketplaceProject }) {
     return (
         <Card sx={{ width: '22.75rem', borderRadius: '0.625rem', backgroundColor: '#F5F7F8', position: 'relative' }}>
             <CardMedia
-                component='img'
-                image={Media}
-                loading='lazy'
+                component="img"
+                image={marketplaceProject?.marketplaceFiles.find((file) => file.fileType === 2)?.url || ''}
+                loading="lazy"
                 sx={{ width: '22.75rem', height: '13.75rem', objectFit: 'cover' }}
             />
             <Button
@@ -51,16 +50,43 @@ function HomeMarketingProjectCard() {
             <CardContent sx={{ px: '2rem !important', marginBottom: '0.5rem' }} className='parent-card'>
                 <div className='mt-[0.5rem]'>
                     <Typography sx={{ color: '#2F3645', fontWeight: '700', mb: '1rem', width: 'fit-content' }} className='project-card-name'>
-                        Hollow Knight
+                        {marketplaceProject.name}
                     </Typography>
-                    <Typography sx={{ color: '#2F3645', fontWeight: '400', fontSize: '0.875rem' }}>
-                        A beautiful and mysterious 2D adventure through a surreal world of insects and heroes. A game for PC, Mac, Xbox and Linux.
+                    <Typography sx={{
+                        color: '#2F3645', fontWeight: '400', fontSize: '0.875rem', width: 'fit-content',
+                        display: '-webkit-box',
+                        WebkitBoxOrient: 'vertical',
+                        WebkitLineClamp: 3,
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        height: '4rem'
+                    }}>
+                        {marketplaceProject.description}
                     </Typography>
                     <div className='flex flex-row justify-between align-bottom mt-[1.75rem]'>
                         <div>
-                            <div className='flex flex-row gap-[0.5rem] mb-[1rem]'>
-                                <Chip label="Adventure" sx={{ borderRadius: '0.313rem', fontSize: '0.875rem', backgroundColor: '#F5F7F8', border: '2px solid #EAEAEA' }} />
-                                <Chip label="Horror" sx={{ borderRadius: '0.313rem', fontSize: '0.875rem', backgroundColor: '#F5F7F8', border: '2px solid #EAEAEA' }} />
+                            <div className='flex flex-row gap-[0.5rem] overflow-x-auto pb-[0.5rem] w-[10rem]' style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+                                <style>
+                                    {`
+                                    .scrollable-category::-webkit-scrollbar {
+                                        display: none;
+                                    }
+                                `}
+                                </style>
+                                {marketplaceProject.categories && marketplaceProject.categories.map((item, index) => (
+                                    <Chip
+                                        key={index}
+                                        label={item.name}
+                                        className="scrollable-category"
+                                        sx={{
+                                            borderRadius: '0.313rem',
+                                            fontSize: '0.875rem',
+                                            backgroundColor: '#F5F7F8',
+                                            border: '2px solid #EAEAEA',
+                                            whiteSpace: 'nowrap',
+                                        }}
+                                    />
+                                ))}
                             </div>
                             <Chip label="PC" sx={{ borderRadius: '0.313rem', fontSize: '0.875rem' }} />
                         </div>
@@ -69,7 +95,7 @@ function HomeMarketingProjectCard() {
                                 VND
                             </Typography>
                             <Typography sx={{ fontWeight: '700', width: 'fit-content', fontSize: '1.5rem', color: 'var(--primary-green)', textAlign: 'right' }}>
-                                100.000
+                                {marketplaceProject.price.toLocaleString('de-DE')}
                             </Typography>
                         </div>
                     </div>

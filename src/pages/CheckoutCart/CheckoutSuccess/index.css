@@ -100,6 +100,15 @@
     color: var(--black) !important;
 }
 
+.outline-download-button {
+    border-radius: 0.625rem;
+    text-transform: none !important;
+    font-weight: 600 !important;
+    height: 3rem;
+    border: 1.5px solid var(--black) !important;
+    color: var(--black) !important;
+}
+
 .checkout-success-paper {
     background-color: var(--white) !important;
     width: fit-content;

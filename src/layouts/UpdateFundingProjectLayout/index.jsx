@@ -8,7 +8,7 @@ import 'sweetalert2';
 import fundingProjectApiInstace from '../../utils/ApiInstance/fundingProjectApiInstance';
 import milestoneApiInstace from '../../utils/ApiInstance/milestoneApiInstance';
 import './index.css';
-import LoadingProjectBackDrop from './LoadingProjectBackdrop';
+// import LoadingProjectBackDrop from '../../components/LoadingProjectBackdrop';
 import ProjectContext from './UpdateFundingProjectContext';
 import { editorList } from './UpdateFundingProjectLayout';
 
@@ -264,8 +264,8 @@ function UpdateFundingProjectLayout() {
                             </div>
                             <div>
                                 <div className='mt-[2rem]'>
-                                    <Typography className='update-project-section' 
-                                    onClick={() => navigate(`/account/projects/update/${project.id}/preview`)} >
+                                    <Typography className='update-project-section'
+                                        onClick={() => navigate(`/account/projects/update/${project.id}/preview`)} >
                                         Project Preview
                                     </Typography>
                                 </div>

@@ -19,7 +19,6 @@ function CartDrawer({ cartOpen, setCartOpen }) {
     useEffect(() => {
         if (isLogined) {
             fetchCartItems();
-            fetchCartCount();
         }
     }, [token]);
 
@@ -33,6 +32,7 @@ function CartDrawer({ cartOpen, setCartOpen }) {
             if (res.data._statusCode == 200) {
                 setCartItems(res.data._data.items);
                 getPriceTotal(res.data._data.items);
+                fetchCartCount();
             }
         } catch (err) {
             console.log(err);
@@ -70,7 +70,6 @@ function CartDrawer({ cartOpen, setCartOpen }) {
                 },
             });
             if (res.data._statusCode == 200) {
-                fetchCartCount();
                 fetchCartItems();
             }
         } catch (err) {
@@ -88,7 +87,6 @@ function CartDrawer({ cartOpen, setCartOpen }) {
             });
 
             if (res.data._statusCode === 200) {
-                fetchCartCount();
                 fetchCartItems();
             }
         } catch (err) {

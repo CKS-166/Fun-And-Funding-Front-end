@@ -2,7 +2,7 @@ import FormatQuoteIcon from '@mui/icons-material/FormatQuote';
 import { Avatar, Box, Card, CardContent, Divider, Typography } from '@mui/material';
 import React from 'react';
 
-function TestimonialCard() {
+function TestimonialCard({ testimonial }) {
     return (
         <Card sx={{ width: '17.375rem', borderRadius: '0.625rem', backgroundColor: '#F5F7F8', boxShadow: '0px 3px 3px -2px rgba(0, 0, 0, 0.2), 0px 3px 4px 0px rgba(0, 0, 0, 0.14), 0px 1px 8px 0px rgba(0, 0, 0, 0.12)' }}>
             <CardContent sx={{ display: 'flex', flexDirection: 'column', py: '1.5rem !important', px: '2.5rem !important' }}>
@@ -11,7 +11,7 @@ function TestimonialCard() {
                 </Box>
                 <Divider sx={{ backgroundColor: '#1BAA64', mb: '1rem', borderBottomWidth: '2px' }} />
                 <Typography sx={{ fontWeight: '400', fontSize: '1rem', color: '#2F3645', textAlign: 'left', mb: '1rem' }}>
-                    "Love this platform! It's easy to navigate, with great games to support. The crowdfunding is smooth, and projects update quickly. Highly recommend for gamers and developers!"
+                    {testimonial.content}
                 </Typography>
                 <Divider sx={{ backgroundColor: '#1BAA64', mb: '1rem', borderBottomWidth: '2px' }} />
                 <div className='flex flex-row gap-[1rem]'>

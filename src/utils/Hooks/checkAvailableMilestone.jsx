@@ -12,8 +12,14 @@ export const checkAvailableMilestone = async (projectId, milestoneId) => {
             `?projectId=${projectId}&milestoneId=${milestoneId}`
         ).then((res) => res)
         .catch((error) => error);
-    
+        console.log(res);
         if(res.status == 200){
+            if(res.data._data.items.length == 0){
+                return {
+                    status : 'not requested',
+                    data: [],    
+                };
+            }
             const status = res.data._data.items[0].status
             console.log(status)
             if(status == 1) {

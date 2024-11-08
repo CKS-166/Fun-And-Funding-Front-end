@@ -56,7 +56,6 @@ import Milestone3 from "./pages/UpdateFundingProjectForm/ProjectMilestone/Milest
 import Milestone4 from "./pages/UpdateFundingProjectForm/ProjectMilestone/Milestone4";
 import ProjectPreview from "./pages/UpdateFundingProjectForm/ProjectPreview";
 import MarketplaceHomePage from "./pages/MarketplaceHomePage";
-
 function App() {
   const location = useLocation();
   const hideAppBar = location.pathname.includes("admin-dashboard");

@@ -11,6 +11,22 @@ const BackdropRequestMilestone = ({ isHidden, milestone, projectId, onCloseBackd
         setIsModalOpen(false);
         // onCloseBackdrop(); // Close the Backdrop when modal is closed
     };
+    const checkResponseStatus = (status) => {
+        if (status === null || status === undefined) {
+            throw new Error('Status cannot be null or undefined');
+        }
+
+        switch (status) {
+            case 'not requested':
+                return <Typography variant='h4'>Request Milestone</Typography>;
+            case 'completed':
+                return <Typography variant='h4'>Milestone Completed</Typography>;
+            case 'pending':
+                return <Typography variant='h4'>Milestone Pending</Typography>;
+            default:
+                throw new Error(`Unknown status: ${status}`);
+        }
+    }
     return (
         <>
             {/* when milestone not requested */}
@@ -37,19 +53,14 @@ const BackdropRequestMilestone = ({ isHidden, milestone, projectId, onCloseBackd
             )}
 
             {/* when milestone is completed */}
-            {status == 'completed' && (
                 <Backdrop
                     // className="overlay"
                     sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1, position :'absolute' }}
                     open={isHidden}
                 >
-                   
-                        <Typography variant='h4'>Milestone Completed</Typography>
+                    {checkResponseStatus(status)}
                     
                 </Backdrop>
-
-
-            )}
         </>
 
     )

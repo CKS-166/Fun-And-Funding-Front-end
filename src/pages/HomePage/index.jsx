@@ -26,6 +26,7 @@ import HomeFundingCardList from "../../components/HomeFundingCardList";
 import HomeMarketingCardList from "../../components/HomeMarketingCardList";
 import TopBackerList from "../../components/TopBackerList";
 import TopTestimonialList from "../../components/TopTestimonialList";
+import LineChart from "../../components/Chart/BarChartDashboard";
 // import ReportForm from "../../components/ReportPopUp";
 import "./index.css";
 
@@ -560,6 +561,7 @@ function HomePage() {
           Get your trust from our users
         </Typography>
         <TopTestimonialList />
+      
       </div>
     </div>
   );

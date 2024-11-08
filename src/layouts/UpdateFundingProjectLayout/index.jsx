@@ -135,7 +135,7 @@ function UpdateFundingProjectLayout() {
     }, [id]);
 
     const handleNavigatePreview = (id) => {
-        navigate(`/account/projects/update//${id}/preview`);
+        navigate(`/account/projects/update/${id}/preview`);
     };
 
     const fetchProject = async () => {
@@ -196,10 +196,11 @@ function UpdateFundingProjectLayout() {
     };
 
     const handleMilestoneNavigation = (milestoneId,index) => {
+        console.log(milestoneId)
         // console.log(id)
-        navigate(`/account/projects/update/${project.id}/milestone1`, { state: { milestoneId } });
+        navigate(`/account/projects/update/${id}/milestone1`, { state: { milestoneId } });
         if(index == 1){
-            navigate(`/account/projects/update/${project.id}/milestone2`, { state: { milestoneId } });
+            navigate(`/account/projects/update/${id}/milestone2`, { state: { milestoneId } });
         }
     };
 
@@ -371,8 +372,8 @@ function UpdateFundingProjectLayout() {
                             </Typography>
                         </div>
                     </Grid2>
-                    <Grid2 size={9.5}>
-                        <div className='relative'>
+                    <Grid2 size={9.5} style={{position : 'relative'}}>
+                        <div>
                             <div className='fixed-update-header'>
                                 <div>
                                     <Typography

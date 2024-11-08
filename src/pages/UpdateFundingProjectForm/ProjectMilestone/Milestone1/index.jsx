@@ -160,7 +160,7 @@ const MilestoneForm = () => {
   if (!milestone) return <p>Loading milestone...</p>;
 
   return (
-    <div style={{position : 'relative'}}>
+    <div >
       {milestoneData && milestone && !isLoading
         && <BackdropRequestMilestone
           isHidden={isBackdropHidden}

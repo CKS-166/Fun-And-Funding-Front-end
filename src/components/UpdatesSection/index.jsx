@@ -1,53 +1,147 @@
-import { Avatar, Box, Typography } from '@mui/material'
-import React from 'react'
+import { Avatar, Box, Divider, Typography } from '@mui/material'
+import React, { useEffect, useState } from 'react'
 import kuru from '../../assets/images/ktm.jpg'
+import projectMilestoneApiInstace from '../../utils/ApiInstance/projectMilestoneApiInstance'
+import { useParams } from 'react-router'
+import Cookies from "js-cookie";
+import Timeline from '@mui/lab/Timeline';
+import TimelineItem from '@mui/lab/TimelineItem';
+import TimelineSeparator from '@mui/lab/TimelineSeparator';
+import TimelineConnector from '@mui/lab/TimelineConnector';
+import TimelineContent from '@mui/lab/TimelineContent';
+import TimelineDot from '@mui/lab/TimelineDot';
+import TimelineOppositeContent, {
+    timelineOppositeContentClasses,
+} from '@mui/lab/TimelineOppositeContent';
+import userApiInstace from '../../utils/ApiInstance/userApiInstance'
+import { ArrowRight, ChatBubble } from '@mui/icons-material'
+import ProjectMilestoneModal2 from '../../pages/ProjectDetail/ProjectMilestoneModal2'
 const UpdatesSection = () => {
+    const [pmData, setPmData] = useState(null)
+    const { id } = useParams()
+    const [userData, setUserData] = useState(null)
+    const [selectedPm, setSelectedPm] = useState(null)
+
+    const [openModal, setOpenModal] = useState(false)
+
+    const token = Cookies.get("_auth")
+
+    useEffect(() => {
+        const fetchProjectMilestone = async () => {
+            try {
+                const response = await projectMilestoneApiInstace.get("/", { params: { projectId: id } });
+                setPmData(response.data?._data);
+            } catch (error) {
+                console.error("Error fetching milestone data:", error);
+            }
+        };
+
+        const fetchUserData = () => {
+            userApiInstace
+                .get("/info", {
+                    headers: { Authorization: `Bearer ${token}` },
+                })
+                .then((response) => {
+                    const userData = response.data._data;
+
+                    setUserData(userData);
+                })
+                .catch((error) => {
+                    console.error("Error fetching user profile:", error);
+                })
+                .finally(() => {
+                    // setIsLoading(false);
+                });
+        };
+
+        fetchUserData()
+
+        fetchProjectMilestone();
+    }, [id]);
+
     return (
         <>
-            <Box sx={{
-                width: '800px', border: '1px solid rgba(0, 0, 0, 0.3)'
-                , padding: '45px', borderRadius: '10px', background: '#FFFFFF'
-            }}>
-                <Typography sx={{ color: 'rgba(0,0,0,0.5)' }}>Update #1</Typography>
-                <Typography sx={{ fontWeight: 600, fontSize: '24px' }}>
-                    First Update: Game have been launched and being test
-                </Typography>
-                <Box sx={{ display: 'flex', alignItems: 'center', marginTop: '12px' }}>
-                    <Avatar sx={{ width: '60px', height: '60px', marginRight: '10px' }}>H</Avatar>
-                    <Box sx={{ marginRight: '10px' }}>
-                        <Typography sx={{ fontSize: '18px', fontWeight: '500' }}>
-                            SuperIdol123
-                        </Typography>
-                        <Typography sx={{ fontSize: '14px', fontWeight: '400', color: '#1BAA64' }}>
-                            9/9/2024
-                        </Typography>
-                    </Box>
-                    <Box sx={{
-                        width: '82px', height: '27px', color: '#FFFFFF'
-                        , background: '#1BAA64', textAlign: 'center', borderRadius: '8px', display: 'flex',
-                        alignItems: 'center', justifyContent: 'center'
-                    }}>
-                        Creator
-                    </Box>
+            <Timeline
+                sx={{
+                    [`& .${timelineOppositeContentClasses.root}`]: {
+                        flex: 0.2,
+                    },
+                }}
+                position="alternate">
+                {pmData && pmData.items.map((pm, index) => (
+                    <TimelineItem>
+                        <TimelineOppositeContent color="text.secondary">
+                            {new Date(pm.createdDate).toLocaleDateString()}
+                        </TimelineOppositeContent>
+                        <TimelineSeparator>
+                            <TimelineDot />
+                            {
+                                index != pmData.items.length
+                                    ? (
+                                        <TimelineConnector />
+                                    )
+                                    : ''
+                            }
+                        </TimelineSeparator>
+                        <TimelineContent>
+                            {pm.milestone.milestoneName}
+                            <div className='w-[35rem] bg-white rounded mt-3 shadow-md '>
+                                <div className='p-8'>
+                                    <div className='text-sm italic font-semibold text-gray-500'>Milestone #{pm.milestone.milestoneOrder + 1}</div>
+                                    <div class="flex items-center gap-4 my-3">
+                                        {
+                                            userData?.avatar
+                                                ? (<div>
+                                                    <img class="w-10 h-10 rounded-full" src={userData.avatar} alt="" />
+                                                </div>)
+                                                : (
+                                                    <Avatar sx={{ width: '10', height: '10' }}></Avatar>
+                                                )
+                                        }
+                                        <div class="font-medium dark:text-white">
+                                            <div className='flex gap-3 items-center'>
+                                                {userData?.userName}
+                                                <div className='text-white bg-primary-green text-sm px-3 rounded'>
+                                                    Game owner
+                                                </div>
+                                            </div>
+                                            <div class="text-sm text-gray-500 dark:text-gray-400">Joined in {new Date(userData?.createdDate).toDateString()}</div>
+                                        </div>
+                                    </div>
+                                    <Divider sx={{ my: '1rem' }} />
+                                    <div className='font-semibold text-xl mb-5'>
+                                        Milestone title (add field to prj milestone)
+                                    </div>
 
-                </Box>
-                <Typography sx={{
-                    background: 'rgba(0, 0, 0, 0.3)', width: '700px', height: '1px',
-                    marginTop: '8px'
-                }}></Typography>
-                <Box>
-                    <img src={kuru} style={{
-                        width: '700px', height: '185px', objectFit: 'cover',
-                        objectPosition: '50% 50%', marginTop: '10px'
-                    }} />
-                </Box>
-                <Box sx={{ marginTop: '27px' }}>
-                    <Typography>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
-                        nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in
-                    </Typography>
-                </Box>
-            </Box>
+                                    <p className='text-sm'>
+                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
+                                        nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in
+                                    </p>
+                                    <div>*(thêm 2 field title với intro cho projectmilestone)</div>
+                                </div>
+
+                                <div className='px-8 py-5 border-t-2 flex justify-between'>
+                                    <div className='text-gray-500 text-sm'>
+                                        <ChatBubble /> N/A
+                                    </div>
+                                    <div onClick={() => { setSelectedPm(pm); setOpenModal(true) }} className='text-gray-500 hover:underline hover:cursor-pointer'>
+                                        Read more
+                                        <ArrowRight />
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </TimelineContent>
+                    </TimelineItem>
+                ))}
+
+
+            </Timeline>
+            {
+                pmData &&
+                <ProjectMilestoneModal2 openModal={openModal} setOpenModal={setOpenModal} pmData={selectedPm} />
+            }
         </>
     )
 }

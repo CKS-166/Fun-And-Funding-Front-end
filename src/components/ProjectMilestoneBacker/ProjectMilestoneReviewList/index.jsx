@@ -1,9 +1,9 @@
 import { Rating } from "@mui/material"
 import { useProjectMilestoneBackerApi } from "../../../utils/Hooks/ProjectMilestoneBacker"
 
-const ProjectMilestoneReviewList = () => {
+const ProjectMilestoneReviewList = ({ pmId }) => {
 
-  const { data, error } = useProjectMilestoneBackerApi("/?projectMilestoneId=55484864-6EED-4BB7-9967-BEE8512957C1")
+  const { data, error } = useProjectMilestoneBackerApi(`/?projectMilestoneId=${pmId}`)
 
   return (
     <>

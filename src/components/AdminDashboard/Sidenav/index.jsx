@@ -7,7 +7,7 @@ const Sidenav = () => {
 
   const [isOpenRequest, setIsOpenRequest] = useState(true);
   const [isOpenManagement, setIsOpenManagement] = useState(false);
-  const [isOpenConfig, setIsOpenConfig] = useState(false);
+  const [isOpenConfig, setIsOpenConfig] = useState(true);
 
   const activeBg = "bg-gray-300"
 
@@ -210,7 +210,7 @@ const Sidenav = () => {
               {isOpenConfig && (
                 <ul id="dropdown-example" className="py-1 space-y-2 list-none ">
                   <li>
-                    <NavLink to="" className={({ isActive }) => `${isActive ? activeBg : ''} flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 group`}>
+                    <NavLink to="/admin-dashboard/commission" className={({ isActive }) => `${isActive ? activeBg : ''} flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 group`}>
                       <svg className="flex-shrink-0 w-4 h-4 text-gray-500 transition duration-75 group-hover:text-gray-900" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
                         <path d="M16 14V2a2 2 0 0 0-2-2H2a2 2 0 0 0-2 2v15a3 3 0 0 0 3 3h12a1 1 0 0 0 0-2h-1v-2a2 2 0 0 0 2-2ZM4 2h2v12H4V2Zm8 16H3a1 1 0 0 1 0-2h9v2Z" />
                       </svg>
@@ -218,7 +218,7 @@ const Sidenav = () => {
                     </NavLink>
                   </li>
                   <li>
-                    <NavLink to="" className={({ isActive }) => `${isActive ? activeBg : ''} flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 group`}>
+                    <NavLink to="/admin-dashboard/milestones" className={({ isActive }) => `${isActive ? activeBg : ''} flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 group`}>
                       <svg className="flex-shrink-0 w-4 h-4 text-gray-500 transition duration-75 group-hover:text-gray-900" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
                         <path d="M16 14V2a2 2 0 0 0-2-2H2a2 2 0 0 0-2 2v15a3 3 0 0 0 3 3h12a1 1 0 0 0 0-2h-1v-2a2 2 0 0 0 2-2ZM4 2h2v12H4V2Zm8 16H3a1 1 0 0 1 0-2h9v2Z" />
                       </svg>

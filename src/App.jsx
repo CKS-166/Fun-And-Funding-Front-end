@@ -47,6 +47,8 @@ import AdminWithdrawRequest from "./pages/AdminWithdrawRequest";
 import Chat from "./pages/Chat";
 import CheckoutCart from "./pages/CheckoutCart";
 import CheckoutSuccess from "./pages/CheckoutCart/CheckoutSuccess";
+import CommissionFee from "./pages/CommissionFee";
+import MarketplaceHomePage from "./pages/MarketplaceHomePage";
 import Milestones from "./pages/Milestones";
 import MilestoneForm from "./pages/TestCR/MilestoneForm";
 import BankAccount from "./pages/UpdateFundingProjectForm/ProjectEditor/BankAccount";
@@ -58,8 +60,6 @@ import Milestone2 from "./pages/UpdateFundingProjectForm/ProjectMilestone/Milest
 import Milestone3 from "./pages/UpdateFundingProjectForm/ProjectMilestone/Milestone3";
 import Milestone4 from "./pages/UpdateFundingProjectForm/ProjectMilestone/Milestone4";
 import ProjectPreview from "./pages/UpdateFundingProjectForm/ProjectPreview";
-import MarketplaceHomePage from "./pages/MarketplaceHomePage";
-import CommissionFee from "./pages/CommissionFee";
 function App() {
   const location = useLocation();
   const hideAppBar = location.pathname.includes("admin-dashboard");
@@ -84,7 +84,7 @@ function App() {
             <Route path="/" element={<Navigate to="/home" />} />
             <Route element={<UserLayout />}>
               <Route path="/checkout-cart" element={<CheckoutCart />} />
-              <Route path="/checkout-success" element={<CheckoutSuccess />} />
+              <Route path="/checkout-success/:id" element={<CheckoutSuccess />} />
               <Route path="/home" element={<HomePage />} />
               <Route path="/about-us" element={<AboutUs />} />
               <Route path="/project-detail" element={<ProjectDetail />} />

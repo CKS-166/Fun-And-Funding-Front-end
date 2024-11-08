@@ -5,7 +5,6 @@ import CheckIcon from "@mui/icons-material/Check";
 import MailOutlineIcon from "@mui/icons-material/MailOutline";
 import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
 import {
-  Backdrop,
   Button,
   Card,
   CardContent,
@@ -27,11 +26,14 @@ import HomeFundingCardList from "../../components/HomeFundingCardList";
 import HomeMarketingCardList from "../../components/HomeMarketingCardList";
 import TopBackerList from "../../components/TopBackerList";
 import TopTestimonialList from "../../components/TopTestimonialList";
+import { useLoading } from "../../contexts/LoadingContext";
+import marketplaceProjectApiInstance from "../../utils/ApiInstance/marketplaceProjectApiInstance";
 import systemWalletApiInstace from "../../utils/ApiInstance/systemWalletApiInstance";
 import userApiInstance from '../../utils/ApiInstance/userApiInstance';
 import "./index.css";
 
 function HomePage() {
+  const { isLoading, setIsLoading } = useLoading();
   const [mailSending, isMailSending] = useState(false);
   const [sendingSuccess, isSendingSuccess] = useState(false);
   const [openReportForm, setOpenReportForm] = useState(false);
@@ -40,7 +42,6 @@ function HomePage() {
   const [fetchPlatformStatistic, isFetchPlatformStatistic] = useState(false);
   const [fetchBackers, isFetchBackers] = useState(false);
   const [fetchComments, isFetchComments] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
 
   const [userStatistic, setUserStatistic] = useState(0);
   const [projectStatistic, setProjectStatistic] = useState(0);
@@ -59,7 +60,15 @@ function HomePage() {
 
   useEffect(() => {
     fetchStatistic();
-  })
+  }, [])
+
+  useEffect(() => {
+    if (!fetchPlatformStatistic || !fetchBackers || !fetchComments || !fetchFundingProject || !fetchMarketplaceProject) {
+      setIsLoading(true);
+    } else {
+      setIsLoading(false);
+    }
+  }, [fetchPlatformStatistic, fetchBackers, fetchComments, fetchFundingProject, fetchMarketplaceProject])
 
   const fetchStatistic = async () => {
     try {
@@ -67,7 +76,7 @@ function HomePage() {
       if (userRes.data._statusCode == 200) {
         setUserStatistic(userRes.data._data);
       }
-      const projectRes = await marketplaceProjectApiInstace.get('/number-of-projects');
+      const projectRes = await marketplaceProjectApiInstance.get('/number-of-projects');
       if (projectRes.data._statusCode == 200) {
         setProjectStatistic(projectRes.data._data);
       }
@@ -87,14 +96,6 @@ function HomePage() {
 
   return (
     <div className="mt-[-6.4rem]">
-      <Backdrop
-        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-        open={isLoading}
-      >
-        <div className='flex flex-col justify-center items-center'>
-          <CircularProgress color="inherit" />
-        </div>
-      </Backdrop>
       <BannerCarousel />
       <div className="flex flex-col justify-center px-[6rem] pt-[7.5rem] pb-[3.75rem]">
         <div className="flex justify-between gap-[4rem] mb-[2.5rem]">
@@ -242,7 +243,7 @@ function HomePage() {
           Support the latest crowdfunding game and help bring the next big hit
           to life!
         </Typography>
-        <HomeFundingCardList />
+        <HomeFundingCardList fetchFundingProject={fetchFundingProject} isFetchFundingProject={(value) => isFetchFundingProject(value)} />
         <Button
           sx={{
             borderRadius: "0.625rem",
@@ -296,7 +297,7 @@ function HomePage() {
         >
           Discover and buy the latest games directly from our platform!
         </Typography>
-        <HomeMarketingCardList />
+        <HomeMarketingCardList fetchMarketplaceProject={fetchMarketplaceProject} isFetchMarketplaceProject={(value) => isFetchMarketplaceProject(value)} />
         <Button
           sx={{
             borderRadius: "0.625rem",
@@ -390,7 +391,7 @@ function HomePage() {
                     color: "#2F3645",
                   }}
                 >
-                  {userStatistic}+
+                  {userStatistic.toLocaleString('de-DE')}+
                 </Typography>
                 <div className="flex justify-between align-bottom">
                   <Typography
@@ -403,7 +404,7 @@ function HomePage() {
                     }}
                   >
                     Next target: <br />
-                    <span style={{ fontWeight: "700" }}>1000 users</span>
+                    <span style={{ fontWeight: "700" }}>1.000 users</span>
                   </Typography>
                   <PeopleAltIcon
                     style={{ color: "#2F3645", fontSize: "4rem" }}
@@ -453,7 +454,7 @@ function HomePage() {
                     textAlign: "center",
                   }}
                 >
-                  {profitStatistic}
+                  {profitStatistic.toLocaleString('de-DE')}
                 </Typography>
                 <Typography
                   sx={{
@@ -499,7 +500,7 @@ function HomePage() {
                     textAlign: "right",
                   }}
                 >
-                  {projectStatistic}+
+                  {projectStatistic.toLocaleString('de-DE')}+
                 </Typography>
                 <div className="flex justify-between align-bottom">
                   <AiFillProject
@@ -515,7 +516,7 @@ function HomePage() {
                     }}
                   >
                     Next target: <br />
-                    <span style={{ fontWeight: "700" }}>1000 projects</span>
+                    <span style={{ fontWeight: "700" }}>1.000 projects</span>
                   </Typography>
                 </div>
               </CardContent>
@@ -609,7 +610,7 @@ function HomePage() {
         >
           Get your trust from our users
         </Typography>
-        <TopTestimonialList />
+        <TopTestimonialList fetchComments={fetchComments} isFetchComments={(value) => isFetchComments(value)} />
       </div>
     </div>
   );

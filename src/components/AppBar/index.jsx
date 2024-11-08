@@ -32,7 +32,6 @@ import Swal from "sweetalert2";
 import homeLogo from "../../assets/images/logo-alt.png";
 import defaultLogo from "../../assets/images/logo-text.png";
 import { useCart } from '../../contexts/CartContext';
-import cartApiInstace from "../../utils/ApiInstance/cartApiInstance";
 import userApiInstace from "../../utils/ApiInstance/userApiInstance";
 import CartDrawer from "../CartDrawer";
 import AuthDialog from "../Popup";
@@ -85,12 +84,6 @@ const FunFundingAppBar = () => {
   }, [isLogined]);
 
   useEffect(() => {
-    if (isLogined) {
-      fetchCartCount();
-    }
-  }, [isLogined, cartCount]);
-
-  useEffect(() => {
     const activePage = pages.find((page) => page.route === location.pathname);
     if (activePage) {
       setTabValue(activePage.index);
@@ -115,21 +108,6 @@ const FunFundingAppBar = () => {
       console.log(err);
     }
   };
-
-  const fetchCartCount = async () => {
-    try {
-      const res = await cartApiInstace.get("/quantity", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      if (res.data._statusCode == 200) {
-        setCartCount(res.data._data);
-      }
-    } catch (err) {
-      console.log(err);
-    }
-  }
 
   const handleTabChange = (event, newValue) => {
     setTabValue(newValue);
@@ -349,13 +327,12 @@ const FunFundingAppBar = () => {
               <Button
                 variant="contained"
                 sx={{
-                  background: "#1BAA64",
+                  backgroundColor: "#1BAA64",
                   fontWeight: "600",
                   textTransform: "none",
                   px: "3rem",
                   fontSize: "1.2rem",
                 }}
-                className="poiner-cursor"
                 onClick={openAuthDialog}
               >
                 Sign In
@@ -365,7 +342,7 @@ const FunFundingAppBar = () => {
           </Toolbar>
         </Container>
       </AppBar>
-      <CartDrawer cartOpen={cartOpen} setCartOpen={handleCartOpen} cartCount={cartCount} fetchCartCount={fetchCartCount} />
+      <CartDrawer cartOpen={cartOpen} setCartOpen={handleCartOpen} />
     </div>
   );
 };

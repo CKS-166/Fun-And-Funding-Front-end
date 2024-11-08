@@ -37,9 +37,11 @@ import TestDetail from "./pages/TestDetail";
 import { Backdrop, CircularProgress } from "@mui/material";
 import { CartProvider } from "./contexts/CartContext";
 import { ChatProvider } from "./contexts/ChatContext";
+import { MarketplaceProjectProvider } from "./contexts/CreateMarketplaceProjectContext";
 import { useLoading } from "./contexts/LoadingContext";
 import AdminDashboardLayout from "./layouts/AdminDashboardLayout";
 import ChatLayout from "./layouts/ChatLayout";
+import CreateMarketplaceProjectLayout from "./layouts/CreateMarketplaceProjectLayout";
 import AccountWallet from "./pages/AccountWallet";
 import AdminMilestone from "./pages/AdminPages/AdminMilestone";
 import Dashboard from "./pages/AdminPages/Dashboard";
@@ -48,6 +50,8 @@ import Chat from "./pages/Chat";
 import CheckoutCart from "./pages/CheckoutCart";
 import CheckoutSuccess from "./pages/CheckoutCart/CheckoutSuccess";
 import CommissionFee from "./pages/CommissionFee";
+import MarketplaceProjectBasicInfo from "./pages/CreateMarketplaceProjectForm/MarketplaceProjectBasicInfo";
+import MarketplaceProjectIntroduction from "./pages/CreateMarketplaceProjectForm/MarketplaceProjectIntroduction";
 import MarketplaceHomePage from "./pages/MarketplaceHomePage";
 import Milestones from "./pages/Milestones";
 import MilestoneForm from "./pages/TestCR/MilestoneForm";
@@ -60,12 +64,6 @@ import Milestone2 from "./pages/UpdateFundingProjectForm/ProjectMilestone/Milest
 import Milestone3 from "./pages/UpdateFundingProjectForm/ProjectMilestone/Milestone3";
 import Milestone4 from "./pages/UpdateFundingProjectForm/ProjectMilestone/Milestone4";
 import ProjectPreview from "./pages/UpdateFundingProjectForm/ProjectPreview";
-import MarketplaceHomePage from "./pages/MarketplaceHomePage";
-import CommissionFee from "./pages/CommissionFee";
-import { MarketplaceProjectProvider } from "./contexts/CreateMarketplaceProjectContext";
-import CreateMarketplaceProjectLayout from "./layouts/CreateMarketplaceProjectLayout";
-import MarketplaceProjectBasicInfo from "./pages/CreateMarketplaceProjectForm/MarketplaceProjectBasicInfo";
-import MarketplaceProjectIntroduction from "./pages/CreateMarketplaceProjectForm/MarketplaceProjectIntroduction";
 
 function App() {
   const location = useLocation();

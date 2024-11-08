@@ -9,6 +9,7 @@ const BackdropRequestMilestone = ({ isHidden, milestone, projectId, onCloseBackd
     }
     const handleModalClose = () => {
         setIsModalOpen(false);
+        isHidden = true;
         // onCloseBackdrop(); // Close the Backdrop when modal is closed
     };
     const checkResponseStatus = (status) => {
@@ -17,28 +18,24 @@ const BackdropRequestMilestone = ({ isHidden, milestone, projectId, onCloseBackd
         }
 
         switch (status) {
-            case 'not requested':
-                return <Typography variant='h4'>Request Milestone</Typography>;
             case 'completed':
                 return <Typography variant='h4'>Milestone Completed</Typography>;
             case 'pending':
                 return <Typography variant='h4'>Milestone Pending</Typography>;
-            default:
-                throw new Error(`Unknown status: ${status}`);
         }
     }
     return (
         <>
             {/* when milestone not requested */}
-            {status == 'error' && (
+            {status == 'not requested' && (
                 <Backdrop
                     // className="overlay"
-                    sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                    sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1, position :'absolute'}}
                     open={isHidden}
                 >
                     <Button variant="contained"
                         sx={{
-                            width: "100%", whiteSpace: "nowrap"
+                            width: "300px", whiteSpace: "nowrap"
                             , background: "#1BAA64", fontWeight: "bold", py: 1
                         }}
                         onClick={() => handleProcess()}
@@ -53,6 +50,7 @@ const BackdropRequestMilestone = ({ isHidden, milestone, projectId, onCloseBackd
             )}
 
             {/* when milestone is completed */}
+            {status !== 'not requested' && (status !== 'pending' || status === 'edit') && (
                 <Backdrop
                     // className="overlay"
                     sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1, position :'absolute' }}
@@ -61,6 +59,7 @@ const BackdropRequestMilestone = ({ isHidden, milestone, projectId, onCloseBackd
                     {checkResponseStatus(status)}
                     
                 </Backdrop>
+            )}    
         </>
 
     )

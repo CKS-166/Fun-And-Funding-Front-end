@@ -6,7 +6,9 @@ const ProgressChart = ({ balance, target }) => {
     const remaining = 100 - progress;          // Calculate remaining percentage
     console.log(progress, remaining)
     return (
-        <Box sx={{ border: '1px solid black', padding: '10px' }}>
+        <Box sx={{ borderRadius : '10px', padding: '10px', marginBottom : '20px'
+            ,boxShadow: 'rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px'
+           }}>
             <PieChart
                 series={[
                     {
@@ -22,7 +24,6 @@ const ProgressChart = ({ balance, target }) => {
                 height={200}
             />
         </Box>
-
     );
 }
 

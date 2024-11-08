@@ -10,6 +10,7 @@ import { IoMdClose } from "react-icons/io";
 import projectMilestoneApiInstance from '../../utils/ApiInstance/projectMilestoneApiInstance';
 import zIndex from '@mui/material/styles/zIndex';
 import { ToastContainer, toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 const RequestMilestoneModal = ({ open, handleClose, milestone, projectId, handleCloseBackdrop }) => {
   const modalStyle = {
     position: "absolute",
@@ -40,13 +41,17 @@ const RequestMilestoneModal = ({ open, handleClose, milestone, projectId, handle
       })
       .then(res => {
         console.log(res);
-        handleCloseBackdrop();
-        Swal.fire({
-          title: `Request for ${milestone.milestoneName} sent!`,
-          text: "The waiting process can take 2-5 days. Thank you for your patience.Please check your email for more details.",
-          icon: "success"
-        });
-        handleClose();
+        if(res.data._isSuccess) {
+          handleCloseBackdrop && handleCloseBackdrop();
+          Swal.fire({
+            title: `Request for ${milestone.milestoneName} sent!`,
+            text: "The waiting process can take 2-5 days. Thank you for your patience.Please check your email for more details.",
+            icon: "success"
+          });
+          handleClose();
+        }else{
+          toast.warn(res.data._message[0])
+        }
       })
       .catch(error => {
         handleClose();
@@ -72,6 +77,7 @@ const RequestMilestoneModal = ({ open, handleClose, milestone, projectId, handle
   return (
     <Modal open={open} onClose={handleClose} sx={{ margin: '20px 0' }}>
       <Box sx={modalStyle}>
+      <ToastContainer />
         <Typography variant="h5" gutterBottom 
         sx={{display :'flex', alignItems: 'center', justifyContent: 'space-between'}}>
           <span>{milestone.milestoneName}</span>

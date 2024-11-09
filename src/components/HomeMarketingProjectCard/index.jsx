@@ -20,7 +20,7 @@ const BorderLinearProgress = styled(LinearProgress)(() => ({
 
 function HomeMarketingProjectCard({ marketplaceProject }) {
     return (
-        <Card sx={{ width: '22.75rem', borderRadius: '0.625rem', backgroundColor: '#F5F7F8', position: 'relative' }}>
+        <Card sx={{ width: '22.75rem', borderRadius: '0.625rem', backgroundColor: '#F5F7F8', position: 'relative', boxShadow: '0px 3px 3px -2px rgba(0, 0, 0, 0.2), 0px 3px 4px 0px rgba(0, 0, 0, 0.14), 0px 1px 8px 0px rgba(0, 0, 0, 0.12)' }}>
             <CardMedia
                 component="img"
                 image={marketplaceProject?.marketplaceFiles.find((file) => file.fileType === 2)?.url || ''}

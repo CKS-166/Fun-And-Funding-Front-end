@@ -13,9 +13,17 @@ const MarketplaceProjectIntroduction = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const [introductionData, setIntroductionData] = useState("");
+  const [introductionData, setIntroductionData] = useState(
+    marketplaceProject?.introduction
+  );
 
   console.log(marketplaceProject);
+
+  useEffect(() => {
+    if (marketplaceProject?.introduction) {
+      setIntroductionData(marketplaceProject.introduction);
+    }
+  }, [marketplaceProject.introduction]);
 
   useEffect(() => {
     setMarketplaceProject((prev) => ({
@@ -65,13 +73,13 @@ const MarketplaceProjectIntroduction = () => {
           <NavigateButton
             text={"Back"}
             onClick={() => {
-              navigate(`/${id}/request-marketplace-project/basic-info`);
+              navigate(`/request-marketplace-project/${id}/basic-info`);
             }}
           />
           <NavigateButton
             text={"Next"}
             onClick={() => {
-              navigate(`/${id}/request-marketplace-project/media`);
+              navigate(`/request-marketplace-project/${id}/project-media`);
             }}
           />
         </div>

@@ -74,7 +74,7 @@ const MarketplaceProjectBasicInfo = () => {
       ...data,
     }));
 
-    navigate(`/${id}/request-marketplace-project/introduction`);
+    navigate(`/request-marketplace-project/${id}/introduction`);
   };
 
   const validateStartDate = (value) => {

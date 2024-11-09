@@ -48,9 +48,9 @@ const CreateMarketplaceProjectLayout = () => {
             fundingProjectId: data.id || "",
             marketplaceFiles:
               data.fundingFiles?.map((file) => ({
-                name: file.name || "string",
-                url: file.url || "string",
-                filetype: file.filetype || 0,
+                name: file.name || "",
+                url: file.url || "",
+                filetype: file.filetype,
               })) || [],
             categories:
               data.categories?.map((category) => ({
@@ -58,6 +58,8 @@ const CreateMarketplaceProjectLayout = () => {
                 name: category.name || "",
               })) || [],
           });
+
+          console.log(marketplaceProject);
         }
       })
       .catch((error) => {

@@ -114,7 +114,7 @@ export default function ReportTable({
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <img
+                <a
                   src={url}
                   alt="Attachment"
                   style={{
@@ -123,7 +123,9 @@ export default function ReportTable({
                     marginRight: 5,
                     cursor: "pointer",
                   }}
-                />
+                >
+                  Link
+                </a>
               </Link>
             ))}
           </Box>

@@ -15,6 +15,7 @@ import Background from "../../assets/images/background-pattern.png";
 import BrowseMarketingCard from "../../components/BrowseMarketingCard";
 import CheckoutGameTable from "../../components/CheckoutCart/CheckoutGameTable";
 import { useCart } from '../../contexts/CartContext';
+import { useLoading } from "../../contexts/LoadingContext";
 import cartApiInstance from "../../utils/ApiInstance/cartApiInstance";
 import couponApiInstance from "../../utils/ApiInstance/couponApiInstance";
 import orderApiInstance from "../../utils/ApiInstance/orderApiInstance";
@@ -46,6 +47,7 @@ const notify = (message, type) => {
 
 function CheckoutCart() {
     const { cartItems, cartCount, order, setCartItems, setCartCount, setOrder } = useCart();
+    const { isLoading, setIsLoading } = useLoading();
     const token = Cookies.get("_auth");
     const isLogined = Cookies.get("_auth") !== undefined;
 
@@ -135,15 +137,16 @@ function CheckoutCart() {
                 price: item.marketplaceProject.price,
                 marketplaceProject: item.marketplaceProject,
                 discountedPrice: item.marketplaceProject.discountedPrice || item.marketplaceProject.price,
-                appliedCoupon: {
-                    id: item.appliedCoupon?.id || "",
-                    couponKey: item.appliedCoupon?.couponKey || "",
-                    discountRate: item.appliedCoupon?.discountRate || 0,
-                    quantity: item.appliedCoupon?.quantity || 0
-                },
+                ...(item.appliedCoupon && {
+                    appliedCoupon: {
+                        id: item.appliedCoupon.id,
+                        couponKey: item.appliedCoupon.couponKey,
+                        discountRate: item.appliedCoupon.discountRate,
+                        quantity: item.appliedCoupon.quantity
+                    }
+                }),
                 createdDate: item.createdDate
             }));
-            console.log(newOrderItems);
             setOrder([{ cartItems: newOrderItems }]);
         } catch (err) {
             console.log("Error applying cart to order:", err);
@@ -211,7 +214,7 @@ function CheckoutCart() {
                                 ...orderItem,
                                 cartItems: orderItem.cartItems.map((item) => {
                                     if (item.marketplaceProjectId === marketplaceProjectId) {
-                                        if (item.appliedCoupon && item.appliedCoupon.couponKey) {
+                                        if (item.appliedCoupon) {
                                             status.code = 400;
                                             status.message = "Coupon already applied";
                                         } else {
@@ -254,12 +257,7 @@ function CheckoutCart() {
                         ...orderItem,
                         cartItems: orderItem.cartItems.map((item) => {
                             if (item.marketplaceProjectId === marketplaceProjectId) {
-                                item.appliedCoupon = {
-                                    id: "",
-                                    couponKey: "",
-                                    discountRate: 0,
-                                    quantity: ""
-                                };
+                                item.appliedCoupon = null;
                                 item.discountedPrice = item.price;
                             }
                             return item;
@@ -275,10 +273,16 @@ function CheckoutCart() {
     };
 
     const handleCreateOrder = async () => {
+        console.log(order);
         const flattenedOrder = {
-            cartItems: order[0].cartItems
+            cartItems: order[0].cartItems.map(item => ({
+                ...item,
+                appliedCoupon: item.appliedCoupon ?? null
+            }))
         };
         try {
+            console.log(flattenedOrder);
+            setIsLoading(true);
             const res = await orderApiInstance.post(``, flattenedOrder, {
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -292,11 +296,14 @@ function CheckoutCart() {
                 });
                 if (cartRes.data._statusCode == 200) {
                     fetchCartItems();
+                    fetchCartCount();
                     navigate(`/checkout-success/${res.data._data}`)
                 }
             }
         } catch (err) {
             console.log(err);
+        } finally {
+            setIsLoading(false);
         }
     }
 

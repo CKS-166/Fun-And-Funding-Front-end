@@ -11,7 +11,7 @@ function TopTestimonialList({ fetchComments, isFetchComments }) {
 
     const fetchTopComments = async () => {
         try {
-            const res = await feedbackApiInstance.get('/top3');
+            const res = await feedbackApiInstance.get('/top4');
             if (res.status == 200) {
                 setCommentList(res.data._data);
                 isFetchComments(true);

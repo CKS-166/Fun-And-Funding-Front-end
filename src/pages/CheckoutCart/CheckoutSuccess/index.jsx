@@ -71,7 +71,8 @@ function CheckoutSuccess() {
                 const fetchedDetails = fetchedOrder.orderDetails.map((item) => ({
                     id: item.digitalKey.id,
                     imageUrl: item.digitalKey.marketingProject?.marketplaceFiles.find(file => file.fileType === 2)?.url || '',
-                    name: item.digitalKey.marketingProject?.name || 'Unnamed Product',
+                    name: item.digitalKey.marketingProject?.name || 'Unnamed Game',
+                    keyString: item.digitalKey?.keyString || 'No Key',
                     price: item.unitPrice,
                     gameFile: item.digitalKey.marketingProject?.marketplaceFiles.find(file => file.fileType === 3)?.url || '',
                 }));
@@ -122,7 +123,7 @@ function CheckoutSuccess() {
                                 <div
                                     className="overflow-hidden"
                                     style={{
-                                        maxHeight: `calc(2.5 * (5rem + 2rem))`,
+                                        maxHeight: `calc(2.5 * (7rem + 3.5rem))`,
                                         height: 'fit-content',
                                         overflowY: 'scroll',
                                         scrollbarWidth: 'none',
@@ -140,28 +141,28 @@ function CheckoutSuccess() {
                                                         marginBottom: index === detailList.length - 1 ? 0 : '1rem',
                                                     }}
                                                 >
-                                                    <div className="!flex-grow-0 flex flex-row justify-between items-center rounded-[0.625rem] gap-[0.5rem] w-[22rem]">
+                                                    <div className="!flex-grow-0 flex flex-row justify-between items-center rounded-[0.625rem] gap-[0.5rem] w-[25rem]">
                                                         <div className="flex-shrink-0">
                                                             <img
-                                                                className="w-[5rem] h-[5rem] object-cover rounded-[0.25rem] flex-shrink-0"
+                                                                className="w-[8rem] h-[8rem] object-cover rounded-[0.25rem] flex-shrink-0"
                                                                 src={item.imageUrl}
                                                                 alt={item.name}
                                                             />
                                                         </div>
                                                         <div className="flex-shrink-0 flex justify-between">
-                                                            <div className="flex flex-col justify-start gap-[0.5rem]">
+                                                            <div className="flex flex-col justify-start gap-[0.5rem] flex-grow-0 flex-shrink-0">
                                                                 <Typography
                                                                     sx={{
-                                                                        fontSize: '1rem',
+                                                                        fontSize: '1.25rem',
                                                                         fontWeight: '700',
                                                                         color: 'var(--black)',
                                                                         display: '-webkit-box',
                                                                         WebkitBoxOrient: 'vertical',
-                                                                        WebkitLineClamp: 2,
+                                                                        WebkitLineClamp: 1,
                                                                         overflow: 'hidden',
                                                                         textOverflow: 'ellipsis',
                                                                         whiteSpace: 'normal',
-                                                                        width: '15rem',
+                                                                        maxWidth: '15rem',
                                                                     }}
                                                                 >
                                                                     {item.name}
@@ -169,11 +170,20 @@ function CheckoutSuccess() {
                                                                 <Typography
                                                                     sx={{
                                                                         fontSize: '1rem',
-                                                                        fontWeight: '500',
-                                                                        color: 'var(--black)',
+                                                                        fontWeight: '600',
+                                                                        color: 'var(--primary-green)',
                                                                     }}
                                                                 >
                                                                     {formatPrice(item.price)} VND
+                                                                </Typography>
+                                                                <Typography
+                                                                    sx={{
+                                                                        fontSize: '1rem',
+                                                                        fontWeight: '400',
+                                                                        color: 'var(--black)',
+                                                                    }}
+                                                                >
+                                                                    Game unlock key: <br /><span className="font-bold">{item.keyString}</span>
                                                                 </Typography>
                                                             </div>
                                                         </div>
@@ -234,7 +244,7 @@ function CheckoutSuccess() {
                         </Button>
                     </div>
                 </div>
-            </div>
+            </div >
 
             <div className='recommended-section'>
                 <Typography className='checkout-cart-title !pb-[1rem]'>
@@ -264,7 +274,7 @@ function CheckoutSuccess() {
                     </Button>
                 </div>
             </div>
-        </div>
+        </div >
     );
 }
 

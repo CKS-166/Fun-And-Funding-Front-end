@@ -24,12 +24,7 @@ export const CartProvider = ({ children }) => {
                             },
                         ]
                     },
-                    appliedCoupon: {
-                        id: "",
-                        couponKey: "",
-                        discountRate: 0,
-                        quantity: ""
-                    },
+                    appliedCoupon: null,
                     createdDate: null,
                 }
             ]

@@ -48,6 +48,7 @@ const CreateMarketplaceProjectLayout = () => {
             fundingProjectId: data.id || "",
             marketplaceFiles:
               data.fundingFiles?.map((file) => ({
+                id: file.id | "",
                 name: file.name || "",
                 url: file.url || "",
                 filetype: file.filetype,

@@ -64,6 +64,10 @@ import Milestone2 from "./pages/UpdateFundingProjectForm/ProjectMilestone/Milest
 import Milestone3 from "./pages/UpdateFundingProjectForm/ProjectMilestone/Milestone3";
 import Milestone4 from "./pages/UpdateFundingProjectForm/ProjectMilestone/Milestone4";
 import ProjectPreview from "./pages/UpdateFundingProjectForm/ProjectPreview";
+import MarketplaceHomePage from "./pages/MarketplaceHomePage";
+import CommissionFee from "./pages/CommissionFee";
+import AboutUsLayout from "./layouts/AboutUsLayout";
+import Policies from "./pages/Policies";
 import AdminReport from "./pages/AdminPages/AdminReport";
 import MarketplaceProjectMedia from "./pages/CreateMarketplaceProjectForm/MarketplaceProjectMedia";
 function App() {
@@ -188,6 +192,9 @@ function App() {
                 element={<CommissionFee />}
               />
               <Route path="/admin-dashboard/report" element={<AdminReport />} />
+            </Route>
+            <Route element={<AboutUsLayout />}>
+              <Route path="/policies" element={<Policies />} />
             </Route>
 
             <Route path="/funding-detail/:id" element={<ProjectDetail />} />

@@ -66,6 +66,7 @@ import Milestone4 from "./pages/UpdateFundingProjectForm/ProjectMilestone/Milest
 import ProjectPreview from "./pages/UpdateFundingProjectForm/ProjectPreview";
 import AdminReport from "./pages/AdminPages/AdminReport";
 import MarketplaceProjectMedia from "./pages/CreateMarketplaceProjectForm/MarketplaceProjectMedia";
+import MarketplaceProjectSetupBankAccount from "./pages/CreateMarketplaceProjectForm/MarketplaceProjectSetupBankAccount";
 function App() {
   const location = useLocation();
   const hideAppBar = location.pathname.includes("admin-dashboard");
@@ -233,11 +234,11 @@ function App() {
                 path="request-marketplace-project/:id/project-media"
                 element={<MarketplaceProjectMedia />}
               />
-              {/* <Route
-                path="request-marketplace-project/setup-bank-account"
-                element={<SetupBankAccount />}
-              />
               <Route
+                path="request-marketplace-project/:id/bank-account"
+                element={<MarketplaceProjectSetupBankAccount />}
+              />
+              {/* <Route
                 path="request-marketplace-project/game-content"
                 element={<SetupDonatePackage />}
               /> */}

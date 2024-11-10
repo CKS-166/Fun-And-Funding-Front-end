@@ -185,7 +185,7 @@ const MarketplaceProjectMedia = () => {
           <NavigateButton
             text="Next"
             onClick={() =>
-              navigate(`/request-marketplace-project/${id}/set-up-bank-account`)
+              navigate(`/request-marketplace-project/${id}/bank-account`)
             }
           />
         </div>

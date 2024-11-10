@@ -15,6 +15,7 @@ export const MarketplaceProjectProvider = ({ children }) => {
     fundingProjectId: "",
     marketplaceFiles: [
       {
+        id: "",
         name: "string",
         url: "string",
         filetype: 0,

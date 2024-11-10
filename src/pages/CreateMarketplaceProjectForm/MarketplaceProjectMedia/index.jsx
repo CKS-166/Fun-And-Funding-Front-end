@@ -1,4 +1,4 @@
-import { Grid2, Paper } from "@mui/material";
+import { Grid2, ImageList, ImageListItem, Paper } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import FormDivider from "../../../components/CreateProject/ProjectForm/Divider";
@@ -10,6 +10,8 @@ import "filepond/dist/filepond.min.css";
 import ReactPlayer from "react-player";
 import NavigateButton from "../../../components/CreateProject/ProjectForm/NavigateButton";
 import { useCreateMarketplaceProject } from "../../../contexts/CreateMarketplaceProjectContext";
+import Lightbox from "react-18-image-lightbox";
+import Swal from "sweetalert2";
 
 registerPlugin(FilePondPluginFileValidateType, FilePondPluginImagePreview);
 
@@ -23,6 +25,9 @@ const MarketplaceProjectMedia = () => {
   const [projectVideo, setProjectVideo] = useState([]);
   const [projectImages, setProjectImages] = useState([]);
   const [initialLoad, setInitialLoad] = useState(true);
+  const [isImageOpen, setIsImageOpen] = useState(false);
+  const [isThumbnailOpen, setIsThumbnailOpen] = useState(false);
+  const [photoIndex, setPhotoIndex] = useState(0);
 
   useEffect(() => {
     setFormIndex(2);
@@ -34,26 +39,13 @@ const MarketplaceProjectMedia = () => {
 
     const { marketplaceFiles } = marketplaceProject;
 
-    const thumbnailFile = marketplaceFiles
-      .filter((file) => file.filetype === 2)
-      .map((file) => ({
-        source: file.url,
-        options: { type: "remote" },
-      }));
+    const thumbnailFile = marketplaceFiles.filter(
+      (file) => file.filetype === 2
+    );
 
-    const videoFile = marketplaceFiles
-      .filter((file) => file.filetype === 1)
-      .map((file) => ({
-        source: file.url,
-        options: { type: "remote" },
-      }));
+    const videoFile = marketplaceFiles.filter((file) => file.filetype === 1);
 
-    const imageFiles = marketplaceFiles
-      .filter((file) => file.filetype === 4)
-      .map((file) => ({
-        source: file.url,
-        options: { type: "remote" },
-      }));
+    const imageFiles = marketplaceFiles.filter((file) => file.filetype === 4);
 
     setThumbnail(thumbnailFile);
     setProjectVideo(videoFile);
@@ -61,27 +53,30 @@ const MarketplaceProjectMedia = () => {
     setInitialLoad(false);
   }, [marketplaceProject.marketplaceFiles, initialLoad]);
 
-  // Update marketplaceFiles when file states change
-  const handleFileUpdate = (files, type) => {
-    const updatedMarketplaceFiles = [...marketplaceProject.marketplaceFiles];
-
-    // Remove existing files of the current type
-    const filteredFiles = updatedMarketplaceFiles.filter(
-      (file) => file.filetype !== type
-    );
-
-    // Add new files
-    const newFiles = files.map((fileItem, index) => ({
-      name:
-        type === 2 ? "thumbnail" : type === 1 ? "video" : `image_${index + 1}`,
-      url: fileItem.file,
-      filetype: type,
-    }));
-
-    setMarketplaceProject((prev) => ({
-      ...prev,
-      marketplaceFiles: [...filteredFiles, ...newFiles],
-    }));
+  const handleDeleteImage = () => {
+    const deleteProjectImage = [...projectImages];
+    if (deleteProjectImage.length <= 1) {
+      Swal.fire({
+        title: "Unable to delete",
+        text: "You must have at least 1 bonus image.",
+        icon: "error",
+      });
+    } else {
+      Swal.fire({
+        title: "Do you want to delete the image?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Yes",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          setProjectImages((prevImages) =>
+            prevImages.filter((_, index) => index !== photoIndex)
+          );
+          setIsImageOpen(false);
+          Swal.fire("Delete successfully!", "", "success");
+        }
+      });
+    }
   };
 
   return (
@@ -100,18 +95,18 @@ const MarketplaceProjectMedia = () => {
             </p>
           </Grid2>
           <Grid2 size={9}>
-            <FilePond
-              files={thumbnail}
-              onupdatefiles={(files) => {
-                setThumbnail(files);
-                handleFileUpdate(files, 2);
-              }}
-              allowMultiple={false}
-              maxFiles={1}
-              acceptedFileTypes={["image/*"]}
-              name="thumbnail"
-              labelIdle='Drag & drop a file here or <span class="filepond--label-action">Browse</span>'
+            <img
+              src={thumbnail[0]?.url}
+              alt="Thumbnail preview"
+              className="w-full h-[17.8rem] object-contain rounded-lg cursor-pointer"
+              onClick={() => setIsThumbnailOpen(true)}
             />
+            {isThumbnailOpen && (
+              <Lightbox
+                mainSrc={thumbnail[0].url}
+                onCloseRequest={() => setIsThumbnailOpen(false)}
+              />
+            )}
           </Grid2>
         </Grid2>
 
@@ -124,22 +119,10 @@ const MarketplaceProjectMedia = () => {
             </p>
           </Grid2>
           <Grid2 size={9}>
-            <FilePond
-              files={projectVideo}
-              onupdatefiles={(files) => {
-                setProjectVideo(files);
-                handleFileUpdate(files, 1);
-              }}
-              allowMultiple={false}
-              maxFiles={1}
-              acceptedFileTypes={["video/mp4", "video/avi", "video/mov"]}
-              name="video"
-              labelIdle='Drag & drop a file here or <span class="filepond--label-action">Browse</span>'
-            />
             {projectVideo.length > 0 && (
               <div className="mt-4">
                 <ReactPlayer
-                  url={projectVideo[0].source}
+                  url={projectVideo[0].url}
                   width="100%"
                   height="100%"
                   controls
@@ -160,18 +143,79 @@ const MarketplaceProjectMedia = () => {
             </p>
           </Grid2>
           <Grid2 size={9}>
-            <FilePond
-              files={projectImages}
-              onupdatefiles={(files) => {
-                setProjectImages(files);
-                handleFileUpdate(files, 4);
+            <ImageList
+              sx={{
+                width: "70%",
+                ml: "0 !important",
+                maxHeight: "40rem",
+                scrollbarWidth: "thin",
               }}
-              allowMultiple={true}
-              maxFiles={4}
-              acceptedFileTypes={["image/*"]}
-              name="images"
-              labelIdle='Drag & drop files here or <span class="filepond--label-action">Browse</span>'
-            />
+              cols={3}
+              rowHeight={160}
+            >
+              {projectImages.map((item, index) => (
+                <ImageListItem key={index} sx={{ bgcolor: "#000000" }}>
+                  <img
+                    src={item.url}
+                    alt={`Project image ${index + 1}`}
+                    loading="lazy"
+                    style={{
+                      cursor: "pointer",
+                      height: "5rem",
+                      objectFit: "contain",
+                    }}
+                    onClick={() => {
+                      setPhotoIndex(index);
+                      setIsImageOpen(true);
+                    }}
+                  />
+                </ImageListItem>
+              ))}
+
+              {isImageOpen && projectImages && (
+                <Lightbox
+                  mainSrc={projectImages[photoIndex]?.url}
+                  nextSrc={
+                    projectImages[(photoIndex + 1) % projectImages.length]?.url
+                  }
+                  prevSrc={
+                    projectImages[
+                      (photoIndex + projectImages.length - 1) %
+                        projectImages.length
+                    ]?.url
+                  }
+                  onCloseRequest={() => setIsImageOpen(false)}
+                  onMovePrevRequest={() =>
+                    setPhotoIndex(
+                      (photoIndex + projectImages.length - 1) %
+                        projectImages.length
+                    )
+                  }
+                  onMoveNextRequest={() =>
+                    setPhotoIndex((photoIndex + 1) % projectImages.length)
+                  }
+                  toolbarButtons={[
+                    <button
+                      title="Delete"
+                      style={{
+                        background: "transparent",
+                        border: "none",
+                        cursor: "pointer",
+                        fontSize: "1.125rem",
+                        marginRight: "0.5rem",
+                        opacity: "0.7",
+                        color: "#FFFFFF",
+                      }}
+                      onMouseEnter={(e) => (e.target.style.opacity = 1)}
+                      onMouseLeave={(e) => (e.target.style.opacity = 0.7)}
+                      onClick={handleDeleteImage}
+                    >
+                      🗑️
+                    </button>,
+                  ]}
+                />
+              )}
+            </ImageList>
           </Grid2>
         </Grid2>
 

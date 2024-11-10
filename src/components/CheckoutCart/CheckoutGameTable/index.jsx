@@ -18,7 +18,7 @@ import empty from "../../../assets/images/image_empty.png";
 import NoImage from '../../../assets/images/no-image.png';
 import AddCouponForm from '../AddCouponForm';
 
-function CheckoutGameTable({ order, handleDeleteCartItem, handleAddCoupon, handleRemoveCoupon }) {
+function CheckoutGameTable({ order, handleDeleteCartItem, handleAddCoupon, handleRemoveCoupon, onCouponNotification }) {
     const [isDeletingMap, setIsDeletingMap] = useState({});
     const [open, setIsOpen] = useState(false);
 
@@ -62,10 +62,10 @@ function CheckoutGameTable({ order, handleDeleteCartItem, handleAddCoupon, handl
                 }}
                 elevation={3}
             >
-                <Typography sx={{ flexGrow: 1, color: 'var(--black)', width: '45%', fontWeight: '600', fontSize: '1.25rem', }}>Game name</Typography>
-                <Typography sx={{ width: '25%', color: 'var(--black)', fontWeight: '600', fontSize: '1.25rem', }}>Price</Typography>
-                <Typography sx={{ width: '15%', color: 'var(--black)', fontWeight: '600', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '0.5rem', fontSize: '1.25rem', }}>Discount<RiDiscountPercentFill /></Typography>
-                <Typography sx={{ width: '15%', color: 'var(--black)', visibility: 'hidden', fontSize: '1.25rem', }}>Action</Typography>
+                <Typography sx={{ flexGrow: 1, color: 'var(--black)', width: '45%', fontWeight: '600', fontSize: '1rem', }}>Game name</Typography>
+                <Typography sx={{ width: '25%', color: 'var(--black)', fontWeight: '600', fontSize: '1rem', }}>Price</Typography>
+                <Typography sx={{ width: '15%', color: 'var(--black)', fontWeight: '600', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '0.5rem', fontSize: '1rem', }}>Discount<RiDiscountPercentFill /></Typography>
+                <Typography sx={{ width: '15%', color: 'var(--black)', visibility: 'hidden', fontSize: '1rem', }}>Action</Typography>
             </Paper>
             {
                 order != null && cartItems.length > 0 ? (
@@ -136,7 +136,7 @@ function CheckoutGameTable({ order, handleDeleteCartItem, handleAddCoupon, handl
                                         <span style={{ color: 'var(--primary-green)', fontWeight: 600 }}>{formatPrice(item.discountedPrice)} VND</span>
                                     </Typography>
                                     <Typography sx={{ fontWeight: '600', fontSize: '1.5rem', width: '15%', textAlign: 'center', color: 'var(--primary-green)' }}>
-                                        {item.appliedCoupon.discountRate} %
+                                        {item.appliedCoupon.discountRate * 100} %
                                     </Typography>
                                     <div className='w-[15%] flex justify-center'>
                                         <Tooltip title="Remove from cart" placement="bottom">
@@ -175,7 +175,7 @@ function CheckoutGameTable({ order, handleDeleteCartItem, handleAddCoupon, handl
                                         Remove coupon
                                     </Button>
                                 </div>
-                                <AddCouponForm marketplaceProject={item.marketplaceProject} open={open} handleCloseCoupon={handleCloseCoupon} />
+                                <AddCouponForm marketplaceProject={item.marketplaceProject} open={open} handleCloseCoupon={handleCloseCoupon} onCouponNotification={onCouponNotification} />
                             </Paper>
                         ) : (
                             <Paper
@@ -269,7 +269,7 @@ function CheckoutGameTable({ order, handleDeleteCartItem, handleAddCoupon, handl
                                         Add coupon
                                     </Button>
                                 </div>
-                                <AddCouponForm marketplaceProject={item.marketplaceProject} open={open} handleCloseCoupon={handleCloseCoupon} handleAddCoupon={handleAddCoupon} />
+                                <AddCouponForm marketplaceProject={item.marketplaceProject} open={open} handleCloseCoupon={handleCloseCoupon} handleAddCoupon={handleAddCoupon} onCouponNotification={onCouponNotification} />
                             </Paper>
                         )
                     ))

@@ -1,12 +1,16 @@
 import ArrowForwardOutlinedIcon from "@mui/icons-material/ArrowForwardOutlined";
-import { Button, Divider, Paper, Typography } from '@mui/material';
-import React, { useState } from 'react';
+import DownloadIcon from '@mui/icons-material/Download';
+import { Button, Divider, Paper, Tooltip, Typography } from '@mui/material';
+import Cookies from "js-cookie";
+import React, { useEffect, useState } from 'react';
 import { FaMoneyBillTransfer } from "react-icons/fa6";
 import { HiOutlineHome } from "react-icons/hi2";
 import { TbListDetails } from "react-icons/tb";
+import { useParams } from "react-router";
+import { useNavigate } from "react-router-dom";
 import Confetti from "../../../assets/images/confetti-background.png";
-import ktm from '../../../assets/images/ktm.jpg';
 import BrowseMarketingCard from "../../../components/BrowseMarketingCard";
+import orderApiInstance from "../../../utils/ApiInstance/orderApiInstance";
 import './index.css';
 
 const AnimatedCheckIcon = () => {
@@ -40,41 +44,54 @@ const AnimatedCheckIcon = () => {
 };
 
 function CheckoutSuccess() {
-    const [detailList, setDetailList] = useState([
-        {
-            id: 1,
-            imageUrl: ktm,
-            name: "Product 1 aaaa aaaaaaa aaa a a aa aaaaaaaa aaaaaaaaa aaaaaa",
-            price: "100.000 VND",
-        },
-        {
-            id: 2,
-            imageUrl: ktm,
-            name: "Product 2",
-            price: "200.000 VND",
-        },
-        {
-            id: 3,
-            imageUrl: ktm,
-            name: "Product 3",
-            price: "200.000 VND",
-        },
-        {
-            id: 4,
-            imageUrl: ktm,
-            name: "Product 4",
-            price: "200.000 VND",
-        },
-    ]);
+    const { id } = useParams();
+    const token = Cookies.get("_auth");
+    const isLogined = Cookies.get("_auth") !== undefined;
+    const navigate = useNavigate();
+    const [order, setOrder] = useState(null);
+    const [detailList, setDetailList] = useState([]);
+
+    useEffect(() => {
+        if (isLogined) {
+            fetchOrder();
+        }
+    }, [isLogined, id]);
+
+    const fetchOrder = async () => {
+        try {
+            const res = await orderApiInstance.get(`/${id}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            if (res.data._statusCode === 200) {
+                const fetchedOrder = res.data._data;
+                setOrder(fetchedOrder);
+
+                const fetchedDetails = fetchedOrder.orderDetails.map((item) => ({
+                    id: item.digitalKey.id,
+                    imageUrl: item.digitalKey.marketingProject?.marketplaceFiles.find(file => file.fileType === 2)?.url || '',
+                    name: item.digitalKey.marketingProject?.name || 'Unnamed Game',
+                    keyString: item.digitalKey?.keyString || 'No Key',
+                    price: item.unitPrice,
+                    gameFile: item.digitalKey.marketingProject?.marketplaceFiles.find(file => file.fileType === 3)?.url || '',
+                }));
+                setDetailList(fetchedDetails);
+            }
+        } catch (err) {
+            console.log(err);
+        }
+    };
+
+    const formatPrice = (price) => {
+        return new Intl.NumberFormat('de-DE').format(price);
+    };
 
     return (
         <div>
             <div className='relative-container'>
                 <div className="success-background">
-                    <img
-                        src={Confetti}
-                        alt="Confetti Background"
-                    />
+                    <img src={Confetti} alt="Confetti Background" />
                     <div className="success-overlay"></div>
                 </div>
                 <div className="flex flex-col justify-center items-center z-10">
@@ -85,87 +102,114 @@ function CheckoutSuccess() {
                     <Typography>
                         Thank you for trusting us and our community. We are glad to serve you on our journey.
                     </Typography>
-                    <div className="my-[2rem] w-fit">
-                        <Paper elevation={3} className="checkout-success-paper">
-                            <div className="border-[2px] border-[var(--primary-green)] px-[2rem] py-[1rem] flex flex-row justify-start items-center rounded-[0.625rem] gap-[2.5rem] w-[26rem]"
-                                style={{ backgroundColor: 'rgba(27, 170, 100, 0.1)' }}>
-                                <div className="flex-shrink-0">
-                                    <FaMoneyBillTransfer style={{ fontSize: '4rem', color: 'var(--black)' }} />
+                    {order != null &&
+                        <div className="mt-[2rem] mb-[1rem] w-fit">
+                            <Paper elevation={3} className="checkout-success-paper">
+                                <div className="border-[2px] border-[var(--primary-green)] px-[2rem] py-[1rem] flex flex-row justify-start items-center rounded-[0.625rem] gap-[2.5rem] w-[40rem]"
+                                    style={{ backgroundColor: 'rgba(27, 170, 100, 0.1)' }}>
+                                    <div className="flex-shrink-0">
+                                        <FaMoneyBillTransfer style={{ fontSize: '4rem', color: 'var(--black)' }} />
+                                    </div>
+                                    <div className="flex-shrink-0 flex flex-col justify-start gap-[0.5rem]">
+                                        <Typography sx={{ fontSize: '1rem', fontWeight: '400', color: 'var(--black)' }}>
+                                            Total amount
+                                        </Typography>
+                                        <Typography sx={{ fontSize: '1.5rem', fontWeight: '700', color: 'var(--black)' }}>
+                                            {formatPrice(order.totalPrice)} VND
+                                        </Typography>
+                                    </div>
                                 </div>
-                                <div className="flex-shrink-0 flex flex-col justify-start gap-[0.5rem]">
-                                    <Typography sx={{ fontSize: '1rem', fontWeight: '400', color: 'var(--black)' }}>
-                                        Total amount
-                                    </Typography>
-                                    <Typography sx={{ fontSize: '1.5rem', fontWeight: '700', color: 'var(--black)' }}>
-                                        140.000 VND
-                                    </Typography>
-                                </div>
-                            </div>
-                            <Divider orientation="horizontal" sx={{ borderColor: '#DBDBDB', my: '1.5rem' }} />
-                            <div
-                                className="overflow-hidden"
-                                style={{
-                                    height: `calc(2.5 * (5rem + 2rem))`,
-                                    overflowY: 'scroll',
-                                    scrollbarWidth: 'none',
-                                    WebkitOverflowScrolling: 'touch',
-                                }}
-                            >
+                                <Divider orientation="horizontal" sx={{ borderColor: '#DBDBDB', my: '1.5rem' }} />
                                 <div
-                                    className="hide-scrollbar"
+                                    className="overflow-hidden"
+                                    style={{
+                                        maxHeight: `calc(2.5 * (7rem + 3.5rem))`,
+                                        height: 'fit-content',
+                                        overflowY: 'scroll',
+                                        scrollbarWidth: 'none',
+                                        WebkitOverflowScrolling: 'touch',
+                                    }}
                                 >
-                                    {detailList != null &&
-                                        detailList.length > 0 &&
-                                        detailList.map((item, index) => (
-                                            <div
-                                                key={index}
-                                                className="border-[2px] border-[var(--grey)] pl-[1rem] pr-[2rem] py-[1rem] flex flex-row justify-start items-center rounded-[0.625rem] gap-[1rem] w-[26rem]"
-                                                style={{
-                                                    backgroundColor: 'var(--white)',
-                                                    marginBottom: index === detailList.length - 1 ? 0 : '1rem',
-                                                }}
-                                            >
-                                                <div className="flex-shrink-0">
-                                                    <img
-                                                        className="w-[5rem] h-[5rem] object-cover rounded-[0.25rem] flex-shrink-0 mr-[1rem]"
-                                                        src={item.imageUrl}
-                                                        alt={item.name}
-                                                    />
+                                    <div className="hide-scrollbar">
+                                        {detailList.length > 0 &&
+                                            detailList.map((item, index) => (
+                                                <div
+                                                    key={index}
+                                                    className="border-[2px] border-[var(--grey)] pl-[1rem] pr-[2rem] py-[1rem] flex flex-row justify-between items-center rounded-[0.625rem] gap-[4rem] w-[40rem]"
+                                                    style={{
+                                                        backgroundColor: 'var(--white)',
+                                                        marginBottom: index === detailList.length - 1 ? 0 : '1rem',
+                                                    }}
+                                                >
+                                                    <div className="!flex-grow-0 flex flex-row justify-between items-center rounded-[0.625rem] gap-[0.5rem] w-[25rem]">
+                                                        <div className="flex-shrink-0">
+                                                            <img
+                                                                className="w-[8rem] h-[8rem] object-cover rounded-[0.25rem] flex-shrink-0"
+                                                                src={item.imageUrl}
+                                                                alt={item.name}
+                                                            />
+                                                        </div>
+                                                        <div className="flex-shrink-0 flex justify-between">
+                                                            <div className="flex flex-col justify-start gap-[0.5rem] flex-grow-0 flex-shrink-0">
+                                                                <Typography
+                                                                    sx={{
+                                                                        fontSize: '1.25rem',
+                                                                        fontWeight: '700',
+                                                                        color: 'var(--black)',
+                                                                        display: '-webkit-box',
+                                                                        WebkitBoxOrient: 'vertical',
+                                                                        WebkitLineClamp: 1,
+                                                                        overflow: 'hidden',
+                                                                        textOverflow: 'ellipsis',
+                                                                        whiteSpace: 'normal',
+                                                                        maxWidth: '15rem',
+                                                                    }}
+                                                                >
+                                                                    {item.name}
+                                                                </Typography>
+                                                                <Typography
+                                                                    sx={{
+                                                                        fontSize: '1rem',
+                                                                        fontWeight: '600',
+                                                                        color: 'var(--primary-green)',
+                                                                    }}
+                                                                >
+                                                                    {formatPrice(item.price)} VND
+                                                                </Typography>
+                                                                <Typography
+                                                                    sx={{
+                                                                        fontSize: '1rem',
+                                                                        fontWeight: '400',
+                                                                        color: 'var(--black)',
+                                                                    }}
+                                                                >
+                                                                    Game unlock key: <br /><span className="font-bold">{item.keyString}</span>
+                                                                </Typography>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <Tooltip title="Download game file" arrow>
+                                                        <Button
+                                                            variant="outlined"
+                                                            className="outline-download-button"
+                                                        >
+                                                            <DownloadIcon
+                                                                sx={{
+                                                                    fontSize: "2rem !important",
+                                                                    strokeWidth: "1",
+                                                                    stroke: "#F5F7F8",
+                                                                }}
+                                                            />
+                                                        </Button>
+                                                    </Tooltip>
                                                 </div>
-                                                <div className="flex-shrink-0 flex flex-col justify-start gap-[0.5rem]">
-                                                    <Typography
-                                                        sx={{
-                                                            fontSize: '1rem',
-                                                            fontWeight: '600',
-                                                            color: 'var(--black)',
-                                                            display: '-webkit-box',
-                                                            WebkitBoxOrient: 'vertical',
-                                                            WebkitLineClamp: 2,
-                                                            overflow: 'hidden',
-                                                            textOverflow: 'ellipsis',
-                                                            whiteSpace: 'normal',
-                                                            width: '16rem',
-                                                        }}
-                                                    >
-                                                        {item.name}
-                                                    </Typography>
-                                                    <Typography
-                                                        sx={{
-                                                            fontSize: '1rem',
-                                                            fontWeight: '400',
-                                                            color: 'var(--black)',
-                                                        }}
-                                                    >
-                                                        {item.price}
-                                                    </Typography>
-                                                </div>
-                                            </div>
-                                        ))}
+                                            ))}
+                                    </div>
                                 </div>
-                            </div>
-                        </Paper>
-                    </div>
-                    <div className="flex flex-row justify-center items-center gap-[2rem]">
+                            </Paper>
+                        </div>
+                    }
+                    <div className="flex flex-row justify-center items-center gap-[2rem] mb-[2rem]">
                         <Button
                             variant="outlined"
                             className="outline-button"
@@ -178,6 +222,7 @@ function CheckoutSuccess() {
                                     }}
                                 />
                             }
+                            onClick={() => navigate('/home')}
                         >
                             Back to Home
                         </Button>
@@ -193,12 +238,13 @@ function CheckoutSuccess() {
                                     }}
                                 />
                             }
+                            onClick={() => navigate('/home')}
                         >
                             See more details
                         </Button>
                     </div>
                 </div>
-            </div>
+            </div >
 
             <div className='recommended-section'>
                 <Typography className='checkout-cart-title !pb-[1rem]'>
@@ -228,7 +274,7 @@ function CheckoutSuccess() {
                     </Button>
                 </div>
             </div>
-        </div>
+        </div >
     );
 }
 

@@ -37,9 +37,11 @@ import TestDetail from "./pages/TestDetail";
 import { Backdrop, CircularProgress } from "@mui/material";
 import { CartProvider } from "./contexts/CartContext";
 import { ChatProvider } from "./contexts/ChatContext";
+import { MarketplaceProjectProvider } from "./contexts/CreateMarketplaceProjectContext";
 import { useLoading } from "./contexts/LoadingContext";
 import AdminDashboardLayout from "./layouts/AdminDashboardLayout";
 import ChatLayout from "./layouts/ChatLayout";
+import CreateMarketplaceProjectLayout from "./layouts/CreateMarketplaceProjectLayout";
 import AccountWallet from "./pages/AccountWallet";
 import AdminMilestone from "./pages/AdminPages/AdminMilestone";
 import Dashboard from "./pages/AdminPages/Dashboard";
@@ -47,6 +49,10 @@ import AdminWithdrawRequest from "./pages/AdminWithdrawRequest";
 import Chat from "./pages/Chat";
 import CheckoutCart from "./pages/CheckoutCart";
 import CheckoutSuccess from "./pages/CheckoutCart/CheckoutSuccess";
+import CommissionFee from "./pages/CommissionFee";
+import MarketplaceProjectBasicInfo from "./pages/CreateMarketplaceProjectForm/MarketplaceProjectBasicInfo";
+import MarketplaceProjectIntroduction from "./pages/CreateMarketplaceProjectForm/MarketplaceProjectIntroduction";
+import MarketplaceHomePage from "./pages/MarketplaceHomePage";
 import Milestones from "./pages/Milestones";
 import MilestoneForm from "./pages/TestCR/MilestoneForm";
 import BankAccount from "./pages/UpdateFundingProjectForm/ProjectEditor/BankAccount";
@@ -62,6 +68,8 @@ import MarketplaceHomePage from "./pages/MarketplaceHomePage";
 import CommissionFee from "./pages/CommissionFee";
 import AboutUsLayout from "./layouts/AboutUsLayout";
 import Policies from "./pages/Policies";
+import AdminReport from "./pages/AdminPages/AdminReport";
+import MarketplaceProjectMedia from "./pages/CreateMarketplaceProjectForm/MarketplaceProjectMedia";
 function App() {
   const location = useLocation();
   const hideAppBar = location.pathname.includes("admin-dashboard");
@@ -86,7 +94,10 @@ function App() {
             <Route path="/" element={<Navigate to="/home" />} />
             <Route element={<UserLayout />}>
               <Route path="/checkout-cart" element={<CheckoutCart />} />
-              <Route path="/checkout-success" element={<CheckoutSuccess />} />
+              <Route
+                path="/checkout-success/:id"
+                element={<CheckoutSuccess />}
+              />
               <Route path="/home" element={<HomePage />} />
               <Route path="/about-us" element={<AboutUs />} />
               <Route path="/project-detail" element={<ProjectDetail />} />
@@ -180,7 +191,7 @@ function App() {
                 path="/admin-dashboard/commission"
                 element={<CommissionFee />}
               />
-
+              <Route path="/admin-dashboard/report" element={<AdminReport />} />
             </Route>
             <Route element={<AboutUsLayout />}>
               <Route path="/policies" element={<Policies />} />
@@ -208,6 +219,35 @@ function App() {
             </Route>
             <Route element={<ChatLayout />}>
               <Route path="/chat/:receiverId" element={<Chat />} />
+            </Route>
+
+            <Route
+              element={
+                <MarketplaceProjectProvider>
+                  <CreateMarketplaceProjectLayout />
+                </MarketplaceProjectProvider>
+              }
+            >
+              <Route
+                path="/request-marketplace-project/:id/basic-info"
+                element={<MarketplaceProjectBasicInfo />}
+              />
+              <Route
+                path="/request-marketplace-project/:id/introduction"
+                element={<MarketplaceProjectIntroduction />}
+              />
+              <Route
+                path="request-marketplace-project/:id/project-media"
+                element={<MarketplaceProjectMedia />}
+              />
+              {/* <Route
+                path="request-marketplace-project/setup-bank-account"
+                element={<SetupBankAccount />}
+              />
+              <Route
+                path="request-marketplace-project/game-content"
+                element={<SetupDonatePackage />}
+              /> */}
             </Route>
           </Routes>
         </ChatProvider>

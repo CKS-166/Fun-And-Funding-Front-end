@@ -3,7 +3,7 @@ import React from 'react';
 
 function BackerCard({ backer }) {
     const formatPrice = (price) => {
-        return new Intl.NumberFormat('en-US').format(price);
+        return new Intl.NumberFormat('de-DE').format(price);
     };
     return (
         <Card sx={{ width: '17.375rem', borderRadius: '0.625rem', backgroundColor: '#F5F7F8', boxShadow: '0px 3px 3px -2px rgba(0, 0, 0, 0.2), 0px 3px 4px 0px rgba(0, 0, 0, 0.14), 0px 1px 8px 0px rgba(0, 0, 0, 0.12)' }}>

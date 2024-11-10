@@ -8,9 +8,33 @@ import 'sweetalert2';
 import fundingProjectApiInstace from '../../utils/ApiInstance/fundingProjectApiInstance';
 import milestoneApiInstace from '../../utils/ApiInstance/milestoneApiInstance';
 import './index.css';
-import LoadingProjectBackDrop from './LoadingProjectBackdrop';
+// import LoadingProjectBackDrop from '../../components/LoadingProjectBackdrop';
+import { toast, ToastContainer } from "react-toastify";
 import ProjectContext from './UpdateFundingProjectContext';
 import { editorList } from './UpdateFundingProjectLayout';
+
+const notify = (message, type) => {
+    const options = {
+        position: "top-right",
+        autoClose: 3000,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        style: {
+            backgroundColor: "#ffffff",
+            color: "#2F3645",
+            fontWeight: "600",
+        },
+    };
+
+    if (type === "warn") {
+        toast.warn(message, options);
+    } else if (type === "success") {
+        toast.success(message, options);
+    } else if (type === "error") {
+        toast.error(message, options);
+    }
+};
 
 function UpdateFundingProjectLayout() {
     const { id } = useParams();
@@ -23,7 +47,7 @@ function UpdateFundingProjectLayout() {
     const [isLoading, setIsLoading] = useState(true);
     const [loadingStatus, setLoadingStatus] = useState(0);
     const [milestoneList, setMilestoneList] = useState([]);
-    // console.log(project);
+    console.log(project);
 
     //fetch milestones
     const fetchMilestones = async () => {
@@ -104,7 +128,7 @@ function UpdateFundingProjectLayout() {
             });
 
             if (response.status === 200) {
-                console.log('Project saved successfully.');
+                notify('Project saved successfully!', "success");
                 console.log(response);
                 setIsEdited(false);
             } else {
@@ -144,6 +168,8 @@ function UpdateFundingProjectLayout() {
             const response = await fundingProjectApiInstace.get(`/${id}`);
             if (response && response.data) {
                 const project = response.data._data;
+                const filteredPackages = project.packages.filter(pkg => pkg.packageTypes !== 0);
+
                 const existedFile = project.fundingFiles.map(file => ({
                     id: file.id,
                     name: file.name,
@@ -156,6 +182,7 @@ function UpdateFundingProjectLayout() {
 
                 setProject({
                     ...project,
+                    packages: filteredPackages,
                     fundingFiles: null,
                     existedFile: existedFile,
                 });
@@ -195,11 +222,11 @@ function UpdateFundingProjectLayout() {
         return matchedMilestone ? `Project Milestone / ${matchedMilestone.milestoneName}` : '';
     };
 
-    const handleMilestoneNavigation = (milestoneId,index) => {
+    const handleMilestoneNavigation = (milestoneId, index) => {
         console.log(milestoneId)
         // console.log(id)
         navigate(`/account/projects/update/${id}/milestone1`, { state: { milestoneId } });
-        if(index == 1){
+        if (index == 1) {
             navigate(`/account/projects/update/${id}/milestone2`, { state: { milestoneId } });
         }
     };
@@ -264,8 +291,8 @@ function UpdateFundingProjectLayout() {
                             </div>
                             <div>
                                 <div className='mt-[2rem]'>
-                                    <Typography className='update-project-section' 
-                                    onClick={() => navigate(`/account/projects/update/${project.id}/preview`)} >
+                                    <Typography className='update-project-section'
+                                        onClick={() => navigate(`/account/projects/update/${project.id}/preview`)} >
                                         Project Preview
                                     </Typography>
                                 </div>
@@ -372,7 +399,7 @@ function UpdateFundingProjectLayout() {
                             </Typography>
                         </div>
                     </Grid2>
-                    <Grid2 size={9.5} style={{position : 'relative'}}>
+                    <Grid2 size={9.5} style={{ position: 'relative' }}>
                         <div>
                             <div className='fixed-update-header'>
                                 <div>
@@ -415,6 +442,14 @@ function UpdateFundingProjectLayout() {
                     </Grid2>
                 </Grid2>
             </Container>
+            <ToastContainer
+                position="bottom-left"
+                autoClose={3000}
+                hideProgressBar={false}
+                closeOnClick
+                pauseOnHover
+                pauseOnFocusLoss
+            />
         </ProjectContext.Provider>
     );
 }

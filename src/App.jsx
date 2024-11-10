@@ -60,6 +60,8 @@ import Milestone4 from "./pages/UpdateFundingProjectForm/ProjectMilestone/Milest
 import ProjectPreview from "./pages/UpdateFundingProjectForm/ProjectPreview";
 import MarketplaceHomePage from "./pages/MarketplaceHomePage";
 import CommissionFee from "./pages/CommissionFee";
+import AboutUsLayout from "./layouts/AboutUsLayout";
+import Policies from "./pages/Policies";
 function App() {
   const location = useLocation();
   const hideAppBar = location.pathname.includes("admin-dashboard");
@@ -179,6 +181,9 @@ function App() {
                 element={<CommissionFee />}
               />
 
+            </Route>
+            <Route element={<AboutUsLayout />}>
+              <Route path="/policies" element={<Policies />} />
             </Route>
 
             <Route path="/funding-detail/:id" element={<ProjectDetail />} />

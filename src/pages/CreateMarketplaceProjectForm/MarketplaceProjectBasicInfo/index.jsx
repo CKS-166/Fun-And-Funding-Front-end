@@ -77,27 +77,6 @@ const MarketplaceProjectBasicInfo = () => {
     navigate(`/request-marketplace-project/${id}/introduction`);
   };
 
-  const validateStartDate = (value) => {
-    const today = new Date();
-    const selectedDate = new Date(value);
-    const minDate = new Date();
-    minDate.setDate(today.getDate() + 7); // 7 days from today
-    return (
-      selectedDate >= minDate ||
-      "Start date must be at least 7 days from today."
-    );
-  };
-
-  const validateEndDate = (endDate) => {
-    const startDate = watch("startDate");
-    const start = new Date(startDate);
-    const end = new Date(endDate);
-    return (
-      end >= new Date(start.setDate(start.getDate() + 7)) ||
-      "End date must be at least 7 days after the start date."
-    );
-  };
-
   useEffect(() => {
     const handleBeforeUnload = (event) => {
       const formData = watch();

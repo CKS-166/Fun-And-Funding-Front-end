@@ -13,6 +13,7 @@ import { useCreateMarketplaceProject } from "../../../contexts/CreateMarketplace
 import Swal from "sweetalert2";
 import Cookies from "js-cookie";
 import marketplaceProjectApiInstace from "../../../utils/ApiInstance/marketplaceProjectApiInstance";
+import { useLoading } from "../../../contexts/LoadingContext";
 
 registerPlugin(FilePondPluginFileValidateType, FilePondPluginImagePreview);
 
@@ -22,10 +23,23 @@ const MarketplaceProjectGameContent = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const token = Cookies.get("_auth");
+  const { isLoading, setIsLoading } = useLoading();
 
-  const [couponFile, setCouponFile] = useState([]);
-  const [gameFile, setGameFile] = useState([]);
-  const [evidenceFiles, setEvidenceFiles] = useState([]);
+  const [couponFile, setCouponFile] = useState(
+    marketplaceProject.marketplaceFiles
+      ?.filter((file) => file.filetype === 9)
+      .map((file) => ({ source: file.url, options: { type: "local" } })) || []
+  );
+  const [gameFile, setGameFile] = useState(
+    marketplaceProject.marketplaceFiles
+      ?.filter((file) => file.filetype === 3)
+      .map((file) => ({ source: file.url, options: { type: "local" } })) || []
+  );
+  const [evidenceFiles, setEvidenceFiles] = useState(
+    marketplaceProject.marketplaceFiles
+      ?.filter((file) => file.filetype === 5)
+      .map((file) => ({ source: file.url, options: { type: "local" } })) || []
+  );
 
   useEffect(() => {
     setFormIndex(4);
@@ -36,16 +50,16 @@ const MarketplaceProjectGameContent = () => {
 
     if (couponFile.length > 0) {
       files.push({
-        name: "Coupon File",
-        urlFile: couponFile[0].file,
+        name: "coupon_file",
+        url: couponFile[0].file || couponFile[0].source,
         filetype: 9,
       });
     }
 
     if (gameFile.length > 0) {
       files.push({
-        name: "Game File",
-        urlFile: gameFile[0].file,
+        name: "game_file",
+        url: gameFile[0].file || gameFile[0].source,
         filetype: 3,
       });
     }
@@ -53,8 +67,8 @@ const MarketplaceProjectGameContent = () => {
     if (evidenceFiles.length > 0) {
       evidenceFiles.forEach((evidence, index) => {
         files.push({
-          name: `Evidence File ${index + 1}`,
-          urlFile: evidence.file,
+          name: `evidence_file_${index + 1}`,
+          url: evidence.file || evidence.source,
           filetype: 5,
         });
       });
@@ -78,7 +92,8 @@ const MarketplaceProjectGameContent = () => {
   console.log(marketplaceProject.marketplaceFiles);
 
   const createRequest = async () => {
-    console.log(marketplaceProject);
+    setIsLoading(true);
+
     if (!(gameFile.length > 0)) {
       Swal.fire({
         title: "Error",
@@ -105,6 +120,9 @@ const MarketplaceProjectGameContent = () => {
 
     const formData = new FormData();
 
+    //funding project id
+    formData.append("FundingProjectId", marketplaceProject.fundingProjectId);
+
     //basic information
     formData.append("Name", marketplaceProject.name);
     formData.append("Description", marketplaceProject.description);
@@ -129,7 +147,7 @@ const MarketplaceProjectGameContent = () => {
       );
       formData.append(
         `MarketplaceFiles[${i}].URL`,
-        marketplaceProject.marketplaceFiles[i].urlFile
+        marketplaceProject.marketplaceFiles[i].url
       );
       formData.append(
         `MarketplaceFiles[${i}].Filetype`,
@@ -151,12 +169,10 @@ const MarketplaceProjectGameContent = () => {
         },
       });
 
-      console.log(response);
-
       if (response.status === 201) {
         Swal.fire({
           title: "Success",
-          text: response.data._message,
+          text: response.data._message[0],
           icon: "success",
           showConfirmButton: false,
           timer: 1500,
@@ -173,6 +189,8 @@ const MarketplaceProjectGameContent = () => {
           timer: 1500,
         });
       }
+    } finally {
+      setIsLoading(false);
     }
   };
 

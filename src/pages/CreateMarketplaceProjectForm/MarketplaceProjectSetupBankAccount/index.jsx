@@ -46,11 +46,11 @@ const MarketplaceProjectSetupBankAccount = () => {
   const navigate = useNavigate();
 
   const [selectedBank, setSelectedBank] = useState(
-    setMarketplaceProject?.bankAccount?.bankCode || null
+    marketplaceProject?.bankAccount?.bankCode || null
   );
   const [bankList, setBankList] = useState([]);
   const [bankAccountNumber, setBankaccountNumber] = useState(
-    setMarketplaceProject?.bankAccount?.bankNumber || ""
+    marketplaceProject?.bankAccount?.bankNumber || ""
   );
   const [ownerName, setOwnerName] = useState("");
   useEffect(() => {}, [selectedBank, bankAccountNumber]);
@@ -96,6 +96,8 @@ const MarketplaceProjectSetupBankAccount = () => {
     console.log(selectedBank, bankAccountNumber, ownerName);
     navigate(`/request-marketplace-project/${id}/game-content`);
   };
+
+  console.log(marketplaceProject);
 
   return (
     <>

@@ -188,6 +188,7 @@ function Milestone2() {
                 >
                     {milestone.description}
                 </Typography>
+                
                 <Box>
                     {milestone && milestone.requirements.map((req) => (
                         <>

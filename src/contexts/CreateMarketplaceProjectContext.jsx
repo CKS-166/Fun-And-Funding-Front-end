@@ -18,7 +18,6 @@ export const MarketplaceProjectProvider = ({ children }) => {
         id: "",
         name: "",
         url: "",
-        urlFile: null,
         filetype: 0,
       },
     ],

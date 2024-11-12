@@ -7,7 +7,7 @@ import axios from 'axios';
 import Swal from 'sweetalert2';
 import PackageModal from '../PackageModal';
 import Cookies from 'js-cookie';
-const PackageSide = ({ packageList, reloadDetail }) => {
+const PackageSide = ({ packageList, reloadDetail, isButtonActive }) => {
     const token = Cookies.get('_auth')
     const fixedPackageList = packageList && packageList.filter((item) => item.packageTypes === 1)
     const [isLoading, setIsLoading] = useState(false)
@@ -36,7 +36,7 @@ const PackageSide = ({ packageList, reloadDetail }) => {
             
             console.log(donateBody)
             try{
-                await axios.post('https://localhost:7044/api/PackageBackers', donateBody,{
+                await axios.post('https://localhost:7044/api/package-backers', donateBody,{
                     headers : {
                         Authorization: `Bearer ${token}`
                     }
@@ -79,24 +79,18 @@ const PackageSide = ({ packageList, reloadDetail }) => {
                 <Card sx={{
                     borderRadius: 0,
                     border: ".1rem solid rgba(0, 0, 0, 0.12)", mb: 3, mx: 1, position: 'relative', width: '307px'
-                    , height: '399px'
+                    , height: '399px',
+                    cursor: 'pointer'
                 }}
+                onClick={() => handleOpen(item)}
                 key={index}>
                     <CardMedia
                         component="img"
                         alt="green iguana"
-                        image="https://t4.ftcdn.net/jpg/03/03/46/39/360_F_303463981_i1CiZU5VYclryudt7VI7YSEDw9mgkSqJ.jpg"
+                        image={item.url}
                         sx={{ height: "9rem" }}
                     />
-                    <Typography
-                        sx={{
-                            fontWeight: 'bold', fontSize: '18px',
-                            color: 'white', position: 'absolute',
-                            top: '3.5rem', left: '4.5rem'
-                        }}
-                    >
-                        {item.requiredAmount.toLocaleString('de-DE')} VND
-                    </Typography>
+                    
                     <CardContent>
                         <Typography
                             gutterBottom
@@ -128,6 +122,7 @@ const PackageSide = ({ packageList, reloadDetail }) => {
                             width: '286px', marginTop: '14px'
                             , backgroundColor: '#1BAA64', fontWeight: 700
                         }}
+                        disabled={isButtonActive}
                         // onClick = {() => handlePackageDonate(item)}
                         onClick={() => handleOpen(item)}>
                             Pledge {item.requiredAmount.toLocaleString('de-DE')} VND
@@ -137,6 +132,7 @@ const PackageSide = ({ packageList, reloadDetail }) => {
             ))}
              {selectedItem && (
                 <PackageModal
+                    isButtonActive={isButtonActive}
                     open={openModal}
                     handleClose={handleClose}
                     item={selectedItem}

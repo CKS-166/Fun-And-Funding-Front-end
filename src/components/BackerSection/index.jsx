@@ -3,27 +3,31 @@ import {
     Table, TableBody, TableCell, TableHead
     , TableRow, Avatar
 } from '@mui/material';
-const BackerSection = () => {
+const BackerSection = ({ backers }) => {
+    console.log(backers)
     return (
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
-            <TableHead>
-                <TableRow>
-                    <TableCell></TableCell>
-                    <TableCell align="left">Backer's name</TableCell>
-                    <TableCell align="left">Amount</TableCell>
-                    <TableCell align="left">Time</TableCell>
-                    <TableCell align="left">Package type</TableCell>
-                </TableRow>
-            </TableHead>
-            <TableBody>
-                <TableRow >
-                    <TableCell><Avatar>H</Avatar></TableCell>
-                    <TableCell align="left">Name</TableCell>
-                    <TableCell align="left">2000</TableCell>
-                    <TableCell align="left">Time</TableCell>
-                    <TableCell align="left">Type</TableCell>
-                </TableRow>
-            </TableBody>
+            {backers.map(backer => (
+                <>
+                    <TableHead sx={{backgroundColor: "#1BAA64"}}>
+                        <TableRow >
+                            <TableCell></TableCell>
+                            <TableCell sx={{color : '#ffffff'}} align="left">Backer's name</TableCell>
+                            <TableCell sx={{color : '#ffffff'}} align="left">Total Donate Amount</TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        <TableRow >
+                            <TableCell><Avatar>{backer.url ? <img src={backer.url} /> : "H" }</Avatar></TableCell>
+                            <TableCell align="left">{backer.name}</TableCell>
+                            <TableCell align="left">{backer.donateAmount.toLocaleString("de-DE")}</TableCell>
+
+                        </TableRow>
+                    </TableBody>
+                </>
+
+            ))}
+
         </Table>
     )
 }

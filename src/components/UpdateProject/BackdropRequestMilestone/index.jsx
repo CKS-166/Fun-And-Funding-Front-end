@@ -22,6 +22,8 @@ const BackdropRequestMilestone = ({ isHidden, milestone, projectId, onCloseBackd
                 return <Typography variant='h4'>Milestone Completed</Typography>;
             case 'pending':
                 return <Typography variant='h4'>Milestone Pending</Typography>;
+            case 'submitted':
+                return <Typography variant='h4'>Milestone has been submmited</Typography>;
         }
     }
     return (

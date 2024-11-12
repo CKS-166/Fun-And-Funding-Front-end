@@ -7,7 +7,7 @@ import PackageItem from './PackageItem';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import Cookies from 'js-cookie';
-const PackageReward = ({ packageList, reloadDetail }) => {
+const PackageReward = ({ packageList, reloadDetail, isButtonActive }) => {
   const token = Cookies.get("_auth");
 
   const number = 30000000;
@@ -20,10 +20,42 @@ const PackageReward = ({ packageList, reloadDetail }) => {
       donateAmount: donatedMoney,
     };
 
-    console.log(donateBody);
-    // await axios.post('https://localhost:7044/api/PackageBackers', donateBody).then(res => {
-    //     console.log(res)
-    // })
+    try {
+      await axios
+        .post("https://localhost:7044/api/package-backers", donateBody,{
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((res) => {
+          console.log(res);
+          setIsLoading(false);
+          Swal.fire({
+            title: "Donation Success",
+            text: "Thank you for your donation!",
+
+            icon: "success",
+          });
+          reloadDetail();
+        });
+    } catch (error) {
+      setIsLoading(false);
+      if(error.status === 401){
+                    
+        Swal.fire({
+            title: "Donation Failed",
+            text: "Please Login in Backer role",
+            icon: "error"
+        })
+    }else { 
+        Swal.fire({
+            title: "Donation Failed",
+            text: error.response.data._message,
+            icon: "error"
+        })
+    }
+      console.log(error);
+    }
   };
 
   const handlePackageDonate = async (item) => {
@@ -37,7 +69,7 @@ const PackageReward = ({ packageList, reloadDetail }) => {
     console.log(donateBody);
     try {
       await axios
-        .post("https://localhost:7044/api/PackageBackers", donateBody,{
+        .post("https://localhost:7044/api/package-backers", donateBody,{
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -164,6 +196,7 @@ const PackageReward = ({ packageList, reloadDetail }) => {
                           color: "#FFFFFF",
                           marginTop: "10px",
                         }}
+                        disabled={isButtonActive}
                         className="pledge-btn"
                         onClick={() => handleDonateFree(item)}
                       >
@@ -229,6 +262,7 @@ const PackageReward = ({ packageList, reloadDetail }) => {
                           marginTop: "10px",
                         }}
                         className="pledge-btn"
+                        disabled={isButtonActive}
                         onClick={() => handlePackageDonate(item)}
                       >
                         Pledge

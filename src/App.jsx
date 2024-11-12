@@ -69,7 +69,10 @@ import Policies from "./pages/Policies";
 import AdminReport from "./pages/AdminPages/AdminReport";
 import MarketplaceProjectMedia from "./pages/CreateMarketplaceProjectForm/MarketplaceProjectMedia";
 import MarketplaceProjectSetupBankAccount from "./pages/CreateMarketplaceProjectForm/MarketplaceProjectSetupBankAccount";
+import GetAllProject from "./pages/GetAllProject";
+
 import MarketplaceProjectGameContent from "./pages/CreateMarketplaceProjectForm/MarketplaceProjectGameContent";
+
 function App() {
   const location = useLocation();
   const hideAppBar = location.pathname.includes("admin-dashboard");
@@ -100,8 +103,8 @@ function App() {
               />
               <Route path="/home" element={<HomePage />} />
               <Route path="/about-us" element={<AboutUs />} />
-              <Route path="/project-detail" element={<ProjectDetail />} />
               <Route path="/marketplace" element={<MarketplaceHomePage />} />
+              <Route path="/crowdfunding" element={<GetAllProject />} />
             </Route>
             <Route path="choose-project-plan" element={<ChoosePlan />} />
             <Route element={<CreateFundingProjectLayout />}>

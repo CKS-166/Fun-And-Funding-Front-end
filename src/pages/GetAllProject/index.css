@@ -1,0 +1,10 @@
+.crowBanner {
+    background-image: url('../../assets/images/techBack.jpg');
+}
+
+.seperator {
+    width: 60%;
+    height: 1px;
+    margin-top: 20px;
+    background-color: gray;
+}

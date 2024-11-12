@@ -94,10 +94,7 @@ const MarketplaceProjectSetupBankAccount = () => {
       },
     }));
     console.log(selectedBank, bankAccountNumber, ownerName);
-    if (ownerName) {
-    } else {
-      notify("Please finish your bank account setup for your game.", "warn");
-    }
+    navigate(`/request-marketplace-project/${id}/game-content`);
   };
 
   return (

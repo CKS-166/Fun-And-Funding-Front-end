@@ -70,6 +70,9 @@ import AdminReport from "./pages/AdminPages/AdminReport";
 import MarketplaceProjectMedia from "./pages/CreateMarketplaceProjectForm/MarketplaceProjectMedia";
 import MarketplaceProjectSetupBankAccount from "./pages/CreateMarketplaceProjectForm/MarketplaceProjectSetupBankAccount";
 import GetAllProject from "./pages/GetAllProject";
+
+import MarketplaceProjectGameContent from "./pages/CreateMarketplaceProjectForm/MarketplaceProjectGameContent";
+
 function App() {
   const location = useLocation();
   const hideAppBar = location.pathname.includes("admin-dashboard");
@@ -244,10 +247,10 @@ function App() {
                 path="request-marketplace-project/:id/bank-account"
                 element={<MarketplaceProjectSetupBankAccount />}
               />
-              {/* <Route
-                path="request-marketplace-project/game-content"
-                element={<SetupDonatePackage />}
-              /> */}
+              <Route
+                path="request-marketplace-project/:id/game-content"
+                element={<MarketplaceProjectGameContent />}
+              />
             </Route>
           </Routes>
         </ChatProvider>

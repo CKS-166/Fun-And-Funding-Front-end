@@ -1,4 +1,11 @@
-import { Grid2, ImageList, ImageListItem, Paper } from "@mui/material";
+import {
+  Box,
+  Button,
+  Grid2,
+  ImageList,
+  ImageListItem,
+  Paper,
+} from "@mui/material";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import FormDivider from "../../../components/CreateProject/ProjectForm/Divider";
@@ -12,6 +19,9 @@ import NavigateButton from "../../../components/CreateProject/ProjectForm/Naviga
 import { useCreateMarketplaceProject } from "../../../contexts/CreateMarketplaceProjectContext";
 import Lightbox from "react-18-image-lightbox";
 import Swal from "sweetalert2";
+import { v4 as uuidv4 } from "uuid";
+import AddCircleIcon from "@mui/icons-material/AddCircle";
+import ChangeCircleIcon from "@mui/icons-material/ChangeCircle";
 
 registerPlugin(FilePondPluginFileValidateType, FilePondPluginImagePreview);
 
@@ -69,15 +79,89 @@ const MarketplaceProjectMedia = () => {
         confirmButtonText: "Yes",
       }).then((result) => {
         if (result.isConfirmed) {
+          const imageToDelete = projectImages[photoIndex];
+
           setProjectImages((prevImages) =>
             prevImages.filter((_, index) => index !== photoIndex)
           );
+
+          setMarketplaceProject((prevProject) => ({
+            ...prevProject,
+            marketplaceFiles: prevProject.marketplaceFiles.filter(
+              (file) => file.id !== imageToDelete.id
+            ),
+          }));
+
           setIsImageOpen(false);
           Swal.fire("Delete successfully!", "", "success");
         }
       });
     }
   };
+
+  const handleThumbnailChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const newThumbnail = {
+        name: "Marketplace Project Thumbnail",
+        url: URL.createObjectURL(file),
+        urlFile: file,
+        filetype: 2,
+      };
+      setThumbnail([newThumbnail]);
+      updateMarketplaceFiles(newThumbnail);
+
+      event.target.value = null;
+    }
+  };
+
+  const handleVideoChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const newVideo = {
+        name: "Marketplace Project Video",
+        url: URL.createObjectURL(file),
+        urlFile: file,
+        filetype: 1,
+      };
+      setProjectVideo([newVideo]);
+      updateMarketplaceFiles(newVideo);
+
+      event.target.value = null;
+    }
+  };
+
+  const handleAddImage = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const newImage = {
+        id: uuidv4(),
+        name: "Marketplace Project Image",
+        url: URL.createObjectURL(file),
+        urlFile: file,
+        filetype: 4,
+      };
+      setProjectImages((prevImages) => [...prevImages, newImage]);
+      updateMarketplaceFiles(newImage);
+
+      event.target.value = null;
+    }
+  };
+
+  // update the marketplaceFiles
+  const updateMarketplaceFiles = (newFile) => {
+    setMarketplaceProject((prevProject) => {
+      const updatedFiles = [
+        ...prevProject.marketplaceFiles.filter(
+          (file) => file.filetype !== newFile.filetype || file.filetype === 4
+        ),
+        newFile,
+      ];
+      return { ...prevProject, marketplaceFiles: updatedFiles };
+    });
+  };
+
+  console.log(marketplaceProject.marketplaceFiles);
 
   return (
     <Paper elevation={1} className="bg-white w-full overflow-hidden">
@@ -107,11 +191,41 @@ const MarketplaceProjectMedia = () => {
                 onCloseRequest={() => setIsThumbnailOpen(false)}
               />
             )}
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "flex-end",
+                width: "100%",
+                mt: "1.5rem",
+              }}
+            >
+              <input
+                type="file"
+                accept="image/*"
+                style={{ display: "none" }}
+                id="thumbnail-input"
+                onChange={handleThumbnailChange}
+              />
+              <Button
+                variant="contained"
+                onClick={() =>
+                  document.getElementById("thumbnail-input").click()
+                }
+                sx={{
+                  backgroundColor: "#1BAA64",
+                  textTransform: "none",
+                  fontWeight: "600",
+                }}
+                startIcon={<ChangeCircleIcon />}
+              >
+                Change Thumbnail
+              </Button>
+            </Box>
           </Grid2>
         </Grid2>
 
         <FormDivider title="Project demo video" />
-        <Grid2 container spacing={2} className="mt-8">
+        <Grid2 container spacing={2} className="my-8">
           <Grid2 size={3}>
             <h4 className="font-semibold text-sm mb-1">Project demo*</h4>
             <p className="text-gray-500 text-xs">
@@ -129,6 +243,34 @@ const MarketplaceProjectMedia = () => {
                 />
               </div>
             )}
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "flex-end",
+                width: "100%",
+                mt: "1.5rem",
+              }}
+            >
+              <input
+                type="file"
+                id="video-file"
+                className="hidden"
+                accept="video/mp4,video/x-m4v,video/*"
+                onChange={handleVideoChange}
+              />
+              <Button
+                variant="contained"
+                onClick={() => document.getElementById("video-file").click()}
+                sx={{
+                  backgroundColor: "#1BAA64",
+                  textTransform: "none",
+                  fontWeight: "600",
+                }}
+                startIcon={<ChangeCircleIcon />}
+              >
+                Change Video
+              </Button>
+            </Box>
           </Grid2>
         </Grid2>
 
@@ -145,7 +287,7 @@ const MarketplaceProjectMedia = () => {
           <Grid2 size={9}>
             <ImageList
               sx={{
-                width: "70%",
+                width: "100%",
                 ml: "0 !important",
                 maxHeight: "40rem",
                 scrollbarWidth: "thin",
@@ -216,6 +358,34 @@ const MarketplaceProjectMedia = () => {
                 />
               )}
             </ImageList>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "flex-end",
+                width: "100%",
+                mt: "1.5rem",
+              }}
+            >
+              <input
+                type="file"
+                id="image-file"
+                className="hidden"
+                accept="image/*"
+                onChange={handleAddImage}
+              />
+              <Button
+                variant="contained"
+                onClick={() => document.getElementById("image-file").click()}
+                sx={{
+                  backgroundColor: "#1BAA64",
+                  textTransform: "none",
+                  fontWeight: "600",
+                }}
+                startIcon={<AddCircleIcon />}
+              >
+                Add More Images
+              </Button>
+            </Box>
           </Grid2>
         </Grid2>
 

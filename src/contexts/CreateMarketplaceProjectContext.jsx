@@ -16,14 +16,15 @@ export const MarketplaceProjectProvider = ({ children }) => {
     marketplaceFiles: [
       {
         id: "",
-        name: "string",
-        url: "string",
+        name: "",
+        url: "",
+        urlFile: null,
         filetype: 0,
       },
     ],
     bankAccount: {
-      bankNumber: "string",
-      bankCode: "string",
+      bankNumber: "",
+      bankCode: "",
     },
     categories: [{ id: "", name: "" }],
   });

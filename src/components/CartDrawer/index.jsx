@@ -97,7 +97,7 @@ function CartDrawer({ cartOpen, setCartOpen }) {
     };
 
     const formatPrice = (price) => {
-        return new Intl.NumberFormat('en-US').format(price);
+        return new Intl.NumberFormat('de-DE').format(price);
     };
 
     const redirectToCheckout = () => {

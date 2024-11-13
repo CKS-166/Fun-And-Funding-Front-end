@@ -24,31 +24,31 @@ const AdminMilestone = () => {
 
   return (
     <>
-      <div class="mx-auto max-w-screen-xl px-4 lg:px-12">
-        <div class="bg-white relative shadow-md sm:rounded-lg overflow-hidden">
-          <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
-            <div class="w-full md:w-1/2">
-              <span class="text-sm font-normal text-gray-500">
+      <div className="mx-auto max-w-screen-xl px-4 lg:px-12">
+        <div className="bg-white relative shadow-md sm:rounded-lg overflow-hidden">
+          <div className="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
+            <div className="w-full md:w-1/2">
+              <span className="text-sm font-normal text-gray-500">
                 Showing{" "}
-                <span class="font-semibold text-gray-900">
+                <span className="font-semibold text-gray-900">
                   {data?._data.totalItems}{" "}
                 </span>
-                {/* of <span class="font-semibold text-gray-900">1000 </span> */}
+                {/* of <span className="font-semibold text-gray-900">1000 </span> */}
                 Milestone disbursement requests
               </span>
             </div>
-            <div class="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
-              <div class="flex items-center space-x-3 w-full md:w-auto">
+            <div className="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
+              <div className="flex items-center space-x-3 w-full md:w-auto">
                 <button
                   id="filterDropdownButton"
                   data-dropdown-toggle="filterDropdown"
-                  class="w-full md:w-auto flex items-center justify-center py-2 px-4 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200"
+                  className="w-full md:w-auto flex items-center justify-center py-2 px-4 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200"
                   type="button"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     aria-hidden="true"
-                    class="h-4 w-4 mr-2 text-gray-400"
+                    className="h-4 w-4 mr-2 text-gray-400"
                     viewbox="0 0 20 20"
                     fill="currentColor"
                   >
@@ -60,7 +60,7 @@ const AdminMilestone = () => {
                   </svg>
                   Filter
                   <svg
-                    class="-mr-1 ml-1.5 w-5 h-5"
+                    className="-mr-1 ml-1.5 w-5 h-5"
                     fill="currentColor"
                     viewbox="0 0 20 20"
                     xmlns="http://www.w3.org/2000/svg"
@@ -76,70 +76,70 @@ const AdminMilestone = () => {
               </div>
             </div>
           </div>
-          <div class="overflow-x-auto">
-            <table class="w-full text-sm text-left text-gray-500">
-              <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm text-left text-gray-500">
+              <thead className="text-xs text-gray-700 uppercase bg-gray-50">
                 <tr>
-                  <th scope="col" class="px-4 py-3">
+                  <th scope="col" className="px-4 py-3">
                     Milestone
                   </th>
-                  <th scope="col" class="px-4 py-3">
+                  <th scope="col" className="px-4 py-3">
                     Created date
                   </th>
-                  <th scope="col" class="px-4 py-3">
+                  <th scope="col" className="px-4 py-3">
                     End date
                   </th>
-                  <th scope="col" class="px-4 py-3">
+                  <th scope="col" className="px-4 py-3">
                     Funding Project
                   </th>
-                  <th scope="col" class="px-4 py-3">
+                  <th scope="col" className="px-4 py-3">
                     Amount
                   </th>
-                  <th scope="col" class="px-4 py-3">
+                  <th scope="col" className="px-4 py-3">
                     Status
                   </th>
-                  <th scope="col" class="px-4 py-3">
-                    <span class="sr-only">Actions</span>
+                  <th scope="col" className="px-4 py-3">
+                    <span className="sr-only">Actions</span>
                   </th>
                 </tr>
               </thead>
               <tbody>
                 {data?._data.items.map((pm, index) => (
-                  <tr key={index} class="border-b">
+                  <tr key={index} className="border-b">
                     <th
                       scope="row"
-                      class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap"
+                      className="px-4 py-3 font-medium text-gray-900 whitespace-nowrap"
                     >
                       {pm.milestoneName}
                     </th>
-                    <td class="px-4 py-3">
+                    <td className="px-4 py-3">
                       {new Date(pm.createdDate).toLocaleString()}
                     </td>
-                    <td class="px-4 py-3">
+                    <td className="px-4 py-3">
                       {new Date(pm.endDate).toLocaleString()}
                     </td>
-                    <td class="px-4 py-3">
-                      {/* <img class="w-10 h-10 rounded" src={pm.fundingProject.fundingFiles.} alt="Default avatar" /> */}
+                    <td className="px-4 py-3">
+                      {/* <img className="w-10 h-10 rounded" src={pm.fundingProject.fundingFiles.} alt="Default avatar" /> */}
                       {pm.fundingProject.name}
                     </td>
-                    <td class="px-4 py-3">
+                    <td className="px-4 py-3">
                       {pm.milestone.disbursementPercentage *
                         pm.fundingProject.balance}{" "}
                       đ
                     </td>
-                    <td class="px-4 py-3">
-                      <span class="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded">
+                    <td className="px-4 py-3">
+                      <span className="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded">
                         {pmStatus[pm.status]}
                       </span>
                     </td>
-                    <td class="px-4 py-3 flex items-center justify-end">
+                    <td className="px-4 py-3 flex items-center justify-end">
                       <button
                         onClick={() => handleOpenModal(pm)}
-                        class="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none"
+                        className="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none"
                         type="button"
                       >
                         <svg
-                          class="w-5 h-5"
+                          className="w-5 h-5"
                           aria-hidden="true"
                           fill="currentColor"
                           viewbox="0 0 20 20"
@@ -155,19 +155,19 @@ const AdminMilestone = () => {
             </table>
           </div>
           <nav
-            class="flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0 p-4"
+            className="flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0 p-4"
             aria-label="Table navigation"
           >
             <div></div>
-            <ul class="inline-flex items-stretch -space-x-px list-none">
+            <ul className="inline-flex items-stretch -space-x-px list-none">
               <li>
                 <a
                   href="#"
-                  class="flex items-center justify-center h-full py-1.5 px-3 ml-0 text-gray-500 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700"
+                  className="flex items-center justify-center h-full py-1.5 px-3 ml-0 text-gray-500 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700"
                 >
-                  <span class="sr-only">Previous</span>
+                  <span className="sr-only">Previous</span>
                   <svg
-                    class="w-5 h-5"
+                    className="w-5 h-5"
                     aria-hidden="true"
                     fill="currentColor"
                     viewbox="0 0 20 20"
@@ -184,7 +184,7 @@ const AdminMilestone = () => {
               <li>
                 <a
                   href="#"
-                  class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700"
+                  className="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700"
                 >
                   1
                 </a>
@@ -192,7 +192,7 @@ const AdminMilestone = () => {
               <li>
                 <a
                   href="#"
-                  class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700"
+                  className="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700"
                 >
                   2
                 </a>
@@ -201,7 +201,7 @@ const AdminMilestone = () => {
                 <a
                   href="#"
                   aria-current="page"
-                  class="flex items-center justify-center text-sm z-10 py-2 px-3 leading-tight text-primary-600 bg-primary-50 border border-primary-300 hover:bg-primary-100 hover:text-primary-700"
+                  className="flex items-center justify-center text-sm z-10 py-2 px-3 leading-tight text-primary-600 bg-primary-50 border border-primary-300 hover:bg-primary-100 hover:text-primary-700"
                 >
                   3
                 </a>
@@ -209,7 +209,7 @@ const AdminMilestone = () => {
               <li>
                 <a
                   href="#"
-                  class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700"
+                  className="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700"
                 >
                   ...
                 </a>
@@ -217,7 +217,7 @@ const AdminMilestone = () => {
               <li>
                 <a
                   href="#"
-                  class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700"
+                  className="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700"
                 >
                   100
                 </a>
@@ -225,11 +225,11 @@ const AdminMilestone = () => {
               <li>
                 <a
                   href="#"
-                  class="flex items-center justify-center h-full py-1.5 px-3 leading-tight text-gray-500 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700"
+                  className="flex items-center justify-center h-full py-1.5 px-3 leading-tight text-gray-500 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700"
                 >
-                  <span class="sr-only">Next</span>
+                  <span className="sr-only">Next</span>
                   <svg
-                    class="w-5 h-5"
+                    className="w-5 h-5"
                     aria-hidden="true"
                     fill="currentColor"
                     viewbox="0 0 20 20"

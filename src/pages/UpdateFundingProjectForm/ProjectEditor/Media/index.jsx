@@ -33,8 +33,6 @@ function Media() {
             ...(project.fundingFiles || []),
         ];
 
-        console.log("Hihi");
-
         if (allFiles.length > 0) {
             const videoFile = allFiles.filter(file => file.filetype === 1);
             let videoData = videoFile.length > 0 ?
@@ -76,8 +74,6 @@ function Media() {
         }
     }
 
-    console.log(thumbnail);
-
     const generateGUID = () => {
         return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
             const r = Math.random() * 16 | 0;
@@ -117,6 +113,8 @@ function Media() {
             e.target.value = null;
         }
     };
+
+    console.log(thumbnail);
 
 
     const getSelectedThumbnailId = () => {
@@ -233,6 +231,7 @@ function Media() {
     };
 
     const handleSaveAll = async () => {
+        console.log("DaoHuongThao");
         setIsLoading(true);
         setLoadingStatus(2);
         const existedFile = [];
@@ -257,6 +256,8 @@ function Media() {
             fundingFiles: fundingFiles,
             existedFile: existedFile,
         };
+
+        console.log(updatedProject);
 
         setProject(updatedProject);
         setIsEdited(true);

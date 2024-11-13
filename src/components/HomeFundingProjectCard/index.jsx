@@ -8,6 +8,7 @@ import Cookies from "js-cookie";
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import likeApiInstace from '../../utils/ApiInstance/likeApiInstance';
+import packageBackerApiInstance from "../../utils/ApiInstance/packageBackerApiInstance";
 import './index.css';
 
 const BorderLinearProgress = styled(LinearProgress)(() => ({
@@ -26,16 +27,18 @@ function HomeFundingProjectCard({ fundingProject }) {
     const token = Cookies.get("_auth");
     const navigate = useNavigate();
     const [liked, isLiked] = useState(false);
+    const [packBackers, setPackBackers] = useState([]);
 
     useEffect(() => {
         if (token != undefined || token != null) {
             fetchUserLike();
+            fetchBackers();
         }
     }, [fundingProject, token])
 
     const fetchUserLike = async () => {
         try {
-            const res = await likeApiInstace.get(`/check-project-like/${fundingProject.id}`, {
+            const res = await likeApiInstace.get(`/get-project-like/${fundingProject.id}`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
@@ -50,7 +53,7 @@ function HomeFundingProjectCard({ fundingProject }) {
 
     const handleLikeProject = async () => {
         try {
-            const res = await likeApiInstace.post(`/funding/like`, {
+            const res = await likeApiInstace.post(`/funding`, {
                 projectId: fundingProject.id
             }, {
                 headers: {
@@ -58,7 +61,7 @@ function HomeFundingProjectCard({ fundingProject }) {
                 },
             })
             if (res.data._statusCode == 200) {
-                fetchUserLike();
+                isLiked(!liked);
             }
         } catch (error) {
             console.log(error);
@@ -88,6 +91,20 @@ function HomeFundingProjectCard({ fundingProject }) {
             return "Campaign already ended";
         }
     }
+
+    const fetchBackers = async (id) => {
+        try {
+            await packageBackerApiInstance
+                .get(`/project-backers-detail?projectId=${fundingProject.id}`)
+                .then((res) => {
+                    if (res.data.result._isSuccess) {
+                        setPackBackers(res.data.result._data);
+                    }
+                });
+        } catch (error) {
+            console.error(error);
+        }
+    };
 
     const convertPercentage = (a, b) => Math.ceil((a / b) * 100);
 
@@ -159,7 +176,7 @@ function HomeFundingProjectCard({ fundingProject }) {
                         <BorderLinearProgress variant="determinate" sx={{ width: "100%", my: '0.313rem' }} value={convertPercentage(fundingProject.balance, fundingProject.target)} />
                         <div className='flex flex-row justify-between'>
                             <Typography sx={{ color: '#2F3645', fontSize: '0.75rem', fontWeight: '600' }}>
-                                696 Investors
+                                {packBackers?.length} Investors
                             </Typography>
                             <Typography sx={{ color: '#2F3645', fontSize: '0.75rem', fontWeight: '600' }}>
                                 {convertPercentage(fundingProject.balance, fundingProject.target)}% of target

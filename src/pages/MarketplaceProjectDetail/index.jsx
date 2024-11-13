@@ -5,8 +5,8 @@ import { Avatar, Box, Button, Chip, CircularProgress, Container, Divider, Grid2,
 import DOMPurify from "dompurify";
 import Cookies from "js-cookie";
 import React, { useEffect, useState } from 'react';
+import { FaHeart } from "react-icons/fa";
 import { FaRegHeart } from "react-icons/fa6";
-import { IoHeartDislikeOutline } from "react-icons/io5";
 import { useParams } from 'react-router';
 import { toast, ToastContainer } from "react-toastify";
 import MarketplaceCommentBar from '../../components/MarketplaceCommentBar';
@@ -141,11 +141,11 @@ function MarketplaceProjectDetail() {
 
     const fetchUserLike = async () => {
         try {
-            const res = await likeApiInstace.get(`/check-project-like/${id}`, {
+            const res = await likeApiInstace.get(`/get-project-like/${id}`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
-            })
+            });
             if (res.data._statusCode == 200) {
                 isLiked(res.data._data.isLike);
             }
@@ -156,15 +156,15 @@ function MarketplaceProjectDetail() {
 
     const handleLikeProject = async () => {
         try {
-            const res = await likeApiInstace.post(`/marketplace/like`, {
+            const res = await likeApiInstace.post(`/marketplace`, {
                 projectId: marketplaceProject.id
             }, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
-            })
+            });
             if (res.data._statusCode == 200) {
-                fetchUserLike();
+                isLiked(!liked)
             }
         } catch (error) {
             notify(error.response?.data?.message || error.message || "An error occurred", "error");
@@ -177,14 +177,15 @@ function MarketplaceProjectDetail() {
             const commentBody =
             {
                 "content": comment,
-                "projectId": { id }
+                "projectId": id
             }
-            const res = await commentApiInstace.post(``, commentBody, {
+            const res = await commentApiInstace.post(`marketplace`, commentBody, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
             })
             if (res.data._statusCode == 200) {
+                setComment("");
                 fetchComments();
             }
         } catch (error) {
@@ -196,9 +197,10 @@ function MarketplaceProjectDetail() {
 
     const fetchComments = async () => {
         try {
-            const res = await commentApiInstace.get(`all`)
+            const res = await commentApiInstace.get(`marketplace/${id}`)
             if (res.status == 200) {
-                setCommentList(res.data);
+                const sortedComments = res.data.sort((a, b) => new Date(b.createDate) - new Date(a.createDate));
+                setCommentList(sortedComments);
             }
         } catch (error) {
             notify(error.response?.data?.message || error.message || "An error occurred", "error");
@@ -281,21 +283,26 @@ function MarketplaceProjectDetail() {
                                                 src={marketplaceProject.user?.avatar ?? ''}
                                             />
                                             <Box>
-                                                <Typography
-                                                    sx={{
-                                                        fontSize: "1.25rem",
-                                                        fontWeight: '600',
-                                                        width: '15rem',
-                                                        overflow: 'hidden',
-                                                        textOverflow: 'ellipsis',
-                                                        whiteSpace: 'nowrap',
-                                                        color: 'var(--black)'
-                                                    }}
-                                                >
-                                                    {marketplaceProject.user?.userName ?? 'N/A'}
-                                                </Typography>
+                                                <a href={`/profile/${marketplaceProject.user?.id}`}>
+                                                    <Typography
+                                                        sx={{
+                                                            fontSize: "1.25rem",
+                                                            fontWeight: '600',
+                                                            width: '15rem',
+                                                            overflow: 'hidden',
+                                                            textOverflow: 'ellipsis',
+                                                            whiteSpace: 'nowrap',
+                                                            color: 'var(--black)',
+                                                            '&:hover': {
+                                                                textDecoration: 'underline',
+                                                            },
+                                                        }}
+                                                    >
+                                                        {marketplaceProject.user?.userName ?? 'N/A'}
+                                                    </Typography>
+                                                </a>
                                                 <Typography sx={{ fontSize: "0.75rem", opacity: "0.6", color: 'var(--black)' }}>
-                                                    1 game selling | Viet Nam
+                                                    1 game selling
                                                 </Typography>
                                             </Box>
                                         </div>
@@ -344,24 +351,24 @@ function MarketplaceProjectDetail() {
                                             <AddShoppingCartIcon sx={{ mr: '1rem' }} />
                                             Add to cart
                                         </Button>
-                                        <Grid2 container spacing={3} sx={{ marginTop: "20px" }}>
+                                        <Grid2 container spacing={2} sx={{ marginTop: "20px" }}>
                                             <Grid2 size={6}>
                                                 {liked ? <Button
                                                     variant="contained"
-                                                    className='marketplace-project-unlike-button'
+                                                    className='marketplace-project-like-button'
                                                     onClick={() => handleLikeProject()}
                                                 >
-                                                    <IoHeartDislikeOutline
-                                                        style={{ marginRight: "0.5rem", fontSize: "1.5rem", strokeWidth: 1 }}
+                                                    <FaHeart
+                                                        style={{ marginRight: "0.75rem", fontSize: "1.5rem", strokeWidth: 1, color: 'var(--red)' }}
                                                     />
-                                                    Unfollow
+                                                    Followed
                                                 </Button> : <Button
                                                     variant="contained"
                                                     className='marketplace-project-like-button'
                                                     onClick={() => handleLikeProject()}
                                                 >
                                                     <FaRegHeart
-                                                        style={{ marginRight: "0.5rem", fontSize: "1.5rem", strokeWidth: 1 }}
+                                                        style={{ marginRight: "0.75rem", fontSize: "1.5rem", strokeWidth: 1 }}
                                                     />
                                                     Follow
                                                 </Button>}
@@ -404,7 +411,7 @@ function MarketplaceProjectDetail() {
                                         value="1"
                                     />
                                     <Tab
-                                        label="Comments (2)"
+                                        label={`Comments (${commentList != null ? commentList.length : 0})`}
                                         className="marketplace-project-tab"
                                         value="2"
                                     />
@@ -478,40 +485,11 @@ function MarketplaceProjectDetail() {
                                                     }}
                                                 >
                                                     <Box sx={{ width: '100%', display: 'flex', justifyContent: 'flex-start', flexDirection: 'row' }}>
-                                                        <Avatar
-                                                            sx={{
-                                                                width: "3.5rem",
-                                                                height: "3.5rem",
-                                                                marginRight: "1.25rem",
-                                                            }}
-                                                            src={''}
-                                                        />
                                                         <div style={{ width: '100%' }}>
-                                                            <div className='flex flex-row justify-start items-center'>
-                                                                <Typography
-                                                                    sx={{
-                                                                        fontSize: "1.25rem",
-                                                                        fontWeight: '700',
-                                                                        color: 'var(--black)',
-                                                                        mr: '0.5rem'
-                                                                    }}
-                                                                >
-                                                                    diemyolo
-                                                                </Typography>
-                                                            </div>
-                                                            <Typography
-                                                                sx={{
-                                                                    fontSize: "0.875rem",
-                                                                    fontWeight: '600',
-                                                                    color: 'var(--primary-green)',
-                                                                    mb: '1rem'
-                                                                }}
-                                                            >
-                                                                Backer
-                                                            </Typography>
                                                             <TextareaAutosize
                                                                 color="primary"
                                                                 minRows={3}
+                                                                value={comment}
                                                                 placeholder='What are your thoughts?'
                                                                 style={{
                                                                     width: '100%',
@@ -608,10 +586,10 @@ function MarketplaceProjectDetail() {
                                                         fontSize: "1.5rem",
                                                         fontWeight: '700',
                                                         color: 'var(--black)',
-                                                        mb: '2rem'
+                                                        mb: '3rem'
                                                     }}
                                                 >
-                                                    All comments (2)
+                                                    All comments ({commentList != null ? commentList.length : 0})
                                                 </Typography>
                                                 {commentList != null && commentList.length > 0 ?
                                                     commentList.map((item, index) => (

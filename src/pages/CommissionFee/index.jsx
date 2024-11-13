@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-vars */
 import React from "react";
-import CustomPaginationActionsTable from "../../components/AdminTable";
+import CommisionTable from "../../components/CommisionTable";
 import commissionApiInstance from "../../utils/ApiInstance/commisionApiInstance";
 import { useState, useEffect } from "react";
 import { ToastContainer, toast } from "react-toastify";
@@ -11,8 +11,6 @@ import PercentIcon from "@mui/icons-material/Percent";
 import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 import FormatListNumberedIcon from "@mui/icons-material/FormatListNumbered";
 import SelectWithIcon from "../../components/SelectionCommision";
-import Chip from "@mui/material/Chip";
-import Stack from "@mui/material/Stack";
 
 const notify = (message, type) => {
   const options = {
@@ -143,14 +141,6 @@ function CommissionFee() {
     return `${day}/${month}/${year} ${hours}:${minutes}`;
   };
 
-  const mappingData = dataLoad.map((data) => ({
-    Id: data.id,
-    Rate: data.rate,
-    Version: data.version,
-    Type: data.commissionType === 0 ? "Funding" : "Marketplace",
-    "Last Updated": formatDate(data.updateDate),
-  }));
-
   const mappingLatestData =
     latestType?.map((data) => ({
       Id: data.id,
@@ -159,6 +149,21 @@ function CommissionFee() {
       Type: data.commissionType === 0 ? "Funding" : "Marketplace",
       "Last Updated": formatDate(data.updateDate),
     })) || [];
+
+  const mappingData = dataLoad.map((data) => {
+    const isLatest = latestType?.some(
+      (latestData) => latestData.id === data.id
+    );
+
+    return {
+      Id: data.id,
+      Rate: data.rate + "%",
+      Version: data.version,
+      Type: data.commissionType === 0 ? "Funding" : "Marketplace",
+      "Last Updated": formatDate(data.updateDate),
+      Status: isLatest ? "Applied" : "Outdated", // Set "Latest" if it matches, otherwise "Outdated"
+    };
+  });
 
   useEffect(() => {
     fetchCommisonFee();
@@ -226,11 +231,7 @@ function CommissionFee() {
         </button>
       </div>
 
-      <CustomPaginationActionsTable
-        data={mappingLatestData}
-        handleRowClick={handleRowClick}
-      />
-      <CustomPaginationActionsTable
+      <CommisionTable
         data={mappingData}
         handleRowClick={handleRowClick} // Assuming you have a handler for row clicks
         totalItems={pagination.totalItems}

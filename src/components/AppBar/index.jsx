@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import LogoutIcon from "@mui/icons-material/Logout";
@@ -25,13 +26,13 @@ import {
 import Aos from "aos";
 import "aos/dist/aos.css";
 import Cookies from "js-cookie";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import useSignOut from "react-auth-kit/hooks/useSignOut";
 import { useLocation, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import homeLogo from "../../assets/images/logo-alt.png";
 import defaultLogo from "../../assets/images/logo-text.png";
-import { useCart } from '../../contexts/CartContext';
+import { useCart } from "../../contexts/CartContext";
 import userApiInstace from "../../utils/ApiInstance/userApiInstance";
 import CartDrawer from "../CartDrawer";
 import AuthDialog from "../Popup";
@@ -128,8 +129,9 @@ const FunFundingAppBar = () => {
         title: "Warning?",
         text: "Do You Want To Logout?",
         icon: "warning",
+        iconColor: "#1BAA64",
         showCancelButton: true,
-        confirmButtonColor: "#FBB03B",
+        confirmButtonColor: "#1BAA64",
         cancelButtonColor: "D8D8D8",
         confirmButtonText: "Yes!",
         cancelButtonText: "No!",
@@ -200,7 +202,7 @@ const FunFundingAppBar = () => {
                 alignItems: "center",
                 cursor: "pointer",
               }}
-              onClick={() => navigate('/home')}
+              onClick={() => navigate("/home")}
             >
               <img
                 src={isPage ? homeLogo : defaultLogo}
@@ -239,8 +241,8 @@ const FunFundingAppBar = () => {
                           ? "#1BAA64"
                           : "#F5F7F8"
                         : tabValue === index
-                          ? "#1BAA64"
-                          : "#2F3645",
+                        ? "#1BAA64"
+                        : "#2F3645",
                       fontWeight: "700 !important",
                     }}
                     error="false"

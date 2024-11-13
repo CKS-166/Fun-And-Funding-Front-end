@@ -35,10 +35,6 @@ import UpdatesSection from "../../components/UpdatesSection";
 import fundingProjectApiInstance from "../../utils/ApiInstance/fundingProjectApiInstance";
 import milestoneApiInstace from "../../utils/ApiInstance/milestoneApiInstance";
 import "./index.css";
-import Cookies from "js-cookie";
-import ReportForm from "../../components/ReportPopUp";
-import ReportProblemIcon from "@mui/icons-material/ReportProblem";
-import { ToastContainer, toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import packageBackerApiInstance from "../../utils/ApiInstance/packageBackerApiInstance";
 
@@ -85,7 +81,7 @@ const ProjectDetail = () => {
   const [firstMilestone, setFirstMilestone] = useState({});
   const [buttonActive, setButtonActive] = useState(false);
   const [buttonBackerActive, setButtonBackerActive] = useState(false);
-  const[isBacker, setIsBacker] = useState(false);
+  const [isBacker, setIsBacker] = useState(false);
   const [packBackers, setPackBackers] = useState([]);
   // project status
   const deleted = 0;
@@ -103,19 +99,19 @@ const ProjectDetail = () => {
 
   //fetch backers
   const fetchBackers = async (id) => {
-    try{
-      await packageBackerApiInstance.get(`/project-backers-detail?projectId=${id}`)
-      .then(res => {
-        console.log(res.data);
-        if(res.data.result._isSuccess){
-          setPackBackers(res.data.result._data);
-        }
-      })
-    }catch(error){
+    try {
+      await packageBackerApiInstance
+        .get(`/project-backers-detail?projectId=${id}`)
+        .then((res) => {
+          console.log(res.data);
+          if (res.data.result._isSuccess) {
+            setPackBackers(res.data.result._data);
+          }
+        });
+    } catch (error) {
       console.error(error);
     }
-    
-  }
+  };
   const handleOpenDialog = () => {
     setOpenDialog(true);
   };
@@ -142,47 +138,44 @@ const ProjectDetail = () => {
       case fundedSuccessful:
         return handleRequestMilestone();
       default:
-
         return;
     }
   };
   //check project owner
   const checkOwner = (status) => {
-    token && fundingProjectApiInstance
-      .get("/project-owner", {
-        params: {
-          projectId: id,
-        },
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((response) => {
-        console.log(response.data);
-        if(response.data._data ){
-          if(response.data._message == 'owner'){
-            setButtonBackerActive(true)
-            setIsOwner(response.data._data);
-            if(status == processing || status == fundedSuccessful){
-              setButtonActive(false)
-            }else{
-              setButtonActive(true)
-
-            }
-          }else if(response.data._message == 'backer of this project'){
-            setIsBacker(response.data._data);
-            if(status == processing){
-              setButtonActive(false)
-              setButtonBackerActive(false)
-            }else{
-              setButtonActive(true)
-              setButtonBackerActive(true)
+    token &&
+      fundingProjectApiInstance
+        .get("/project-owner", {
+          params: {
+            projectId: id,
+          },
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((response) => {
+          console.log(response.data);
+          if (response.data._data) {
+            if (response.data._message == "owner") {
+              setButtonBackerActive(true);
+              setIsOwner(response.data._data);
+              if (status == processing || status == fundedSuccessful) {
+                setButtonActive(false);
+              } else {
+                setButtonActive(true);
+              }
+            } else if (response.data._message == "backer of this project") {
+              setIsBacker(response.data._data);
+              if (status == processing) {
+                setButtonActive(false);
+                setButtonBackerActive(false);
+              } else {
+                setButtonActive(true);
+                setButtonBackerActive(true);
+              }
             }
           }
-          
-        }
-        
-      });
+        });
   };
   //fetch milestones
   const fetchMilestones = async () => {
@@ -434,9 +427,7 @@ const ProjectDetail = () => {
                         className="like-btn"
                       >
                         {isOwner ? (
-                          <Typography>
-                            {renderButtonContent()}
-                          </Typography>
+                          <Typography>{renderButtonContent()}</Typography>
                         ) : (
                           <Typography>Back this project</Typography>
                         )}
@@ -666,7 +657,7 @@ const ProjectDetail = () => {
                   <Box>
                     <Box>
                       <PackageSide
-                      isButtonActive={buttonBackerActive}
+                        isButtonActive={buttonBackerActive}
                         packageList={projectData.packages}
                         reloadDetail={fetchProject}
                       />
@@ -677,7 +668,7 @@ const ProjectDetail = () => {
               {tabValue === "2" && (
                 <Container maxWidth="1400px">
                   <PackageReward
-                  isButtonActive={buttonBackerActive}
+                    isButtonActive={buttonBackerActive}
                     packageList={projectData.packages}
                     reloadDetail={fetchProject}
                   />
@@ -746,7 +737,7 @@ const ProjectDetail = () => {
                   >
                     <Box sx={{ marginRight: "150px" }}>
                       <Box>
-                        <BackerSection backers={packBackers}/>
+                        <BackerSection backers={packBackers} />
                       </Box>
                     </Box>
                     <Box>

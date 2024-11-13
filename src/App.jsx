@@ -69,8 +69,7 @@ import MarketplaceHomePage from "./pages/MarketplaceHomePage";
 import CommissionFee from "./pages/CommissionFee";
 import AboutUsLayout from "./layouts/AboutUsLayout";
 import Policies from "./pages/Policies";
-import AdminReport from "./pages/AdminPages/AdminReport";
-import MarketplaceProjectMedia from "./pages/CreateMarketplaceProjectForm/MarketplaceProjectMedia";
+// import MarketplaceProjectMedia from "./pages/CreateMarketplaceProjectForm/MarketplaceProjectMedia";
 import MarketplaceProjectSetupBankAccount from "./pages/CreateMarketplaceProjectForm/MarketplaceProjectSetupBankAccount";
 import GetAllProject from "./pages/GetAllProject";
 import MarketplaceProjectGameContent from "./pages/CreateMarketplaceProjectForm/MarketplaceProjectGameContent";
@@ -87,7 +86,10 @@ function App() {
         {!hideAppBar && <FunFundingAppBar />}
 
         <Backdrop
-          sx={(theme) => ({ color: "var(--white)", zIndex: theme.zIndex.drawer + 1 })}
+          sx={(theme) => ({
+            color: "var(--white)",
+            zIndex: theme.zIndex.drawer + 1,
+          })}
           open={isLoading}
         >
           <CircularProgress color="inherit" />
@@ -106,7 +108,10 @@ function App() {
               <Route path="/home" element={<HomePage />} />
               <Route path="/about-us" element={<AboutUs />} />
               <Route path="/marketplace" element={<MarketplaceHomePage />} />
-              <Route path="/marketplace-detail/:id" element={<MarketplaceProjectDetail />} />
+              <Route
+                path="/marketplace-detail/:id"
+                element={<MarketplaceProjectDetail />}
+              />
               <Route path="/crowdfunding" element={<GetAllProject />} />
             </Route>
             <Route path="choose-project-plan" element={<ChoosePlan />} />

@@ -2,7 +2,7 @@ import { Box } from "@mui/material";
 import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import './index.css';
-function ProjectImages({files}) {
+function ProjectImages({ files }) {
   const videoFile = files.find(file => file.filetype === 1);
   const thumbnail = files.find(file => file.filetype === 2);
   const stories = files.filter(file => file.filetype === 4);
@@ -65,7 +65,7 @@ function ProjectImages({files}) {
 
   // )
 
-  
+
   return (
     <div>
       <Carousel showArrows={false} showIndicators={false} interval={3000}

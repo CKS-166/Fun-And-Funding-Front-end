@@ -44,6 +44,7 @@ import ChatLayout from "./layouts/ChatLayout";
 import CreateMarketplaceProjectLayout from "./layouts/CreateMarketplaceProjectLayout";
 import AccountWallet from "./pages/AccountWallet";
 import AdminMilestone from "./pages/AdminPages/AdminMilestone";
+import AdminReport from "./pages/AdminPages/AdminReport";
 import Dashboard from "./pages/AdminPages/Dashboard";
 import AdminWithdrawRequest from "./pages/AdminWithdrawRequest";
 import Chat from "./pages/Chat";
@@ -52,7 +53,9 @@ import CheckoutSuccess from "./pages/CheckoutCart/CheckoutSuccess";
 import CommissionFee from "./pages/CommissionFee";
 import MarketplaceProjectBasicInfo from "./pages/CreateMarketplaceProjectForm/MarketplaceProjectBasicInfo";
 import MarketplaceProjectIntroduction from "./pages/CreateMarketplaceProjectForm/MarketplaceProjectIntroduction";
+import MarketplaceProjectMedia from "./pages/CreateMarketplaceProjectForm/MarketplaceProjectMedia";
 import MarketplaceHomePage from "./pages/MarketplaceHomePage";
+import MarketplaceProjectDetail from "./pages/MarketplaceProjectDetail";
 import Milestones from "./pages/Milestones";
 import MilestoneForm from "./pages/TestCR/MilestoneForm";
 import BankAccount from "./pages/UpdateFundingProjectForm/ProjectEditor/BankAccount";
@@ -64,8 +67,6 @@ import Milestone2 from "./pages/UpdateFundingProjectForm/ProjectMilestone/Milest
 import Milestone3 from "./pages/UpdateFundingProjectForm/ProjectMilestone/Milestone3";
 import Milestone4 from "./pages/UpdateFundingProjectForm/ProjectMilestone/Milestone4";
 import ProjectPreview from "./pages/UpdateFundingProjectForm/ProjectPreview";
-import AdminReport from "./pages/AdminPages/AdminReport";
-import MarketplaceProjectMedia from "./pages/CreateMarketplaceProjectForm/MarketplaceProjectMedia";
 function App() {
   const location = useLocation();
   const hideAppBar = location.pathname.includes("admin-dashboard");
@@ -78,7 +79,7 @@ function App() {
         {!hideAppBar && <FunFundingAppBar />}
 
         <Backdrop
-          sx={(theme) => ({ color: "#fff", zIndex: theme.zIndex.drawer + 1 })}
+          sx={(theme) => ({ color: "var(--white)", zIndex: theme.zIndex.drawer + 1 })}
           open={isLoading}
         >
           <CircularProgress color="inherit" />
@@ -98,6 +99,7 @@ function App() {
               <Route path="/about-us" element={<AboutUs />} />
               <Route path="/project-detail" element={<ProjectDetail />} />
               <Route path="/marketplace" element={<MarketplaceHomePage />} />
+              <Route path="/marketplace-detail/:id" element={<MarketplaceProjectDetail />} />
             </Route>
             <Route path="choose-project-plan" element={<ChoosePlan />} />
             <Route element={<CreateFundingProjectLayout />}>
@@ -191,6 +193,7 @@ function App() {
             </Route>
 
             <Route path="/funding-detail/:id" element={<ProjectDetail />} />
+
             <Route path="/test" element={<TestCR />} />
             <Route path="/test-update" element={<TestUpdate />} />
             <Route path="/test-mile-req" element={<TestMileReq />} />

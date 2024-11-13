@@ -1,5 +1,6 @@
 /* eslint-disable no-unreachable */
 /* eslint-disable no-unused-vars */
+import ReportProblemIcon from "@mui/icons-material/ReportProblem";
 import { TabContext, TabList } from "@mui/lab";
 import {
   Avatar,
@@ -16,26 +17,24 @@ import {
   Typography,
 } from "@mui/material";
 import Grid from "@mui/material/Grid2";
+import DOMPurify from "dompurify";
+import Cookies from "js-cookie";
 import React, { useEffect, useState } from "react";
 import { CiBookmark, CiHeart } from "react-icons/ci";
 import { useParams } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
 import BackerSection from "../../components/BackerSection";
 import CommentSection from "../../components/CommentSection";
 import PackageReward from "../../components/PackageList/PackageReward";
 import PackageSide from "../../components/PackageList/PackageSide";
 import ProjectImages from "../../components/ProjectImages";
 import ProjectIntro from "../../components/ProjectIntro";
-import UpdatesSection from "../../components/UpdatesSection";
-import "./index.css";
-import DOMPurify from "dompurify";
+import ReportForm from "../../components/ReportPopUp";
 import RequestMilestoneModal from "../../components/RequestMilestoneModal";
-import { set } from "react-hook-form";
+import UpdatesSection from "../../components/UpdatesSection";
 import fundingProjectApiInstance from "../../utils/ApiInstance/fundingProjectApiInstance";
 import milestoneApiInstace from "../../utils/ApiInstance/milestoneApiInstance";
-import Cookies from "js-cookie";
-import ReportForm from "../../components/ReportPopUp";
-import ReportProblemIcon from "@mui/icons-material/ReportProblem";
-import { ToastContainer, toast } from "react-toastify";
+import "./index.css";
 const notify = (message, type) => {
   const options = {
     position: "top-right",

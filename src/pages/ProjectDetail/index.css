@@ -1,29 +1,35 @@
 .Mui-selected {
     background-color: "none !important";
 }
+
 .carousel .thumbs {
     display: flex;
     align-items: center;
     justify-content: center
 }
-.like-btn { 
+
+.like-btn {
     font-size: 20px !important;
 }
-.like-btn:hover{
+
+.like-btn:hover {
     background-color: #ffffff !important;
-    color:#1BAA64 !important ;
+    color: #1BAA64 !important;
     outline: none !important;
 }
-.like-btn:focus{
+
+.like-btn:focus {
     outline: none !important;
 }
-.detail-tab { 
-    padding-top:20px;
+
+.detail-tab {
+    padding-top: 20px;
 }
-.detail-tab .MuiTabs-flexContainer{
+
+.detail-tab .MuiTabs-flexContainer {
     justify-content: center !important;
-    border-top : 1px solid #F5F7F8;
-    border-bottom : 1px solid #F5F7F8;
+    border-top: 1px solid #F5F7F8;
+    border-bottom: 1px solid #F5F7F8;
 }
 
 .detail-tab button {

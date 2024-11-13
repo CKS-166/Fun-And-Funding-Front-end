@@ -5,7 +5,7 @@ const processing = 1
 const completed = 2
 const warning = 3
 const failed = 4
-
+const submitted = 5
 export const checkAvailableMilestone = async (projectId, milestoneId) => {
     try {
         const res = await projectMilestoneApiInstace.get(
@@ -22,7 +22,7 @@ export const checkAvailableMilestone = async (projectId, milestoneId) => {
             }
             const status = res.data._data.items[0].status
             console.log(status)
-            if(status == 1) {
+            if(status == processing) {
                 if(res.data._data.items[0].projectMilestoneRequirements.length > 0
                 ){
                     return {
@@ -35,19 +35,27 @@ export const checkAvailableMilestone = async (projectId, milestoneId) => {
                         data: res.data._data.items,
                     };
                 }
-            }else if(status == 0){
+            }else if(status == pending){
                 return {
                     status : 'pending',
                     data: [],
                 };
-            }else if(status == 2){
+            }else if(status == completed){
                 return {
                     status : 'completed',
                     data: res.data._data.items,    
                 };
+            }else if(status == failed){
+                return {
+                    status : 'failed',
+                    data: res.data._data.items,    
+                };
+            }else if(status == submitted){
+                return {
+                    status : 'submitted',
+                    data: res.data._data.items,    
+                };
             }
-            
-            
         }else{
             return {
                 status : 'error',

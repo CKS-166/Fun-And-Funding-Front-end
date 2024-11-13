@@ -15,14 +15,14 @@ const CommentSection = ({ isBacker, projectId }) => {
   // get comment list
   const fetchComment = async () => {
     commentApiInstace.get("/all").then(res => {
-      
+      console.log(res.data);
       setComments(res.data);
     })
   }
   // get user info
 
   const getUser = async () => {
-    userApiInstace.get("/info", {
+    token && userApiInstace.get("/info", {
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -57,7 +57,7 @@ const CommentSection = ({ isBacker, projectId }) => {
   return (
     <>
       <Box>
-        {isBacker ?
+        {isBacker &&
           <Box sx={{
             background: '#FFFFFF'
             , borderRadius: '5px', padding: '22px', marginBottom: '15px',
@@ -97,7 +97,7 @@ const CommentSection = ({ isBacker, projectId }) => {
               </Box>
             </Box>
           </Box>
-          : <CommentBar />}
+         }
         {comments.map(comment => (
           <CommentBar comment={comment}/>
         ))}

@@ -35,6 +35,13 @@ import UpdatesSection from "../../components/UpdatesSection";
 import fundingProjectApiInstance from "../../utils/ApiInstance/fundingProjectApiInstance";
 import milestoneApiInstace from "../../utils/ApiInstance/milestoneApiInstance";
 import "./index.css";
+import Cookies from "js-cookie";
+import ReportForm from "../../components/ReportPopUp";
+import ReportProblemIcon from "@mui/icons-material/ReportProblem";
+import { ToastContainer, toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
+import packageBackerApiInstance from "../../utils/ApiInstance/packageBackerApiInstance";
+
 const notify = (message, type) => {
   const options = {
     position: "top-right",
@@ -61,15 +68,13 @@ const notify = (message, type) => {
 const ProjectDetail = () => {
   const token = Cookies.get("_auth");
   //sample owwner
-  const [isOwner, setIsOwner] = useState(true);
+  const [isOwner, setIsOwner] = useState(false);
 
   //sample data
   const { id } = useParams();
   console.log(id);
   const number = 30000000;
-  const formattedNumber = number.toLocaleString("de-DE");
   const backers = 1000;
-  const target = 100000000;
   const convertPercentage = (a, b) => Math.ceil((a / b) * 100);
   const [tabValue, setTabValue] = useState("1");
   const [projectData, setProjectData] = useState({});
@@ -78,11 +83,39 @@ const ProjectDetail = () => {
   const [saniIntro, setSaniIntro] = useState("");
   const [milestones, setMilestones] = useState([]);
   const [firstMilestone, setFirstMilestone] = useState({});
+  const [buttonActive, setButtonActive] = useState(false);
+  const [buttonBackerActive, setButtonBackerActive] = useState(false);
+  const[isBacker, setIsBacker] = useState(false);
+  const [packBackers, setPackBackers] = useState([]);
   // project status
+  const deleted = 0;
+  const pending = 1;
   const processing = 2;
   const fundedSuccessful = 3;
+  const successful = 4;
+  const failed = 5;
+  const rejected = 6;
+  const approved = 7;
+  const withdrawed = 8;
+  const refunded = 9;
+  const reported = 10;
   const [openDialog, setOpenDialog] = useState(false);
 
+  //fetch backers
+  const fetchBackers = async (id) => {
+    try{
+      await packageBackerApiInstance.get(`/project-backers-detail?projectId=${id}`)
+      .then(res => {
+        console.log(res.data);
+        if(res.data.result._isSuccess){
+          setPackBackers(res.data.result._data);
+        }
+      })
+    }catch(error){
+      console.error(error);
+    }
+    
+  }
   const handleOpenDialog = () => {
     setOpenDialog(true);
   };
@@ -102,21 +135,20 @@ const ProjectDetail = () => {
 
   const handleProcess = () => {
     const fixStatus = projectData.status;
-
+    console.log(fixStatus);
     switch (fixStatus) {
       case processing:
         return handleUpdateProject();
-        break;
       case fundedSuccessful:
         return handleRequestMilestone();
-        break;
       default:
+
         return;
     }
   };
   //check project owner
-  const checkOwner = () => {
-    fundingProjectApiInstance
+  const checkOwner = (status) => {
+    token && fundingProjectApiInstance
       .get("/project-owner", {
         params: {
           projectId: id,
@@ -126,8 +158,30 @@ const ProjectDetail = () => {
         },
       })
       .then((response) => {
-        // console.log(response.data);
-        setIsOwner(response.data.result._data);
+        console.log(response.data);
+        if(response.data._data ){
+          if(response.data._message == 'owner'){
+            setButtonBackerActive(true)
+            setIsOwner(response.data._data);
+            if(status == processing || status == fundedSuccessful){
+              setButtonActive(false)
+            }else{
+              setButtonActive(true)
+
+            }
+          }else if(response.data._message == 'backer of this project'){
+            setIsBacker(response.data._data);
+            if(status == processing){
+              setButtonActive(false)
+              setButtonBackerActive(false)
+            }else{
+              setButtonActive(true)
+              setButtonBackerActive(true)
+            }
+          }
+          
+        }
+        
       });
   };
   //fetch milestones
@@ -164,6 +218,9 @@ const ProjectDetail = () => {
           // Convert milliseconds to days (1 day = 24 * 60 * 60 * 1000 ms)
           const dayDiff = Math.round(timeDiff / (1000 * 60 * 60 * 24));
           setDaysLeft(dayDiff);
+          //setButton disabled status
+          checkOwner(response.data._data.status);
+          fetchBackers(response.data._data.id);
         });
       console.log(data);
     } catch (error) {
@@ -173,7 +230,6 @@ const ProjectDetail = () => {
   useEffect(() => {
     fetchProject();
     fetchMilestones();
-    checkOwner();
   }, [id]);
 
   console.log(projectData);
@@ -199,10 +255,22 @@ const ProjectDetail = () => {
   //handle modal
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const handleOpen = () => setIsModalOpen(true);
   const handleClose = () => {
     setIsModalOpen(false);
     console.log(isModalOpen);
+  };
+
+  const renderButtonContent = () => {
+    const fixStatus = projectData.status;
+    switch (fixStatus) {
+      case processing:
+        return "Update Project";
+      case fundedSuccessful:
+        return "Request Milestone";
+      default:
+        // setButtonActive(true);
+        return "Unable to take action";
+    }
   };
 
   return (
@@ -303,7 +371,7 @@ const ProjectDetail = () => {
                           </span>
                         </Typography>
                         <Typography sx={{ fontSize: "22px", fontWeight: 800 }}>
-                          {backers}{" "}
+                          {packBackers.length}{" "}
                           <span style={{ fontSize: "18px", fontWeight: "400" }}>
                             backers
                           </span>
@@ -350,6 +418,7 @@ const ProjectDetail = () => {
                     >
                       <Button
                         variant="contained"
+                        disabled={buttonActive}
                         sx={{
                           width: "100%",
                           whiteSpace: "nowrap",
@@ -366,9 +435,7 @@ const ProjectDetail = () => {
                       >
                         {isOwner ? (
                           <Typography>
-                            {projectData.status == processing
-                              ? "Update Project"
-                              : "Request Milestone Disbursement"}
+                            {renderButtonContent()}
                           </Typography>
                         ) : (
                           <Typography>Back this project</Typography>
@@ -393,7 +460,6 @@ const ProjectDetail = () => {
                               fontWeight: "bold",
                               py: 1,
                               color: "#000000",
-                              border: "1px solid #000000",
                             }}
                             className="like-btn"
                           >
@@ -413,7 +479,6 @@ const ProjectDetail = () => {
                               fontWeight: "bold",
                               py: 1,
                               color: "#000000",
-                              border: "1px solid #000000",
                             }}
                             className="like-btn"
                           >
@@ -601,6 +666,7 @@ const ProjectDetail = () => {
                   <Box>
                     <Box>
                       <PackageSide
+                      isButtonActive={buttonBackerActive}
                         packageList={projectData.packages}
                         reloadDetail={fetchProject}
                       />
@@ -611,6 +677,7 @@ const ProjectDetail = () => {
               {tabValue === "2" && (
                 <Container maxWidth="1400px">
                   <PackageReward
+                  isButtonActive={buttonBackerActive}
                     packageList={projectData.packages}
                     reloadDetail={fetchProject}
                   />
@@ -628,7 +695,7 @@ const ProjectDetail = () => {
                   <Box sx={{ marginRight: "150px" }}>
                     <Box>
                       <CommentSection
-                        isBacker={true}
+                        isBacker={isBacker || isOwner}
                         projectId={projectData.id}
                       />
                     </Box>
@@ -679,7 +746,7 @@ const ProjectDetail = () => {
                   >
                     <Box sx={{ marginRight: "150px" }}>
                       <Box>
-                        <BackerSection />
+                        <BackerSection backers={packBackers}/>
                       </Box>
                     </Box>
                     <Box>

@@ -50,11 +50,9 @@ import AdminWithdrawRequest from "./pages/AdminWithdrawRequest";
 import Chat from "./pages/Chat";
 import CheckoutCart from "./pages/CheckoutCart";
 import CheckoutSuccess from "./pages/CheckoutCart/CheckoutSuccess";
-import CommissionFee from "./pages/CommissionFee";
 import MarketplaceProjectBasicInfo from "./pages/CreateMarketplaceProjectForm/MarketplaceProjectBasicInfo";
 import MarketplaceProjectIntroduction from "./pages/CreateMarketplaceProjectForm/MarketplaceProjectIntroduction";
 import MarketplaceProjectMedia from "./pages/CreateMarketplaceProjectForm/MarketplaceProjectMedia";
-import MarketplaceHomePage from "./pages/MarketplaceHomePage";
 import MarketplaceProjectDetail from "./pages/MarketplaceProjectDetail";
 import Milestones from "./pages/Milestones";
 import MilestoneForm from "./pages/TestCR/MilestoneForm";
@@ -67,6 +65,16 @@ import Milestone2 from "./pages/UpdateFundingProjectForm/ProjectMilestone/Milest
 import Milestone3 from "./pages/UpdateFundingProjectForm/ProjectMilestone/Milestone3";
 import Milestone4 from "./pages/UpdateFundingProjectForm/ProjectMilestone/Milestone4";
 import ProjectPreview from "./pages/UpdateFundingProjectForm/ProjectPreview";
+import MarketplaceHomePage from "./pages/MarketplaceHomePage";
+import CommissionFee from "./pages/CommissionFee";
+import AboutUsLayout from "./layouts/AboutUsLayout";
+import Policies from "./pages/Policies";
+import AdminReport from "./pages/AdminPages/AdminReport";
+import MarketplaceProjectMedia from "./pages/CreateMarketplaceProjectForm/MarketplaceProjectMedia";
+import MarketplaceProjectSetupBankAccount from "./pages/CreateMarketplaceProjectForm/MarketplaceProjectSetupBankAccount";
+import GetAllProject from "./pages/GetAllProject";
+import MarketplaceProjectGameContent from "./pages/CreateMarketplaceProjectForm/MarketplaceProjectGameContent";
+
 function App() {
   const location = useLocation();
   const hideAppBar = location.pathname.includes("admin-dashboard");
@@ -97,9 +105,9 @@ function App() {
               />
               <Route path="/home" element={<HomePage />} />
               <Route path="/about-us" element={<AboutUs />} />
-              <Route path="/project-detail" element={<ProjectDetail />} />
               <Route path="/marketplace" element={<MarketplaceHomePage />} />
               <Route path="/marketplace-detail/:id" element={<MarketplaceProjectDetail />} />
+              <Route path="/crowdfunding" element={<GetAllProject />} />
             </Route>
             <Route path="choose-project-plan" element={<ChoosePlan />} />
             <Route element={<CreateFundingProjectLayout />}>
@@ -191,6 +199,9 @@ function App() {
               />
               <Route path="/admin-dashboard/report" element={<AdminReport />} />
             </Route>
+            <Route element={<AboutUsLayout />}>
+              <Route path="/policies" element={<Policies />} />
+            </Route>
 
             <Route path="/funding-detail/:id" element={<ProjectDetail />} />
 
@@ -236,14 +247,14 @@ function App() {
                 path="request-marketplace-project/:id/project-media"
                 element={<MarketplaceProjectMedia />}
               />
-              {/* <Route
-                path="request-marketplace-project/setup-bank-account"
-                element={<SetupBankAccount />}
+              <Route
+                path="request-marketplace-project/:id/bank-account"
+                element={<MarketplaceProjectSetupBankAccount />}
               />
               <Route
-                path="request-marketplace-project/game-content"
-                element={<SetupDonatePackage />}
-              /> */}
+                path="request-marketplace-project/:id/game-content"
+                element={<MarketplaceProjectGameContent />}
+              />
             </Route>
           </Routes>
         </ChatProvider>

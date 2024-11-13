@@ -13,6 +13,7 @@ import ChangeCircleIcon from '@mui/icons-material/ChangeCircle';
 import milestoneApiInstace from "../../../../utils/ApiInstance/milestoneApiInstance";
 import BackdropRequestMilestone from "../../../../components/UpdateProject/BackdropRequestMilestone";
 import Swal from "sweetalert2";
+import CompleteMilestoneButton from "../../../../components/UpdateProject/CompleteMilestoneButton";
 const MilestoneForm = () => {
   const { id } = useParams(); // Get the project ID from the URL
   console.log(id);
@@ -28,6 +29,7 @@ const MilestoneForm = () => {
   const [dropdownAnchorEl, setDropdownAnchorEl] = useState(null);
   const [anchorEls, setAnchorEls] = useState({})
   const [isBackdropHidden, setIsBackdropHidden] = useState(false);
+  const [buttonActive, setButtonActive] = useState(false)
   //check available project milestone
   const getMilestoneData = async (id) => {
     setIsLoading(true); // Start loading when data fetch begins
@@ -158,7 +160,7 @@ const MilestoneForm = () => {
   };
 
 
-  if (!milestone) return <p>Loading milestone...</p>;
+  if (!milestone || !milestoneData) return <p>Loading milestone...</p>;
 
   return (
     <div >
@@ -174,18 +176,26 @@ const MilestoneForm = () => {
         <CircularProgress color="inherit" />
       </Backdrop>
       <div className='basic-info-section'>
-        <Typography
-          className='basic-info-title'
-          sx={{ width: '70%', }}
-        >
-          {milestone.milestoneName}<span className='text-[#1BAA64]'>*</span>
-        </Typography>
-        <Typography
-          className='basic-info-subtitle'
-          sx={{ width: '70%', }}
-        >
-          {milestone.description}
-        </Typography>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingRight : '5rem' }}>
+          <Box>
+            <Typography
+              className='basic-info-title'
+            >
+              {milestone.milestoneName}<span className='text-[#1BAA64]'>*</span>
+            </Typography>
+            <Typography
+              className='basic-info-subtitle'
+              sx={{width : '100%'}}
+            >
+              {milestone.description}
+            </Typography>
+          </Box>
+          <Box>
+            <CompleteMilestoneButton status={milestoneData.status} pmId={milestoneData.Id}/>
+          </Box>
+          
+        </Box>
+
         {!isLoading && milestoneData && milestoneData.status == 'create' ? (
           <form onSubmit={handleSubmit}>
             {milestone.requirements.map((req, index) => (

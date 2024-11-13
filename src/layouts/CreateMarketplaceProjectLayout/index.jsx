@@ -41,17 +41,15 @@ const CreateMarketplaceProjectLayout = () => {
         if (response.status === 200) {
           const data = response.data._data;
 
+          console.log(data);
+
           setMarketplaceProject({
             name: data.name || "",
             description: data.description || "",
             introduction: data.introduction || "",
+            price: 1000,
             fundingProjectId: data.id || "",
-            marketplaceFiles:
-              data.fundingFiles?.map((file) => ({
-                name: file.name || "",
-                url: file.url || "",
-                filetype: file.filetype,
-              })) || [],
+            marketplaceFiles: [],
             categories:
               data.categories?.map((category) => ({
                 id: category.id || "",

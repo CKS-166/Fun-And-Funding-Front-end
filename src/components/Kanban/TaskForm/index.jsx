@@ -108,17 +108,7 @@ const TaskForm = ({ onAddTask, projectId, milestoneId, requirementId }) => {
           display: 'flex', justifyContent: 'flex-start'
           , marginBottom: '10px'
         }}>
-          <Button
-            variant="contained" component="label"
-            sx={{
-              backgroundColor: '#1BAA64', textTransform: 'none', fontWeight: '600'
-              , marginLeft: '30rem'
-            }}
-            startIcon={<FaPlus />}
-
-          >
-            Complete Milestone
-          </Button>
+          
         </Box>
       </Box>
 

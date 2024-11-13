@@ -15,13 +15,13 @@ const style = {
     overflow : 'auto'
 };
 
-const PackageModal = ({ open, handleClose, item, onDonate }) => {
+const PackageModal = ({ open, handleClose, item, onDonate, isButtonActive }) => {
     return (
         <Modal open={open} onClose={handleClose}>
             <Box className="package-reward" sx={style}>
                 <Box sx={{ display: 'flex', padding: '34px' }} >
                     <Box className='package-image' sx={{ width: '50%' }}>
-                        <img src={kuru} />
+                        <img src={item.url} />
                     </Box>
                     <Box sx={{ width: '50%' }}>
                         <Typography sx={{ fontSize: '18px', fontWeight: '600' }}>{item.name}</Typography>
@@ -39,6 +39,7 @@ const PackageModal = ({ open, handleClose, item, onDonate }) => {
                             , background: "#1BAA64", fontWeight: "bold", py: 1,
                             borderRadius: '8px', color: '#FFFFFF', marginTop: '10px'
                         }}
+                        disabled={isButtonActive}
                             className='pledge-btn'
                             onClick={() =>onDonate()}>
                             Pledge

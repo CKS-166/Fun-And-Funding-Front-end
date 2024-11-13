@@ -1,4 +1,11 @@
-import { Grid2, Paper } from "@mui/material";
+import {
+  Box,
+  Button,
+  Grid2,
+  ImageList,
+  ImageListItem,
+  Paper,
+} from "@mui/material";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import FormDivider from "../../../components/CreateProject/ProjectForm/Divider";
@@ -10,6 +17,11 @@ import "filepond/dist/filepond.min.css";
 import ReactPlayer from "react-player";
 import NavigateButton from "../../../components/CreateProject/ProjectForm/NavigateButton";
 import { useCreateMarketplaceProject } from "../../../contexts/CreateMarketplaceProjectContext";
+import Lightbox from "react-18-image-lightbox";
+import Swal from "sweetalert2";
+import { v4 as uuidv4 } from "uuid";
+import AddCircleIcon from "@mui/icons-material/AddCircle";
+import ChangeCircleIcon from "@mui/icons-material/ChangeCircle";
 
 registerPlugin(FilePondPluginFileValidateType, FilePondPluginImagePreview);
 
@@ -19,70 +31,64 @@ const MarketplaceProjectMedia = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const [thumbnail, setThumbnail] = useState([]);
-  const [projectVideo, setProjectVideo] = useState([]);
-  const [projectImages, setProjectImages] = useState([]);
-  const [initialLoad, setInitialLoad] = useState(true);
+  // Initialize state from context for persistent files
+  const [thumbnail, setThumbnail] = useState(
+    marketplaceProject.marketplaceFiles
+      ?.filter((file) => file.filetype === 2)
+      .map((file) => ({ source: file.url, options: { type: "local" } })) || []
+  );
+  const [projectVideo, setProjectVideo] = useState(
+    marketplaceProject.marketplaceFiles
+      ?.filter((file) => file.filetype === 1)
+      .map((file) => ({ source: file.url, options: { type: "local" } })) || []
+  );
+  const [projectImages, setProjectImages] = useState(
+    marketplaceProject.marketplaceFiles
+      ?.filter((file) => file.filetype === 4)
+      .map((file) => ({ source: file.url, options: { type: "local" } })) || []
+  );
 
   useEffect(() => {
-    setFormIndex(2);
+    setFormIndex(2); // Set the form index for navigation
   }, []);
 
-  // Load initial values from marketplaceFiles
+  // Sync state with context whenever files change
   useEffect(() => {
-    if (!initialLoad) return;
+    const marketplaceFiles = [];
 
-    const { marketplaceFiles } = marketplaceProject;
+    if (thumbnail.length > 0) {
+      marketplaceFiles.push({
+        name: "marketplace_project_thumbnail",
+        url: thumbnail[0].file || thumbnail[0].source, // Use source if previously uploaded
+        filetype: 2,
+      });
+    }
 
-    const thumbnailFile = marketplaceFiles
-      .filter((file) => file.filetype === 2)
-      .map((file) => ({
-        source: file.url,
-        options: { type: "remote" },
-      }));
+    if (projectVideo.length > 0) {
+      marketplaceFiles.push({
+        name: "marketplace_project_video",
+        url: projectVideo[0].file || projectVideo[0].source,
+        filetype: 1,
+      });
+    }
 
-    const videoFile = marketplaceFiles
-      .filter((file) => file.filetype === 1)
-      .map((file) => ({
-        source: file.url,
-        options: { type: "remote" },
-      }));
-
-    const imageFiles = marketplaceFiles
-      .filter((file) => file.filetype === 4)
-      .map((file) => ({
-        source: file.url,
-        options: { type: "remote" },
-      }));
-
-    setThumbnail(thumbnailFile);
-    setProjectVideo(videoFile);
-    setProjectImages(imageFiles);
-    setInitialLoad(false);
-  }, [marketplaceProject.marketplaceFiles, initialLoad]);
-
-  // Update marketplaceFiles when file states change
-  const handleFileUpdate = (files, type) => {
-    const updatedMarketplaceFiles = [...marketplaceProject.marketplaceFiles];
-
-    // Remove existing files of the current type
-    const filteredFiles = updatedMarketplaceFiles.filter(
-      (file) => file.filetype !== type
-    );
-
-    // Add new files
-    const newFiles = files.map((fileItem, index) => ({
-      name:
-        type === 2 ? "thumbnail" : type === 1 ? "video" : `image_${index + 1}`,
-      url: fileItem.file,
-      filetype: type,
-    }));
+    if (projectImages.length > 0) {
+      projectImages.forEach((image, index) => {
+        marketplaceFiles.push({
+          name: `marketplace_project_image_${index + 1}`,
+          url: image.file || image.source,
+          filetype: 4,
+        });
+      });
+    }
 
     setMarketplaceProject((prev) => ({
       ...prev,
-      marketplaceFiles: [...filteredFiles, ...newFiles],
+      marketplaceFiles,
     }));
-  };
+  }, [thumbnail, projectVideo, projectImages, setMarketplaceProject]);
+
+  console.log(marketplaceProject.marketplaceFiles);
 
   return (
     <Paper elevation={1} className="bg-white w-full overflow-hidden">
@@ -102,10 +108,7 @@ const MarketplaceProjectMedia = () => {
           <Grid2 size={9}>
             <FilePond
               files={thumbnail}
-              onupdatefiles={(files) => {
-                setThumbnail(files);
-                handleFileUpdate(files, 2);
-              }}
+              onupdatefiles={setThumbnail}
               allowMultiple={false}
               maxFiles={1}
               acceptedFileTypes={["image/*"]}
@@ -116,7 +119,7 @@ const MarketplaceProjectMedia = () => {
         </Grid2>
 
         <FormDivider title="Project demo video" />
-        <Grid2 container spacing={2} className="mt-8">
+        <Grid2 container spacing={2} className="my-8">
           <Grid2 size={3}>
             <h4 className="font-semibold text-sm mb-1">Project demo*</h4>
             <p className="text-gray-500 text-xs">
@@ -126,10 +129,7 @@ const MarketplaceProjectMedia = () => {
           <Grid2 size={9}>
             <FilePond
               files={projectVideo}
-              onupdatefiles={(files) => {
-                setProjectVideo(files);
-                handleFileUpdate(files, 1);
-              }}
+              onupdatefiles={setProjectVideo}
               allowMultiple={false}
               maxFiles={1}
               acceptedFileTypes={["video/mp4", "video/avi", "video/mov"]}
@@ -139,7 +139,11 @@ const MarketplaceProjectMedia = () => {
             {projectVideo.length > 0 && (
               <div className="mt-4">
                 <ReactPlayer
-                  url={projectVideo[0].source}
+                  url={
+                    projectVideo[0].file instanceof File
+                      ? URL.createObjectURL(projectVideo[0].file)
+                      : projectVideo[0].source
+                  }
                   width="100%"
                   height="100%"
                   controls
@@ -162,10 +166,7 @@ const MarketplaceProjectMedia = () => {
           <Grid2 size={9}>
             <FilePond
               files={projectImages}
-              onupdatefiles={(files) => {
-                setProjectImages(files);
-                handleFileUpdate(files, 4);
-              }}
+              onupdatefiles={setProjectImages}
               allowMultiple={true}
               maxFiles={4}
               acceptedFileTypes={["image/*"]}
@@ -185,7 +186,7 @@ const MarketplaceProjectMedia = () => {
           <NavigateButton
             text="Next"
             onClick={() =>
-              navigate(`/request-marketplace-project/${id}/set-up-bank-account`)
+              navigate(`/request-marketplace-project/${id}/bank-account`)
             }
           />
         </div>

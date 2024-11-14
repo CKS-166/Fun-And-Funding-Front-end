@@ -14,7 +14,7 @@ import { Outlet, useParams } from "react-router";
 import "./index.css";
 import { steps, stepStyle } from "./CreateMarketplaceProjectLayout";
 import { useCreateMarketplaceProject } from "../../contexts/CreateMarketplaceProjectContext";
-import { MarketplaceProjectProvider } from "../../contexts/CreateMarketplaceProjectContext";
+import { CreateMarketplaceProjectProvider } from "../../contexts/CreateMarketplaceProjectContext";
 import marketplaceProjectApiInstace from "../../utils/ApiInstance/marketplaceProjectApiInstance";
 import fundingProjectApiInstance from "../../utils/ApiInstance/fundingProjectApiInstance";
 

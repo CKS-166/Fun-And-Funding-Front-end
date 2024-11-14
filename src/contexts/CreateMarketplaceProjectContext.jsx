@@ -5,7 +5,7 @@ const CreateMarketplaceProjectContext = createContext();
 export const useCreateMarketplaceProject = () =>
   useContext(CreateMarketplaceProjectContext);
 
-export const MarketplaceProjectProvider = ({ children }) => {
+export const CreateMarketplaceProjectProvider = ({ children }) => {
   const [formIndex, setFormIndex] = useState(0);
   const [marketplaceProject, setMarketplaceProject] = useState({
     name: "",

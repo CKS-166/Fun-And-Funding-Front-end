@@ -37,7 +37,7 @@ import TestDetail from "./pages/TestDetail";
 import { Backdrop, CircularProgress } from "@mui/material";
 import { CartProvider } from "./contexts/CartContext";
 import { ChatProvider } from "./contexts/ChatContext";
-import { MarketplaceProjectProvider } from "./contexts/CreateMarketplaceProjectContext";
+import { CreateMarketplaceProjectProvider } from "./contexts/CreateMarketplaceProjectContext";
 import { useLoading } from "./contexts/LoadingContext";
 import AdminDashboardLayout from "./layouts/AdminDashboardLayout";
 import ChatLayout from "./layouts/ChatLayout";
@@ -73,6 +73,9 @@ import Policies from "./pages/Policies";
 import MarketplaceProjectSetupBankAccount from "./pages/CreateMarketplaceProjectForm/MarketplaceProjectSetupBankAccount";
 import GetAllProject from "./pages/GetAllProject";
 import MarketplaceProjectGameContent from "./pages/CreateMarketplaceProjectForm/MarketplaceProjectGameContent";
+import UpdateMarketplaceProjectLayout from "./layouts/UpdateMarketplaceProjectLayout";
+import { UpdateMarketplaceProjectProvider } from "./contexts/UpdateMarketplaceProjectContext";
+import MarketplaceProjectPreview from "./pages/UpdateMarketplaceProjectForm/ProjectPreview";
 
 function App() {
   const location = useLocation();
@@ -143,11 +146,6 @@ function App() {
                 element={<ProjectPreview />}
               />
               <Route
-                path="/account/projects/update/:id/preview"
-                element={<ProjectPreview />}
-              />
-
-              <Route
                 path="/account/projects/update/:id/basic-info"
                 element={<BasicInformation />}
               />
@@ -179,6 +177,35 @@ function App() {
                 path="/account/projects/update/:id/milestone4"
                 element={<Milestone4 />}
               />
+            </Route>
+
+            <Route
+              element={
+                <UpdateMarketplaceProjectProvider>
+                  <UpdateMarketplaceProjectLayout />
+                </UpdateMarketplaceProjectProvider>
+              }
+            >
+              <Route
+                path="/account/marketplace-projects/update/:id/preview"
+                element={<MarketplaceProjectPreview />}
+              />
+              {/* <Route
+                path="/account/marketplace-projects/update/:id/basic-info"
+                element={<BasicInformation />}
+              />
+              <Route
+                path="/account/marketplace-projects/update/:id/bank-account"
+                element={<BankAccount />}
+              />
+              <Route
+                path="/account/marketplace-projects/update/:id/donation-packages"
+                element={<DonationPackages />}
+              />
+              <Route
+                path="/account/marketplace-projects/update/:id/media-files"
+                element={<Media />}
+              /> */}
             </Route>
 
             <Route element={<AdminDashboardLayout />}>
@@ -235,9 +262,9 @@ function App() {
 
             <Route
               element={
-                <MarketplaceProjectProvider>
+                <CreateMarketplaceProjectProvider>
                   <CreateMarketplaceProjectLayout />
-                </MarketplaceProjectProvider>
+                </CreateMarketplaceProjectProvider>
               }
             >
               <Route

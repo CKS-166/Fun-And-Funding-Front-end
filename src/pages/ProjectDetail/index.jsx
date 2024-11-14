@@ -38,28 +38,7 @@ import ReportProblemIcon from "@mui/icons-material/ReportProblem";
 import { ToastContainer, toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import packageBackerApiInstance from "../../utils/ApiInstance/packageBackerApiInstance";
-const notify = (message, type) => {
-  const options = {
-    position: "top-right",
-    autoClose: 3000,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    style: {
-      backgroundColor: "#ffffff",
-      color: "#000000",
-      fontWeight: "bold",
-    },
-  };
-
-  if (type === "warn") {
-    toast.warn(message, options);
-  } else if (type === "success") {
-    toast.success(message, options);
-  } else if (type === "error") {
-    toast.error(message, options);
-  }
-};
+import { useLoading } from "../../contexts/LoadingContext";
 
 const ProjectDetail = () => {
   const token = Cookies.get("_auth");
@@ -69,8 +48,7 @@ const ProjectDetail = () => {
   //sample data
   const { id } = useParams();
   console.log(id);
-  const number = 30000000;
-  const backers = 1000;
+
   const convertPercentage = (a, b) => Math.ceil((a / b) * 100);
   const [tabValue, setTabValue] = useState("1");
   const [projectData, setProjectData] = useState({});

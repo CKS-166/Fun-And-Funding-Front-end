@@ -191,7 +191,7 @@ const MilestoneForm = () => {
             </Typography>
           </Box>
           <Box>
-            <CompleteMilestoneButton status={milestoneData.status} pmId={milestoneData.Id}/>
+            <CompleteMilestoneButton status={milestoneData.status} pmId={milestoneData.status == 'edit' && milestoneData.data[0].id}/>
           </Box>
           
         </Box>

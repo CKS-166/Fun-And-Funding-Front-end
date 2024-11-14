@@ -6,6 +6,7 @@ import Swal from 'sweetalert2'
 const CompleteMilestoneButton = ({ status, pmId }) => {
     const processing = 1;
     const submitted = 5;
+    console.log(status)
     console.log(pmId)
     const submitMilestone = async () => {
         try {

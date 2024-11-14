@@ -69,6 +69,7 @@ function LoginForm({ onClose, onOpenRoleSelection, onOpenForgotPassword }) {
         } else {
           const decodedToken = jwtDecode(res.data._data);
           const userRole = decodedToken.role;
+          console.log(userRole);
 
           signIn({
             auth: {
@@ -102,7 +103,20 @@ function LoginForm({ onClose, onOpenRoleSelection, onOpenForgotPassword }) {
             },
           }).then(() => {
             // This will execute after Swal closes
-            navigate("/home");
+            const token = Cookies.get("_auth");
+            const decodedToken = jwtDecode(token);
+            const userRole =
+              decodedToken[
+                "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
+              ];
+            console.log(userRole);
+            if (userRole === "Backer") {
+              navigate("/home");
+            } else if (userRole === "Administrator") {
+              navigate("/admin-dashboard/dashboard");
+            } else {
+              navigate("/home");
+            }
           });
 
           setCookie("_auth", Cookies.get("_auth"), 3600);

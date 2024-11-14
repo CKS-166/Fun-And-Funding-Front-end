@@ -1,9 +1,14 @@
-import { Button, Card, Chip, LinearProgress, linearProgressClasses, styled } from '@mui/material';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import { Card, Chip, IconButton, LinearProgress, linearProgressClasses, styled, Tooltip } from '@mui/material';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
-import React from 'react';
-import { FaRegBookmark } from "react-icons/fa6";
+import Cookies from "js-cookie";
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router';
+import likeApiInstace from '../../utils/ApiInstance/likeApiInstance';
+import packageBackerApiInstance from "../../utils/ApiInstance/packageBackerApiInstance";
 import './index.css';
 
 const BorderLinearProgress = styled(LinearProgress)(() => ({
@@ -19,6 +24,50 @@ const BorderLinearProgress = styled(LinearProgress)(() => ({
 }));
 
 function HomeFundingProjectCard({ fundingProject }) {
+    const token = Cookies.get("_auth");
+    const navigate = useNavigate();
+    const [liked, isLiked] = useState(false);
+    const [packBackers, setPackBackers] = useState([]);
+
+    useEffect(() => {
+        if (token != undefined || token != null) {
+            fetchUserLike();
+            fetchBackers();
+        }
+    }, [fundingProject, token])
+
+    const fetchUserLike = async () => {
+        try {
+            const res = await likeApiInstace.get(`/get-project-like/${fundingProject.id}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            })
+            if (res.data._statusCode == 200) {
+                isLiked(res.data._data.isLike);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    const handleLikeProject = async () => {
+        try {
+            const res = await likeApiInstace.post(`/funding`, {
+                projectId: fundingProject.id
+            }, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            })
+            if (res.data._statusCode == 200) {
+                isLiked(!liked);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     const calculateDaysLeft = (startDate, endDate) => {
         const now = new Date();
         const start = new Date(startDate);
@@ -43,6 +92,20 @@ function HomeFundingProjectCard({ fundingProject }) {
         }
     }
 
+    const fetchBackers = async (id) => {
+        try {
+            await packageBackerApiInstance
+                .get(`/project-backers-detail?projectId=${fundingProject.id}`)
+                .then((res) => {
+                    if (res.data.result._isSuccess) {
+                        setPackBackers(res.data.result._data);
+                    }
+                });
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
     const convertPercentage = (a, b) => Math.ceil((a / b) * 100);
 
     return (
@@ -53,25 +116,51 @@ function HomeFundingProjectCard({ fundingProject }) {
                 loading='lazy'
                 sx={{ width: '22.75rem', height: '13.75rem', objectFit: 'cover' }}
             />
-            <Button
-                sx={{
-                    position: 'absolute',
-                    top: '1rem',
-                    right: '1rem',
-                    backgroundColor: '#F5F7F8',
-                    border: '1px solid #EAEAEA',
-                    p: '0.75rem',
-                    color: '#2F3645',
-                    minWidth: '0',
-                    '&:hover': {
-                        backgroundColor: '#DDDDDD',
-                    },
-                    letterSpacing: '0.5px',
-                    zIndex: 2
-                }}
-            >
-                <FaRegBookmark size={'1rem'} style={{ strokeWidth: '1rem' }} />
-            </Button>
+            {liked ? (
+                <Tooltip title="Unlike project" arrow>
+                    <IconButton
+                        sx={{
+                            position: 'absolute',
+                            top: '1rem',
+                            right: '1rem',
+                            backgroundColor: '#F5F7F8',
+                            border: '1px solid #EAEAEA',
+                            p: '0.75rem',
+                            color: '#FF4D4D',
+                            '&:hover': {
+                                backgroundColor: '#FFCCCC',
+                            },
+                            letterSpacing: '0.5px',
+                            zIndex: 2,
+                        }}
+                        onClick={() => handleLikeProject()}
+                    >
+                        <FavoriteIcon size="1rem" style={{ strokeWidth: '1rem' }} />
+                    </IconButton>
+                </Tooltip>
+            ) : (
+                <Tooltip title="Like project" arrow>
+                    <IconButton
+                        sx={{
+                            position: 'absolute',
+                            top: '1rem',
+                            right: '1rem',
+                            backgroundColor: '#F5F7F8',
+                            border: '1px solid #EAEAEA',
+                            p: '0.75rem',
+                            color: '#2F3645',
+                            '&:hover': {
+                                backgroundColor: '#DDDDDD',
+                            },
+                            letterSpacing: '0.5px',
+                            zIndex: 2,
+                        }}
+                        onClick={() => handleLikeProject()}
+                    >
+                        <FavoriteBorderIcon size="1rem" style={{ strokeWidth: '1rem' }} />
+                    </IconButton>
+                </Tooltip>
+            )}
             <CardContent sx={{ px: '2rem !important', marginBottom: '0.5rem' }} className='parent-card'>
                 <Card className='children-card' sx={{ backgroundColor: '#F5F7F8' }}>
                     <CardMedia
@@ -87,7 +176,7 @@ function HomeFundingProjectCard({ fundingProject }) {
                         <BorderLinearProgress variant="determinate" sx={{ width: "100%", my: '0.313rem' }} value={convertPercentage(fundingProject.balance, fundingProject.target)} />
                         <div className='flex flex-row justify-between'>
                             <Typography sx={{ color: '#2F3645', fontSize: '0.75rem', fontWeight: '600' }}>
-                                696 Investors
+                                {packBackers?.length} Investors
                             </Typography>
                             <Typography sx={{ color: '#2F3645', fontSize: '0.75rem', fontWeight: '600' }}>
                                 {convertPercentage(fundingProject.balance, fundingProject.target)}% of target
@@ -96,22 +185,39 @@ function HomeFundingProjectCard({ fundingProject }) {
                     </div>
                 </Card>
                 <div className='mt-[2rem]'>
-                    <Typography
-                        sx={{
-                            color: '#2F3645',
-                            fontWeight: '700',
-                            mb: '1rem',
-                            width: 'fit-content',
-                            display: '-webkit-box',
-                            WebkitBoxOrient: 'vertical',
-                            WebkitLineClamp: 1,
-                            overflow: 'hidden',
-                            textOverflow: 'ellipsis',
+                    <a
+                        href={`/funding-detail/${fundingProject.id}`}
+                        style={{
+                            textDecoration: 'none',
+                            marginBottom: '1rem',
+                            display: 'inline-block',
                         }}
-                        className='project-card-name'
                     >
-                        {fundingProject.name}
-                    </Typography>
+                        <Typography
+                            sx={{
+                                color: '#2F3645',
+                                fontWeight: '700',
+                                width: 'fit-content',
+                                position: 'relative',
+                                transition: 'all 0.3s ease-in-out',
+                            }}
+                            className="project-card-name"
+                        >
+                            <span
+                                style={{
+                                    display: '-webkit-box',
+                                    WebkitBoxOrient: 'vertical',
+                                    WebkitLineClamp: 1,
+                                    overflow: 'hidden',
+                                    textOverflow: 'ellipsis',
+                                    fontSize: '1.2rem',
+                                    fontWeight: '700',
+                                }}
+                            >
+                                {fundingProject.name}
+                            </span>
+                        </Typography>
+                    </a>
                     <Typography sx={{
                         color: '#2F3645', fontWeight: '400', fontSize: '0.875rem', width: 'fit-content',
                         display: '-webkit-box',

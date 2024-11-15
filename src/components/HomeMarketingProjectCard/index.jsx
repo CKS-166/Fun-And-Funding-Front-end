@@ -179,7 +179,7 @@ function HomeMarketingProjectCard({ marketplaceProject }) {
                                     />
                                 ))}
                             </div>
-                            <Chip label="PC" sx={{ borderRadius: '0.313rem', fontSize: '0.875rem' }} />
+                            <Chip label="Unity" sx={{ borderRadius: '0.313rem', fontSize: '0.875rem' }} />
                         </div>
                         <div>
                             <Typography sx={{ color: 'var(--black)', fontWeight: '700', mb: '0.5rem', width: 'full', fontSize: '1.5rem', textAlign: 'right' }}>

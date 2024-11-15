@@ -1,6 +1,5 @@
 /* eslint-disable no-unused-vars */
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import LogoutIcon from "@mui/icons-material/Logout";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
@@ -10,6 +9,7 @@ import {
   Badge,
   Box,
   Button,
+  CircularProgress,
   Container,
   Divider,
   IconButton,
@@ -20,14 +20,15 @@ import {
   Tab,
   Tabs,
   Toolbar,
-  Tooltip,
-  Typography,
+  Typography
 } from "@mui/material";
 import Aos from "aos";
 import "aos/dist/aos.css";
 import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
 import useSignOut from "react-auth-kit/hooks/useSignOut";
+import { FaClipboardList } from "react-icons/fa";
+import { FaFolderOpen, FaUserTie } from "react-icons/fa6";
 import { useLocation, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import homeLogo from "../../assets/images/logo-alt.png";
@@ -51,14 +52,26 @@ const FunFundingAppBar = () => {
     {
       label: "Account",
       route: "/account/profile",
-      icon: <AccountCircleIcon />,
+      icon: <FaUserTie style={{ fontSize: '1.25rem' }} />
     },
     {
       label: "My wallet",
       route: "/account/wallet",
       icon: <AccountBalanceWalletIcon />,
     },
-    { label: "Logout", route: "logout", icon: <LogoutIcon /> },
+  ];
+
+  const projectMenu = [
+    {
+      label: "My Projects",
+      route: "/account/profile",
+      icon: <FaFolderOpen style={{ fontSize: '1.25rem' }} />,
+    },
+    {
+      label: "My Orders",
+      route: "/account/wallet",
+      icon: <FaClipboardList style={{ fontSize: '1.25rem' }} />,
+    },
   ];
 
   const navigate = useNavigate();
@@ -68,10 +81,12 @@ const FunFundingAppBar = () => {
 
   const [name, setName] = useState("");
 
-  const [anchorElProfile, setAnchorElProfile] = useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
   const [user, setUser] = useState(null);
   const [tabValue, setTabValue] = useState(0);
   const [cartOpen, setCartOpen] = useState(false);
+  const [isHovering, setIsHovering] = useState(false);
+  const [userLoading, setUserLoading] = useState(false);
 
   const [isAuthDialogOpen, setIsAuthDialogOpen] = useState(false);
   const openAuthDialog = () => setIsAuthDialogOpen(true);
@@ -95,6 +110,7 @@ const FunFundingAppBar = () => {
 
   const fetchUser = async () => {
     try {
+      setUserLoading(true);
       const res = await userApiInstace.get("/info", {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -103,10 +119,12 @@ const FunFundingAppBar = () => {
       if (res.data._statusCode == 200) {
         const user = res.data._data;
         setUser(user);
-        setName(user.fullName);
+        setName(user.userName);
       }
     } catch (err) {
       console.log(err);
+    } finally {
+      setUserLoading(false);
     }
   };
 
@@ -115,15 +133,23 @@ const FunFundingAppBar = () => {
     navigate(pages[newValue].route);
   };
 
-  const handleOpenProfileMenu = (event) => {
-    setAnchorElProfile(event.currentTarget);
+  const handleMouseEnter = (event) => {
+    setAnchorEl(event.currentTarget);
+    setIsHovering(true);
   };
 
-  const handleCloseProfileMenu = () => {
-    setAnchorElProfile(null);
+  const handleMouseLeave = () => {
+    const timeoutId = setTimeout(() => {
+      if (!isHovering) {
+        setAnchorEl(null);
+      }
+    }, 100);
+    setIsHovering(false);
+    return () => clearTimeout(timeoutId);
   };
-  const signOut = useSignOut();
-  const handleProfileMenuClick = (route) => {
+
+  const handleMenuClick = (route) => {
+    setAnchorEl(null);
     if (route === "logout") {
       Swal.fire({
         title: "Warning?",
@@ -147,6 +173,11 @@ const FunFundingAppBar = () => {
     }
     handleCloseProfileMenu();
   };
+
+  const handleCloseProfileMenu = () => {
+    setAnchorElProfile(null);
+  };
+  const signOut = useSignOut();
 
   const handleCartOpen = () => {
     setCartOpen(!cartOpen);
@@ -241,8 +272,8 @@ const FunFundingAppBar = () => {
                           ? "#1BAA64"
                           : "#F5F7F8"
                         : tabValue === index
-                        ? "#1BAA64"
-                        : "#2F3645",
+                          ? "#1BAA64"
+                          : "#2F3645",
                       fontWeight: "700 !important",
                     }}
                     error="false"
@@ -297,33 +328,176 @@ const FunFundingAppBar = () => {
                     }}
                   />
                 </Badge>
-                <Tooltip title="Tài khoản">
-                  <IconButton sx={{ p: 0 }} onClick={handleOpenProfileMenu}>
-                    <Avatar alt="User" src={user?.avatar} />
-                  </IconButton>
-                </Tooltip>
-                <Menu
-                  anchorEl={anchorElProfile}
-                  anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-                  transformOrigin={{ vertical: "top", horizontal: "center" }}
-                  open={Boolean(anchorElProfile)}
-                  onClose={handleCloseProfileMenu}
-                >
-                  <MenuItem>
-                    <Typography>{name}</Typography>
-                  </MenuItem>
-                  <Divider />
-                  {profileMenu.map((menuItem) => (
-                    <MenuItem
-                      key={menuItem.label}
-                      //onClick={() => navigate(menuItem.route)}
-                      onClick={() => handleProfileMenuClick(menuItem.route)}
+                <div className="relative">
+                  <div
+                    onMouseEnter={handleMouseEnter}
+                    onMouseLeave={handleMouseLeave}
+                  >
+                    <IconButton href="account/profile" component="a">
+                      <Avatar alt="User" src={user?.avatar} />
+                    </IconButton>
+                  </div>
+                  <Menu
+                    anchorEl={anchorEl}
+                    open={Boolean(anchorEl)}
+                    onClose={() => setAnchorEl(null)}
+                    anchorOrigin={{
+                      vertical: 'bottom',
+                      horizontal: 'right',
+                    }}
+                    transformOrigin={{
+                      vertical: 'top',
+                      horizontal: 'right',
+                    }}
+                    onMouseEnter={() => setIsHovering(true)}
+                    onMouseLeave={handleMouseLeave}
+                    sx={{
+                      '& .MuiPaper-root': {
+                        width: '20rem',
+                        borderRadius: '10px',
+                        padding: '1rem',
+                        boxShadow: '0px 3px 3px -2px rgba(0, 0, 0, 0.2), 0px 3px 4px 0px rgba(0, 0, 0, 0.14), 0px 1px 8px 0px rgba(0, 0, 0, 0.12)',
+                        background: 'var(--white)',
+                        color: 'var(--black)',
+                      },
+                      color: 'var(--black)'
+                    }}
+                  >
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        width: '100%',
+                        pointerEvents: 'none',
+                        backgroundColor: 'var(--white)',
+                        '&:hover': {
+                          backgroundColor: 'var(--white)',
+                        },
+                      }}
                     >
-                      <ListItemIcon>{menuItem.icon}</ListItemIcon>
-                      <ListItemText>{menuItem.label}</ListItemText>
+                      <Avatar alt="User" src={user?.avatar} sx={{ mb: '1rem', width: '5rem', height: '5rem' }} />
+                      {userLoading ?
+                        <CircularProgress sx={{ color: 'var(--grey)', fontSize: '1rem' }}></CircularProgress>
+                        :
+                        <>
+                          <Typography
+                            sx={{
+                              fontSize: '1.25rem',
+                              fontWeight: '600',
+                              width: '13rem',
+                              whiteSpace: 'nowrap',
+                              overflow: 'hidden',
+                              textOverflow: 'ellipsis',
+                              textAlign: 'center'
+                            }}
+                          >
+                            {name}
+                          </Typography>
+                          <Typography
+                            sx={{
+                              fontSize: '0.875rem',
+                              fontWeight: '400',
+                              width: '15rem',
+                              whiteSpace: 'nowrap',
+                              overflow: 'hidden',
+                              textOverflow: 'ellipsis',
+                              textAlign: 'center'
+                            }}
+                          >
+                            {user?.email}
+                          </Typography>
+                        </>
+                      }
+                    </Box>
+
+                    <Divider sx={{ my: '1rem !important' }} />
+
+                    {profileMenu.map((item) => (
+                      <MenuItem
+                        key={item.label}
+                        onClick={() => handleMenuClick(item.route)}
+                        sx={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          borderRadius: '0.625rem',
+                          '&:hover': {
+                            backgroundColor: 'var(--primary-green)',
+                            color: 'var(--white)',
+                            '& .MuiListItemIcon-root': {
+                              color: 'var(--white)',
+                            },
+                          },
+                          color: 'var(--black)',
+                          py: '0.5rem'
+                        }}
+                      >
+                        <ListItemIcon sx={{ color: 'var(--black)', mr: '1rem' }}>{item.icon}</ListItemIcon>
+                        <ListItemText
+                          primaryTypographyProps={{ sx: { fontWeight: '500 !important' } }}
+                        >
+                          {item.label}
+                        </ListItemText>
+                      </MenuItem>
+                    ))}
+
+                    <Divider sx={{ my: '1rem !important' }} />
+
+                    {projectMenu.map((item) => (
+                      <MenuItem
+                        key={item.label}
+                        onClick={() => handleMenuClick(item.route)}
+                        sx={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          '&:hover': {
+                            backgroundColor: 'var(--primary-green)',
+                            color: 'var(--white)',
+                            '& .MuiListItemIcon-root': {
+                              color: 'var(--white)',
+                            },
+                          },
+                          color: 'var(--black)',
+                          borderRadius: '0.625rem',
+                          py: '0.5rem'
+                        }}
+                      >
+                        <ListItemIcon sx={{ color: 'var(--black)', mr: '1rem' }}>{item.icon}</ListItemIcon>
+                        <ListItemText
+                          primaryTypographyProps={{ sx: { fontWeight: '500 !important' } }}
+                        >
+                          {item.label}
+                        </ListItemText>
+                      </MenuItem>
+                    ))}
+
+                    <Divider sx={{ my: '1rem !important' }} />
+
+                    <MenuItem
+                      onClick={() => handleMenuClick('logout')}
+                      sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        '&:hover': {
+                          backgroundColor: 'var(--red)',
+                          color: 'var(--white)',
+                          '& .MuiListItemIcon-root': {
+                            color: 'var(--white)',
+                          },
+                        },
+                        color: 'var(--black)',
+                        borderRadius: '0.625rem',
+                        py: '0.5rem'
+                      }}
+                    >
+                      <ListItemIcon sx={{ color: 'var(--black)', mr: '1rem' }}>
+                        <LogoutIcon />
+                      </ListItemIcon>
+                      <ListItemText primaryTypographyProps={{ sx: { fontWeight: '500 !important' } }}>Log Out</ListItemText>
                     </MenuItem>
-                  ))}
-                </Menu>
+                  </Menu>
+                </div>
               </Box>
             ) : (
               <Button

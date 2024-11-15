@@ -2,7 +2,7 @@ import { Avatar, Box, Paper, Typography } from '@mui/material';
 import React from 'react';
 import MarketplaceProjectIntro from "../../components/MarketplaceProjectIntro";
 
-function MarketplaceUpdateContent() {
+function MarketplaceUpdateContent({ content }) {
     return (
         <Paper sx={{ backgroundColor: 'var(--white)', borderRadius: '0.625rem', p: '3rem' }} elevation={3}>
             <Typography
@@ -23,7 +23,7 @@ function MarketplaceUpdateContent() {
                     mb: '2rem'
                 }}
             >
-                Post E3 Wrap! Silksong Systems Update!
+                Update game file version
             </Typography>
             <Box
                 sx={{

@@ -19,6 +19,7 @@ import { useLoading } from "../../contexts/LoadingContext";
 import cartApiInstance from '../../utils/ApiInstance/cartApiInstance';
 import commentApiInstace from '../../utils/ApiInstance/commentApiInstance';
 import likeApiInstace from '../../utils/ApiInstance/likeApiInstance';
+import marketplaceFileApiInstance from '../../utils/ApiInstance/marketplaceFileApiInstance';
 import marketplaceProjectApiInstace from '../../utils/ApiInstance/marketplaceProjectApiInstance';
 import './index.css';
 
@@ -58,6 +59,7 @@ function MarketplaceProjectDetail() {
     const [liked, isLiked] = useState(false);
     const [comment, setComment] = useState("");
     const [commentList, setCommentList] = useState([]);
+    const [updateList, setUpdateList] = useState([]);
     const [sendLoading, setSendLoading] = useState(false);
 
     const [isAuthDialogOpen, setIsAuthDialogOpen] = useState(false);
@@ -68,6 +70,7 @@ function MarketplaceProjectDetail() {
         fetchMarketplaceProject();
         fetchUserLike();
         fetchComments();
+        fetchUpdates();
     }, [id]);
 
     const fetchMarketplaceProject = async () => {
@@ -201,6 +204,21 @@ function MarketplaceProjectDetail() {
             if (res.status == 200) {
                 const sortedComments = res.data.sort((a, b) => new Date(b.createDate) - new Date(a.createDate));
                 setCommentList(sortedComments);
+            }
+        } catch (error) {
+            notify(error.response?.data?.message || error.message || "An error occurred", "error");
+        }
+    }
+
+    const fetchUpdates = async () => {
+        try {
+            const res = await marketplaceFileApiInstance.get(`${id}/game-files`, {
+                params: {
+                    pageSize: 9999
+                }
+            })
+            if (res.data._statusCode == 200) {
+                setUpdateList(res.data._data);
             }
         } catch (error) {
             notify(error.response?.data?.message || error.message || "An error occurred", "error");

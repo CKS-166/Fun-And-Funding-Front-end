@@ -14,6 +14,7 @@ import CreateFundingProjectLayout from "./layouts/CreateFundingProjectLayout";
 import PublicProfileLayout from "./layouts/ProfileLayout/PublicProfileLayout";
 import UserProfileLayout from "./layouts/ProfileLayout/UserProfileLayout";
 import UpdateFundingProjectLayout from "./layouts/UpdateFundingProjectLayout";
+import UpdateMarketplaceProjectLayout from "./layouts/UpdateMarketplaceProjectLayout";
 import UserLayout from "./layouts/UserLayout";
 import AboutUs from "./pages/AboutUs";
 import AccountProfile from "./pages/AccountProfile";
@@ -39,6 +40,8 @@ import { CartProvider } from "./contexts/CartContext";
 import { ChatProvider } from "./contexts/ChatContext";
 import { CreateMarketplaceProjectProvider } from "./contexts/CreateMarketplaceProjectContext";
 import { useLoading } from "./contexts/LoadingContext";
+import { UpdateMarketplaceProjectProvider } from "./contexts/UpdateMarketplaceProjectContext";
+import AboutUsLayout from "./layouts/AboutUsLayout";
 import AdminDashboardLayout from "./layouts/AdminDashboardLayout";
 import ChatLayout from "./layouts/ChatLayout";
 import CreateMarketplaceProjectLayout from "./layouts/CreateMarketplaceProjectLayout";
@@ -46,15 +49,22 @@ import AccountWallet from "./pages/AccountWallet";
 import AdminMilestone from "./pages/AdminPages/AdminMilestone";
 import AdminReport from "./pages/AdminPages/AdminReport";
 import Dashboard from "./pages/AdminPages/Dashboard";
+import Users from "./pages/AdminPages/User";
 import AdminWithdrawRequest from "./pages/AdminWithdrawRequest";
 import Chat from "./pages/Chat";
 import CheckoutCart from "./pages/CheckoutCart";
 import CheckoutSuccess from "./pages/CheckoutCart/CheckoutSuccess";
+import CommissionFee from "./pages/CommissionFee";
 import MarketplaceProjectBasicInfo from "./pages/CreateMarketplaceProjectForm/MarketplaceProjectBasicInfo";
+import MarketplaceProjectGameContent from "./pages/CreateMarketplaceProjectForm/MarketplaceProjectGameContent";
 import MarketplaceProjectIntroduction from "./pages/CreateMarketplaceProjectForm/MarketplaceProjectIntroduction";
 import MarketplaceProjectMedia from "./pages/CreateMarketplaceProjectForm/MarketplaceProjectMedia";
+import MarketplaceProjectSetupBankAccount from "./pages/CreateMarketplaceProjectForm/MarketplaceProjectSetupBankAccount";
+import GetAllProject from "./pages/GetAllProject";
+import MarketplaceHomePage from "./pages/MarketplaceHomePage";
 import MarketplaceProjectDetail from "./pages/MarketplaceProjectDetail";
 import Milestones from "./pages/Milestones";
+import Policies from "./pages/Policies";
 import MilestoneForm from "./pages/TestCR/MilestoneForm";
 import BankAccount from "./pages/UpdateFundingProjectForm/ProjectEditor/BankAccount";
 import BasicInformation from "./pages/UpdateFundingProjectForm/ProjectEditor/BasicInformation";
@@ -65,16 +75,6 @@ import Milestone2 from "./pages/UpdateFundingProjectForm/ProjectMilestone/Milest
 import Milestone3 from "./pages/UpdateFundingProjectForm/ProjectMilestone/Milestone3";
 import Milestone4 from "./pages/UpdateFundingProjectForm/ProjectMilestone/Milestone4";
 import ProjectPreview from "./pages/UpdateFundingProjectForm/ProjectPreview";
-import MarketplaceHomePage from "./pages/MarketplaceHomePage";
-import CommissionFee from "./pages/CommissionFee";
-import AboutUsLayout from "./layouts/AboutUsLayout";
-import Policies from "./pages/Policies";
-// import MarketplaceProjectMedia from "./pages/CreateMarketplaceProjectForm/MarketplaceProjectMedia";
-import MarketplaceProjectSetupBankAccount from "./pages/CreateMarketplaceProjectForm/MarketplaceProjectSetupBankAccount";
-import GetAllProject from "./pages/GetAllProject";
-import MarketplaceProjectGameContent from "./pages/CreateMarketplaceProjectForm/MarketplaceProjectGameContent";
-import UpdateMarketplaceProjectLayout from "./layouts/UpdateMarketplaceProjectLayout";
-import { UpdateMarketplaceProjectProvider } from "./contexts/UpdateMarketplaceProjectContext";
 import MarketplaceProjectPreview from "./pages/UpdateMarketplaceProjectForm/ProjectPreview";
 
 function App() {
@@ -212,6 +212,10 @@ function App() {
               <Route
                 path="/admin-dashboard/dashboard"
                 element={<Dashboard />}
+              />
+              <Route
+                path="/admin-dashboard/users"
+                element={<Users />}
               />
               <Route
                 path="/admin-dashboard/withdraw-table"

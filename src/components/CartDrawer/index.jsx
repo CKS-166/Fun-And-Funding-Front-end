@@ -22,6 +22,12 @@ function CartDrawer({ cartOpen, setCartOpen }) {
         }
     }, [token]);
 
+    useEffect(() => {
+        if (isLogined) {
+            getPriceTotal(cartItems);
+        }
+    }, [cartItems]);
+
     const fetchCartItems = async () => {
         try {
             const res = await cartApiInstace.get("", {

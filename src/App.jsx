@@ -75,7 +75,7 @@ import GetAllProject from "./pages/GetAllProject";
 import MarketplaceProjectGameContent from "./pages/CreateMarketplaceProjectForm/MarketplaceProjectGameContent";
 import UpdateMarketplaceProjectLayout from "./layouts/UpdateMarketplaceProjectLayout";
 import { UpdateMarketplaceProjectProvider } from "./contexts/UpdateMarketplaceProjectContext";
-import MarketplaceProjectPreview from "./pages/UpdateMarketplaceProjectForm/ProjectPreview";
+import MarketplaceProjectPreview from "./pages/UpdateMarketplaceProjectForm/MarketplaceProjectPreview";
 
 function App() {
   const location = useLocation();

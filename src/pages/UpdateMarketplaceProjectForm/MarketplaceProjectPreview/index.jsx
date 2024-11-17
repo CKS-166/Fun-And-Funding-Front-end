@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
-import fundingProjectApiInstance from "../../../utils/ApiInstance/fundingProjectApiInstance";
+import fundingProjectApiInstance from "../../../utils/ApiInstance/fundingProjectApiInstance.jsx";
 import { useParams } from "react-router";
 import { Backdrop, CircularProgress } from "@mui/material";
-import ProgressChart from "../../../components/Chart/ProgressChart";
+import ProgressChart from "../../../components/Chart/ProgressChart/index.jsx";
 import LineChartDashBoard from "../../../components/Chart/LineChartDashboard/index.jsx";
-import packageBackerApiInstance from "../../../utils/ApiInstance/packageBackerApiInstance";
+import packageBackerApiInstance from "../../../utils/ApiInstance/packageBackerApiInstance.jsx";
 import StatBox from "../../../components/Chart/StatBox/index.jsx";
 import { FaWallet, FaEnvelope } from "react-icons/fa";
 import Grid from "@mui/material/Grid2";
@@ -20,26 +20,28 @@ function MarketplaceProjectPreview() {
   const [lineData, setLineData] = useState([]);
   const [barData, setBarData] = useState([]);
 
-  useEffect(() => {
-    fetchProject();
-  }, []);
+  // useEffect(() => {
+  //   fetchProject();
+  // }, []);
 
   // fetch project data
-  const fetchProject = async () => {
-    setLoading(true);
-    try {
-      const response = await marketplaceProjectApiInstace.get(`/${id}`);
-      setMarketplaceProject(response.data._data);
-      console.log(response.data);
-      fetchLineChart(response.data._data.id);
-      fetchBarData(response.data._data.id);
-    } catch (error) {
-      console.error("Error fetching project:", error);
-      setLoading(false);
-    } finally {
-      setLoading(false);
-    }
-  };
+  // const fetchProject = async () => {
+  //   setLoading(true);
+  //   try {
+  //     const response = await marketplaceProjectApiInstace.get(`/${id}`);
+  //     setMarketplaceProject(response.data._data);
+  //     console.log(response.data);
+  //     fetchLineChart(response.data._data.id);
+  //     fetchBarData(response.data._data.id);
+  //   } catch (error) {
+  //     console.error("Error fetching project:", error);
+  //     setLoading(false);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
+  console.log(marketplaceProject);
 
   //fetch line chart data
   const fetchLineChart = async (projectId) => {

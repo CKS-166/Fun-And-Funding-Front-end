@@ -184,20 +184,29 @@ function UpdateMarketplaceProjectLayout() {
     try {
       const response = await marketplaceProjectApiInstace.get(`/${id}`);
       if (response && response.data) {
-        const project = response.data._data;
-
-        // const existedFile = project.fundingFiles.map((file) => ({
-        //   id: file.id,
-        //   name: file.name,
-        //   url: file.url,
-        //   urlFile: null,
-        //   filetype: file.filetype,
-        //   isDeleted: file.isDeleted,
-        //   newlyAdded: false,
-        // }));
+        const data = response.data._data;
 
         setMarketplaceProject({
-          project,
+          name: data.name || "",
+          description: data.description || "",
+          introduction: data.introduction || "",
+          price: data.price || 0,
+          marketplaceFiles: [],
+          existingFiles:
+            data.marketplaceFiles?.map((file) => ({
+              id: file.id || "",
+              name: file.name || "",
+              url: file.url || "",
+              version: file.version || "",
+              description: file.description || "",
+              filetype: file.filetype || 0,
+              isDeleted: file.isDeleted || false,
+            })) || [],
+          bankAccount: {
+            id: data.wallet?.bankAccount.id || "",
+            bankNumber: data.wallet?.bankNumber || "",
+            bankCode: data.wallet?.bankCode || "",
+          },
         });
       } else {
         console.error("No project data found");
@@ -213,7 +222,7 @@ function UpdateMarketplaceProjectLayout() {
         console.error("Error setting up request:", error.message);
       }
     } finally {
-      setIsLoading(false);
+      // setIsLoading(false);
     }
   };
 

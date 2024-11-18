@@ -73,10 +73,7 @@ import Milestone2 from "./pages/UpdateFundingProjectForm/ProjectMilestone/Milest
 import Milestone3 from "./pages/UpdateFundingProjectForm/ProjectMilestone/Milestone3";
 import Milestone4 from "./pages/UpdateFundingProjectForm/ProjectMilestone/Milestone4";
 import ProjectPreview from "./pages/UpdateFundingProjectForm/ProjectPreview";
-// import MarketplaceProjectMedia from "./pages/CreateMarketplaceProjectForm/MarketplaceProjectMedia";
-
 import UpdateMarketplaceProjectLayout from "./layouts/UpdateMarketplaceProjectLayout";
-import { UpdateMarketplaceProjectProvider } from "./contexts/UpdateMarketplaceProjectContext";
 import MarketplaceProjectPreview from "./pages/UpdateMarketplaceProjectForm/MarketplaceProjectPreview";
 
 function App() {
@@ -215,10 +212,7 @@ function App() {
                 path="/admin-dashboard/dashboard"
                 element={<Dashboard />}
               />
-              <Route
-                path="/admin-dashboard/users"
-                element={<Users />}
-              />
+              <Route path="/admin-dashboard/users" element={<Users />} />
               <Route
                 path="/admin-dashboard/withdraw-table"
                 element={<AdminWithdrawRequest />}

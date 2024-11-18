@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import userApiInstance from "../../../utils/ApiInstance/userApiInstance";
+import CreateUserModal from './CreateUserModal';
 import UserDetailModal from './UserDetailModal';
 
 const userStatus = [
@@ -12,6 +13,7 @@ function Users() {
     const [pageIndex, setPageIndex] = useState(1);
     const [totalPage, setTotalPage] = useState(1);
     const [openModal, setOpenModal] = useState(false);
+    const [openCreateModal, setOpenCreateModal] = useState(false);
     const [selectedUserId, setSelectedUserId] = useState("");
 
     useEffect(() => {
@@ -45,6 +47,10 @@ function Users() {
         setOpenModal(true);
     };
 
+    const handleOpenCreateModal = () => {
+        setOpenCreateModal(true);
+    };
+
     return (
         <>
             <div className="mx-auto max-w-screen-xl px-4 lg:px-12 my-8">
@@ -70,7 +76,9 @@ function Users() {
                                             <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
                                         </svg>
                                     </div>
-                                    <input type="text" id="simple-search" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-gray-500 focus:border-gray-500 block w-full pl-10 p-2" placeholder="Search" required="" />
+                                    <input type="text" id="simple-search"
+                                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-gray-500 focus:border-gray-400 block w-full pl-10 p-2"
+                                        placeholder="Search" required="" />
                                 </div>
                             </form>
                         </div>
@@ -78,6 +86,7 @@ function Users() {
                             <button
                                 type="button"
                                 className="flex items-center justify-center text-white bg-[var(--primary-green)] hover:bg-[#159653] focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-4 py-2"
+                                onClick={() => handleOpenCreateModal()}
                             >
                                 <svg
                                     className="h-4 w-4 mr-2"
@@ -92,7 +101,7 @@ function Users() {
                                         d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
                                     />
                                 </svg>
-                                Add product
+                                Add account
                             </button>
 
                             <button
@@ -310,6 +319,7 @@ function Users() {
                 selectedUserId={selectedUserId}
                 fetchUserList={fetchUserList}
             />
+            <CreateUserModal openCreateModal={openCreateModal} setOpenCreateModal={setOpenCreateModal} fetchUserList={fetchUserList} />
         </>
     )
 }

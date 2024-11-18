@@ -19,7 +19,7 @@
   font-weight: 600 !important;
   text-transform: none !important;
   margin-top: 0.5rem;
-  margin-right: 1rem;
+  margin-right: 1rem !important;
   font-size: 1rem !important;
   color: var(--white) !important;
 }

@@ -275,8 +275,37 @@ const Policies = () => {
               content that users submit to the platform.
               By using our services, you agree to release us
               from any claims, damages, or demands of any
-              kind—whether known or unknown, suspected or unsuspected, disclosed or undisclosed—that arise from or relate to such disputes or the use of our services. 
+              kind—whether known or unknown, suspected or unsuspected, disclosed or undisclosed—that arise from or relate to such disputes or the use of our services.
               All content you access through our platform is at your own risk, and you alone are responsible for any resulting damage or loss to yourself or others.
+            </Typography>
+          </Box>
+        </Box>
+        {/* section 6 */}
+        <Box id="section6">
+          <Typography className="term-title">
+            Section 5. Policies for Project Promotion and Support
+          </Typography>
+          <Box className="term-content">
+            <Typography sx={{ fontStyle: 'italic' }}>
+              Projects that successfully secure funding may be promoted on our marketplace, subject to the conditions outlined below.
+            </Typography>
+            <Typography>
+              Our platform is designed specifically to support game projects developed using Unity. To ensure compatibility and consistency, developers must integrate our Unity package into their games. This package provides essential functionalities and allows for seamless verification of digital keys and other platform-specific requirements.
+            </Typography>
+            <Typography>
+              Developers are encouraged to create and manage their own promotional campaigns, including the addition of custom coupons, which can be used to attract and retain players. The platform facilitates these campaigns but does not manage or oversee them on behalf of developers.
+            </Typography>
+            <Typography>
+              By participating in our marketplace, you acknowledge and agree to the following:
+            </Typography>
+            <Typography sx={{ paddingLeft: '16px' }}>
+              - Our platform does not guarantee the success of your project or the performance of your game on the marketplace. <br />
+              - We do not intervene in disputes between users, developers, or third parties related to activities on the platform. <br />
+              - We are not responsible for monitoring project quality, progress, or timeliness. <br />
+              - You are solely responsible for the content you submit and for ensuring compliance with all applicable laws and regulations.
+            </Typography>
+            <Typography>
+              By using our services, you release us from any claims, damages, or demands of any kind—whether known or unknown—that arise from disputes, promotional activities, or the use of our platform. Access to all content on our platform is at your own risk, and you bear full responsibility for any resulting damages or losses.
             </Typography>
           </Box>
         </Box>

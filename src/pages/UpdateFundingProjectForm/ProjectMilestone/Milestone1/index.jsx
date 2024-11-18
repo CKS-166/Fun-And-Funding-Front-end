@@ -3,7 +3,13 @@ import axios from "axios";
 import { useParams, useLocation } from 'react-router-dom';
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import { Backdrop, CircularProgress, Box, Button, Divider, FormControl, MenuItem, Select, TextField, Typography } from '@mui/material';
+import {
+  Backdrop, CircularProgress, Box, Button, Divider, FormControl,
+  MenuItem, Select, TextField, Typography, Tab
+} from '@mui/material';
+import TabContext from '@mui/lab/TabContext';
+import TabList from '@mui/lab/TabList';
+import TabPanel from '@mui/lab/TabPanel';
 import { checkAvailableMilestone } from "../../../../utils/Hooks/checkAvailableMilestone";
 import projectMilestoneApiInstace from "../../../../utils/ApiInstance/projectMilestoneApiInstance";
 import UpdateMilestone from "../UpdateMilestone";
@@ -14,6 +20,7 @@ import milestoneApiInstace from "../../../../utils/ApiInstance/milestoneApiInsta
 import BackdropRequestMilestone from "../../../../components/UpdateProject/BackdropRequestMilestone";
 import Swal from "sweetalert2";
 import CompleteMilestoneButton from "../../../../components/UpdateProject/CompleteMilestoneButton";
+
 const MilestoneForm = () => {
   const { id } = useParams(); // Get the project ID from the URL
   console.log(id);
@@ -30,6 +37,7 @@ const MilestoneForm = () => {
   const [anchorEls, setAnchorEls] = useState({})
   const [isBackdropHidden, setIsBackdropHidden] = useState(false);
   const [buttonActive, setButtonActive] = useState(false)
+  const [issueLog, setIssueLog] = useState("");
   //check available project milestone
   const getMilestoneData = async (id) => {
     setIsLoading(true); // Start loading when data fetch begins
@@ -109,7 +117,7 @@ const MilestoneForm = () => {
         data.append(`request[${i}].RequirementFiles[${fileIndex}].Filetype`, 0);
       });
     });
-
+    data.append("issueLog", issueLog);
     try {
       await axios.post(
         "https://localhost:7044/api/project-milestone-requirements",
@@ -176,7 +184,7 @@ const MilestoneForm = () => {
         <CircularProgress color="inherit" />
       </Backdrop>
       <div className='basic-info-section'>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingRight : '5rem' }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingRight: '5rem' }}>
           <Box>
             <Typography
               className='basic-info-title'
@@ -185,65 +193,85 @@ const MilestoneForm = () => {
             </Typography>
             <Typography
               className='basic-info-subtitle'
-              sx={{width : '100%'}}
+              sx={{ width: '100%' }}
             >
               {milestone.description}
             </Typography>
           </Box>
           <Box>
-            <CompleteMilestoneButton status={milestoneData.status} pmId={milestoneData.status == 'edit' && milestoneData.data[0].id}/>
+            <CompleteMilestoneButton status={milestoneData.status} pmId={milestoneData.status == 'edit' && milestoneData.data[0].id} />
           </Box>
-          
+
         </Box>
 
         {!isLoading && milestoneData && milestoneData.status == 'create' ? (
+
           <form onSubmit={handleSubmit}>
-            {milestone.requirements.map((req, index) => (
-              <div key={req.id} style={{ marginBottom: "20px" }}>
-                <h3>{req.title}</h3>
-                <p>{req.description}</p>
-                <div className="w-[80%]">
-                  <>
-                    <div className="w-[70%]">
-                      <MilestoneQuill
-                        value={formDataArray[index]?.content || " "}
-                        onChange={(value) => handleQuillChange(value, index)}
-                      />
+            <TabContext value={value}>
+              <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                <TabList onChange={handleChange} aria-label="lab API tabs example">
+                  <Tab label="Requirements" value="1" />
+                  <Tab label="Issue Logs" value="2" />
+                </TabList>
+              </Box>
+              <TabPanel value="1">
+                {milestone.requirements.map((req, index) => (
+                  <div key={req.id} style={{ marginBottom: "20px" }}>
+                    <h3>{req.title}</h3>
+                    <p>{req.description}</p>
+                    <div className="w-[80%]">
+                      <>
+                        <div className="w-[70%]">
+                          <MilestoneQuill
+                            value={formDataArray[index]?.content || " "}
+                            onChange={(value) => handleQuillChange(value, index)}
+                          />
+                        </div>
+
+
+                        <Button variant="contained" component="label" onClick={(e) => openDropdown(e, index)}
+                          sx={{ backgroundColor: '#1BAA64', textTransform: 'none', fontWeight: '600' }} startIcon={<ChangeCircleIcon />}>
+                          Upload Files
+                          <input
+                            type="file"
+                            multiple
+                            hidden
+                            onChange={(e) => handleFilesSelected(Array.from(e.target.files), index)}
+
+                          />
+                        </Button>
+                        {formDataArray[index] && formDataArray[index].requirementFiles && (
+                          <FileUploadDropdown
+                            uploadedFiles={formDataArray[index].requirementFiles}
+                            anchorEl={anchorEls[index]}
+                            onClose={() => closeDropdown(index)}
+                            onRemoveFile={(fileIndex) =>
+                              handleRemoveFile(fileIndex, index)
+                            }
+                            requirementFiles={[]}
+                          />
+                        )}
+
+                      </>
                     </div>
 
+                  </div>
+                ))}
+              </TabPanel>
+              <TabPanel value="2">
+                <MilestoneQuill
+                  value={issueLog || ""}
+                  onChange={(value) => setIssueLog(value)}
+                />
+              </TabPanel>
+            </TabContext>
 
-                    <Button variant="contained" component="label" onClick={(e) => openDropdown(e, index)}
-                      sx={{ backgroundColor: '#1BAA64', textTransform: 'none', fontWeight: '600' }} startIcon={<ChangeCircleIcon />}>
-                      Upload Files
-                      <input
-                        type="file"
-                        multiple
-                        hidden
-                        onChange={(e) => handleFilesSelected(Array.from(e.target.files), index)}
-
-                      />
-                    </Button>
-                    {formDataArray[index] && formDataArray[index].requirementFiles && (
-                      <FileUploadDropdown
-                        uploadedFiles={formDataArray[index].requirementFiles}
-                        anchorEl={anchorEls[index]}
-                        onClose={() => closeDropdown(index)}
-                        onRemoveFile={(fileIndex) =>
-                          handleRemoveFile(fileIndex, index)
-                        }
-                        requirementFiles={[]}
-                      />
-                    )}
-
-                  </>
-                </div>
-
-              </div>
-            ))}
 
             <button type="submit">Save</button>
           </form>
-        ) : <UpdateMilestone render={() => getMilestoneData(milestoneId)} milestones={milestoneData?.data[0]?.projectMilestoneRequirements} />}
+        ) : <UpdateMilestone render={() => getMilestoneData(milestoneId)}
+          milestones={milestoneData?.data[0]?.projectMilestoneRequirements}
+          issueLog={milestoneData?.data[0]?.issueLog} />}
       </div>
     </div>
   );

@@ -14,7 +14,6 @@ import CreateFundingProjectLayout from "./layouts/CreateFundingProjectLayout";
 import PublicProfileLayout from "./layouts/ProfileLayout/PublicProfileLayout";
 import UserProfileLayout from "./layouts/ProfileLayout/UserProfileLayout";
 import UpdateFundingProjectLayout from "./layouts/UpdateFundingProjectLayout";
-import UpdateMarketplaceProjectLayout from "./layouts/UpdateMarketplaceProjectLayout";
 import UserLayout from "./layouts/UserLayout";
 import AboutUs from "./pages/AboutUs";
 import AccountProfile from "./pages/AccountProfile";
@@ -75,16 +74,7 @@ import Milestone2 from "./pages/UpdateFundingProjectForm/ProjectMilestone/Milest
 import Milestone3 from "./pages/UpdateFundingProjectForm/ProjectMilestone/Milestone3";
 import Milestone4 from "./pages/UpdateFundingProjectForm/ProjectMilestone/Milestone4";
 import ProjectPreview from "./pages/UpdateFundingProjectForm/ProjectPreview";
-import MarketplaceHomePage from "./pages/MarketplaceHomePage";
-import CommissionFee from "./pages/CommissionFee";
-import AboutUsLayout from "./layouts/AboutUsLayout";
-import Policies from "./pages/Policies";
-// import MarketplaceProjectMedia from "./pages/CreateMarketplaceProjectForm/MarketplaceProjectMedia";
-import MarketplaceProjectSetupBankAccount from "./pages/CreateMarketplaceProjectForm/MarketplaceProjectSetupBankAccount";
-import GetAllProject from "./pages/GetAllProject";
-import MarketplaceProjectGameContent from "./pages/CreateMarketplaceProjectForm/MarketplaceProjectGameContent";
 import UpdateMarketplaceProjectLayout from "./layouts/UpdateMarketplaceProjectLayout";
-import { UpdateMarketplaceProjectProvider } from "./contexts/UpdateMarketplaceProjectContext";
 import MarketplaceProjectPreview from "./pages/UpdateMarketplaceProjectForm/MarketplaceProjectPreview";
 
 function App() {
@@ -223,10 +213,7 @@ function App() {
                 path="/admin-dashboard/dashboard"
                 element={<Dashboard />}
               />
-              <Route
-                path="/admin-dashboard/users"
-                element={<Users />}
-              />
+              <Route path="/admin-dashboard/users" element={<Users />} />
               <Route
                 path="/admin-dashboard/withdraw-table"
                 element={<AdminWithdrawRequest />}

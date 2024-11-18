@@ -199,7 +199,7 @@ function UpdateMarketplaceProjectLayout() {
               url: file.url || "",
               version: file.version || "",
               description: file.description || "",
-              filetype: file.filetype || 0,
+              fileType: file.fileType || 0,
               isDeleted: file.isDeleted || false,
             })) || [],
           bankAccount: {
@@ -207,6 +207,11 @@ function UpdateMarketplaceProjectLayout() {
             bankNumber: data.wallet?.bankNumber || "",
             bankCode: data.wallet?.bankCode || "",
           },
+          categories:
+            data.categories?.map((category) => ({
+              id: category.id || "",
+              name: category.name || "",
+            })) || [],
         });
       } else {
         console.error("No project data found");
@@ -286,12 +291,7 @@ function UpdateMarketplaceProjectLayout() {
                       : "bg-[#FABC3F]"
                   } `}
                 >
-                  {marketplaceProject.status >= 0 &&
-                  marketplaceProject.status <= 8
-                    ? "Funding"
-                    : marketplaceProject.status === 9
-                    ? "Marketing"
-                    : "Unknown Status"}
+                  Marketplace
                 </span>
                 <Typography
                   sx={{

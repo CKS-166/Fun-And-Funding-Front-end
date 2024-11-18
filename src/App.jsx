@@ -75,6 +75,7 @@ import Milestone4 from "./pages/UpdateFundingProjectForm/ProjectMilestone/Milest
 import ProjectPreview from "./pages/UpdateFundingProjectForm/ProjectPreview";
 import UpdateMarketplaceProjectLayout from "./layouts/UpdateMarketplaceProjectLayout";
 import MarketplaceProjectPreview from "./pages/UpdateMarketplaceProjectForm/MarketplaceProjectPreview";
+import { UpdateMarketplaceProjectProvider } from "./contexts/UpdateMarketplaceProjectContext";
 
 function App() {
   const location = useLocation();

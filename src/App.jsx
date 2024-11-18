@@ -76,6 +76,8 @@ import ProjectPreview from "./pages/UpdateFundingProjectForm/ProjectPreview";
 import UpdateMarketplaceProjectLayout from "./layouts/UpdateMarketplaceProjectLayout";
 import MarketplaceProjectPreview from "./pages/UpdateMarketplaceProjectForm/MarketplaceProjectPreview";
 import { UpdateMarketplaceProjectProvider } from "./contexts/UpdateMarketplaceProjectContext";
+import MarketplaceProjectBasicInformation from "./pages/UpdateMarketplaceProjectForm/MarketplaceProjectBasicInformation";
+import MarketplaceProjectMediaFiles from "./pages/UpdateMarketplaceProjectForm/MarketplaceProjectMedia";
 
 function App() {
   const location = useLocation();
@@ -190,22 +192,22 @@ function App() {
                 path="/account/marketplace-projects/update/:id/preview"
                 element={<MarketplaceProjectPreview />}
               />
-              {/* <Route
-                path="/account/marketplace-projects/update/:id/basic-info"
-                element={<BasicInformation />}
-              />
               <Route
+                path="/account/marketplace-projects/update/:id/basic-info"
+                element={<MarketplaceProjectBasicInformation />}
+              />
+              {/* <Route
                 path="/account/marketplace-projects/update/:id/bank-account"
                 element={<BankAccount />}
               />
               <Route
                 path="/account/marketplace-projects/update/:id/donation-packages"
                 element={<DonationPackages />}
-              />
+              /> */}
               <Route
                 path="/account/marketplace-projects/update/:id/media-files"
-                element={<Media />}
-              /> */}
+                element={<MarketplaceProjectMediaFiles />}
+              />
             </Route>
 
             <Route element={<AdminDashboardLayout />}>

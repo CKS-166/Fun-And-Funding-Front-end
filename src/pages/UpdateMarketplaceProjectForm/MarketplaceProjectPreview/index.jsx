@@ -20,29 +20,6 @@ function MarketplaceProjectPreview() {
   const [lineData, setLineData] = useState([]);
   const [barData, setBarData] = useState([]);
 
-  // useEffect(() => {
-  //   fetchProject();
-  // }, []);
-
-  // fetch project data
-  // const fetchProject = async () => {
-  //   setLoading(true);
-  //   try {
-  //     const response = await marketplaceProjectApiInstace.get(`/${id}`);
-  //     setMarketplaceProject(response.data._data);
-  //     console.log(response.data);
-  //     fetchLineChart(response.data._data.id);
-  //     fetchBarData(response.data._data.id);
-  //   } catch (error) {
-  //     console.error("Error fetching project:", error);
-  //     setLoading(false);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
-  console.log(marketplaceProject);
-
   //fetch line chart data
   const fetchLineChart = async (projectId) => {
     try {

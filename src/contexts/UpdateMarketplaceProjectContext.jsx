@@ -36,6 +36,7 @@ export const UpdateMarketplaceProjectProvider = ({ children }) => {
       bankNumber: "",
       bankCode: "",
     },
+    categories: [{ id: "", name: "" }],
   });
 
   return (

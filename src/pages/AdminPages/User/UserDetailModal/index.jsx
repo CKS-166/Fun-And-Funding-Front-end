@@ -9,7 +9,7 @@ import { IoWallet } from "react-icons/io5";
 import { PiGenderIntersexBold } from "react-icons/pi";
 import { toast, ToastContainer } from "react-toastify";
 import Swal from "sweetalert2";
-import userApiInstace from "../../../../utils/ApiInstance/userApiInstance";
+import userApiInstance from "../../../../utils/ApiInstance/userApiInstance";
 import './index.css';
 import UserTransactionTable from "./UserTransactionTable";
 
@@ -44,7 +44,7 @@ const userGender = [
 
 const UserDetailModal = ({ selectedUserId, openModal, setOpenModal, fetchUserList }) => {
     const token = Cookies.get("_auth");
-    const [selectedUser, setSelectedUser] = useState({});
+    const [selectedUser, setSelectedUser] = useState(null);
 
     const style = {
         position: 'absolute',
@@ -60,12 +60,15 @@ const UserDetailModal = ({ selectedUserId, openModal, setOpenModal, fetchUserLis
     };
 
     const handleClose = () => {
-        setOpenModal(false)
+        setOpenModal(false);
+        setSelectedUser(null);
     }
 
     useEffect(() => {
-        fetchUser();
-    }, [selectedUserId])
+        if (openModal && selectedUserId) {
+            fetchUser();
+        }
+    }, [selectedUserId, openModal])
 
     const formatPrice = (price) => {
         return new Intl.NumberFormat('de-DE').format(price);
@@ -73,7 +76,7 @@ const UserDetailModal = ({ selectedUserId, openModal, setOpenModal, fetchUserLis
 
     const fetchUser = async () => {
         try {
-            const res = await userApiInstace.get(`${selectedUserId}`)
+            const res = await userApiInstance.get(`${selectedUserId}`)
             if (res.status == 200) {
                 setSelectedUser(res.data._data);
             }
@@ -107,7 +110,7 @@ const UserDetailModal = ({ selectedUserId, openModal, setOpenModal, fetchUserLis
                 }
             }).then(async (result) => {
                 if (result.isConfirmed) {
-                    const res = await userApiInstace.patch(`status/${selectedUserId}`, '', {
+                    const res = await userApiInstance.patch(`status/${selectedUserId}`, '', {
                         headers: {
                             Authorization: `Bearer ${token}`,
                         },
@@ -133,12 +136,11 @@ const UserDetailModal = ({ selectedUserId, openModal, setOpenModal, fetchUserLis
             notify(error.response?.data?.message || error.message || "An error occurred", "error");
         }
     }
-
-
+    console.log(selectedUserId);
 
     return (
         <>
-            <Modal
+            {selectedUser != null && JSON.stringify(selectedUser) !== '{}' && <Modal
                 open={openModal}
                 onClose={handleClose}
                 slots={{ backdrop: Backdrop }}
@@ -209,7 +211,7 @@ const UserDetailModal = ({ selectedUserId, openModal, setOpenModal, fetchUserLis
                                 <div className="w-full">
                                     <Grid2 container columnSpacing={2} alignItems="center" sx={{ width: '100%', mb: '1rem' }}>
                                         <Grid2 xs={3}>
-                                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, color: 'var(--grey)', width: '10rem' }}>
+                                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, color: 'var(--grey)', width: '12rem' }}>
                                                 <FaRegAddressCard size={16} />
                                                 <Typography sx={{
                                                     fontSize: '1rem',
@@ -243,7 +245,7 @@ const UserDetailModal = ({ selectedUserId, openModal, setOpenModal, fetchUserLis
                                 <div className="w-full">
                                     <Grid2 container columnSpacing={2} alignItems="center" sx={{ width: '100%', mb: '1rem' }}>
                                         <Grid2 xs={3}>
-                                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, color: 'var(--grey)', width: '10rem' }}>
+                                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, color: 'var(--grey)', width: '12rem' }}>
                                                 <PiGenderIntersexBold size={16} />
                                                 <Typography sx={{
                                                     fontSize: '1rem',
@@ -277,7 +279,7 @@ const UserDetailModal = ({ selectedUserId, openModal, setOpenModal, fetchUserLis
                                 <div className="w-full">
                                     <Grid2 container columnSpacing={2} alignItems="center" sx={{ width: '100%', mb: '1rem' }}>
                                         <Grid2 xs={3}>
-                                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, color: 'var(--grey)', width: '10rem' }}>
+                                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, color: 'var(--grey)', width: '12rem' }}>
                                                 <BsCalendar2Date size={16} />
                                                 <Typography sx={{
                                                     fontSize: '1rem',
@@ -311,7 +313,7 @@ const UserDetailModal = ({ selectedUserId, openModal, setOpenModal, fetchUserLis
                                 <div className="w-full">
                                     <Grid2 container columnSpacing={2} alignItems="center" sx={{ width: '100%', mb: '1rem' }}>
                                         <Grid2 xs={3}>
-                                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, color: 'var(--grey)', width: '10rem' }}>
+                                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, color: 'var(--grey)', width: '12rem' }}>
                                                 <AiOutlineHome size={16} />
                                                 <Typography sx={{
                                                     fontSize: '1rem',
@@ -350,7 +352,7 @@ const UserDetailModal = ({ selectedUserId, openModal, setOpenModal, fetchUserLis
                                 <div className="w-full">
                                     <Grid2 container columnSpacing={2} alignItems="center" sx={{ width: '100%', mb: '1rem' }}>
                                         <Grid2 xs={3}>
-                                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, color: 'var(--grey)', width: '10rem' }}>
+                                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, color: 'var(--grey)', width: '12rem' }}>
                                                 <IoWallet size={16} />
                                                 <Typography sx={{
                                                     fontSize: '1rem',
@@ -384,7 +386,7 @@ const UserDetailModal = ({ selectedUserId, openModal, setOpenModal, fetchUserLis
                                 <div className="w-full">
                                     <Grid2 container columnSpacing={2} alignItems="center" sx={{ width: '100%', mb: '1rem' }}>
                                         <Grid2 xs={3}>
-                                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, color: 'var(--grey)', width: '10rem' }}>
+                                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, color: 'var(--grey)', width: '12rem' }}>
                                                 <FiCalendar size={16} />
                                                 <Typography sx={{
                                                     fontSize: '1rem',
@@ -453,6 +455,7 @@ const UserDetailModal = ({ selectedUserId, openModal, setOpenModal, fetchUserLis
                     </Box>
                 </Fade>
             </Modal >
+            }
             <ToastContainer
                 position="bottom-left"
                 autoClose={3000}

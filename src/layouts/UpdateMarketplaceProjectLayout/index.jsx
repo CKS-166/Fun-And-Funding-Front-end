@@ -204,8 +204,8 @@ function UpdateMarketplaceProjectLayout() {
             })) || [],
           bankAccount: {
             id: data.wallet?.bankAccount.id || "",
-            bankNumber: data.wallet?.bankNumber || "",
-            bankCode: data.wallet?.bankCode || "",
+            bankNumber: data.wallet?.bankAccount.bankNumber || "",
+            bankCode: data.wallet?.bankAccount.bankCode || "",
           },
           categories:
             data.categories?.map((category) => ({

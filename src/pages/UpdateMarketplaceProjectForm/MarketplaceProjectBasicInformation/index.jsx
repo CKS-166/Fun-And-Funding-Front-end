@@ -74,7 +74,7 @@ function MarketplaceProjectBasicInformation() {
 
   const handleSaveAll = async () => {
     const updatedProject = {
-      ...project,
+      ...marketplaceProject,
       name: name,
       description: description,
       introduction: intro,

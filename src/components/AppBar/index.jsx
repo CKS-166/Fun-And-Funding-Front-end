@@ -25,6 +25,7 @@ import {
 import Aos from "aos";
 import "aos/dist/aos.css";
 import Cookies from "js-cookie";
+import { jwtDecode } from "jwt-decode";
 import { useEffect, useRef, useState } from "react";
 import useSignOut from "react-auth-kit/hooks/useSignOut";
 import { FaClipboardList } from "react-icons/fa";
@@ -35,12 +36,11 @@ import homeLogo from "../../assets/images/logo-alt.png";
 import defaultLogo from "../../assets/images/logo-text.png";
 import { useCart } from "../../contexts/CartContext";
 import userApiInstace from "../../utils/ApiInstance/userApiInstance";
-import CartDrawer from "../CartDrawer";
-import AuthDialog from "../Popup";
 import { useNotificationApi } from "../../utils/Hooks/Notification";
 import useSignalR from "../../utils/Hooks/SignalR";
+import CartDrawer from "../CartDrawer";
 import NotificationMenu from "../Notification/NotificationMenu";
-import { jwtDecode } from "jwt-decode";
+import AuthDialog from "../Popup";
 
 const FunFundingAppBar = () => {
   const { cartItems, cartCount, setCartItems, setCartCount } = useCart();
@@ -217,11 +217,12 @@ const FunFundingAppBar = () => {
 
   // for noti
 
-  const decoded = jwtDecode(token)
-  const userId = decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"]
+  const decoded = token ? jwtDecode(token) : null
+  const userId = token ? decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"] : null
   const [openNoti, setOpenNoti] = useState(false)
 
   const { notiData, error, fetchNotifications } = useNotificationApi(`/${userId}`)
+
 
   const message = useSignalR()
   const previousMessageRef = useRef(null);

@@ -136,7 +136,13 @@ const ProjectMilestoneModal = ({ pmData, openModal, setOpenModal }) => {
             </button> */}
             Game owner is working on evidence
           </div>
-        );
+        )
+      case 2:
+        return (
+          <div>
+            This milestone is completed
+          </div>
+        )
       case 5: // Submitted
         return (
           <div>
@@ -195,7 +201,7 @@ const ProjectMilestoneModal = ({ pmData, openModal, setOpenModal }) => {
       <Modal open={openModal} onClose={handleClose}>
         <div className="flex justify-center items-center w-full h-full">
           <div class="relative p-4 w-full max-w-[55%] max-h-full overflow-auto scrollbar-hidden">
-            <div class="relative bg-white rounded-lg shadow min-h-[100vh] pb-[7rem]">
+            <div class="relative bg-white rounded-lg shadow min-h-[100%]">
               <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t bg-primary-green">
                 <h3 class="text-xl font-semibold text-white flex uppercase">
                   Funding withdraw request
@@ -225,7 +231,7 @@ const ProjectMilestoneModal = ({ pmData, openModal, setOpenModal }) => {
                 </button>
               </div>
 
-              <div class="p-4 md:p-5">
+              <div class="p-4 md:p-5 h-[35rem] overflow-y-auto">
                 <Stepper
                   activeStep={pmData?.milestone.milestoneOrder}
                   alternativeLabel
@@ -235,6 +241,9 @@ const ProjectMilestoneModal = ({ pmData, openModal, setOpenModal }) => {
                       <StepLabel
                         sx={{
                           "& .MuiStepIcon-root.Mui-active": {
+                            color: 'var(--primary-green) !important',
+                          },
+                          '& .MuiStepIcon-root.Mui-completed': {
                             color: "var(--primary-green) !important",
                           },
                         }}
@@ -259,221 +268,211 @@ const ProjectMilestoneModal = ({ pmData, openModal, setOpenModal }) => {
                   </Tabs>
                 </Box>
 
-                {activeTab === 0 ? (
-                  <div>
-                    <div className="flex justify-center items-center gap-5 my-2 bg-gray-100 rounded overflow-hidden shadow-md">
-                      <div className="w-[50%] h-[12rem] overflow-hidden flex justify-center items-center">
-                        <img
-                          class=" h-auto object-contain transition-transform hover:scale-75"
-                          alt="Funding project image"
-                          src={
-                            pmData?.fundingProject.fundingFiles.find(
-                              (e) => e.filetype == 2
-                            )?.url
-                          }
-                        />
-                      </div>
-                      <div className="w-[50%] h-[12rem] py-2">
-                        <div className="text-primary-green items-center">
-                          {statusString[pmData?.fundingProject.status]}
-                        </div>
-                        <div className="text-2xl font-bold">
-                          {pmData?.fundingProject.name}
-                        </div>
-                        <div className="text-sm font-norml">
-                          {pmData?.fundingProject.description}
-                        </div>
-                        <div className="text-sm font-light text-gray-500">
-                          by{" "}
-                          <span className="italic font-semibold">
-                            {pmData?.fundingProject.user.email}
-                          </span>
-                        </div>
-                        <div className="text-sm mb-2.5">
-                          Fund raised:{" "}
-                          <span className="font-semibold">
-                            {formatNumber(pmData?.fundingProject.balance)}/
-                            {formatNumber(pmData?.fundingProject.target)} đ
-                          </span>
-                        </div>
-                        <button className="text-white bg-gradient-to-r text-xs from-primary-green/70 via-primary-green/80 to-primary-green hover:bg-gradient-to-br font-medium rounded-lg px-3 text-center me-2 mb-2">
-                          Go to project <ArrowRightAlt />
-                        </button>
-                      </div>
-                    </div>
+                {
+                  activeTab === 0
+                    ? (
+                      <div>
+                        <div className="flex justify-center items-center gap-5 my-2 bg-gray-100 rounded overflow-hidden shadow-md">
+                          <div className="w-[50%] h-[12rem] overflow-hidden flex justify-center items-center">
+                            <img class=" h-auto object-contain transition-transform hover:scale-75" alt="Funding project image" src={pmData?.fundingProject.fundingFiles.find((e) => e.filetype == 2)?.url} />
+                          </div>
+                          <div className="w-[50%] h-[12rem] py-2">
+                            <div className="text-primary-green items-center">
+                              {statusString[pmData?.fundingProject.status]}
 
-                    <div class="relative overflow-x-auto sm:rounded-lg mt-[1rem] shadow-md">
-                      <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                        <caption class="p-5 text-lg font-semibold text-left rtl:text-right text-gray-900 bg-white dark:text-white dark:bg-gray-800">
-                          Milestone request
-                        </caption>
-                        <thead class="text-xs text-gray-700 uppercase dark:text-gray-400">
-                          <tr>
-                            <th scope="col" class="px-6 py-3 bg-gray-50">
-                              Information
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                              Value
-                            </th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr class="border-b border-gray-200 dark:border-gray-700">
-                            <th
-                              scope="row"
-                              class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 dark:text-white"
-                            >
-                              (1) {pmData?.milestone.milestoneName} disbursement
-                              percentage
-                            </th>
-                            <td class="px-6 py-4">
-                              {pmData?.milestone.disbursementPercentage * 100}%
-                            </td>
-                          </tr>
-                          <tr class="border-b border-gray-200 dark:border-gray-700">
-                            <th
-                              scope="row"
-                              class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 dark:text-white"
-                            >
-                              (2) Total fund
-                            </th>
-                            <td class="px-6 py-4">
-                              {pmData?.fundingProject.balance
-                                .toString()
-                                .replace(/\B(?=(\d{3})+(?!\d))/g, ".")}{" "}
-                              đ
-                            </td>
-                          </tr>
-                          <tr class="border-b border-gray-200 dark:border-gray-700">
-                            <th
-                              scope="row"
-                              class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 dark:text-white"
-                            >
-                              Milestone requested amount = (1) x (2)
-                            </th>
-                            <td class="px-6 py-4 font-bold text-black text-lg">
-                              {(
-                                pmData?.milestone.disbursementPercentage *
-                                pmData?.fundingProject.balance
-                              )
-                                .toString()
-                                .replace(/\B(?=(\d{3})+(?!\d))/g, ".")}{" "}
-                              đ
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
+                            </div>
+                            <div className="text-2xl font-bold">
+                              {pmData?.fundingProject.name}
+                            </div>
+                            <div className="text-sm font-norml">
+                              {pmData?.fundingProject.description}
+                            </div>
+                            <div className="text-sm font-light text-gray-500">
+                              by <span className="italic font-semibold">{pmData?.fundingProject.user.email}</span>
+                            </div>
+                            <div className="text-sm mb-2.5">
+                              Fund raised: <span className="font-semibold">{formatNumber(pmData?.fundingProject.balance)}/{formatNumber(pmData?.fundingProject.target)} đ</span>
+                            </div>
+                            <button
+                              onClick={() => { window.location.href = `/funding-detail/${pmData?.fundingProject.id}` }}
+                              className="text-white bg-gradient-to-r text-xs from-primary-green/70 via-primary-green/80 to-primary-green hover:bg-gradient-to-br font-medium rounded-lg px-3 text-center me-2 mb-2">
+                              Go to project <ArrowRightAlt />
+                            </button>
+                          </div>
+                        </div>
 
-                    <div className="flex justify-end mt-3">
-                      <button
-                        type="button"
-                        onClick={() => setOpenQRCode(true)}
-                        class="text-white bg-primary-green font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 "
-                      >
-                        Transfer fund
-                      </button>
-                    </div>
-                    {pmData && (
-                      <QRCodeModal
-                        openQRCode={openQRCode}
-                        setOpenQRCode={setOpenQRCode}
-                        pmData={pmData}
-                      />
-                    )}
-                  </div>
-                ) : (
-                  <div>
-                    {/* <div className="flex justify-center">
-                          <Divider sx={{ fontWeight: 'bold', color: 'rgba(0, 0, 0, 0.7)', my: '1rem', width: '60%', textAlign: 'center' }}>Milestone evidence</Divider>
-                        </div> */}
-                    <div class="relative overflow-x-auto">
-                      <table class="w-full text-sm text-left rtl:text-right text-gray-500">
-                        <caption class="px-5 pb-5 text-lg font-semibold text-left rtl:text-right text-gray-900 bg-white dark:text-white">
-                          {/* Project milestone requirement */}
-                          <p class="mt-1 text-sm font-normal text-gray-500 dark:text-gray-400">
-                            At each milestone, game owners must fulfill the
-                            corresponding requirements before they can withdraw
-                            the funds raised.
-                          </p>
-                        </caption>
-                        <thead class="text-xs text-gray-700 uppercase bg-gray-50">
-                          <tr>
-                            <th scope="col" class="px-6 py-3">
-                              Requirement
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                              Last update
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                              Status
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                              {/* Action */}
-                            </th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {pmData?.projectMilestoneRequirements.map(
-                            (pmr, index) => (
-                              <tr class="bg-white border-b">
-                                <td
+                        <div class="relative overflow-x-auto sm:rounded-lg mt-[1rem] shadow-md">
+                          <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                            <caption class="p-5 text-lg font-semibold text-left rtl:text-right text-gray-900 bg-white dark:text-white dark:bg-gray-800">
+                              Milestone request
+                            </caption>
+                            <thead class="text-xs text-gray-700 uppercase dark:text-gray-400">
+                              <tr>
+                                <th scope="col" class="px-6 py-3 bg-gray-50">
+                                  Information
+                                </th>
+                                <th scope="col" class="px-6 py-3">
+                                  Value
+                                </th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr class="border-b border-gray-200 dark:border-gray-700">
+                                <th
                                   scope="row"
-                                  class="px-6 py-4 font-medium text-gray-900"
+                                  class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 dark:text-white"
                                 >
-                                  <div className="">
-                                    <span className="py-.5">
-                                      {pmr.requirementTitle}
-                                    </span>
-                                  </div>
-                                  <div className="font-normal italic">
-                                    {pmr.reqDescription}
-                                  </div>
-                                </td>
+                                  (1) {pmData?.milestone.milestoneName} disbursement
+                                  percentage
+                                </th>
                                 <td class="px-6 py-4">
-                                  <span className="text-xs text-right text-gray-600 italic font-semibold">
-                                    {new Date(pmr.updateDate).toLocaleString()}
-                                  </span>
-                                </td>
-                                <td class="px-6 py-4">
-                                  <span className="bg-blue-200 text-blue-800 px-2 py-.5 ml-2 rounded font-semibold">
-                                    {pmrStatusString[pmr.requirementStatus]}
-                                  </span>
-                                </td>
-                                <td class="px-6 py-4">
-                                  <a
-                                    href="#"
-                                    onClick={() => handleOpenPMR(pmr)}
-                                    class="font-medium text-blue-600 hover:underline"
-                                  >
-                                    View
-                                  </a>
+                                  {pmData?.milestone.disbursementPercentage * 100}%
                                 </td>
                               </tr>
-                            )
-                          )}
-                        </tbody>
-                      </table>
-                    </div>
+                              <tr class="border-b border-gray-200 dark:border-gray-700">
+                                <th
+                                  scope="row"
+                                  class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 dark:text-white"
+                                >
+                                  (2) Total fund
+                                </th>
+                                <td class="px-6 py-4">
+                                  {pmData?.fundingProject.balance
+                                    .toString()
+                                    .replace(/\B(?=(\d{3})+(?!\d))/g, ".")}{" "}
+                                  đ
+                                </td>
+                              </tr>
+                              <tr class="border-b border-gray-200 dark:border-gray-700">
+                                <th
+                                  scope="row"
+                                  class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 dark:text-white"
+                                >
+                                  Milestone requested amount = (1) x (2)
+                                </th>
+                                <td class="px-6 py-4 font-bold text-black text-lg">
+                                  {(
+                                    pmData?.milestone.disbursementPercentage *
+                                    pmData?.fundingProject.balance
+                                  )
+                                    .toString()
+                                    .replace(/\B(?=(\d{3})+(?!\d))/g, ".")}{" "}
+                                  đ
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
 
-                    <PMRequirementModal
-                      pmrData={selectedPMR}
-                      openPMRequirement={openPMRequirement}
-                      setOpenPMRequirement={setOpenPMRequirement}
-                    />
-                  </div>
-                )}
+                        <div className="flex justify-end mt-3">
+                          <button
+                            type="button"
+                            onClick={() => setOpenQRCode(true)}
+                            class="text-white bg-primary-green font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 "
+                          >
+                            Transfer fund
+                          </button>
+                        </div>
+                        {pmData && (
+                          <QRCodeModal
+                            openQRCode={openQRCode}
+                            setOpenQRCode={setOpenQRCode}
+                            pmData={pmData}
+                          />
+                        )}
+                      </div>
+                    ) : (
+                      <div>
+                        {/* <div className="flex justify-center">
+                          <Divider sx={{ fontWeight: 'bold', color: 'rgba(0, 0, 0, 0.7)', my: '1rem', width: '60%', textAlign: 'center' }}>Milestone evidence</Divider>
+                        </div> */}
+                        <div class="relative overflow-x-auto">
+                          <table class="w-full text-sm text-left rtl:text-right text-gray-500">
+                            <caption class="px-5 pb-5 text-lg font-semibold text-left rtl:text-right text-gray-900 bg-white dark:text-white">
+                              {/* Project milestone requirement */}
+                              <p class="mt-1 text-sm font-normal text-gray-500 dark:text-gray-400">
+                                At each milestone, game owners must fulfill the
+                                corresponding requirements before they can withdraw
+                                the funds raised.
+                              </p>
+                            </caption>
+                            <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                              <tr>
+                                <th scope="col" class="px-6 py-3">
+                                  Requirement
+                                </th>
+                                <th scope="col" class="px-6 py-3">
+                                  Last update
+                                </th>
+                                <th scope="col" class="px-6 py-3">
+                                  Status
+                                </th>
+                                <th scope="col" class="px-6 py-3">
+                                  {/* Action */}
+                                </th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {pmData?.projectMilestoneRequirements.map(
+                                (pmr, index) => (
+                                  <tr class="bg-white border-b">
+                                    <td
+                                      scope="row"
+                                      class="px-6 py-4 font-medium text-gray-900"
+                                    >
+                                      <div className="">
+                                        <span className="py-.5">
+                                          {pmr.requirementTitle}
+                                        </span>
+                                      </div>
+                                      <div className="font-normal italic">
+                                        {pmr.reqDescription}
+                                      </div>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                      <span className="text-xs text-right text-gray-600 italic font-semibold">
+                                        {new Date(pmr.updateDate).toLocaleString()}
+                                      </span>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                      <span className="bg-blue-200 text-blue-800 px-2 py-.5 ml-2 rounded font-semibold">
+                                        {pmrStatusString[pmr.requirementStatus]}
+                                      </span>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                      <a
+                                        href="#"
+                                        onClick={() => handleOpenPMR(pmr)}
+                                        class="font-medium text-blue-600 hover:underline"
+                                      >
+                                        View
+                                      </a>
+                                    </td>
+                                  </tr>
+                                )
+                              )}
+                            </tbody>
+                          </table>
+                        </div>
+
+                        <PMRequirementModal
+                          pmrData={selectedPMR}
+                          openPMRequirement={openPMRequirement}
+                          setOpenPMRequirement={setOpenPMRequirement}
+                        />
+                      </div>
+                    )}
               </div>
-              <div className="absolute bottom-0 w-[100%]">
+              <div className="w-[100%] bg-gray-100 rounded-b">
                 <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
                   {pmData
                     ? renderStatusButton(
-                        pmData,
-                        handleProcess,
-                        handleApprove,
-                        handleWarn,
-                        handleFail
-                      )
+                      pmData,
+                      handleProcess,
+                      handleApprove,
+                      handleWarn,
+                      handleFail
+                    )
                     : ""}
                 </div>
               </div>

@@ -33,7 +33,6 @@ const AdminMilestone = () => {
                 <span className="font-semibold text-gray-900">
                   {data?._data.totalItems}{" "}
                 </span>
-                {/* of <span className="font-semibold text-gray-900">1000 </span> */}
                 Milestone disbursement requests
               </span>
             </div>

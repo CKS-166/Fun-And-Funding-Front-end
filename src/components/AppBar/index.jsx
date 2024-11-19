@@ -25,7 +25,7 @@ import {
 import Aos from "aos";
 import "aos/dist/aos.css";
 import Cookies from "js-cookie";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import useSignOut from "react-auth-kit/hooks/useSignOut";
 import { FaClipboardList } from "react-icons/fa";
 import { FaFolderOpen, FaUserTie } from "react-icons/fa6";
@@ -37,6 +37,10 @@ import { useCart } from "../../contexts/CartContext";
 import userApiInstace from "../../utils/ApiInstance/userApiInstance";
 import CartDrawer from "../CartDrawer";
 import AuthDialog from "../Popup";
+import { useNotificationApi } from "../../utils/Hooks/Notification";
+import useSignalR from "../../utils/Hooks/SignalR";
+import NotificationMenu from "../Notification/NotificationMenu";
+import { jwtDecode } from "jwt-decode";
 
 const FunFundingAppBar = () => {
   const { cartItems, cartCount, setCartItems, setCartCount } = useCart();
@@ -211,6 +215,30 @@ const FunFundingAppBar = () => {
     transition: "color 0.3s ease-in-out",
   };
 
+  // for noti
+
+  const decoded = jwtDecode(token)
+  const userId = decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"]
+  const [openNoti, setOpenNoti] = useState(false)
+
+  const { notiData, error, fetchNotifications } = useNotificationApi(`/${userId}`)
+
+  const message = useSignalR()
+  const previousMessageRef = useRef(null);
+
+  useEffect(() => {
+    if (message !== previousMessageRef.current) {
+      previousMessageRef.current = message;
+      if (message) {
+        fetchNotifications()
+        setOpenNoti(true)
+      }
+    }
+
+  }, [message, fetchNotifications]);
+
+
+
   return (
     <div>
       <AppBar position="relative" sx={appBarStyles}>
@@ -307,27 +335,36 @@ const FunFundingAppBar = () => {
                     onClick={handleCartOpen}
                   />
                 </Badge>
-                <Badge
-                  badgeContent={0}
-                  max={99}
-                  showZero
-                  sx={{
-                    marginRight: "2rem",
-                    "& .MuiBadge-badge": {
-                      backgroundColor: "#1BAA64 !important",
-                    },
-                  }}
-                >
-                  <NotificationsIcon
-                    fontSize="large"
+                <div className="relative">
+                  <Badge
+                    badgeContent={notiData?.length}
+                    max={99}
+                    showZero
                     sx={{
-                      cursor: "pointer",
-                      transition: "color 0.3s",
-                      "&:hover": { color: "#c5c9cb" },
-                      color: isPage ? "#F5F7F8" : "#2F3645",
+                      marginRight: "2rem",
+                      "& .MuiBadge-badge": {
+                        backgroundColor: "#1BAA64 !important",
+                      },
                     }}
-                  />
-                </Badge>
+                    // onMouseEnter={() => setOpenNoti(true)}
+                    // onMouseLeave={() => setOpenNoti(false)}
+                    onClick={() => setOpenNoti(!openNoti)}
+                  >
+                    <NotificationsIcon
+                      fontSize="large"
+                      sx={{
+                        cursor: "pointer",
+                        transition: "color 0.3s",
+                        "&:hover": { color: "#c5c9cb" },
+                        color: isPage ? "#F5F7F8" : "#2F3645",
+                      }}
+                    />
+                  </Badge>
+                  <div className={`${openNoti ? '' : 'hidden'} absolute z-20 right-0 top-11`}>
+                    <NotificationMenu notiData={notiData} />
+                  </div>
+                </div>
+
                 <div className="relative">
                   <div
                     onMouseEnter={handleMouseEnter}
@@ -349,7 +386,7 @@ const FunFundingAppBar = () => {
                       vertical: 'top',
                       horizontal: 'right',
                     }}
-                    onMouseEnter={() => setIsHovering(true)}
+                    onMouseEnter={() => { setIsHovering(true), setOpenNoti(false) }}
                     onMouseLeave={handleMouseLeave}
                     sx={{
                       '& .MuiPaper-root': {

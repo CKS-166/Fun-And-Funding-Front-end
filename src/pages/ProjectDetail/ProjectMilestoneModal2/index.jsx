@@ -123,7 +123,7 @@ const ProjectMilestoneModal = ({ pmData, openModal, setOpenModal }) => {
         onClose={handleClose}
       >
         <div className="flex justify-center items-center w-full h-full scrollbar-hidden">
-          <div className="relative p-4 w-full max-w-[50%] max-h-full overflow-auto flex scrollbar-hidden flex-col">
+          <div className="relative p-4 w-full max-w-[60%] max-h-full overflow-auto flex scrollbar-hidden flex-col">
             <div className="relative bg-white rounded-lg shadow min-h-[100vh] pb-[7rem] overflow-auto scrollbar-hidden flex-grow">
               <div className="flex items-center justify-between p-4 md:p-5 border-b rounded-t bg-primary-green">
                 <h3 className="text-xl font-semibold text-white flex uppercase">
@@ -132,7 +132,7 @@ const ProjectMilestoneModal = ({ pmData, openModal, setOpenModal }) => {
                 <button
                   type="button"
                   onClick={handleClose}
-                  className="end-2.5 text-gray-400 bg-transparent text-white hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
+                  className="end-2.5 bg-transparent text-white hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
                   data-modal-hide="authentication-modal"
                 >
                   <svg
@@ -290,7 +290,7 @@ const ProjectMilestoneModal = ({ pmData, openModal, setOpenModal }) => {
           </div>
 
 
-          <div className="relative p-4 w-full max-w-[35%] max-h-full overflow-auto scrollbar-hidden flex flex-col ">
+          <div className="relative p-4 w-full max-w-[30%] max-h-full overflow-auto scrollbar-hidden flex flex-col ">
             <div className="relative rounded-lg shadow min-h-[100vh] pb-[7rem] overflow-auto scrollbar-hidden flex-grow bg-gray-200">
               <div className="flex items-center justify-between p-4 md:p-5 border-b rounded-t bg-primary-green">
                 <h3 className="text-xl font-semibold text-white flex uppercase">

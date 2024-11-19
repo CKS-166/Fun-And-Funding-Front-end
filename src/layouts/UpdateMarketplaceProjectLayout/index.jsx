@@ -147,7 +147,7 @@ function UpdateMarketplaceProjectLayout() {
         console.log(pair[0], pair[1]);
       }
 
-      const response = await fundingProjectApiInstace.put("", formData, {
+      const response = await marketplaceProjectApiInstace.put("", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -156,7 +156,7 @@ function UpdateMarketplaceProjectLayout() {
       if (response.status === 200) {
         notify("Project saved successfully!", "success");
         console.log(response);
-        setIsEdited(false);
+        setEdited(false);
       } else {
         console.error(`Unexpected status code: ${response.error}`);
       }
@@ -169,7 +169,7 @@ function UpdateMarketplaceProjectLayout() {
   const handleDiscardAll = async () => {
     fetchProject();
     await new Promise((resolve) => setTimeout(resolve, 1000));
-    setIsEdited(false);
+    setEdited(false);
   };
 
   useEffect(() => {

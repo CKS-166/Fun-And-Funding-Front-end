@@ -13,6 +13,7 @@ import "react-18-image-lightbox/style.css";
 import ReactPlayer from "react-player";
 import { useParams } from "react-router-dom";
 import Swal from "sweetalert2";
+import { v4 as uuidv4 } from "uuid";
 import { useUpdateMarketplaceProject } from "../../../contexts/UpdateMarketplaceProjectContext";
 
 function MarketplaceProjectMediaFiles() {
@@ -82,20 +83,12 @@ function MarketplaceProjectMediaFiles() {
     }
   };
 
-  const generateGUID = () => {
-    return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (c) => {
-      const r = (Math.random() * 16) | 0;
-      const v = c === "x" ? r : (r & 0x3) | 0x8;
-      return v.toString(16);
-    });
-  };
-
   const handleThumbnailChange = (e, thumbnailId) => {
     const file = e.target.files[0];
     if (file) {
       setThumbnail((prevThumbnails) => {
         const thumbnailIndex = prevThumbnails.findIndex(
-          (item) => item.id === thumbnailId && item.newlyAdded === false
+          (item) => item.id === thumbnailId
         );
         const updatedThumbnails = [...prevThumbnails];
         if (thumbnailIndex != -1) {
@@ -109,13 +102,11 @@ function MarketplaceProjectMediaFiles() {
         }
 
         const newThumbnail = {
-          id: generateGUID(),
-          name: "Project Thumbnail",
-          url: URL.createObjectURL(file),
-          urlFile: file,
+          id: uuidv4(),
+          name: file.name,
+          url: file,
           isDeleted: false,
           filetype: 2,
-          newlyAdded: true,
         };
 
         return [...updatedThumbnails, newThumbnail];
@@ -135,9 +126,7 @@ function MarketplaceProjectMediaFiles() {
     const file = e.target.files[0];
     if (file) {
       setProjectVideo((prevVideos) => {
-        const videoIndex = prevVideos.findIndex(
-          (item) => item.id === videoId && item.newlyAdded === false
-        );
+        const videoIndex = prevVideos.findIndex((item) => item.id === videoId);
         const updatedVideos = [...prevVideos];
         if (videoIndex != -1) {
           updatedVideos[videoIndex].isDeleted = true;
@@ -150,13 +139,11 @@ function MarketplaceProjectMediaFiles() {
         }
 
         const newVideo = {
-          id: generateGUID(),
-          name: "Project Video",
-          url: URL.createObjectURL(file),
-          urlFile: file,
+          id: uuidv4(),
+          name: file.name,
+          url: file,
           isDeleted: false,
           filetype: 1,
-          newlyAdded: true,
         };
 
         return [...updatedVideos, newVideo];
@@ -176,13 +163,11 @@ function MarketplaceProjectMediaFiles() {
     const file = e.target.files[0];
     if (file) {
       const newImage = {
-        id: generateGUID(),
-        name: "Project Bonus Image",
-        url: URL.createObjectURL(file),
-        urlFile: file,
+        id: uuidv4(),
+        name: file.name,
+        url: file,
         filetype: 4,
         isDeleted: false,
-        newlyAdded: true,
       };
       setProjectImages([...projectImages, newImage]);
       setMediaEdited(true);
@@ -208,7 +193,7 @@ function MarketplaceProjectMediaFiles() {
         if (result.isConfirmed) {
           setProjectImages((prevImages) => {
             const imageIndex = prevImages.findIndex(
-              (item) => item.id === bonusImage.id && item.newlyAdded === false
+              (item) => item.id === bonusImage.id
             );
             const updatedImages = [...prevImages];
             if (imageIndex != -1) {
@@ -259,15 +244,15 @@ function MarketplaceProjectMediaFiles() {
   };
 
   const handleSaveAll = async () => {
-    const existedFile = [];
-    const fundingFiles = [];
+    const existingFiles = [];
+    const marketplaceFiles = [];
 
     const classifyFiles = (files) => {
       files.forEach((file) => {
-        if (file.newlyAdded) {
-          fundingFiles.push(file);
+        if (typeof file.url === "object") {
+          marketplaceFiles.push(file);
         } else {
-          existedFile.push(file);
+          existingFiles.push(file);
         }
       });
     };
@@ -277,9 +262,9 @@ function MarketplaceProjectMediaFiles() {
     classifyFiles(projectVideo);
 
     const updatedProject = {
-      ...project,
-      fundingFiles: fundingFiles,
-      existedFile: existedFile,
+      ...marketplaceProject,
+      marketplaceFiles: marketplaceFiles,
+      existingFiles: existingFiles,
     };
 
     console.log(updatedProject);
@@ -341,7 +326,11 @@ function MarketplaceProjectMediaFiles() {
                 className="relative w-[70%] h-[17.8rem] bg-[#000000] rounded-lg"
               >
                 <img
-                  src={item.url}
+                  src={
+                    typeof item.url === "string"
+                      ? item.url
+                      : URL.createObjectURL(item.url)
+                  }
                   alt="Package preview"
                   className="w-full h-[17.8rem] object-contain rounded-lg cursor-pointer"
                   onClick={handleThumbnailClick}
@@ -435,7 +424,11 @@ function MarketplaceProjectMediaFiles() {
               >
                 <ReactPlayer
                   key={video.url}
-                  url={video.url}
+                  url={
+                    typeof video.url === "string"
+                      ? video.url
+                      : URL.createObjectURL(video.url)
+                  }
                   width="100%"
                   height="100%"
                   controls
@@ -533,7 +526,11 @@ function MarketplaceProjectMediaFiles() {
                   sx={{ bgcolor: "#000000" }}
                 >
                   <img
-                    src={item.url}
+                    src={
+                      typeof item.url === "string"
+                        ? item.url
+                        : URL.createObjectURL(item.url)
+                    }
                     alt={`Project image ${index + 1}`}
                     loading="lazy"
                     style={{

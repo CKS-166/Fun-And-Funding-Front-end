@@ -80,6 +80,7 @@ import MarketplaceProjectBasicInformation from "./pages/UpdateMarketplaceProject
 import MarketplaceProjectMediaFiles from "./pages/UpdateMarketplaceProjectForm/MarketplaceProjectMedia";
 import MarketplaceProjectBankAccount from "./pages/UpdateMarketplaceProjectForm/MarketplaceProjectBankAccount";
 import ManageCategory from "./pages/AdminPages/ManageCategory";
+import MarketplaceProjectContent from "./pages/UpdateMarketplaceProjectForm/MarketplaceProjectContent";
 
 function App() {
   const location = useLocation();
@@ -202,10 +203,10 @@ function App() {
                 path="/account/marketplace-projects/update/:id/bank-account"
                 element={<MarketplaceProjectBankAccount />}
               />
-              {/* <Route
-                path="/account/marketplace-projects/update/:id/donation-packages"
-                element={<DonationPackages />}
-              /> */}
+              <Route
+                path="/account/marketplace-projects/update/:id/game-content"
+                element={<MarketplaceProjectContent />}
+              />
               <Route
                 path="/account/marketplace-projects/update/:id/media-files"
                 element={<MarketplaceProjectMediaFiles />}

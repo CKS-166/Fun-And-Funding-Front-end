@@ -12,7 +12,7 @@ export const editorList = [
     link: (id) => `/account/marketplace-projects/update/${id}/bank-account`,
   },
   {
-    name: "Game File",
-    link: (id) => `/account/marketplace-projects/update/${id}/game-file`,
+    name: "Game Content",
+    link: (id) => `/account/marketplace-projects/update/${id}/game-content`,
   },
 ];

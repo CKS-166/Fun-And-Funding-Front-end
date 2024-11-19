@@ -78,6 +78,7 @@ import MarketplaceProjectPreview from "./pages/UpdateMarketplaceProjectForm/Mark
 import { UpdateMarketplaceProjectProvider } from "./contexts/UpdateMarketplaceProjectContext";
 import MarketplaceProjectBasicInformation from "./pages/UpdateMarketplaceProjectForm/MarketplaceProjectBasicInformation";
 import MarketplaceProjectMediaFiles from "./pages/UpdateMarketplaceProjectForm/MarketplaceProjectMedia";
+import ManageCategory from "./pages/AdminPages/ManageCategory";
 
 function App() {
   const location = useLocation();
@@ -216,6 +217,10 @@ function App() {
                 element={<Dashboard />}
               />
               <Route path="/admin-dashboard/users" element={<Users />} />
+              <Route
+                path="/admin-dashboard/categories"
+                element={<ManageCategory />}
+              />
               <Route
                 path="/admin-dashboard/withdraw-table"
                 element={<AdminWithdrawRequest />}

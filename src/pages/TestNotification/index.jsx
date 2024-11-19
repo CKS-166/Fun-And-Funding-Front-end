@@ -5,6 +5,7 @@ import Cookies from "js-cookie";
 
 const TestNotification = () => {
   const [connection, setConnection] = useState(null);
+  const [message, setMessage] = useState(null)
 
   const token = Cookies.get("_auth")
 
@@ -17,6 +18,7 @@ const TestNotification = () => {
 
       connection.on('ReceiveNotification', (notification) => {
         console.log("New notification for you:", notification);
+        setMessage(notification.message)
       });
       try {
         await connection.start();
@@ -33,19 +35,20 @@ const TestNotification = () => {
         connection.stop();
       }
     };
-  }, []);
+  }, [message]);
 
   const handleSendNotification = async () => {
     if (connection) {
       try {
         const notification = {
           message: "Hello, this is a TEST notification!",
+          notificationType: 0,
+          objectId: '4fb92d5b-f332-4d12-4858-08dcf8e9388d',
           date: new Date(),
           isRead: false,
         };
 
-        const userIdList = ["4F3F0846-6E40-4CD7-83AA-8537CC26733D", "34AA3C57-B91F-4387-97C2-F68B50366B76"];
-
+        const userIdList = ["f766c910-4f6a-421e-a1a3-61534e6005c3", "408D9BDB-7AAF-4AAA-B31A-968E0BEF4813"];
 
         const payload = {
           notification,
@@ -71,6 +74,7 @@ const TestNotification = () => {
   return (
     <div>
       <button onClick={handleSendNotification}>Send Notification</button>
+      <div>Message: {message}</div>
     </div>
   );
 };

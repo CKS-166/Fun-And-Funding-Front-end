@@ -2,13 +2,14 @@ import { useState, useEffect } from "react";
 import walletApiInstance from "../../ApiInstance/walletApiInstance";
 import withdrawRequestApiInstance from "../../ApiInstance/withdrawRequestApiInstance";
 import { useLoading } from "../../../contexts/LoadingContext";
+import bankAccountApiInstance from "../../ApiInstance/bankAccountApiInstance";
 
 export const useWalletApi = (endpoint, method = "GET", body = null) => {
   const [data, setData] = useState(null);
-  // const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [bankAccData, setBankAccData] = useState(null);
 
-  const { isLoading, setIsLoading } = useLoading()
+  const { isLoading, setIsLoading } = useLoading();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -21,6 +22,14 @@ export const useWalletApi = (endpoint, method = "GET", body = null) => {
           data: body,
         });
         setData(response.data);
+
+        if (response.data && response.data._data && response.data._data.id) {
+          const bankAccountResponse = await bankAccountApiInstance.request({
+            url: `/${response.data._data.id}`,
+            method: "GET",
+          });
+          setBankAccData(bankAccountResponse.data);
+        }
       } catch (err) {
         setError(err);
       } finally {
@@ -31,7 +40,7 @@ export const useWalletApi = (endpoint, method = "GET", body = null) => {
     fetchData();
   }, [endpoint, method, body]);
 
-  return { data, error };
+  return { data, error, bankAccData };
 };
 
 export const useWithdrawRequest = () => {

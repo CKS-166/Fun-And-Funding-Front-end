@@ -34,8 +34,6 @@ function MarketplaceProjectMediaFiles() {
     fetchMedia();
   }, [id, marketplaceProject]);
 
-  console.log(marketplaceProject);
-
   const fetchMedia = () => {
     const allFiles = [
       ...(marketplaceProject.existingFiles || []),
@@ -310,7 +308,7 @@ function MarketplaceProjectMediaFiles() {
             marginBottom: "1rem",
           }}
         >
-          Media files
+          Media Files
         </Typography>
         <Typography
           sx={{

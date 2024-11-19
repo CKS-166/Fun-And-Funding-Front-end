@@ -78,6 +78,7 @@ import MarketplaceProjectPreview from "./pages/UpdateMarketplaceProjectForm/Mark
 import { UpdateMarketplaceProjectProvider } from "./contexts/UpdateMarketplaceProjectContext";
 import MarketplaceProjectBasicInformation from "./pages/UpdateMarketplaceProjectForm/MarketplaceProjectBasicInformation";
 import MarketplaceProjectMediaFiles from "./pages/UpdateMarketplaceProjectForm/MarketplaceProjectMedia";
+import MarketplaceProjectBankAccount from "./pages/UpdateMarketplaceProjectForm/MarketplaceProjectBankAccount";
 
 function App() {
   const location = useLocation();
@@ -196,11 +197,11 @@ function App() {
                 path="/account/marketplace-projects/update/:id/basic-info"
                 element={<MarketplaceProjectBasicInformation />}
               />
-              {/* <Route
-                path="/account/marketplace-projects/update/:id/bank-account"
-                element={<BankAccount />}
-              />
               <Route
+                path="/account/marketplace-projects/update/:id/bank-account"
+                element={<MarketplaceProjectBankAccount />}
+              />
+              {/* <Route
                 path="/account/marketplace-projects/update/:id/donation-packages"
                 element={<DonationPackages />}
               /> */}

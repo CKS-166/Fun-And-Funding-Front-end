@@ -122,8 +122,8 @@ const AdminMilestone = () => {
                       {pm.fundingProject.name}
                     </td>
                     <td className="px-4 py-3">
-                      {pm.milestone.disbursementPercentage *
-                        pm.fundingProject.balance}{" "}
+                      {(pm.milestone.disbursementPercentage *
+                        pm.fundingProject.balance).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")}{" "}
                       đ
                     </td>
                     <td className="px-4 py-3">

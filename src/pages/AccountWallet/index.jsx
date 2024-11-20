@@ -5,6 +5,7 @@ import { useWalletApi } from "../../utils/Hooks/AccountWallet"
 import TestNotification from "../TestNotification"
 import NotificationMenu from "../../components/Notification/NotificationMenu"
 import BankAccountSettingModal from "./BankAccountSettingModal"
+import { AccountBalance } from "@mui/icons-material"
 
 
 const AccountWallet = () => {
@@ -80,7 +81,9 @@ const AccountWallet = () => {
                 )
                 :
                 (
-                  <div>{bankAccData?.data.bankCode}</div>
+                  <div className="text-4xl font-bold tracking-tight text-gray-900 flex items-center gap-2">
+                    <AccountBalance sx={{ fontSize: '2rem', color: 'var(--primary-green)' }} /> {bankAccData?._data.bankCode} - {bankAccData?._data.bankNumber}
+                  </div>
                 )
             }
           </div>
@@ -152,7 +155,7 @@ const AccountWallet = () => {
 
       <WalletModal openModal={openModal} modalAddMoney={modalAddMoney} handleCloseModal={handleCloseModal} walletId={data?._data.id} />
 
-      <BankAccountSettingModal openModal={openBankSetting} setOpenModal={setOpenBankSetting} />
+      <BankAccountSettingModal openModal={openBankSetting} setOpenModal={setOpenBankSetting} walletId={data?._data.id} />
 
       {/* <TestNotification />
 

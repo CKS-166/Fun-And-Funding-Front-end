@@ -1,9 +1,10 @@
 import { Autocomplete, Avatar, AvatarGroup, Box, Divider, Grid2, Modal, TextField, Typography } from "@mui/material"
 import { useEffect, useState } from "react"
 import axios from "axios"
+import bankAccountApiInstance from "../../../utils/ApiInstance/bankAccountApiInstance"
 
 
-const BankAccountSettingModal = ({ openModal, setOpenModal }) => {
+const BankAccountSettingModal = ({ openModal, setOpenModal, walletId }) => {
 
   const [selectedBank, setSelectedBank] = useState(null)
   const [bankList, setBankList] = useState([])
@@ -33,6 +34,24 @@ const BankAccountSettingModal = ({ openModal, setOpenModal }) => {
     }).then(res => {
       setOwnerName(res.data.data.ownerName)
     })
+  }
+
+  const handleLinkBankAccount = async () => {
+    try {
+      const linkBankBody = {
+        'bankCode': selectedBank?.code,
+        'bankNumber': bankAccountNumber,
+        'id': walletId
+      }
+      bankAccountApiInstance
+        .post("/", linkBankBody)
+        .then(res => {
+          console.log('response', res)
+        })
+
+    } catch (error) {
+      console.error('Error linking bank account:', error);
+    }
   }
 
   return (
@@ -141,7 +160,7 @@ const BankAccountSettingModal = ({ openModal, setOpenModal }) => {
                     onClick={() => setOpenModal(false)}
                     className="bg-red-800 text-white font-semibold px-3 py-1 rounded">Cancel</button>
                   <button
-                    onClick={() => handleConfigBankAccount()}
+                    onClick={() => handleLinkBankAccount()}
                     disabled={ownerName ? false : true}
                     className={`${ownerName ? 'bg-primary-green' : 'bg-gray-400'}  text-white font-semibold px-3 py-1 rounded`}>Confirm</button>
                 </div>

@@ -1,6 +1,7 @@
-import { ArrowRightAlt } from "@mui/icons-material";
+import { ArrowRightAlt, HelpOutline } from "@mui/icons-material";
 import {
   Box,
+  Button,
   Divider,
   Grid2,
   Modal,
@@ -9,11 +10,15 @@ import {
   Stepper,
   Tab,
   Tabs,
+  Typography,
 } from "@mui/material";
+import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
 import projectMilestoneApiInstace from "../../../../utils/ApiInstance/projectMilestoneApiInstance";
 import { useState } from "react";
 import QRCodeModal from "./QRCodeModal";
 import PMRequirementModal from "./PMRequirementModal";
+import { styled } from '@mui/material/styles';
+import WarnModal from "./WarnModal";
 
 const ProjectMilestoneModal = ({ pmData, openModal, setOpenModal }) => {
   const handleClose = () => {
@@ -25,6 +30,12 @@ const ProjectMilestoneModal = ({ pmData, openModal, setOpenModal }) => {
   const [activeTab, setActiveTab] = useState(0);
 
   const [selectedPMR, setSelectedPMR] = useState(null);
+  const [openWarn, setOpenWarn] = useState(false)
+  const [newEndDate, setNewEndDate] = useState()
+
+  const handleOpenWarn = () => {
+    setOpenWarn(true)
+  }
 
   const handleOpenPMR = (pmr) => {
     setSelectedPMR(pmr);
@@ -66,6 +77,7 @@ const ProjectMilestoneModal = ({ pmData, openModal, setOpenModal }) => {
       const response = await projectMilestoneApiInstace.put("/", {
         ProjectMilestoneId: pmData?.id,
         Status: 3,
+        NewEndDate: newEndDate
       });
       console.log("Milestone rejected:", response.data);
     } catch (error) {
@@ -74,6 +86,7 @@ const ProjectMilestoneModal = ({ pmData, openModal, setOpenModal }) => {
       handleClose();
     }
   };
+
 
   const handleProcess = async () => {
     try {
@@ -112,7 +125,8 @@ const ProjectMilestoneModal = ({ pmData, openModal, setOpenModal }) => {
     handleProcess,
     handleApprove,
     handleWarn,
-    handleFail
+    handleFail,
+    setOpenWarn
   ) {
     if (pmData?.status == null) return null;
 
@@ -143,6 +157,12 @@ const ProjectMilestoneModal = ({ pmData, openModal, setOpenModal }) => {
             This milestone is completed
           </div>
         )
+      case 4: // failed
+        return (
+          <div>
+            This milestone has failed
+          </div>
+        )
       case 5: // Submitted
         return (
           <div>
@@ -153,10 +173,11 @@ const ProjectMilestoneModal = ({ pmData, openModal, setOpenModal }) => {
               Approve project milestone
             </button>
             <button
-              onClick={handleWarn}
+              // onClick={handleWarn}
+              onClick={handleOpenWarn}
               className="text-white bg-red-500 hover:bg-gradient-to-br font-medium rounded-lg text-sm px-5 py-2 text-center me-2 mb-2"
             >
-              Warning project milestone
+              Warn this project milestone
             </button>
           </div>
         );
@@ -195,6 +216,19 @@ const ProjectMilestoneModal = ({ pmData, openModal, setOpenModal }) => {
   const handleChange = (event, newValue) => {
     setActiveTab(newValue);
   };
+
+  const HtmlTooltip = styled(({ className, ...props }) => (
+    <Tooltip {...props} classes={{ popper: className }} />
+  ))(({ theme }) => ({
+    [`& .${tooltipClasses.tooltip}`]: {
+      backgroundColor: '#f5f5f9',
+      color: 'rgba(0, 0, 0, 0.87)',
+      maxWidth: 220,
+      fontSize: theme.typography.pxToRem(12),
+      border: '1px solid #dadde9',
+    },
+  }));
+
 
   return (
     <>
@@ -346,14 +380,28 @@ const ProjectMilestoneModal = ({ pmData, openModal, setOpenModal }) => {
                               <tr class="border-b border-gray-200 dark:border-gray-700">
                                 <th
                                   scope="row"
-                                  class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 dark:text-white"
+                                  class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 flex items-center gap-2"
                                 >
-                                  Milestone requested amount = (1) x (2)
+                                  Milestone requested amount = (1) x (2) x <u>50%</u>
+                                  <HtmlTooltip
+                                    title={
+                                      <>
+                                        <Typography color="inherit">Disbursement policy</Typography>
+                                        <em>{"Game owner shall firstly receive"}</em> <b>{'half'}</b>
+                                        <em>{" of the milestone fund"}</em> <b>{'for production'}</b> <em>{"and"}</em> <b>{'the remaining'}</b>
+                                        <em>{" after having provided sufficient evidences of production"}</em>
+                                      </>
+                                    }
+                                  >
+                                    <div>
+                                      <HelpOutline sx={{ fontSize: '1rem' }} />
+                                    </div>
+                                  </HtmlTooltip>
                                 </th>
                                 <td class="px-6 py-4 font-bold text-black text-lg">
                                   {(
                                     pmData?.milestone.disbursementPercentage *
-                                    pmData?.fundingProject.balance
+                                    pmData?.fundingProject.balance * 0.5
                                   )
                                     .toString()
                                     .replace(/\B(?=(\d{3})+(?!\d))/g, ".")}{" "}
@@ -380,6 +428,8 @@ const ProjectMilestoneModal = ({ pmData, openModal, setOpenModal }) => {
                             pmData={pmData}
                           />
                         )}
+                        <WarnModal openWarn={openWarn} setOpenWarn={setOpenWarn} pmData={pmData} newEndDate={newEndDate} setNewEndDate={setNewEndDate} handleWarn={handleWarn} />
+
                       </div>
                     ) : (
                       <div>
@@ -471,7 +521,8 @@ const ProjectMilestoneModal = ({ pmData, openModal, setOpenModal }) => {
                       handleProcess,
                       handleApprove,
                       handleWarn,
-                      handleFail
+                      handleFail,
+                      handleOpenWarn
                     )
                     : ""}
                 </div>

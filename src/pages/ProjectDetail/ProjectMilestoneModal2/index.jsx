@@ -1,5 +1,5 @@
-import { ArrowRightAlt } from "@mui/icons-material"
-import { Box, Divider, Grid2, Modal, Step, StepLabel, Stepper, Tab, Tabs } from "@mui/material"
+import { ArrowRightAlt, HelpOutline } from "@mui/icons-material"
+import { Box, Divider, Grid2, Modal, Step, StepLabel, Stepper, Tab, Tabs, Typography } from "@mui/material"
 // import projectMilestoneApiInstace from "../../../../utils/ApiInstance/projectMilestoneApiInstance"
 import projectMilestoneApiInstace from "../../../utils/ApiInstance/projectMilestoneApiInstance"
 import { useState } from "react"
@@ -7,6 +7,8 @@ import QRCodeModal from "./QRCodeModal"
 import PMRequirementModal from "./PMRequirementModal"
 import ProjectMilestoneReviewList from "../../../components/ProjectMilestoneBacker/ProjectMilestoneReviewList"
 import ProjectMilestoneReviewForm from "../../../components/ProjectMilestoneBacker/ProjectMilestoneReviewForm"
+import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
+import { styled } from '@mui/material/styles';
 
 const ProjectMilestoneModal = ({ pmData, openModal, setOpenModal }) => {
 
@@ -116,6 +118,18 @@ const ProjectMilestoneModal = ({ pmData, openModal, setOpenModal }) => {
     setActiveTab(newValue);
   };
 
+  const HtmlTooltip = styled(({ className, ...props }) => (
+    <Tooltip {...props} classes={{ popper: className }} />
+  ))(({ theme }) => ({
+    [`& .${tooltipClasses.tooltip}`]: {
+      backgroundColor: '#f5f5f9',
+      color: 'rgba(0, 0, 0, 0.87)',
+      maxWidth: 220,
+      fontSize: theme.typography.pxToRem(12),
+      border: '1px solid #dadde9',
+    },
+  }));
+
   return (
     <>
       <Modal
@@ -161,9 +175,12 @@ const ProjectMilestoneModal = ({ pmData, openModal, setOpenModal }) => {
                     <Step key={milestone}>
                       <StepLabel
                         sx={{
-                          '& .MuiStepIcon-root.Mui-active': {
+                          "& .MuiStepIcon-root.Mui-active": {
                             color: 'var(--primary-green) !important',
-                          }
+                          },
+                          '& .MuiStepIcon-root.Mui-completed': {
+                            color: "var(--primary-green) !important",
+                          },
                         }}
                       >
                         {milestone}
@@ -208,8 +225,22 @@ const ProjectMilestoneModal = ({ pmData, openModal, setOpenModal }) => {
                           </td>
                         </tr>
                         <tr className="border-b border-gray-200 dark:border-gray-700">
-                          <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 dark:text-white">
-                            Milestone requested amount = (1) x (2)
+                          <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 dark:text-white flex items-center gap-2">
+                            Milestone requested amount = (1) x (2) x <u>50%</u>
+                            <HtmlTooltip
+                              title={
+                                <>
+                                  <Typography color="inherit">Disbursement policy</Typography>
+                                  <em>{"Game owner shall firstly receive"}</em> <b>{'half'}</b>
+                                  <em>{" of the milestone fund"}</em> <b>{'for production'}</b> <em>{"and"}</em> <b>{'the remaining'}</b>
+                                  <em>{" after having provided sufficient evidences of production"}</em>
+                                </>
+                              }
+                            >
+                              <div>
+                                <HelpOutline sx={{ fontSize: '1rem' }} />
+                              </div>
+                            </HtmlTooltip>
                           </th>
                           <td className="px-6 py-4 font-bold text-black text-lg">
                             {(pmData?.milestone.disbursementPercentage * pmData?.fundingProject.balance).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")} đ

@@ -218,7 +218,8 @@ function MarketplaceProjectDetail() {
                 }
             })
             if (res.data._statusCode == 200) {
-                setUpdateList(res.data._data);
+                console.log(res.data._data.items);
+                setUpdateList(res.data._data.items);
             }
         } catch (error) {
             notify(error.response?.data?.message || error.message || "An error occurred", "error");
@@ -650,7 +651,20 @@ function MarketplaceProjectDetail() {
                                         Updates
                                     </Typography>
                                     <Box>
-                                        <MarketplaceUpdateContent />
+                                        {updateList != null && updateList.length > 0 ?
+                                            updateList.slice(0, -1).map((item, index) =>
+                                                <MarketplaceUpdateContent key={index} content={item} index={updateList.length - index - 1} gameOwner={marketplaceProject?.user} />
+                                            )
+                                            :
+                                            <Typography
+                                                sx={{
+                                                    fontSize: "1.5rem",
+                                                    fontWeight: '500',
+                                                    color: 'var(--black)',
+                                                }}
+                                            >
+                                                No Updates Yet
+                                            </Typography>}
                                     </Box>
                                 </Box>
                             </Box>

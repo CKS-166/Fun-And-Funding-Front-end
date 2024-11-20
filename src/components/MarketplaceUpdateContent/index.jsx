@@ -2,7 +2,8 @@ import { Avatar, Box, Paper, Typography } from '@mui/material';
 import React from 'react';
 import MarketplaceProjectIntro from "../../components/MarketplaceProjectIntro";
 
-function MarketplaceUpdateContent({ content }) {
+function MarketplaceUpdateContent({ content, index, gameOwner }) {
+    console.log(content);
     return (
         <Paper sx={{ backgroundColor: 'var(--white)', borderRadius: '0.625rem', p: '3rem' }} elevation={3}>
             <Typography
@@ -13,7 +14,7 @@ function MarketplaceUpdateContent({ content }) {
                     mb: '1rem'
                 }}
             >
-                UPDATE (#1)
+                UPDATE (#{index})
             </Typography>
             <Typography
                 sx={{
@@ -23,7 +24,7 @@ function MarketplaceUpdateContent({ content }) {
                     mb: '2rem'
                 }}
             >
-                Update game file version
+                Update game file version <span className='text-[var(--primary-green)] font-bold'>{content.version}</span>
             </Typography>
             <Box
                 sx={{
@@ -40,7 +41,7 @@ function MarketplaceUpdateContent({ content }) {
                             height: "3.5rem",
                             marginRight: "1rem",
                         }}
-                        src={''}
+                        src={gameOwner.avatar ?? ''}
                     />
                     <Box>
                         <a href={`/profile/`}>
@@ -58,17 +59,17 @@ function MarketplaceUpdateContent({ content }) {
                                     },
                                 }}
                             >
-                                Team Cherry
+                                {gameOwner.userName ?? ''}
                             </Typography>
                         </a>
                         <Typography sx={{ fontSize: "0.75rem", opacity: "0.6", color: 'var(--black)' }}>
-                            13/11/2024 10:47 pm
+                            {new Date(content.createdDate).toLocaleString()}
                         </Typography>
                     </Box>
                 </div>
             </Box>
             <Box>
-                <MarketplaceProjectIntro intro={""} />
+                <MarketplaceProjectIntro intro={content.description} />
             </Box>
         </Paper>
     )

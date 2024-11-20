@@ -6,7 +6,7 @@ import CTO from '../../assets/images/CTO.png';
 
 function MemberCard({ imgUrl, name, role, description, secondDescription }) {
     return (
-        <Card sx={{ position: 'relative', overflow: 'visible', backgroundColor: '#f4f4f4', borderRadius: '1rem' }}>
+        <Card sx={{ position: 'relative', overflow: 'visible', backgroundColor: '#f4f4f4', borderRadius: '1rem', maxWidth: '25rem' }}>
             <div style={{ position: 'relative', height: '16rem', overflow: 'visible' }}>
                 <CardMedia
                     component="img"

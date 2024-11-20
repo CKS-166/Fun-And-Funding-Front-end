@@ -14,7 +14,6 @@ import MemberCard from '../../components/MemberCard';
 import './index.css';
 
 function AboutUs() {
-
     useEffect(() => {
         Aos.init({ duration: 2000 });
     }, []);
@@ -48,21 +47,21 @@ function AboutUs() {
                         </Grid2>
                     </Grid2>
                     <Grid2 container columnGap={6} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                        <Grid2 item xs={12}>
+                        <Grid2 item xs={6}>
                             <MemberCard name={"Dao Huong Thao"} role={"Developer"} description={"Develop and maintain the crowdfunding platform's source code to ensure stability, security, and advancement."} />
                         </Grid2>
-                        <Grid2 item xs={12}>
+                        <Grid2 item xs={6}>
                             <MemberCard imgUrl={Bao} name={"Cao Duy Bao"} role={"Developer"} description={"Develop and maintain the crowdfunding platform's source code to ensure stability, security, and advancement."} />
                         </Grid2>
                     </Grid2>
                 </div>
             </div>
             <div className='hp-question h-[40vh] select-none flex flex-col items-center justify-center' data-aos="fade-up" style={{ marginLeft: 'var(--side-margin)', marginRight: 'var(--side-margin)' }}>
-                <Typography variant="h1" sx={{ fontSize: { lg: '1.4rem', xs: '1rem' }, color: '#FFFFFF', fontWeight: 600, textAlign: 'center', textShadow: '.12rem .12rem .3rem rgba(0, 0, 0, 0.2)', mb: '1rem' }}>
+                <Typography sx={{ fontSize: '2rem', color: 'var(--primary-green)', fontWeight: 600, textAlign: 'center', textShadow: '.12rem .12rem .3rem rgba(0, 0, 0, 0.2)', mb: '1rem' }}>
                     Fun&Funding's Goal:
                 </Typography>
-                <Typography variant="h2" sx={{
-                    fontSize: { lg: '2.4rem', xs: '1.5rem' }, color: '#FFFFFF', fontWeight: 600, textAlign: 'center', width: '75%', textShadow: '.12rem .12rem .3rem rgba(0, 0, 0, 0.2)', lineHeight: '1.625'
+                <Typography sx={{
+                    fontSize: '2.4rem', color: 'var(--primary-green)', fontWeight: 600, textAlign: 'center', width: '75%', textShadow: '.12rem .12rem .3rem rgba(0, 0, 0, 0.2)', lineHeight: '1.625'
                 }}>
                     <TypeAnimation
                         sequence={[

@@ -163,7 +163,9 @@ export default function CommisionTable({
                       color={row[column] === "Applied" ? "success" : "error"}
                       sx={{
                         backgroundColor:
-                          row[column] === "Applied" ? "green" : "#D70040",
+                          row[column] === "Applied"
+                            ? "var(--primary-green)"
+                            : "var(--red)",
                         color: "white",
                       }}
                     />

@@ -11,6 +11,7 @@ import PercentIcon from "@mui/icons-material/Percent";
 import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 import FormatListNumberedIcon from "@mui/icons-material/FormatListNumbered";
 import SelectWithIcon from "../../components/SelectionCommision";
+import { useLoading } from "../../contexts/LoadingContext";
 
 const notify = (message, type) => {
   const options = {
@@ -52,6 +53,7 @@ function CommissionFee() {
     currentPage: 0,
     pageSize: 10,
   });
+  const { isLoading, setIsLoading } = useLoading();
 
   // Update a specific pagination value
   const updatePagination = (updates) => {
@@ -95,12 +97,14 @@ function CommissionFee() {
         },
       });
       const { items, totalItems, totalPages } = response.data._data;
+      setIsLoading(true);
       setDataLoad(items);
       updatePagination({ totalItems, totalPages, currentPage: page });
-
       fetchLatestVersion();
     } catch (error) {
       console.log(error);
+    } finally {
+      setIsLoading(false);
     }
   };
   // Usage in handlers

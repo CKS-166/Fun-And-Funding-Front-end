@@ -44,7 +44,6 @@ function MarketplaceProjectBankAccount() {
       if (response.data.code === 200) {
         const bankList = response.data.data;
         const bankCode = marketplaceProject.bankAccount.bankCode;
-        console.log(bankCode);
         const foundBank = bankList.find((record) => record.code === bankCode);
         if (foundBank) {
           setSelectedBank(foundBank);
@@ -81,7 +80,8 @@ function MarketplaceProjectBankAccount() {
   };
 
   const checkBankAccount = async (choosenBank, accountNumber) => {
-    if (marketplaceProject.wallet.bankAccount) {
+    console.log(accountNumber);
+    if (marketplaceProject.bankAccount) {
       try {
         const response = await axios.post(
           "https://api.httzip.com/api/bank/id-lookup-prod",
@@ -116,7 +116,6 @@ function MarketplaceProjectBankAccount() {
         setBankAccountEdited(false);
         isChecked(false);
       } finally {
-        setIsLoading(false);
       }
     }
   };

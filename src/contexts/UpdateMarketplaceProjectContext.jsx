@@ -18,6 +18,8 @@ export const UpdateMarketplaceProjectProvider = ({ children }) => {
         name: "",
         url: "",
         filetype: 0,
+        version: "",
+        description: "",
       },
     ],
     existingFiles: [

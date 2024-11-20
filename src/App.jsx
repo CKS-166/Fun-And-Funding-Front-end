@@ -37,8 +37,9 @@ import TestDetail from "./pages/TestDetail";
 import { Backdrop, CircularProgress } from "@mui/material";
 import { CartProvider } from "./contexts/CartContext";
 import { ChatProvider } from "./contexts/ChatContext";
-import { MarketplaceProjectProvider } from "./contexts/CreateMarketplaceProjectContext";
+import { CreateMarketplaceProjectProvider } from "./contexts/CreateMarketplaceProjectContext";
 import { useLoading } from "./contexts/LoadingContext";
+import AboutUsLayout from "./layouts/AboutUsLayout";
 import AdminDashboardLayout from "./layouts/AdminDashboardLayout";
 import ChatLayout from "./layouts/ChatLayout";
 import CreateMarketplaceProjectLayout from "./layouts/CreateMarketplaceProjectLayout";
@@ -46,15 +47,22 @@ import AccountWallet from "./pages/AccountWallet";
 import AdminMilestone from "./pages/AdminPages/AdminMilestone";
 import AdminReport from "./pages/AdminPages/AdminReport";
 import Dashboard from "./pages/AdminPages/Dashboard";
+import Users from "./pages/AdminPages/User";
 import AdminWithdrawRequest from "./pages/AdminWithdrawRequest";
 import Chat from "./pages/Chat";
 import CheckoutCart from "./pages/CheckoutCart";
 import CheckoutSuccess from "./pages/CheckoutCart/CheckoutSuccess";
+import CommissionFee from "./pages/CommissionFee";
 import MarketplaceProjectBasicInfo from "./pages/CreateMarketplaceProjectForm/MarketplaceProjectBasicInfo";
+import MarketplaceProjectGameContent from "./pages/CreateMarketplaceProjectForm/MarketplaceProjectGameContent";
 import MarketplaceProjectIntroduction from "./pages/CreateMarketplaceProjectForm/MarketplaceProjectIntroduction";
 import MarketplaceProjectMedia from "./pages/CreateMarketplaceProjectForm/MarketplaceProjectMedia";
+import MarketplaceProjectSetupBankAccount from "./pages/CreateMarketplaceProjectForm/MarketplaceProjectSetupBankAccount";
+import GetAllProject from "./pages/GetAllProject";
+import MarketplaceHomePage from "./pages/MarketplaceHomePage";
 import MarketplaceProjectDetail from "./pages/MarketplaceProjectDetail";
 import Milestones from "./pages/Milestones";
+import Policies from "./pages/Policies";
 import MilestoneForm from "./pages/TestCR/MilestoneForm";
 import BankAccount from "./pages/UpdateFundingProjectForm/ProjectEditor/BankAccount";
 import BasicInformation from "./pages/UpdateFundingProjectForm/ProjectEditor/BasicInformation";
@@ -65,14 +73,14 @@ import Milestone2 from "./pages/UpdateFundingProjectForm/ProjectMilestone/Milest
 import Milestone3 from "./pages/UpdateFundingProjectForm/ProjectMilestone/Milestone3";
 import Milestone4 from "./pages/UpdateFundingProjectForm/ProjectMilestone/Milestone4";
 import ProjectPreview from "./pages/UpdateFundingProjectForm/ProjectPreview";
-import MarketplaceHomePage from "./pages/MarketplaceHomePage";
-import CommissionFee from "./pages/CommissionFee";
-import AboutUsLayout from "./layouts/AboutUsLayout";
-import Policies from "./pages/Policies";
-// import MarketplaceProjectMedia from "./pages/CreateMarketplaceProjectForm/MarketplaceProjectMedia";
-import MarketplaceProjectSetupBankAccount from "./pages/CreateMarketplaceProjectForm/MarketplaceProjectSetupBankAccount";
-import GetAllProject from "./pages/GetAllProject";
-import MarketplaceProjectGameContent from "./pages/CreateMarketplaceProjectForm/MarketplaceProjectGameContent";
+import UpdateMarketplaceProjectLayout from "./layouts/UpdateMarketplaceProjectLayout";
+import MarketplaceProjectPreview from "./pages/UpdateMarketplaceProjectForm/MarketplaceProjectPreview";
+import { UpdateMarketplaceProjectProvider } from "./contexts/UpdateMarketplaceProjectContext";
+import MarketplaceProjectBasicInformation from "./pages/UpdateMarketplaceProjectForm/MarketplaceProjectBasicInformation";
+import MarketplaceProjectMediaFiles from "./pages/UpdateMarketplaceProjectForm/MarketplaceProjectMedia";
+import MarketplaceProjectBankAccount from "./pages/UpdateMarketplaceProjectForm/MarketplaceProjectBankAccount";
+import ManageCategory from "./pages/AdminPages/ManageCategory";
+import MarketplaceProjectContent from "./pages/UpdateMarketplaceProjectForm/MarketplaceProjectContent";
 
 function App() {
   const location = useLocation();
@@ -143,11 +151,6 @@ function App() {
                 element={<ProjectPreview />}
               />
               <Route
-                path="/account/projects/update/:id/preview"
-                element={<ProjectPreview />}
-              />
-
-              <Route
                 path="/account/projects/update/:id/basic-info"
                 element={<BasicInformation />}
               />
@@ -181,10 +184,44 @@ function App() {
               />
             </Route>
 
+            <Route
+              element={
+                <UpdateMarketplaceProjectProvider>
+                  <UpdateMarketplaceProjectLayout />
+                </UpdateMarketplaceProjectProvider>
+              }
+            >
+              <Route
+                path="/account/marketplace-projects/update/:id/preview"
+                element={<MarketplaceProjectPreview />}
+              />
+              <Route
+                path="/account/marketplace-projects/update/:id/basic-info"
+                element={<MarketplaceProjectBasicInformation />}
+              />
+              <Route
+                path="/account/marketplace-projects/update/:id/bank-account"
+                element={<MarketplaceProjectBankAccount />}
+              />
+              <Route
+                path="/account/marketplace-projects/update/:id/game-content"
+                element={<MarketplaceProjectContent />}
+              />
+              <Route
+                path="/account/marketplace-projects/update/:id/media-files"
+                element={<MarketplaceProjectMediaFiles />}
+              />
+            </Route>
+
             <Route element={<AdminDashboardLayout />}>
               <Route
                 path="/admin-dashboard/dashboard"
                 element={<Dashboard />}
+              />
+              <Route path="/admin-dashboard/users" element={<Users />} />
+              <Route
+                path="/admin-dashboard/categories"
+                element={<ManageCategory />}
               />
               <Route
                 path="/admin-dashboard/withdraw-table"
@@ -235,9 +272,9 @@ function App() {
 
             <Route
               element={
-                <MarketplaceProjectProvider>
+                <CreateMarketplaceProjectProvider>
                   <CreateMarketplaceProjectLayout />
-                </MarketplaceProjectProvider>
+                </CreateMarketplaceProjectProvider>
               }
             >
               <Route

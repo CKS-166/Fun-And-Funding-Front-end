@@ -38,29 +38,6 @@ import "./index.css";
 import { useNavigate } from "react-router-dom";
 import packageBackerApiInstance from "../../utils/ApiInstance/packageBackerApiInstance";
 
-const notify = (message, type) => {
-  const options = {
-    position: "top-right",
-    autoClose: 3000,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    style: {
-      backgroundColor: "#ffffff",
-      color: "#000000",
-      fontWeight: "bold",
-    },
-  };
-
-  if (type === "warn") {
-    toast.warn(message, options);
-  } else if (type === "success") {
-    toast.success(message, options);
-  } else if (type === "error") {
-    toast.error(message, options);
-  }
-};
-
 const ProjectDetail = () => {
   const token = Cookies.get("_auth");
   //sample owwner
@@ -69,8 +46,7 @@ const ProjectDetail = () => {
   //sample data
   const { id } = useParams();
   console.log(id);
-  const number = 30000000;
-  const backers = 1000;
+
   const convertPercentage = (a, b) => Math.ceil((a / b) * 100);
   const [tabValue, setTabValue] = useState("1");
   const [projectData, setProjectData] = useState({});
@@ -100,18 +76,18 @@ const ProjectDetail = () => {
   //fetch backers
   const fetchBackers = async (id) => {
     try {
-      await packageBackerApiInstance
-        .get(`/project-backers-detail?projectId=${id}`)
-        .then((res) => {
+      await packageBackerApiInstance.get(`/project-backers-detail?projectId=${id}`)
+        .then(res => {
           console.log(res.data);
           if (res.data.result._isSuccess) {
             setPackBackers(res.data.result._data);
           }
-        });
+        })
     } catch (error) {
       console.error(error);
     }
-  };
+
+  }
   const handleOpenDialog = () => {
     setOpenDialog(true);
   };
@@ -143,39 +119,41 @@ const ProjectDetail = () => {
   };
   //check project owner
   const checkOwner = (status) => {
-    token &&
-      fundingProjectApiInstance
-        .get("/project-owner", {
-          params: {
-            projectId: id,
-          },
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
-        .then((response) => {
-          console.log(response.data);
-          if (response.data._data) {
-            if (response.data._message == "owner") {
-              setButtonBackerActive(true);
-              setIsOwner(response.data._data);
-              if (status == processing || status == fundedSuccessful) {
-                setButtonActive(false);
-              } else {
-                setButtonActive(true);
-              }
-            } else if (response.data._message == "backer of this project") {
-              setIsBacker(response.data._data);
-              if (status == processing) {
-                setButtonActive(false);
-                setButtonBackerActive(false);
-              } else {
-                setButtonActive(true);
-                setButtonBackerActive(true);
-              }
+    token && fundingProjectApiInstance
+      .get("/project-owner", {
+        params: {
+          projectId: id,
+        },
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        console.log(response.data);
+        if (response.data._data) {
+          if (response.data._message == 'owner') {
+            setButtonBackerActive(true)
+            setIsOwner(response.data._data);
+            if (status == processing || status == fundedSuccessful) {
+              setButtonActive(false)
+            } else {
+              setButtonActive(true)
+
+            }
+          } else if (response.data._message == 'backer of this project') {
+            setIsBacker(response.data._data);
+            if (status == processing) {
+              setButtonActive(false)
+              setButtonBackerActive(false)
+            } else {
+              setButtonActive(true)
+              setButtonBackerActive(true)
             }
           }
-        });
+
+        }
+
+      });
   };
   //fetch milestones
   const fetchMilestones = async () => {
@@ -264,6 +242,36 @@ const ProjectDetail = () => {
         // setButtonActive(true);
         return "Unable to take action";
     }
+  };
+
+  const handleSendNotification = async () => {
+    try {
+      const notification = {
+        message: "User suongck donated to your project!",
+        notificationType: 0,
+        objectId: '4fb92d5b-f332-4d12-4858-08dcf8e9388d',
+        date: new Date(),
+        isRead: false,
+      };
+
+      const userIdList = ["f766c910-4f6a-421e-a1a3-61534e6005c3", "408D9BDB-7AAF-4AAA-B31A-968E0BEF4813"];
+
+      const payload = {
+        notification,
+        userIds: userIdList,
+      };
+
+      await fetch('https://localhost:7044/api/notification/send', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+    } catch (error) {
+      console.error('Error sending notification:', error);
+    }
+
   };
 
   return (
@@ -429,7 +437,7 @@ const ProjectDetail = () => {
                         {isOwner ? (
                           <Typography>{renderButtonContent()}</Typography>
                         ) : (
-                          <Typography>Back this project</Typography>
+                          <Typography onClick={handleSendNotification}>Back this project</Typography>
                         )}
                       </Button>
                       {firstMilestone && (

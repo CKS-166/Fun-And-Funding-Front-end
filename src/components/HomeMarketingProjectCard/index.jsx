@@ -24,13 +24,12 @@ function HomeMarketingProjectCard({ marketplaceProject }) {
 
     const fetchUserLike = async () => {
         try {
-            const res = await likeApiInstace.get(`/check-project-like/${marketplaceProject.id}`, {
+            const res = await likeApiInstace.get(`/get-project-like/${marketplaceProject.id}`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
-            })
+            });
             if (res.data._statusCode == 200) {
-                console.log(res.data._data);
                 isLiked(res.data._data.isLike);
             }
         } catch (error) {
@@ -40,15 +39,15 @@ function HomeMarketingProjectCard({ marketplaceProject }) {
 
     const handleLikeProject = async () => {
         try {
-            const res = await likeApiInstace.post(`/marketplace/like`, {
+            const res = await likeApiInstace.post(`/marketplace`, {
                 projectId: marketplaceProject.id
             }, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
-            })
+            });
             if (res.data._statusCode == 200) {
-                fetchUserLike();
+                isLiked(!liked);
             }
         } catch (error) {
             console.log(error);
@@ -180,7 +179,7 @@ function HomeMarketingProjectCard({ marketplaceProject }) {
                                     />
                                 ))}
                             </div>
-                            <Chip label="PC" sx={{ borderRadius: '0.313rem', fontSize: '0.875rem' }} />
+                            <Chip label="Unity" sx={{ borderRadius: '0.313rem', fontSize: '0.875rem' }} />
                         </div>
                         <div>
                             <Typography sx={{ color: 'var(--black)', fontWeight: '700', mb: '0.5rem', width: 'full', fontSize: '1.5rem', textAlign: 'right' }}>

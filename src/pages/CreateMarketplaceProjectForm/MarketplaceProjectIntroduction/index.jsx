@@ -17,8 +17,6 @@ const MarketplaceProjectIntroduction = () => {
     marketplaceProject?.introduction
   );
 
-  console.log(marketplaceProject);
-
   useEffect(() => {
     if (marketplaceProject?.introduction) {
       setIntroductionData(marketplaceProject.introduction);

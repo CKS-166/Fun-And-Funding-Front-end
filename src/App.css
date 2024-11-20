@@ -1,48 +1,48 @@
 * {
-
-    font-family: 'Poppins', sans-serif !important;
+  font-family: "Poppins", sans-serif !important;
 }
 
 body {
-    background-color: #F5F7F8;
+  background-color: #f5f7f8;
 }
 
 :root {
-    --primary-green: #1BAA64;
-    --dark-green: #06402b;
-    --black: #2F3645;
-    --white: #F5F7F9;
-    --grey: #B7B7B7;
-    --red: #d9534f;
-    --header-height: 6.4rem;
-    --side-margin: 5.5rem;
+  --primary-green: #1baa64;
+  --dark-green: #06402b;
+  --black: #2f3645;
+  --white: #f5f7f8;
+  --grey: #b7b7b7;
+  --light-grey: #eaeaea;
+  --red: #d9534f;
+  --header-height: 6.4rem;
+  --side-margin: 5.5rem;
 }
 
 @font-face {
-    font-family: WhyteInktrap;
-    src: url('/src/assets/fonts/WhyteInktrap.ttf');
+  font-family: WhyteInktrap;
+  src: url("/src/assets/fonts/WhyteInktrap.ttf");
 }
 
 @font-face {
-    font-family: GuthenBloots;
-    src: url('/src/assets/fonts/GuthenBloots.ttf');
+  font-family: GuthenBloots;
+  src: url("/src/assets/fonts/GuthenBloots.ttf");
 }
 
 .scrollbar-hidden {
-    scrollbar-width: none;
+  scrollbar-width: none;
 }
 
 .scrollbar-hidden::-webkit-scrollbar {
-    display: none;
+  display: none;
 }
 
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
+  -webkit-appearance: none;
+  margin: 0;
 }
 
 /* Firefox */
-input[type=number] {
-    -moz-appearance: textfield;
+input[type="number"] {
+  -moz-appearance: textfield;
 }

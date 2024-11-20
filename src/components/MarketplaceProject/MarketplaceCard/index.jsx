@@ -1,19 +1,40 @@
 import React from 'react';
 import { Card, CardMedia, CardContent, Typography, Button, Box } from '@mui/material';
-
-const MarketPlaceCard = ({ image, title, description, price, category }) => {
+import { useNavigate } from 'react-router';
+const MarketPlaceCard = ({id, image, title, description, price, category }) => {
+  const navigate = useNavigate();
   return (
     <Card
       sx={{
+        width: '22.75rem',
         maxWidth: 345,
         position: 'relative',
         overflow: 'hidden',
         backgroundColor: '#F5F7F8',
         boxShadow: 'none', // Removes the box shadow
         '&:hover .overlay': { opacity: 1 }, // Show overlay on Card hover
-        
+
       }}
     >
+      {/* Discount Badge */}
+      <Box
+        sx={{
+          position: 'absolute',
+          top: '10px',
+          left: '10px',
+          backgroundColor: '#6200ea', // Purple background
+          color: 'white',
+          fontWeight: 'bold',
+          fontSize: '0.75rem',
+          textTransform: 'uppercase',
+          borderRadius: '8px',
+          padding: '5px 10px',
+          zIndex: 1,
+          boxShadow: '0 2px 4px rgba(0, 0, 0, 0.2)',
+        }}
+      >
+        Up to 9% OFF
+      </Box>
       {/* Card Header with Image */}
       <Box sx={{ position: 'relative', height: 312, overflow: 'hidden', borderRadius: '10px' }}>
         <CardMedia
@@ -25,6 +46,9 @@ const MarketPlaceCard = ({ image, title, description, price, category }) => {
             transition: 'transform 0.3s ease',
             '&:hover': { transform: 'scale(1.1)' },
             borderRadius: '10px',
+            objectFit: 'cover', // Ensures the image fills the CardMedia
+            width: '100%', // Makes sure the image spans the full width
+            height: '100%', // Ensures the image spans the full height
           }}
         />
 
@@ -49,6 +73,7 @@ const MarketPlaceCard = ({ image, title, description, price, category }) => {
           <Button
             variant="contained"
             color="primary"
+            onClick={() => navigate(`/marketplace-detail/${id}`)}
             sx={{
               backgroundColor: '#1BAA64',
               marginBottom: '20px',

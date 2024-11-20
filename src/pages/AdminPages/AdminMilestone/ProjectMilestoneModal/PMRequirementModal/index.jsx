@@ -61,17 +61,31 @@ const PMRequirementModal = ({ pmrData, openPMRequirement, setOpenPMRequirement }
                           {
                             pmrData.requirementFiles.length > 0
                               ? pmrData.requirementFiles.map((file, index) => {
-                                if (file.filetype == 6)
-                                  return (<div>
-                                    <img class="h-auto max-w-full rounded-lg" src={file.url} alt="" />
+                                if (file.file == 6)
+                                  return (<div className="h-[10rem] object-contain overflow-hidden rounded-lg">
+                                    <img class=" max-w-full " src={file.url} alt="" />
 
                                   </div>)
-                                else
-                                  return (<div>
-                                    <video class="h-auto max-w-full rounded-lg" controls alt="">
+                                else if (file.file == 7)
+                                  return (<div className="h-[10rem] overflow-hidden rounded-lg">
+                                    <video class="h-auto max-w-full " controls alt="">
                                       <source src={file.url} type="video/mp4" />
                                     </video>
                                   </div>)
+                                else
+                                  return (
+                                    <div className="h-[10rem] overflow-hidden rounded-lg bg-gray-200 flex justify-center items-center">
+                                      <div>
+                                        <div className="font-light mb-1 italic text-gray-800">
+                                          {file.name}
+                                        </div>
+                                        <a href={file.url} download class="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10 "><svg class="w-3.5 h-3.5 me-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                          <path d="M14.707 7.793a1 1 0 0 0-1.414 0L11 10.086V1.5a1 1 0 0 0-2 0v8.586L6.707 7.793a1 1 0 1 0-1.414 1.414l4 4a1 1 0 0 0 1.416 0l4-4a1 1 0 0 0-.002-1.414Z" />
+                                          <path d="M18 12h-2.55l-2.975 2.975a3.5 3.5 0 0 1-4.95 0L4.55 12H2a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-4a2 2 0 0 0-2-2Zm-3 5a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z" />
+                                        </svg> Download File</a>
+                                      </div>
+                                    </div>
+                                  )
                               })
                               : 'No files available'
 
@@ -88,7 +102,7 @@ const PMRequirementModal = ({ pmrData, openPMRequirement, setOpenPMRequirement }
             </div>
           </div>
         </div>
-      </Modal>
+      </Modal >
     </>
   )
 }

@@ -159,6 +159,7 @@ const GetAllProject = () => {
 
             {/* Pagination */}
             <Pagination
+                sx={{marginTop: '2rem', display: 'flex', justifyContent: 'center'}}
               count={projects.totalPages}
               page={projects.pageIndex}
               onChange={(e, page) => {

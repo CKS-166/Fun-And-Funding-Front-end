@@ -67,7 +67,8 @@ const UpdatesSection = () => {
                         flex: 0.2,
                     },
                 }}
-                position="alternate">
+            // position="alternate"
+            >
                 {pmData && pmData.items.map((pm, index) => (
                     <TimelineItem>
                         <TimelineOppositeContent color="text.secondary">
@@ -78,12 +79,12 @@ const UpdatesSection = () => {
                             {
                                 index != pmData.items.length
                                     ? (
-                                        <TimelineConnector />
+                                        <TimelineConnector sx={{ paddingBottom: '2.5rem' }} />
                                     )
                                     : ''
                             }
                         </TimelineSeparator>
-                        <TimelineContent>
+                        <TimelineContent sx={{ paddingBottom: '2.5rem' }}>
                             {pm.milestone.milestoneName}
                             <div className='w-[35rem] bg-white rounded mt-3 shadow-md '>
                                 <div className='p-8'>
@@ -135,9 +136,8 @@ const UpdatesSection = () => {
                         </TimelineContent>
                     </TimelineItem>
                 ))}
-
-
             </Timeline>
+
             {
                 pmData &&
                 <ProjectMilestoneModal2 openModal={openModal} setOpenModal={setOpenModal} pmData={selectedPm} />

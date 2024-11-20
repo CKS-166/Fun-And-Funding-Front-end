@@ -1,7 +1,13 @@
 import { Avatar, Box, Typography } from '@mui/material';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import userApiInstace from "../../utils/ApiInstance/userApiInstance";
 
 function MarketplaceCommentBar({ response, index }) {
+    const [userRole, setUserRole] = useState("N/A");
+
+    useEffect(() => {
+        fetchUserRole();
+    }, [response])
 
     const formatDate = (dateString) => {
         const date = new Date(dateString);
@@ -15,6 +21,17 @@ function MarketplaceCommentBar({ response, index }) {
 
         return `${day}/${month}/${year} ${hours}:${minutes} ${ampm}`;
     };
+
+    const fetchUserRole = async () => {
+        try {
+            const res = await userApiInstace.get(`user-role/${response.userId}`)
+            if (res.data._statusCode == 200) {
+                setUserRole(res.data._data);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
     return (
         <Box sx={{ maxWidth: '100%', display: 'flex', justifyContent: 'flex-start', flexDirection: 'row', mt: index === 0 ? "3rem" : '2rem' }}>
@@ -56,7 +73,7 @@ function MarketplaceCommentBar({ response, index }) {
                         mb: '1rem'
                     }}
                 >
-                    Backer
+                    {userRole}
                 </Typography>
                 <Typography
                     sx={{

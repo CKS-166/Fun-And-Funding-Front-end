@@ -192,7 +192,7 @@ const Sidenav = () => {
                         <path d="M18 0H6a2 2 0 0 0-2 2h14v12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2Z" />
                         <path d="M14 4H2a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2ZM2 16v-6h12v6H2Z" />
                       </svg>
-                      <span className="flex-1 ms-3 whitespace-nowrap">
+                      <span className="flex-1 ms-3 whitespace-nowrap group-hover:text-gray-900">
                         Funding Projects
                       </span>
                       {/* <span className="inline-flex items-center justify-center w-3 h-3 p-3 ms-3 text-sm font-medium text-dark-green bg-primary-green/20 rounded-full">
@@ -234,7 +234,7 @@ const Sidenav = () => {
                     </NavLink>
                   </li>
                   <li>
-                    <NavLink to="" className={({ isActive }) => `${isActive ? activeBg : 'text-gray-200'} flex items-center p-2 rounded-lg hover:bg-gray-100 group`}>
+                    <NavLink to="/admin-dashboard/withdraw-table" className={({ isActive }) => `${isActive ? activeBg : 'text-gray-200'} flex items-center p-2 rounded-lg hover:bg-gray-100 group`}>
                       <svg className="flex-shrink-0 w-4 h-4 transition duration-75 group-hover:text-gray-900" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
                         <path d="M5 5V.13a2.96 2.96 0 0 0-1.293.749L.879 3.707A2.96 2.96 0 0 0 .13 5H5Z" />
                         <path d="M6.737 11.061a2.961 2.961 0 0 1 .81-1.515l6.117-6.116A4.839 4.839 0 0 1 16 2.141V2a1.97 1.97 0 0 0-1.933-2H7v5a2 2 0 0 1-2 2H0v11a1.969 1.969 0 0 0 1.933 2h12.134A1.97 1.97 0 0 0 16 18v-3.093l-1.546 1.546c-.413.413-.94.695-1.513.81l-3.4.679a2.947 2.947 0 0 1-1.85-.227 2.96 2.96 0 0 1-1.635-3.257l.681-3.397Z" />

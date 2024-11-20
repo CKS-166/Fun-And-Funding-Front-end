@@ -43,28 +43,32 @@ function MarketplaceProjectMediaFiles() {
 
     if (allFiles.length > 0) {
       const videoFile = allFiles.filter((file) => file.fileType === 1);
-      console.log(videoFile);
       let videoData =
         videoFile.length > 0
           ? videoFile.map((file) => ({
               id: file.id,
               url: file.url,
+              name: file.name,
               isDeleted: file.isDeleted,
               fileType: file.fileType,
+              version: file.version || "",
+              description: file.description || "",
             }))
           : [];
       setProjectVideo(videoData);
 
       const thumbnailFile = allFiles.filter((file) => file.fileType === 2);
-      console.log(allFiles);
 
       let thumbnailData =
         thumbnailFile.length > 0
           ? thumbnailFile.map((file) => ({
               id: file.id,
               url: file.url,
+              name: file.name,
               isDeleted: file.isDeleted,
               fileType: file.fileType,
+              version: file.version || "",
+              description: file.description || "",
             }))
           : [];
       setThumbnail(thumbnailData);
@@ -75,8 +79,11 @@ function MarketplaceProjectMediaFiles() {
           ? imageFiles.map((file) => ({
               id: file.id,
               url: file.url,
+              name: file.name,
               isDeleted: file.isDeleted,
               fileType: file.fileType,
+              version: file.version || "",
+              description: file.description || "",
             }))
           : [];
       setProjectImages(imageData);
@@ -106,7 +113,9 @@ function MarketplaceProjectMediaFiles() {
           name: file.name,
           url: file,
           isDeleted: false,
-          filetype: 2,
+          fileType: 2,
+          version: "",
+          description: "",
         };
 
         return [...updatedThumbnails, newThumbnail];
@@ -143,7 +152,9 @@ function MarketplaceProjectMediaFiles() {
           name: file.name,
           url: file,
           isDeleted: false,
-          filetype: 1,
+          fileType: 1,
+          version: "",
+          description: "",
         };
 
         return [...updatedVideos, newVideo];
@@ -166,8 +177,10 @@ function MarketplaceProjectMediaFiles() {
         id: uuidv4(),
         name: file.name,
         url: file,
-        filetype: 4,
+        fileType: 4,
         isDeleted: false,
+        version: "",
+        description: "",
       };
       setProjectImages([...projectImages, newImage]);
       setMediaEdited(true);
@@ -176,7 +189,10 @@ function MarketplaceProjectMediaFiles() {
   };
 
   const handleDeleteBonusImage = (bonusImage) => {
-    const deleteProjectImage = [...projectImages];
+    console.log(projectImages);
+    const deleteProjectImage = [
+      ...projectImages.filter((item) => !item.isDeleted),
+    ];
     if (deleteProjectImage.length <= 1) {
       Swal.fire({
         title: "Unable to delete",
@@ -231,11 +247,11 @@ function MarketplaceProjectMediaFiles() {
   ) => {
     if (
       updatedThumbnail !==
-        project.existedFile.filter((file) => file.filetype === 2) ||
+        project.existedFile.filter((file) => file.fileType === 2) ||
       updatedVideos !==
-        project.existedFile.filter((file) => file.filetype === 1) ||
+        project.existedFile.filter((file) => file.fileType === 1) ||
       updateBonusImages !==
-        project.existedFile.filter((file) => file.filetype === 4)
+        project.existedFile.filter((file) => file.fileType === 4)
     ) {
       setMediaEdited(true);
     } else {
@@ -244,15 +260,20 @@ function MarketplaceProjectMediaFiles() {
   };
 
   const handleSaveAll = async () => {
-    const existingFiles = [];
+    const existingFiles = marketplaceProject.existingFiles;
     const marketplaceFiles = [];
 
     const classifyFiles = (files) => {
       files.forEach((file) => {
         if (typeof file.url === "object") {
-          marketplaceFiles.push(file);
+          if (!file.isDeleted) {
+            marketplaceFiles.push(file);
+          }
         } else {
-          existingFiles.push(file);
+          if (file.isDeleted) {
+            const fileToDelete = existingFiles.find((f) => f.id === file.id);
+            fileToDelete.isDeleted = true;
+          }
         }
       });
     };
@@ -337,7 +358,11 @@ function MarketplaceProjectMediaFiles() {
                 />
                 {isThumbnailOpen && (
                   <Lightbox
-                    mainSrc={item.url}
+                    mainSrc={
+                      typeof item.url === "string"
+                        ? item.url
+                        : URL.createObjectURL(item.url)
+                    }
                     onCloseRequest={() => setIsThumbnailOpen(false)}
                   />
                 )}
@@ -579,7 +604,14 @@ function MarketplaceProjectMediaFiles() {
         {isImageOpen && (
           <Lightbox
             mainSrc={
-              projectImages.filter((item) => !item.isDeleted)[photoIndex].url
+              typeof projectImages.filter((item) => !item.isDeleted)[photoIndex]
+                .url === "string"
+                ? projectImages.filter((item) => !item.isDeleted)[photoIndex]
+                    .url
+                : URL.createObjectURL(
+                    projectImages.filter((item) => !item.isDeleted)[photoIndex]
+                      .url
+                  )
             }
             nextSrc={
               projectImages.filter((item) => !item.isDeleted)[

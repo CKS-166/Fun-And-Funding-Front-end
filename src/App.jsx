@@ -39,14 +39,17 @@ import { CartProvider } from "./contexts/CartContext";
 import { ChatProvider } from "./contexts/ChatContext";
 import { CreateMarketplaceProjectProvider } from "./contexts/CreateMarketplaceProjectContext";
 import { useLoading } from "./contexts/LoadingContext";
+import { UpdateMarketplaceProjectProvider } from "./contexts/UpdateMarketplaceProjectContext";
 import AboutUsLayout from "./layouts/AboutUsLayout";
 import AdminDashboardLayout from "./layouts/AdminDashboardLayout";
 import ChatLayout from "./layouts/ChatLayout";
 import CreateMarketplaceProjectLayout from "./layouts/CreateMarketplaceProjectLayout";
+import UpdateMarketplaceProjectLayout from "./layouts/UpdateMarketplaceProjectLayout";
 import AccountWallet from "./pages/AccountWallet";
 import AdminMilestone from "./pages/AdminPages/AdminMilestone";
 import AdminReport from "./pages/AdminPages/AdminReport";
 import Dashboard from "./pages/AdminPages/Dashboard";
+import ManageCategory from "./pages/AdminPages/ManageCategory";
 import Users from "./pages/AdminPages/User";
 import AdminWithdrawRequest from "./pages/AdminWithdrawRequest";
 import Chat from "./pages/Chat";
@@ -62,6 +65,7 @@ import GetAllProject from "./pages/GetAllProject";
 import MarketplaceHomePage from "./pages/MarketplaceHomePage";
 import MarketplaceProjectDetail from "./pages/MarketplaceProjectDetail";
 import Milestones from "./pages/Milestones";
+import PageError from "./pages/PageError";
 import Policies from "./pages/Policies";
 import MilestoneForm from "./pages/TestCR/MilestoneForm";
 import BankAccount from "./pages/UpdateFundingProjectForm/ProjectEditor/BankAccount";
@@ -73,14 +77,11 @@ import Milestone2 from "./pages/UpdateFundingProjectForm/ProjectMilestone/Milest
 import Milestone3 from "./pages/UpdateFundingProjectForm/ProjectMilestone/Milestone3";
 import Milestone4 from "./pages/UpdateFundingProjectForm/ProjectMilestone/Milestone4";
 import ProjectPreview from "./pages/UpdateFundingProjectForm/ProjectPreview";
-import UpdateMarketplaceProjectLayout from "./layouts/UpdateMarketplaceProjectLayout";
-import MarketplaceProjectPreview from "./pages/UpdateMarketplaceProjectForm/MarketplaceProjectPreview";
-import { UpdateMarketplaceProjectProvider } from "./contexts/UpdateMarketplaceProjectContext";
-import MarketplaceProjectBasicInformation from "./pages/UpdateMarketplaceProjectForm/MarketplaceProjectBasicInformation";
-import MarketplaceProjectMediaFiles from "./pages/UpdateMarketplaceProjectForm/MarketplaceProjectMedia";
 import MarketplaceProjectBankAccount from "./pages/UpdateMarketplaceProjectForm/MarketplaceProjectBankAccount";
-import ManageCategory from "./pages/AdminPages/ManageCategory";
+import MarketplaceProjectBasicInformation from "./pages/UpdateMarketplaceProjectForm/MarketplaceProjectBasicInformation";
 import MarketplaceProjectContent from "./pages/UpdateMarketplaceProjectForm/MarketplaceProjectContent";
+import MarketplaceProjectMediaFiles from "./pages/UpdateMarketplaceProjectForm/MarketplaceProjectMedia";
+import MarketplaceProjectPreview from "./pages/UpdateMarketplaceProjectForm/MarketplaceProjectPreview";
 
 function App() {
   const location = useLocation();
@@ -102,12 +103,12 @@ function App() {
         >
           <CircularProgress color="inherit" />
         </Backdrop>
-
         <ChatProvider>
           <Routes>
-            <Route path="*" element={<Navigate to="/home" />} />
+            <Route path="*" element={<Navigate to="/error" />} />
             <Route path="/" element={<Navigate to="/home" />} />
             <Route element={<UserLayout />}>
+              <Route path="/error" element={<PageError />} />
               <Route path="/checkout-cart" element={<CheckoutCart />} />
               <Route
                 path="/checkout-success/:id"

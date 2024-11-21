@@ -35,6 +35,9 @@ function MarketplaceProjectMediaFiles() {
     fetchMedia();
   }, [id, marketplaceProject]);
 
+  console.log(marketplaceProject.existingFiles);
+  console.log(marketplaceProject.marketplaceFiles);
+
   const fetchMedia = () => {
     const allFiles = [
       ...(marketplaceProject.existingFiles || []),
@@ -240,28 +243,9 @@ function MarketplaceProjectMediaFiles() {
     setIsThumbnailOpen(true);
   };
 
-  const checkIfEdited = (
-    updatedThumbnail,
-    updatedVideos,
-    updateBonusImages
-  ) => {
-    if (
-      updatedThumbnail !==
-        project.existedFile.filter((file) => file.fileType === 2) ||
-      updatedVideos !==
-        project.existedFile.filter((file) => file.fileType === 1) ||
-      updateBonusImages !==
-        project.existedFile.filter((file) => file.fileType === 4)
-    ) {
-      setMediaEdited(true);
-    } else {
-      setMediaEdited(false);
-    }
-  };
-
   const handleSaveAll = async () => {
-    const existingFiles = marketplaceProject.existingFiles;
-    const marketplaceFiles = [];
+    const existingFiles = [...marketplaceProject.existingFiles];
+    const marketplaceFiles = [...marketplaceProject.marketplaceFiles];
 
     const classifyFiles = (files) => {
       files.forEach((file) => {

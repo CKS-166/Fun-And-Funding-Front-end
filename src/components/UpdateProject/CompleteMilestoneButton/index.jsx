@@ -3,7 +3,7 @@ import { Button } from '@mui/material'
 import { FaPlus } from 'react-icons/fa'
 import projectMilestoneApiInstace from '../../../utils/ApiInstance/projectMilestoneApiInstance'
 import Swal from 'sweetalert2'
-const CompleteMilestoneButton = ({ status, pmId }) => {
+const CompleteMilestoneButton = ({ status, pmId, render }) => {
     const processing = 1;
     const submitted = 5;
     console.log(status)
@@ -23,6 +23,8 @@ const CompleteMilestoneButton = ({ status, pmId }) => {
                 })
         } catch (error) {
 
+        }finally{
+            render()
         }
     }
     return (

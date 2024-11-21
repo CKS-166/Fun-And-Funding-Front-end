@@ -33,21 +33,18 @@ function MarketplaceProjectContent() {
     fetchData();
   }, [id, marketplaceProject]);
 
-  useEffect(() => {
-    if (gameFile.length > 0) {
-      setVersion(gameFile[0]?.version || "");
-      setDescription(gameFile[0]?.description || "");
-    }
-  }, [gameFile]);
-
   const fetchData = () => {
     const allFiles = [
       ...(marketplaceProject.existingFiles || []),
       ...(marketplaceProject.marketplaceFiles || []),
     ];
 
+    console.log(allFiles);
+
     if (allFiles.length > 0) {
-      const game = allFiles.filter((file) => file.fileType === 3);
+      const game = allFiles.filter(
+        (file) => file.fileType === 3 && !file.isDeleted
+      );
       let gameData =
         game.length > 0
           ? game.map((file) => ({
@@ -61,17 +58,16 @@ function MarketplaceProjectContent() {
             }))
           : [];
       setGameFile(gameData);
-      setVersion(gameFile[0]?.version || "");
-      setDescription(gameFile[0]?.description || "");
-    }
-  };
+      setVersion(gameData[0].version);
+      setDescription(gameData[0].description);
 
-  const handleDescriptionChange = (value) => {
-    setDescription(value);
+      console.log(gameFile);
+    }
   };
 
   const handleGameFileChange = (e, fileId) => {
     const file = e.target.files[0];
+    console.log(file);
     if (file) {
       setGameFile((prev) => {
         const fileIndex = prev.findIndex((item) => item.id === fileId);
@@ -91,8 +87,12 @@ function MarketplaceProjectContent() {
           name: file.name,
           url: file,
           isDeleted: false,
-          filetype: 3,
+          fileType: 3,
+          version: "",
+          description: "",
         };
+        console.log(newFile);
+        console.log(fileToUpdate);
 
         return [...fileToUpdate, newFile];
       });
@@ -102,33 +102,62 @@ function MarketplaceProjectContent() {
     }
   };
 
+  console.log(gameFile);
+
   const getSelectedFileId = () => {
     const file = gameFile.find((item) => !item.isDeleted);
     return file ? file.id : null;
   };
 
   const handleSaveAll = async () => {
-    const existedFile = [];
-    const fundingFiles = [];
+    if (!version) {
+      Swal.fire({
+        title: "Save failed",
+        text: "Version is required.",
+        icon: "error",
+      });
+
+      return;
+    }
+
+    if (!description) {
+      Swal.fire({
+        title: "Save failed",
+        text: "Description is required.",
+        icon: "error",
+      });
+
+      return;
+    }
+
+    console.log(gameFile);
+
+    const existingFiles = [...marketplaceProject.existingFiles];
+    const marketplaceFiles = [...marketplaceProject.marketplaceFiles];
 
     const classifyFiles = (files) => {
       files.forEach((file) => {
-        if (file.newlyAdded) {
-          fundingFiles.push(file);
+        if (typeof file.url === "object") {
+          if (!file.isDeleted) {
+            file.version = version;
+            file.description = description;
+            marketplaceFiles.push(file);
+          }
         } else {
-          existedFile.push(file);
+          if (file.isDeleted) {
+            const fileToDelete = existingFiles.find((f) => f.id === file.id);
+            fileToDelete.isDeleted = true;
+          }
         }
       });
     };
 
-    classifyFiles(thumbnail);
-    classifyFiles(projectImages);
-    classifyFiles(projectVideo);
+    classifyFiles(gameFile);
 
     const updatedProject = {
-      ...project,
-      fundingFiles: fundingFiles,
-      existedFile: existedFile,
+      ...marketplaceProject,
+      marketplaceFiles: marketplaceFiles,
+      existingFiles: existingFiles,
     };
 
     console.log(updatedProject);
@@ -136,7 +165,6 @@ function MarketplaceProjectContent() {
     setMarketplaceProject(updatedProject);
     setEdited(true);
     setContentEdited(false);
-    fetchData();
   };
 
   const handleDiscardAll = () => {
@@ -185,19 +213,26 @@ function MarketplaceProjectContent() {
         gameFile.some((item) => !item.isDeleted) ? (
           gameFile
             .filter((item) => !item.isDeleted)
-            .map((item) => (
-              <div className="h-[10rem] overflow-hidden rounded-lg bg-gray-200 flex justify-center items-center w-[70%]">
+            .map((item, index) => (
+              <div
+                className="h-[10rem] overflow-hidden rounded-lg bg-gray-200 flex justify-center items-center w-[70%]"
+                key={index}
+              >
                 <div className="text-center">
                   <div className="font-light mb-1 italic text-gray-800 text-center">
                     {item.name}
                   </div>
                   <a
-                    href={item.url}
+                    href={
+                      typeof item.url === "string"
+                        ? item.url
+                        : URL.createObjectURL(item.url)
+                    }
                     download
-                    class="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10 "
+                    className="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10 "
                   >
                     <svg
-                      class="w-3.5 h-3.5 me-2.5"
+                      className="w-3.5 h-3.5 me-2.5"
                       aria-hidden="true"
                       xmlns="http://www.w3.org/2000/svg"
                       fill="currentColor"
@@ -232,9 +267,9 @@ function MarketplaceProjectContent() {
               <h1 className="mb-[1.25rem] text-sm text-gray-500 !text-[1.5rem] font-semibold">
                 Click to upload
               </h1>
-              <p className="text-xs text-gray-500 !text-[1rem] font-medium">
+              {/* <p className="text-xs text-gray-500 !text-[1rem] font-medium">
                 SVG, PNG, JPG or GIF (max. 800x400px)
-              </p>
+              </p> */}
               <input
                 type="file"
                 id="add-thumbnail"
@@ -281,11 +316,10 @@ function MarketplaceProjectContent() {
           What is the version of your game?
         </Typography>
         <TextField
-          placeholder="Project name..."
+          placeholder="Version..."
           className="custom-update-textfield"
           variant="outlined"
           required={true}
-          disabled={!contentEdited}
           value={version}
           onChange={(e) => {
             setVersion(e.target.value);
@@ -300,44 +334,17 @@ function MarketplaceProjectContent() {
         <Typography className="basic-info-subtitle" sx={{ width: "70%" }}>
           What is the description of your update?
         </Typography>
-        <Box className="w-[70%] !important">
+        <Box className="w-[70%] !important !mb-[4rem]">
           <QuillEditor
             value={description}
             data={description}
             setData={setDescription}
-            isEnabled={contentEdited}
+            isEnabled={true}
             onChange={(e) => {
               setDescription(e.target.value);
             }}
           />
         </Box>
-      </div>
-
-      <div className="basic-info-section !mb-[2rem]">
-        <Typography
-          sx={{
-            color: "#2F3645",
-            fontSize: "1.5rem",
-            fontWeight: "700",
-            userSelect: "none",
-            width: "70%",
-            marginBottom: "1rem",
-          }}
-        >
-          Game Coupons
-        </Typography>
-        <Typography
-          sx={{
-            color: "#2F3645",
-            fontSize: "1rem",
-            fontWeight: "400",
-            userSelect: "none",
-            width: "70%",
-          }}
-        >
-          Provide dynamic images and videos to showcase your project's unique
-          features, giving backers a more immersive experience.
-        </Typography>
       </div>
 
       <div className="basic-info-section !mb-0">

@@ -36,7 +36,7 @@ function UserProfileLayout() {
     { text: "Account", path: "/account/profile" },
     { text: "Projects", path: "/account/projects" },
     { text: "Bookmarks", path: "/account/bookmarks" },
-    { text: "Orders", path: "/account/order" },
+    { text: "Orders", path: "/account/orders" },
     { text: "Wallet", path: "/account/wallet" },
   ];
 
@@ -51,7 +51,7 @@ function UserProfileLayout() {
     0: () => navigate("/account/profile"),
     1: () => navigate("/account/projects"),
     2: () => navigate("/account/bookmarks"),
-    3: () => navigate("/account/bookmarks"),
+    3: () => navigate("/account/orders"),
     4: () => navigate("/account/wallet"),
   };
 

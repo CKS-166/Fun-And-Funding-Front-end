@@ -82,6 +82,7 @@ import MarketplaceProjectBasicInformation from "./pages/UpdateMarketplaceProject
 import MarketplaceProjectContent from "./pages/UpdateMarketplaceProjectForm/MarketplaceProjectContent";
 import MarketplaceProjectMediaFiles from "./pages/UpdateMarketplaceProjectForm/MarketplaceProjectMedia";
 import MarketplaceProjectPreview from "./pages/UpdateMarketplaceProjectForm/MarketplaceProjectPreview";
+import MyOrder from "./pages/MyOrder";
 
 function App() {
   const location = useLocation();
@@ -263,6 +264,7 @@ function App() {
               <Route path="/account/profile" element={<AccountProfile />} />
               <Route path="/account/projects" element={<AccountProject />} />
               <Route path="/account/wallet" element={<AccountWallet />} />
+              <Route path="/account/orders" element={<MyOrder />} />
             </Route>
             <Route element={<PublicProfileLayout />}>
               <Route path="/profile/:id" element={<PublicProfile />} />

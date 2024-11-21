@@ -11,6 +11,7 @@ import projectMilestoneApiInstance from '../../utils/ApiInstance/projectMileston
 import zIndex from '@mui/material/styles/zIndex';
 import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import utc from "dayjs/plugin/utc";
 const RequestMilestoneModal = ({ open, handleClose, milestone, projectId, handleCloseBackdrop }) => {
   const modalStyle = {
     position: "absolute",
@@ -28,13 +29,18 @@ const RequestMilestoneModal = ({ open, handleClose, milestone, projectId, handle
   const [alert, setAlert] = useState(false);
 
   const handleSubmit = () => {
+    dayjs.extend(utc);
     if (!startDate) {
       setAlert(true); // Show alert if no date selected
       return;
     }
+
+    console.log("Start Date:", startDate.format("YYYY-MM-DD"));
+    const createdDate = dayjs.utc(startDate.format("YYYY-MM-DD")).toISOString();
+    console.log(createdDate);
     try {
       projectMilestoneApiInstance.post("",{
-        "createdDate": startDate,
+        "createdDate": createdDate,
         "status": 0,
         "milestoneId": milestone.id,
         "fundingProjectId": projectId

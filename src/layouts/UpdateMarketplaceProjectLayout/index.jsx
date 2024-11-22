@@ -315,7 +315,9 @@ function UpdateMarketplaceProjectLayout() {
                   <Typography
                     className="update-project-section"
                     onClick={() =>
-                      navigate(`/account/projects/update/${project.id}/preview`)
+                      navigate(
+                        `/account/marketplace-projects/update/${marketplaceProject.id}/preview`
+                      )
                     }
                   >
                     Project Preview

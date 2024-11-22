@@ -8,6 +8,7 @@ import {
   Button,
   Container,
   Divider,
+  Grid2,
   LinearProgress,
   linearProgressClasses,
   Stack,
@@ -37,11 +38,13 @@ import milestoneApiInstace from "../../utils/ApiInstance/milestoneApiInstance";
 import "./index.css";
 import { useNavigate } from "react-router-dom";
 import packageBackerApiInstance from "../../utils/ApiInstance/packageBackerApiInstance";
+import { AutoAwesome, Bookmark, Favorite, Report } from "@mui/icons-material";
 
 const ProjectDetail = () => {
   const token = Cookies.get("_auth");
   //sample owwner
   const [isOwner, setIsOwner] = useState(false);
+  const navigate = useNavigate()
 
   //sample data
   const { id } = useParams();
@@ -273,14 +276,42 @@ const ProjectDetail = () => {
     }
 
   };
+  // bg-gradient-to-br from-dark-green via-primary-green to-gray-200 background-animate
 
   return (
     <Box>
       {isLoading && (
         <>
-          <Box sx={{ backgroundColor: "#FFFFFF" }}>
-            <Container maxWidth="xl">
-              <Grid container spacing={2}>
+          <div className="bg-gradient-to-r from-primary-green via-dark-green to-primary-green background-animate h-[4rem] flex items-center">
+            <div className="px-[7rem]">
+              {
+                isOwner
+                  ? (
+                    <div className="text-gray-200 font-semibold flex items-center gap-1">
+                      <AutoAwesome /> You are the owner of this funding project <AutoAwesome />
+                      <button
+                        onClick={() => navigate(`/account/projects/update/${id}/preview`)}
+                        className="text-sm ml-4 text-white bg-gray-200/40 px-2 py-1 rounded backdrop-blur-3xl">
+                        Manage project
+                      </button>
+                    </div>
+                  )
+                  : (
+                    <div className="text-gray-200 font-semibold flex items-center gap-1">
+                      Explore other funding project
+                      <button
+                        onClick={() => navigate(`/crowdfunding`)}
+                        className="text-sm ml-4 text-white bg-gray-200/40 px-2 py-1 rounded backdrop-blur-3xl">
+                        Explore
+                      </button>
+                    </div>
+                  )
+              }
+            </div>
+          </div>
+          <div className="pt-[2.5rem] pb-[1rem] bg-gray-200/60">
+            <div className="w-[85%] mx-auto">
+              <Grid container spacing={1}>
                 <Grid size={6.5} sx={{ mt: "0 !important" }}>
                   <Box>
                     <ProjectImages files={projectData.fundingFiles} />
@@ -289,22 +320,14 @@ const ProjectDetail = () => {
                 <Grid
                   size={5.5}
                   sx={{ mt: "0 !important", justifyContent: "space-between" }}
-                  paddingLeft={5}
                 >
                   {/* project detail */}
                   <Container>
                     <div className="flex justify-between">
-                      <Typography
-                        sx={{
-                          color: "#1BAA64",
-                          fontSize: "30px",
-                          fontStyle: "italic",
-                          fontWeight: "200",
-                        }}
-                      >
+                      <div className="text-primary-green font-semibold">
                         Funding
-                      </Typography>
-                      <ReportProblemIcon onClick={handleOpenDialog} />
+                      </div>
+                      <Report className="text-red-700 hover:cursor-pointer" onClick={handleOpenDialog} />
                     </div>
 
                     <ReportForm
@@ -312,75 +335,55 @@ const ProjectDetail = () => {
                       closeDialog={handleCloseDialog}
                       openDialog={openDialog}
                     />
-                    <Typography
-                      sx={{
-                        fontSize: "54px",
-                        fontWeight: "800",
-                        marginTop: "8px",
-                      }}
-                    >
+                    <div className="text-[2.8rem] font-semibold">
                       {projectData.name.toUpperCase()}
-                    </Typography>
-                    <Typography
-                      sx={{
-                        fontSize: "18px",
-                        lineHeight: "27px",
-                        margin: "15px 0",
-                      }}
-                    >
+                    </div>
+                    <div className="text-gray-800 font-medium">
                       {projectData.description}
-                    </Typography>
+                    </div>
 
                     {/* owner info */}
-                    <Box
-                      sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        spacing: "10px",
-                        marginTop: "30px",
-                      }}
-                    >
+                    <div className="flex items-center my-5">
                       <Avatar
                         sx={{
-                          width: "50px",
-                          height: "50px",
+                          width: "3rem",
+                          height: "3rem",
                           marginRight: "10px",
                         }}
                       />
                       <Box>
-                        <Typography sx={{ fontSize: "18px" }}>
+                        <div className="font-semibold text-lg">
                           {projectData.user.fullName}
-                        </Typography>
+                        </div>
                         <Typography sx={{ fontSize: "12px", opacity: "0.6" }}>
                           1 campaign | Rollinsofrd, United States
                         </Typography>
                       </Box>
-                    </Box>
+                    </div>
                     {/* progress bar */}
-                    <Box>
+                    <Box className="my-[2rem]">
                       <Box
                         sx={{
                           display: "flex",
-                          marginTop: "27px",
                           justifyContent: "space-between",
                         }}
                       >
-                        <Typography sx={{ fontSize: "22px", fontWeight: 800 }}>
+                        <Typography sx={{ fontSize: "1rem", fontWeight: 800 }}>
                           {projectData.balance.toLocaleString("de-DE")}{" "}
-                          <span style={{ fontSize: "18px", fontWeight: "400" }}>
+                          <span style={{ fontSize: "1rem", fontWeight: "400" }}>
                             VND
                           </span>
                         </Typography>
-                        <Typography sx={{ fontSize: "22px", fontWeight: 800 }}>
+                        <Typography sx={{ fontSize: "1rem", fontWeight: 800 }}>
                           {packBackers.length}{" "}
-                          <span style={{ fontSize: "18px", fontWeight: "400" }}>
+                          <span style={{ fontSize: "1rem", fontWeight: "400" }}>
                             backers
                           </span>
                         </Typography>
                       </Box>
                       <BorderLinearProgress
                         variant="determinate"
-                        sx={{ width: "100%", my: 0, py: 1 }}
+                        sx={{ width: "100%", my: 0, py: 1, }}
                         value={convertPercentage(
                           projectData.balance,
                           projectData.target
@@ -393,20 +396,20 @@ const ProjectDetail = () => {
                           marginTop: "5px",
                         }}
                       >
-                        <Typography sx={{ fontSize: "18px" }}>
+                        <Typography sx={{ fontSize: "1rem" }}>
                           {convertPercentage(
                             projectData.balance,
                             projectData.target
                           )}
                           %{" "}
-                          <span style={{ fontSize: "18px" }}>
+                          <span style={{ fontSize: "1rem" }}>
                             out of {projectData.target.toLocaleString("de-DE")}{" "}
                             vnd
                           </span>
                         </Typography>
-                        <Typography sx={{ fontSize: "18px" }}>
+                        <Typography sx={{ fontSize: "1rem" }}>
                           {daysLeft}{" "}
-                          <span style={{ fontSize: "18px" }}>days left</span>
+                          <span style={{ fontSize: "1rem" }}>days left</span>
                         </Typography>
                       </Box>
                     </Box>
@@ -415,7 +418,6 @@ const ProjectDetail = () => {
                     <Stack
                       spacing={1}
                       direction="column"
-                      sx={{ marginTop: "39px" }}
                     >
                       <Button
                         variant="contained"
@@ -424,8 +426,12 @@ const ProjectDetail = () => {
                           width: "100%",
                           whiteSpace: "nowrap",
                           background: "#1BAA64",
-                          fontWeight: "bold",
-                          py: 1,
+                          fontWeight: "900",
+                          height: '3rem',
+                          '&:hover': {
+                            boxShadow: 'none',
+                            border: '2px solid var(--primary-green)'
+                          },
                         }}
                         onClick={() => {
                           if (isOwner) {
@@ -435,9 +441,9 @@ const ProjectDetail = () => {
                         className="like-btn"
                       >
                         {isOwner ? (
-                          <Typography>{renderButtonContent()}</Typography>
+                          <Typography sx={{ fontWeight: '600' }}>{renderButtonContent()}</Typography>
                         ) : (
-                          <Typography onClick={handleSendNotification}>Back this project</Typography>
+                          <Typography sx={{ fontWeight: '600' }} onClick={handleSendNotification}>Back this project</Typography>
                         )}
                       </Button>
                       {firstMilestone && (
@@ -456,16 +462,20 @@ const ProjectDetail = () => {
                               width: "100%",
                               whiteSpace: "nowrap",
                               background: "#FFFFFF",
-                              fontWeight: "bold",
+                              fontWeight: "900",
                               py: 1,
-                              color: "#000000",
+                              color: "rgba(0, 0, 0, 0.7)",
+                              boxShadow: 'none',
+                              border: '2px solid rgba(0, 0, 0, 0.5)',
+                              height: '3rem',
                             }}
-                            className="like-btn"
+                            className="like-btn flex items-center gap-1"
                           >
-                            <CiBookmark
-                              style={{ marginRight: "5px", fontSize: "20px" }}
+                            <Bookmark sx={{ fontSize: '1.2rem' }}
                             />{" "}
-                            Follow
+                            <span className="text-[1rem]">
+                              Follow
+                            </span>
                           </Button>
                         </Grid>
                         <Grid size={6}>
@@ -477,14 +487,18 @@ const ProjectDetail = () => {
                               background: "#FFFFFF",
                               fontWeight: "bold",
                               py: 1,
-                              color: "#000000",
+                              color: "rgba(0, 0, 0, 0.7)",
+                              boxShadow: 'none',
+                              border: '2px solid rgba(0, 0, 0, 0.5)',
+                              height: '3rem',
                             }}
-                            className="like-btn"
+                            className="like-btn flex items-center gap-1"
                           >
-                            <CiHeart
-                              style={{ marginRight: "5px", fontSize: "24px" }}
+                            <Favorite sx={{ fontSize: '1.2rem' }}
                             />{" "}
-                            Like
+                            <span className="text-[1rem]">
+                              Like
+                            </span>
                           </Button>
                         </Grid>
                       </Grid>
@@ -492,8 +506,10 @@ const ProjectDetail = () => {
                   </Container>
                 </Grid>
               </Grid>
-            </Container>
-          </Box>
+            </div>
+          </div>
+
+          <Divider />
           {/* tab value */}
           <TabContext value={tabValue}>
             <Box
@@ -528,7 +544,8 @@ const ProjectDetail = () => {
                       fontStyle: "normal",
                       fontWeight: "bold",
                       px: 4,
-                      py: 3,
+                      py: 2,
+                      fontSize: '.8rem',
                       whiteSpace: "nowrap",
                       textTransform: "none",
                       color: "rgba(0, 0, 0, 0.6) !important",
@@ -552,7 +569,8 @@ const ProjectDetail = () => {
                       fontStyle: "normal",
                       fontWeight: "bold",
                       px: 4,
-                      py: 3,
+                      py: 2,
+                      fontSize: '.8rem',
                       whiteSpace: "nowrap",
                       textTransform: "none",
                       color: "rgba(0, 0, 0, 0.6) !important",
@@ -576,7 +594,8 @@ const ProjectDetail = () => {
                       fontStyle: "normal",
                       fontWeight: "bold",
                       px: 4,
-                      py: 3,
+                      py: 2,
+                      fontSize: '.8rem',
                       whiteSpace: "nowrap",
                       textTransform: "none",
                       color: "rgba(0, 0, 0, 0.6) !important",
@@ -599,7 +618,8 @@ const ProjectDetail = () => {
                       fontStyle: "normal",
                       fontWeight: "bold",
                       px: 4,
-                      py: 3,
+                      py: 2,
+                      fontSize: '.8rem',
                       whiteSpace: "nowrap",
                       textTransform: "none",
                       color: "rgba(0, 0, 0, 0.6) !important",
@@ -622,7 +642,8 @@ const ProjectDetail = () => {
                       fontStyle: "normal",
                       fontWeight: "bold",
                       px: 4,
-                      py: 3,
+                      py: 2,
+                      fontSize: '.8rem',
                       whiteSpace: "nowrap",
                       textTransform: "none",
                       color: "rgba(0, 0, 0, 0.6) !important",
@@ -644,119 +665,94 @@ const ProjectDetail = () => {
               <Divider />
             </Box>
 
-            <Container
-              maxWidth={tabValue === "2" ? "false" : "lg"}
-              className="flex flex-row "
-            >
-              {tabValue === "1" && (
-                <Box
-                  sx={{
-                    display: "flex",
-                    flexDirection: "row",
-                    width: "100%",
-                    marginTop: "80px",
-                  }}
-                >
-                  <Box sx={{ marginRight: "150px" }}>
-                    <Box>
+            <div className="bg-white flex justify-center pt-[3rem] min-h-[40rem] overflow-y-auto">
+              <div className="w-[90%]">
+                {tabValue === "1" && (
+                  <Grid2 container spacing={4}>
+                    <Grid2 size={8}>
                       <ProjectIntro intro={saniIntro} />
-                    </Box>
-                  </Box>
-                  <Box>
-                    <Box>
+                    </Grid2>
+                    <Grid2 size={4}>
                       <PackageSide
                         isButtonActive={buttonBackerActive}
                         packageList={projectData.packages}
                         reloadDetail={fetchProject}
                       />
-                    </Box>
-                  </Box>
-                </Box>
-              )}
-              {tabValue === "2" && (
-                <Container maxWidth="1400px">
-                  <PackageReward
-                    isButtonActive={buttonBackerActive}
-                    packageList={projectData.packages}
-                    reloadDetail={fetchProject}
-                  />
-                </Container>
-              )}
-              {tabValue === "3" && (
-                <Box
-                  sx={{
-                    display: "flex",
-                    flexDirection: "row",
-                    width: "100%",
-                    marginTop: "80px",
-                  }}
-                >
-                  <Box sx={{ marginRight: "150px" }}>
-                    <Box>
-                      <CommentSection
-                        isBacker={isBacker || isOwner}
-                        projectId={projectData.id}
-                      />
-                    </Box>
-                  </Box>
-                  <Box>
-                    <Box>
+                    </Grid2>
+                  </Grid2>
+                )}
+                {tabValue === "2" && (
+                  <div>
+                    <PackageReward
+                      isButtonActive={buttonBackerActive}
+                      packageList={projectData.packages}
+                      reloadDetail={fetchProject}
+                    />
+                  </div>
+                )}
+                {tabValue === "3" && (
+
+                  <Grid2 container spacing={4}>
+                    <Grid2 size={8} className="flex justify-center">
+                      <div className="w-[80%]">
+                        <CommentSection
+                          isBacker={isBacker || isOwner}
+                          projectId={projectData.id}
+                        />
+                      </div>
+                    </Grid2>
+                    <Grid2 size={4}>
                       <PackageSide
+                        isButtonActive={buttonBackerActive}
                         packageList={projectData.packages}
                         reloadDetail={fetchProject}
                       />
-                    </Box>
-                  </Box>
-                </Box>
-              )}
-              {tabValue === "4" && (
-                <Box
-                  sx={{
-                    display: "flex",
-                    flexDirection: "row",
-                    width: "100%",
-                    marginTop: "80px",
-                  }}
-                >
-                  <Box sx={{ marginRight: "150px" }}>
-                    <Box>
-                      <UpdatesSection />
-                    </Box>
-                  </Box>
-                  <Box>
-                    <Box>
+                    </Grid2>
+                  </Grid2>
+
+                )}
+                {tabValue === "4" && (
+                  <Grid2 container spacing={4}>
+                    <Grid2 size={8} className="flex justify-center">
+                      <div className="w-[80%]">
+                        <Box>
+                          <UpdatesSection />
+                        </Box>
+                      </div>
+                    </Grid2>
+                    <Grid2 size={4} sx={{ height: '100%' }}>
                       <PackageSide
+                        isButtonActive={buttonBackerActive}
                         packageList={projectData.packages}
                         reloadDetail={fetchProject}
                       />
-                    </Box>
-                  </Box>
-                </Box>
-              )}
-              {tabValue === "5" && (
-                <Box>
-                  <Box
-                    sx={{
-                      display: "flex",
-                      flexDirection: "row",
-                      width: "100%",
-                      marginTop: "80px",
-                    }}
-                  >
-                    <Box sx={{ marginRight: "150px" }}>
-                      <Box>
-                        <BackerSection backers={packBackers} />
-                      </Box>
-                    </Box>
-                    <Box>
-                      <Box>
-                        <PackageSide packageList={projectData.packages} />
-                      </Box>
-                    </Box>
-                  </Box>
-                </Box>
-              )}
-            </Container>
+                    </Grid2>
+                  </Grid2>
+                )}
+                {tabValue === "5" && (
+                  <Grid2 container spacing={4}>
+                    <Grid2 size={8} className="flex justify-center">
+                      <div className="w-[80%]">
+                        <Box>
+                          <BackerSection backers={packBackers} />
+
+                        </Box>
+                      </div>
+                    </Grid2>
+                    <Grid2 size={4}>
+                      <PackageSide
+                        isButtonActive={buttonBackerActive}
+                        packageList={projectData.packages}
+                        reloadDetail={fetchProject}
+                      />
+                    </Grid2>
+                  </Grid2>
+
+                )}
+              </div>
+            </div>
+
+
           </TabContext>
           <ToastContainer
             position="bottom-left"
@@ -768,8 +764,9 @@ const ProjectDetail = () => {
             pauseOnFocusLoss
           />
         </>
-      )}
-    </Box>
+      )
+      }
+    </Box >
 
     // tab value
   );

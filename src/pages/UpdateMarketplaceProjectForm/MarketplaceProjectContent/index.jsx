@@ -5,6 +5,7 @@ import {
   Button,
   ImageList,
   ImageListItem,
+  TextField,
   Typography,
 } from "@mui/material";
 import React, { useContext, useEffect, useState } from "react";
@@ -12,7 +13,9 @@ import Lightbox from "react-18-image-lightbox";
 import "react-18-image-lightbox/style.css";
 import ReactPlayer from "react-player";
 import { useParams } from "react-router-dom";
+import { v4 as uuidv4 } from "uuid";
 import Swal from "sweetalert2";
+import QuillEditor from "../../../components/AccountProfile/QuillEditor";
 import { useUpdateMarketplaceProject } from "../../../contexts/UpdateMarketplaceProjectContext";
 
 function MarketplaceProjectContent() {
@@ -21,14 +24,14 @@ function MarketplaceProjectContent() {
     useUpdateMarketplaceProject();
 
   const [gameFile, setGameFile] = useState([]);
+  const [version, setVersion] = useState("");
+  const [description, setDescription] = useState("");
   const [coupons, setCoupons] = useState([]);
-  const [mediaEdited, setMediaEdited] = useState(false);
+  const [contentEdited, setContentEdited] = useState(false);
 
   useEffect(() => {
     fetchData();
   }, [id, marketplaceProject]);
-
-  console.log(gameFile);
 
   const fetchData = () => {
     const allFiles = [
@@ -36,9 +39,12 @@ function MarketplaceProjectContent() {
       ...(marketplaceProject.marketplaceFiles || []),
     ];
 
+    console.log(allFiles);
+
     if (allFiles.length > 0) {
-      const game = allFiles.filter((file) => file.fileType === 3);
-      console.log(game);
+      const game = allFiles.filter(
+        (file) => file.fileType === 3 && !file.isDeleted
+      );
       let gameData =
         game.length > 0
           ? game.map((file) => ({
@@ -47,102 +53,123 @@ function MarketplaceProjectContent() {
               url: file.url,
               isDeleted: file.isDeleted,
               fileType: file.fileType,
+              version: file.version,
+              description: file.description,
             }))
           : [];
       setGameFile(gameData);
+      setVersion(gameData[0].version);
+      setDescription(gameData[0].description);
+
+      console.log(gameFile);
     }
   };
 
-  const handleThumbnailChange = (e, thumbnailId) => {
+  const handleGameFileChange = (e, fileId) => {
     const file = e.target.files[0];
+    console.log(file);
     if (file) {
-      setThumbnail((prevThumbnails) => {
-        const thumbnailIndex = prevThumbnails.findIndex(
-          (item) => item.id === thumbnailId && item.newlyAdded === false
-        );
-        const updatedThumbnails = [...prevThumbnails];
-        if (thumbnailIndex != -1) {
-          updatedThumbnails[thumbnailIndex].isDeleted = true;
+      setGameFile((prev) => {
+        const fileIndex = prev.findIndex((item) => item.id === fileId);
+        const fileToUpdate = [...prev];
+        if (fileIndex != -1) {
+          fileToUpdate[fileIndex].isDeleted = true;
         } else {
-          const filteredThumbnail = updatedThumbnails.filter(
-            (item) => item.id !== thumbnailId
+          const filteredFile = fileToUpdate.filter(
+            (item) => item.id !== fileId
           );
-          updatedThumbnails.length = 0;
-          updatedThumbnails.push(...filteredThumbnail);
+          fileToUpdate.length = 0;
+          fileToUpdate.push(...filteredFile);
         }
 
-        const newThumbnail = {
-          id: generateGUID(),
-          name: "Project Thumbnail",
-          url: URL.createObjectURL(file),
-          urlFile: file,
+        const newFile = {
+          id: uuidv4(),
+          name: file.name,
+          url: file,
           isDeleted: false,
-          filetype: 2,
-          newlyAdded: true,
+          fileType: 3,
+          version: "",
+          description: "",
         };
+        console.log(newFile);
+        console.log(fileToUpdate);
 
-        return [...updatedThumbnails, newThumbnail];
+        return [...fileToUpdate, newFile];
       });
 
-      setMediaEdited(true);
+      setContentEdited(true);
       e.target.value = null;
     }
   };
 
-  const checkIfEdited = (
-    updatedThumbnail,
-    updatedVideos,
-    updateBonusImages
-  ) => {
-    if (
-      updatedThumbnail !==
-        project.existedFile.filter((file) => file.filetype === 2) ||
-      updatedVideos !==
-        project.existedFile.filter((file) => file.filetype === 1) ||
-      updateBonusImages !==
-        project.existedFile.filter((file) => file.filetype === 4)
-    ) {
-      setMediaEdited(true);
-    } else {
-      setMediaEdited(false);
-    }
+  console.log(gameFile);
+
+  const getSelectedFileId = () => {
+    const file = gameFile.find((item) => !item.isDeleted);
+    return file ? file.id : null;
   };
 
   const handleSaveAll = async () => {
-    const existedFile = [];
-    const fundingFiles = [];
+    if (!version) {
+      Swal.fire({
+        title: "Save failed",
+        text: "Version is required.",
+        icon: "error",
+      });
+
+      return;
+    }
+
+    if (!description) {
+      Swal.fire({
+        title: "Save failed",
+        text: "Description is required.",
+        icon: "error",
+      });
+
+      return;
+    }
+
+    console.log(gameFile);
+
+    const existingFiles = [...marketplaceProject.existingFiles];
+    const marketplaceFiles = [...marketplaceProject.marketplaceFiles];
 
     const classifyFiles = (files) => {
       files.forEach((file) => {
-        if (file.newlyAdded) {
-          fundingFiles.push(file);
+        if (typeof file.url === "object") {
+          if (!file.isDeleted) {
+            file.version = version;
+            file.description = description;
+            marketplaceFiles.push(file);
+          }
         } else {
-          existedFile.push(file);
+          if (file.isDeleted) {
+            const fileToDelete = existingFiles.find((f) => f.id === file.id);
+            fileToDelete.isDeleted = true;
+          }
         }
       });
     };
 
-    classifyFiles(thumbnail);
-    classifyFiles(projectImages);
-    classifyFiles(projectVideo);
+    classifyFiles(gameFile);
 
     const updatedProject = {
-      ...project,
-      fundingFiles: fundingFiles,
-      existedFile: existedFile,
+      ...marketplaceProject,
+      marketplaceFiles: marketplaceFiles,
+      existingFiles: existingFiles,
     };
 
     console.log(updatedProject);
 
     setMarketplaceProject(updatedProject);
     setEdited(true);
-    setMediaEdited(false);
-    fetchMedia();
+    setContentEdited(false);
   };
 
   const handleDiscardAll = () => {
-    fetchMedia();
-    setMediaEdited(false);
+    fetchData();
+    setContentEdited(false);
   };
 
   return (
@@ -173,6 +200,7 @@ function MarketplaceProjectContent() {
           features, giving backers a more immersive experience.
         </Typography>
       </div>
+
       <div className="basic-info-section">
         <Typography className="basic-info-title" sx={{ width: "70%" }}>
           Game File<span className="text-[#1BAA64]">*</span>
@@ -185,19 +213,26 @@ function MarketplaceProjectContent() {
         gameFile.some((item) => !item.isDeleted) ? (
           gameFile
             .filter((item) => !item.isDeleted)
-            .map((item) => (
-              <div className="h-[10rem] overflow-hidden rounded-lg bg-gray-200 flex justify-center items-center w-[70%]">
-                <div>
+            .map((item, index) => (
+              <div
+                className="h-[10rem] overflow-hidden rounded-lg bg-gray-200 flex justify-center items-center w-[70%]"
+                key={index}
+              >
+                <div className="text-center">
                   <div className="font-light mb-1 italic text-gray-800 text-center">
                     {item.name}
                   </div>
                   <a
-                    href={item.url}
+                    href={
+                      typeof item.url === "string"
+                        ? item.url
+                        : URL.createObjectURL(item.url)
+                    }
                     download
-                    class="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10 "
+                    className="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10 "
                   >
                     <svg
-                      class="w-3.5 h-3.5 me-2.5"
+                      className="w-3.5 h-3.5 me-2.5"
                       aria-hidden="true"
                       xmlns="http://www.w3.org/2000/svg"
                       fill="currentColor"
@@ -232,9 +267,9 @@ function MarketplaceProjectContent() {
               <h1 className="mb-[1.25rem] text-sm text-gray-500 !text-[1.5rem] font-semibold">
                 Click to upload
               </h1>
-              <p className="text-xs text-gray-500 !text-[1rem] font-medium">
+              {/* <p className="text-xs text-gray-500 !text-[1rem] font-medium">
                 SVG, PNG, JPG or GIF (max. 800x400px)
-              </p>
+              </p> */}
               <input
                 type="file"
                 id="add-thumbnail"
@@ -254,14 +289,13 @@ function MarketplaceProjectContent() {
         >
           <input
             type="file"
-            accept="image/*"
-            onChange={(e) => handleThumbnailChange(e, getSelectedThumbnailId())}
+            onChange={(e) => handleGameFileChange(e, getSelectedFileId())}
             style={{ display: "none" }}
-            id="thumbnail-input"
+            id="game-file-input"
           />
           <Button
             variant="contained"
-            onClick={() => document.getElementById("thumbnail-input").click()}
+            onClick={() => document.getElementById("game-file-input").click()}
             sx={{
               backgroundColor: "#1BAA64",
               textTransform: "none",
@@ -274,31 +308,43 @@ function MarketplaceProjectContent() {
         </Box>
       </div>
 
-      <div className="basic-info-section !mb-[2rem]">
-        <Typography
-          sx={{
-            color: "#2F3645",
-            fontSize: "1.5rem",
-            fontWeight: "700",
-            userSelect: "none",
-            width: "70%",
-            marginBottom: "1rem",
-          }}
-        >
-          Game Coupons
+      <div className="basic-info-section">
+        <Typography className="basic-info-title" sx={{ width: "70%" }}>
+          Version<span className="text-[#1BAA64]">*</span>
         </Typography>
-        <Typography
-          sx={{
-            color: "#2F3645",
-            fontSize: "1rem",
-            fontWeight: "400",
-            userSelect: "none",
-            width: "70%",
-          }}
-        >
-          Provide dynamic images and videos to showcase your project's unique
-          features, giving backers a more immersive experience.
+        <Typography className="basic-info-subtitle" sx={{ width: "70%" }}>
+          What is the version of your game?
         </Typography>
+        <TextField
+          placeholder="Version..."
+          className="custom-update-textfield"
+          variant="outlined"
+          required={true}
+          value={version}
+          onChange={(e) => {
+            setVersion(e.target.value);
+          }}
+        />
+      </div>
+
+      <div className="basic-info-section">
+        <Typography className="basic-info-title" sx={{ width: "70%" }}>
+          Description<span className="text-[#1BAA64]">*</span>
+        </Typography>
+        <Typography className="basic-info-subtitle" sx={{ width: "70%" }}>
+          What is the description of your update?
+        </Typography>
+        <Box className="w-[70%] !important !mb-[4rem]">
+          <QuillEditor
+            value={description}
+            data={description}
+            setData={setDescription}
+            isEnabled={true}
+            onChange={(e) => {
+              setDescription(e.target.value);
+            }}
+          />
+        </Box>
       </div>
 
       <div className="basic-info-section !mb-0">
@@ -313,7 +359,7 @@ function MarketplaceProjectContent() {
           <Button
             variant="outlined"
             color="error"
-            disabled={!mediaEdited}
+            disabled={!contentEdited}
             sx={{ backgroundColor: "transparent", textTransform: "none" }}
             onClick={() => handleDiscardAll()}
           >
@@ -321,7 +367,7 @@ function MarketplaceProjectContent() {
           </Button>
           <Button
             variant="contained"
-            disabled={!mediaEdited}
+            disabled={!contentEdited}
             sx={{ backgroundColor: "#1BAA64", textTransform: "none" }}
             onClick={() => handleSaveAll()}
           >

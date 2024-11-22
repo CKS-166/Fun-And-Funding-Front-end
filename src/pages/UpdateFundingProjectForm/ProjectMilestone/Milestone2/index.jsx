@@ -6,11 +6,15 @@ import { useParams, useLocation } from 'react-router-dom';
 import milestoneApiInstace from '../../../../utils/ApiInstance/milestoneApiInstance';
 import { checkAvailableMilestone } from "../../../../utils/Hooks/checkAvailableMilestone";
 import BackdropRequestMilestone from '../../../../components/UpdateProject/BackdropRequestMilestone';
-import { Typography, Box } from '@mui/material';
+import { Typography, Box, Tab } from '@mui/material';
 import axios from "axios";
 import Grid from '@mui/material/Grid2';
 import { set } from 'react-hook-form';
 import Swal from 'sweetalert2';
+import TabContext from '@mui/lab/TabContext';
+import TabList from '@mui/lab/TabList';
+import TabPanel from '@mui/lab/TabPanel';
+import CompleteMilestoneButton from '../../../../components/UpdateProject/CompleteMilestoneButton';
 function Milestone2() {
     const { id } = useParams(); // Get the project ID from the URL
     console.log(id);
@@ -43,11 +47,15 @@ function Milestone2() {
             const data = await checkAvailableMilestone(projectId, id);
             setMilestoneData(data); // Set data after fetching
             console.log(data);
-            
-            if(data.status === 'create' || data.status === 'edit'){
+
+            if (data.status === 'create' || data.status === 'edit') {
                 setIsBackdropHidden(false)
                 setTasks(data.data[0].projectMilestoneRequirements)
-            }else{
+            }
+            else {
+                if (data.status == 'submitted') {
+                    setTasks(data.data[0].projectMilestoneRequirements)
+                }
                 console.log("a")
                 setIsBackdropHidden(true)
             }
@@ -146,7 +154,7 @@ function Milestone2() {
                 title: "Error",
                 text: error.response.data.message,
                 icon: "error"
-              });
+            });
         }
     };
     //handle update task
@@ -164,75 +172,97 @@ function Milestone2() {
             setIsLoading(false);
         }
     };
-    if (!milestone) return <p>Loading milestone...</p>;
+
+    
+  const [value, setValue] = React.useState('1');
+  const [issueLog, setIssueLog] = useState("");
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
+    if (!milestone || !milestoneData || !tasks) return <p>Loading milestone...</p>;
     console.log(isLoading)
     return (
         <>
-            {milestoneData && milestone && !isLoading 
-            && <BackdropRequestMilestone
+            {milestoneData && milestone && !isLoading
+                && <BackdropRequestMilestone
                     isHidden={isBackdropHidden}
                     projectId={projectId}
                     milestone={milestone}
                     status={milestoneData.status}
                     onCloseBackdrop={handleBackdropClose} />}
             <div className='basic-info-section'>
-                <Typography
-                    className='basic-info-title'
-                    sx={{ width: '70%', }}
-                >
-                    {milestone.milestoneName}
-                </Typography>
-                <Typography
-                    className='basic-info-subtitle'
-                    sx={{ width: '70%', }}
-                >
-                    {milestone.description}
-                </Typography>
-                
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingRight: '5rem' }}>
+                    <Box>
+                        <Typography
+                            className='basic-info-title'
+                        >
+                            {milestone.milestoneName}<span className='text-[#1BAA64]'>*</span>
+                        </Typography>
+                        <Typography
+                            className='basic-info-subtitle'
+                            sx={{ width: '100%' }}
+                        >
+                            {milestone.description}
+                        </Typography>
+                    </Box>
+                    <Box>
+                        <CompleteMilestoneButton render={() => getMilestoneData(milestoneId)} status={milestoneData.status} pmId={milestoneData.status == 'edit' && milestoneData.data[0].id} />
+                    </Box>
+
+                </Box>
+
                 <Box>
                     {milestone && milestone.requirements.map((req) => (
                         <>
                             <Typography sx={{ fontWeight: 600 }}>{req.description}  <span className='text-[#1BAA64]'>*</span></Typography>
-                            <TaskForm onAddTask={handleAddTask} projectId={projectId} milestoneId={milestoneId} requirementId={req.id} />
-                            <Grid container spacing={2}>
-                                <Grid size={4} className="app_main">
-                                    <TaskColumn
-                                        className='task-column'
-                                        title="To-do"
-                                        tasks={tasks}
-                                        status={0}
-                                        handleDelete={handleDelete}
-                                        setActiveCard={setActiveCard}
-                                        onDrop={handleDropCard}
-                                        updateTask={handleUpdateTask}
-                                    />
+                            <TabContext value={value}>
+                                <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                                    <TabList onChange={handleChange} aria-label="lab API tabs example">
+                                        <Tab label="Requirements" value="1" />
+                                        <Tab label="Issue Logs" value="2" />
+                                    </TabList>
+                                </Box>
+                            </TabContext>
+                                <TaskForm onAddTask={handleAddTask} projectId={projectId} milestoneId={milestoneId} requirementId={req.id} />
+                                <Grid container spacing={2}>
+                                    <Grid size={4} className="app_main">
+                                        <TaskColumn
+                                            className='task-column'
+                                            title="To-do"
+                                            tasks={tasks}
+                                            status={0}
+                                            handleDelete={handleDelete}
+                                            setActiveCard={setActiveCard}
+                                            onDrop={handleDropCard}
+                                            updateTask={handleUpdateTask}
+                                        />
+                                    </Grid>
+                                    <Grid size={4}>
+                                        <TaskColumn
+                                            title="Doing"
+                                            tasks={tasks}
+                                            status={1}
+                                            handleDelete={handleDelete}
+                                            setActiveCard={setActiveCard}
+                                            onDrop={handleDropCard}
+                                            updateTask={handleUpdateTask}
+                                        />
+                                    </Grid>
+                                    <Grid size={4}>
+                                        <TaskColumn
+                                            title="Done"
+                                            tasks={tasks}
+                                            status={2}
+                                            handleDelete={handleDelete}
+                                            setActiveCard={setActiveCard}
+                                            onDrop={handleDropCard}
+                                            updateTask={handleUpdateTask}
+                                        />
+                                    </Grid>
                                 </Grid>
-                                <Grid size={4}>
-                                    <TaskColumn
-                                        title="Doing"
-                                        tasks={tasks}
-                                        status={1}
-                                        handleDelete={handleDelete}
-                                        setActiveCard={setActiveCard}
-                                        onDrop={handleDropCard}
-                                        updateTask={handleUpdateTask}
-                                    />
-                                </Grid>
-                                <Grid size={4}>
-                                    <TaskColumn
-                                        title="Done"
-                                        tasks={tasks}
-                                        status={2}
-                                        handleDelete={handleDelete}
-                                        setActiveCard={setActiveCard}
-                                        onDrop={handleDropCard}
-                                        updateTask={handleUpdateTask}
-                                    />
-                                </Grid>
-                            </Grid>
-                        </>
+                            </>
                     ))}
-                </Box>
+                        </Box >
 
             </div >
 

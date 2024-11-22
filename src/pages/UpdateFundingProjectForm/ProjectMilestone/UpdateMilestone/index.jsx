@@ -12,7 +12,7 @@ const UpdateMilestone = ({ milestones, render, issueLog }) => {
 
   const [milestoneData, setMilestoneData] = useState([]);
   const [anchorEls, setAnchorEls] = useState({});
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [issueLogData, setIssueLogData] = useState(issueLog || "");
   console.log(milestones)
   console.log(issueLog)
@@ -115,9 +115,9 @@ const UpdateMilestone = ({ milestones, render, issueLog }) => {
 
   return (
     <>
-      {/* <Backdrop sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }} open={loading}>
+      <Backdrop sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }} open={loading}>
         <CircularProgress color="inherit" />
-      </Backdrop> */}
+      </Backdrop>
 
       {!loading && milestones && milestones.length === 0 && <h2>No milestones found.</h2>}
 

@@ -191,9 +191,9 @@ const FunFundingAppBar = () => {
     location.pathname === "/home" ||
     location.pathname === "/choose-project-plan";
   const appBarStyles = {
-    background: isPage ? "transparent" : "#F5F7F8",
+    background: isPage ? "transparent" : "white",
     boxShadow: "none",
-    height: "5rem",
+    height: "4rem",
     justifyContent: "center",
     display: "flex",
     px: "4rem",
@@ -201,7 +201,7 @@ const FunFundingAppBar = () => {
 
   const tabStyles = {
     fontWeight: "900 !important",
-    fontSize: "1rem",
+    fontSize: ".9rem",
     textTransform: "none",
     color: isPage ? "#F5F7F8" : "#2F3645",
     "&.Mui-selected": {
@@ -332,6 +332,7 @@ const FunFundingAppBar = () => {
                       transition: "color 0.3s",
                       "&:hover": { color: "#c5c9cb" },
                       cursor: "pointer",
+                      fontSize: '1.8rem'
                     }}
                     onClick={handleCartOpen}
                   />
@@ -358,6 +359,7 @@ const FunFundingAppBar = () => {
                         transition: "color 0.3s",
                         "&:hover": { color: "#c5c9cb" },
                         color: isPage ? "#F5F7F8" : "#2F3645",
+                        fontSize: '1.8rem'
                       }}
                     />
                   </Badge>
@@ -372,7 +374,7 @@ const FunFundingAppBar = () => {
                     onMouseLeave={handleMouseLeave}
                   >
                     <IconButton href="account/profile" component="a">
-                      <Avatar alt="User" src={user?.avatar} />
+                      <Avatar alt="User" src={user?.avatar} sx={{ height: '2rem', width: '2rem' }} />
                     </IconButton>
                   </div>
                   <Menu
@@ -556,6 +558,7 @@ const FunFundingAppBar = () => {
           </Toolbar>
         </Container>
       </AppBar>
+      <Divider />
       <CartDrawer cartOpen={cartOpen} setCartOpen={handleCartOpen} />
     </div>
   );

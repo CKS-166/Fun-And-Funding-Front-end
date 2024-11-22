@@ -73,7 +73,7 @@ function ProjectImages({ files }) {
         {medias.map((media, index) => (
           <Box key={index}
             sx={{
-              height: '30rem', borderRadius: '.2rem', overflow: 'hidden',
+              height: '25rem', borderRadius: '.2rem', overflow: 'hidden',
             }}
           >
             {media.type === 'video' ? (

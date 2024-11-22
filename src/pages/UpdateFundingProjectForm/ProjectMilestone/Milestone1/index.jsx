@@ -167,6 +167,11 @@ const MilestoneForm = () => {
     setFormDataArray(updatedFormData);
   };
 
+  const [value, setValue] = React.useState('1');
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
 
   if (!milestone || !milestoneData) return <p>Loading milestone...</p>;
 
@@ -199,7 +204,7 @@ const MilestoneForm = () => {
             </Typography>
           </Box>
           <Box>
-            <CompleteMilestoneButton status={milestoneData.status} pmId={milestoneData.status == 'edit' && milestoneData.data[0].id} />
+            <CompleteMilestoneButton render={() => getMilestoneData(milestoneId)} status={milestoneData.status} pmId={milestoneData.status == 'edit' && milestoneData.data[0].id} />
           </Box>
 
         </Box>

@@ -22,7 +22,7 @@ const PackageReward = ({ packageList, reloadDetail, isButtonActive }) => {
 
     try {
       await axios
-        .post("https://localhost:7044/api/package-backers", donateBody,{
+        .post("https://localhost:7044/api/package-backers", donateBody, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -40,20 +40,20 @@ const PackageReward = ({ packageList, reloadDetail, isButtonActive }) => {
         });
     } catch (error) {
       setIsLoading(false);
-      if(error.status === 401){
-                    
+      if (error.status === 401) {
+
         Swal.fire({
-            title: "Donation Failed",
-            text: "Please Login in Backer role",
-            icon: "error"
+          title: "Donation Failed",
+          text: "Please Login in Backer role",
+          icon: "error"
         })
-    }else { 
+      } else {
         Swal.fire({
-            title: "Donation Failed",
-            text: error.response.data._message,
-            icon: "error"
+          title: "Donation Failed",
+          text: error.response.data._message,
+          icon: "error"
         })
-    }
+      }
       console.log(error);
     }
   };
@@ -69,7 +69,7 @@ const PackageReward = ({ packageList, reloadDetail, isButtonActive }) => {
     console.log(donateBody);
     try {
       await axios
-        .post("https://localhost:7044/api/package-backers", donateBody,{
+        .post("https://localhost:7044/api/package-backers", donateBody, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -87,20 +87,20 @@ const PackageReward = ({ packageList, reloadDetail, isButtonActive }) => {
         });
     } catch (error) {
       setIsLoading(false);
-      if(error.status === 401){
-                    
+      if (error.status === 401) {
+
         Swal.fire({
-            title: "Donation Failed",
-            text: "Please Login in Backer role",
-            icon: "error"
+          title: "Donation Failed",
+          text: "Please Login in Backer role",
+          icon: "error"
         })
-    }else { 
+      } else {
         Swal.fire({
-            title: "Donation Failed",
-            text: error.response.data._message,
-            icon: "error"
+          title: "Donation Failed",
+          text: error.response.data._message,
+          icon: "error"
         })
-    }
+      }
       console.log(error);
     }
 
@@ -121,8 +121,8 @@ const PackageReward = ({ packageList, reloadDetail, isButtonActive }) => {
     <div>
       <Grid
         container
-        spacing={1}
-        sx={{ marginTop: "78px", marginBottom: "100px" }}
+        spacing={5}
+      // sx={{ marginTop: "78px", marginBottom: "100px" }}
       >
         <Backdrop
           sx={{
@@ -137,148 +137,86 @@ const PackageReward = ({ packageList, reloadDetail, isButtonActive }) => {
           <>
             {item.packageTypes == 0 ? (
               <Grid size={6} sx={{ overflowY: "auto" }}>
-                <Box
-                  className="package-reward"
-                  sx={{ height: "407px", overflowY: "auto" }}
-                >
-                  <Box sx={{ display: "flex", padding: "34px" }}>
-                    <Box className="package-image" sx={{ width: "50%" }}>
-                      <img src={kuru} />
-                    </Box>
+                <div className="border-2 border-gray-300 p-4 rounded h-[25rem]">
+                  <div className="flex items-center">
+                    <div className="package-image rounded overflow-hidden flex justify-center items-center bg-gray-200">
+                      <img src="https://i.ibb.co/z6VfqjK/heart.png" className=' !w-[8rem] !h-[8rem]' />
+                    </div>
                     <Box sx={{ width: "50%" }}>
-                      <Typography sx={{ fontSize: "18px", fontWeight: "600" }}>
-                        {item.name}
-                      </Typography>
-                      <Typography
-                        sx={{
-                          fontSize: "12px",
-                          fontWeight: "400",
-                          opacity: 0.5,
-                          marginTop: "10px",
-                        }}
-                      >
-                        {item.description}
-                      </Typography>
-                      <Typography
-                        sx={{
-                          fontSize: "16px",
-                          fontWeight: "700",
-                          marginTop: "10px",
-                          border: "1px solid #1BAA64",
-                        }}
-                      >
-                        <Box sx={{ width: 500, maxWidth: "100%" }}>
-                          <TextField
-                            fullWidth
-                            id="input-with-icon-adornment"
-                            value={donatedMoney}
-                            onChange={(e) => setDonatedMoney(e.target.value)}
-                            slotProps={{
-                              input: {
-                                startAdornment: (
-                                  <InputAdornment position="start">
-                                    <Box>VND</Box>
-                                  </InputAdornment>
-                                ),
-                              },
-                            }}
-                          />
-                        </Box>
-                      </Typography>
-                      <Button
-                        sx={{
-                          width: "100%",
-                          whiteSpace: "nowrap",
-                          background: "#1BAA64",
-                          fontWeight: "bold",
-                          py: 1,
-                          borderRadius: "8px",
-                          color: "#FFFFFF",
-                          marginTop: "10px",
-                        }}
-                        disabled={isButtonActive}
-                        className="pledge-btn"
-                        onClick={() => handleDonateFree(item)}
-                      >
-                        Pledge
-                      </Button>
+                      <div className='text-lg font-bold'>{item.name}</div>
+                      <div className="text-sm text-gray-500 mt-2">{item.description}</div>
                     </Box>
-                  </Box>
-                </Box>
+                  </div>
+                  <div className='mt-5 w-[70%] mx-auto'>
+                    <div >
+                      <Box sx={{ width: "100%" }}>
+                        <TextField
+                          fullWidth
+                          type='number'
+                          id="input-with-icon-adornment"
+                          value={donatedMoney}
+                          onChange={(e) => setDonatedMoney(e.target.value)}
+                          slotProps={{
+                            input: {
+                              startAdornment: (
+                                <InputAdornment position="start">
+                                  <Box>VND</Box>
+                                </InputAdornment>
+                              ),
+                            },
+                          }}
+                        />
+                      </Box>
+                    </div>
+                    <button
+                      className="bg-primary-green text-white font-semibold py-2 w-[100%] rounded uppercase mt-5 hover:cursor-pointer"
+                      disabled={isButtonActive}
+                      onClick={() => handleDonateFree(item)}
+                    >
+                      Pledge
+                    </button>
+                  </div>
+                </div>
               </Grid>
             ) : (
-              <Grid key={index} size={6} sx={{ overflowY: "auto" }}>
-                <Box
-                  className="package-reward"
-                  sx={{ height: "407px", overflowY: "auto" }}
-                >
-                  <Box sx={{ display: "flex", padding: "34px" }}>
-                    <Box className="package-image" sx={{ width: "50%" }}>
-                      <img src={kuru} />
-                    </Box>
+              <Grid key={index} size={6} sx={{ overflowY: "auto" }} spacing={5}>
+                <div className="border-2 border-gray-300 p-4 rounded h-[25rem]">
+                  <div className="flex">
+                    <div className="package-image rounded overflow-hidden">
+                      <img src={item.url} />
+                    </div>
                     <Box sx={{ width: "50%" }}>
-                      <Typography sx={{ fontSize: "18px", fontWeight: "600" }}>
-                        {item.name}
-                      </Typography>
-                      <Typography
-                        sx={{
-                          fontSize: "16px",
-                          fontWeight: "700",
-                          color: "#1BAA64",
-                          marginTop: "10px",
-                        }}
-                      >
-                        {item.requiredAmount.toLocaleString("de-DE")}
-                      </Typography>
-                      <Typography
-                        sx={{
-                          fontSize: "12px",
-                          fontWeight: "400",
-                          opacity: 0.5,
-                          marginTop: "10px",
-                        }}
-                      >
-                        {item.description}
-                      </Typography>
-                      <Typography
-                        sx={{
-                          fontSize: "16px",
-                          fontWeight: "700",
-                          marginTop: "10px",
-                        }}
-                      >
-                        {item.limitQuantity}{" "}
-                        <span style={{ fontWeight: "400" }}>are left</span>
-                      </Typography>
-                      <Button
-                        sx={{
-                          width: "100%",
-                          whiteSpace: "nowrap",
-                          background: "#1BAA64",
-                          fontWeight: "bold",
-                          py: 1,
-                          borderRadius: "8px",
-                          color: "#FFFFFF",
-                          marginTop: "10px",
-                        }}
-                        className="pledge-btn"
+                      <div className='text-lg font-bold'>{item.name}</div>
+                      <div className="text-3xl font-semibold text-primary-green my-2">
+                        {item.requiredAmount.toLocaleString("de-DE")} vnd
+                      </div>
+                      <div className="text-sm text-gray-500">{item.description}</div>
+                      <div className="mt-5">
+                        <span className="font-bold">
+                          {item.limitQuantity}{" "}
+                        </span>
+                        <span className="">packages left</span>
+                      </div>
+                      <button
+                        className="bg-primary-green text-white font-semibold py-2 w-[100%] rounded uppercase mt-5 hover:cursor-pointer"
                         disabled={isButtonActive}
                         onClick={() => handlePackageDonate(item)}
                       >
                         Pledge
-                      </Button>
+                      </button>
                     </Box>
-                  </Box>
-                  <Box className="package-item" sx={{ padding: "34px" }}>
-                    <Grid container spacing={2}>
+                  </div>
+                  <div className="my-[1.5rem] font-semibold text-lg">This package consists of</div>
+                  <div className="package-item">
+                    <Grid container spacing={5}>
                       {item.rewardItems.map((rItem, index) => (
                         <Grid size={6}>
                           <PackageItem item={rItem} />
                         </Grid>
                       ))}
                     </Grid>
-                  </Box>
-                </Box>
+                  </div>
+                </div>
               </Grid>
             )}
           </>

@@ -1,4 +1,4 @@
-import React,{useState} from 'react'
+import React, { useState } from 'react'
 import {
     Card, CardContent, CardActions, CardMedia,
     Typography, Divider, Button
@@ -27,51 +27,51 @@ const PackageSide = ({ packageList, reloadDetail, isButtonActive }) => {
     const handlePackageDonate = async (item) => {
         console.log(item)
         setIsLoading(true);
-            let donateBody =
-            {
-                "userId": "8C94B07C-209B-4E11-A1B6-BC59E0B29976",
-                "packageId": item.id,
-                "donateAmount": item.requiredAmount
-            }
-            
-            console.log(donateBody)
-            try{
-                await axios.post('https://localhost:7044/api/package-backers', donateBody,{
-                    headers : {
-                        Authorization: `Bearer ${token}`
-                    }
-                }).then(res => {
-                    console.log(res)
-                    setIsLoading(false);
-                    setOpenModal(false);    
-                    Swal.fire({
-                        title: "Donation Success",
-                        text: "Thank you for your donation!",
-                        
-                        icon: "success"
-                    });
-                    reloadDetail()
-                })
-            }catch(error){
-                setOpenModal(false);
-                if(error.status === 401){
-                    
-                    Swal.fire({
-                        title: "Donation Failed",
-                        text: "Please Login in Backer role",
-                        icon: "error"
-                    })
-                }else { 
-                    Swal.fire({
-                        title: "Donation Failed",
-                        text: error.response.data._message,
-                        icon: "error"
-                    })
+        let donateBody =
+        {
+            "userId": "8C94B07C-209B-4E11-A1B6-BC59E0B29976",
+            "packageId": item.id,
+            "donateAmount": item.requiredAmount
+        }
+
+        console.log(donateBody)
+        try {
+            await axios.post('https://localhost:7044/api/package-backers', donateBody, {
+                headers: {
+                    Authorization: `Bearer ${token}`
                 }
-                console.log(error)
+            }).then(res => {
+                console.log(res)
+                setIsLoading(false);
+                setOpenModal(false);
+                Swal.fire({
+                    title: "Donation Success",
+                    text: "Thank you for your donation!",
+
+                    icon: "success"
+                });
+                reloadDetail()
+            })
+        } catch (error) {
+            setOpenModal(false);
+            if (error.status === 401) {
+
+                Swal.fire({
+                    title: "Donation Failed",
+                    text: "Please Login in Backer role",
+                    icon: "error"
+                })
+            } else {
+                Swal.fire({
+                    title: "Donation Failed",
+                    text: error.response.data._message,
+                    icon: "error"
+                })
             }
-            
-            console.log('abcd')
+            console.log(error)
+        }
+
+        console.log('abcd')
     }
     return (
         <div>
@@ -80,17 +80,17 @@ const PackageSide = ({ packageList, reloadDetail, isButtonActive }) => {
                     borderRadius: 0,
                     border: ".1rem solid rgba(0, 0, 0, 0.12)", mb: 3, mx: 1, position: 'relative', width: '307px'
                     , height: '399px',
-                    cursor: 'pointer'
+                    cursor: 'pointer',
                 }}
-                onClick={() => handleOpen(item)}
-                key={index}>
+                    onClick={() => handleOpen(item)}
+                    key={index}>
                     <CardMedia
                         component="img"
                         alt="green iguana"
                         image={item.url}
                         sx={{ height: "9rem" }}
                     />
-                    
+
                     <CardContent>
                         <Typography
                             gutterBottom
@@ -122,15 +122,15 @@ const PackageSide = ({ packageList, reloadDetail, isButtonActive }) => {
                             width: '286px', marginTop: '14px'
                             , backgroundColor: '#1BAA64', fontWeight: 700
                         }}
-                        disabled={isButtonActive}
-                        // onClick = {() => handlePackageDonate(item)}
-                        onClick={() => handleOpen(item)}>
+                            disabled={isButtonActive}
+                            // onClick = {() => handlePackageDonate(item)}
+                            onClick={() => handleOpen(item)}>
                             Pledge {item.requiredAmount.toLocaleString('de-DE')} VND
                         </Button>
                     </CardActions>
                 </Card>
             ))}
-             {selectedItem && (
+            {selectedItem && (
                 <PackageModal
                     isButtonActive={isButtonActive}
                     open={openModal}

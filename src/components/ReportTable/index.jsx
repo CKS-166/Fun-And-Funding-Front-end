@@ -219,9 +219,13 @@ export default function ReportTable({
                   {renderCellContent(column, row[column])}
                 </TableCell>
               ))}
-              <TableCell>
-                <Button onClick={() => handleRowClick(row.Id)}>Handle</Button>
-              </TableCell>
+
+              {/* Conditionally render the "Handle" button */}
+              {row.isHandle !== "Handled" && (
+                <TableCell>
+                  <Button onClick={() => handleRowClick(row.Id)}>Handle</Button>
+                </TableCell>
+              )}
             </TableRow>
           ))}
         </TableBody>

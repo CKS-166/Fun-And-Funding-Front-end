@@ -5,6 +5,8 @@ import ReportTable from "../../../components/ReportTable";
 import userApiInstace from "../../../utils/ApiInstance/userApiInstance";
 import fundingProjectApiInstace from "../../../utils/ApiInstance/fundingProjectApiInstance";
 import Cookies from "js-cookie";
+import { Dialog } from "@mui/material";
+import ReactQuill from "react-quill";
 
 const notify = (message, type) => {
   const options = {
@@ -41,6 +43,9 @@ const formatDate = (dateString) => {
 
 function AdminReport() {
   const [dataLoad, setDataLoad] = useState([]);
+  const [openDialog, setOpenDialog] = useState(false);
+  const [content, setContent] = useState("");
+  const [reportId, setReportId] = useState("");
   const [pagination, setPagination] = useState({
     totalItems: 0,
     totalPages: 0,
@@ -49,10 +54,67 @@ function AdminReport() {
   });
   const [mappedData, setMappedData] = useState([]); // State to store the mapped data
 
+  const handleOpenDialog = () => setOpenDialog(true);
+  const handleCloseDialog = () => setOpenDialog(false);
+  const handleEmailSubmit = async () => {
+    await sendEmail();
+    await fetchUpdateStatus(reportId);
+  };
   const fetchUserById = async (userId) => {
     try {
       const response = await userApiInstace.get(`/${userId}`);
       return response.data._data;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const sendEmail = async () => {
+    try {
+      const token = Cookies.get("_auth");
+      const response = await reportApiInstance.post(
+        `/send-email`,
+        {
+          reportId: reportId,
+          content: content,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      const data = response.data;
+      console.log(data);
+      if (data._isSuccess === true) {
+        notify("Email has been sent", "success");
+        fetchReportList();
+        handleCloseDialog();
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const fetchUpdateStatus = async (reportId) => {
+    try {
+      const token = Cookies.get("_auth");
+      console.log(token);
+      // Make sure the Authorization header is in the headers object
+      const response = await reportApiInstance.patch(
+        `?id=${reportId}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      const data = response.data;
+      console.log(data);
+      if (data._isSuccess === true) {
+        notify("Report has been handled", "success");
+        fetchReportList();
+      }
     } catch (error) {
       console.log(error);
     }
@@ -94,7 +156,6 @@ function AdminReport() {
       const { items, totalItems, totalPages } = response.data._data;
       setDataLoad(items || []); // Ensure items is an array
       updatePagination({ totalItems, totalPages, currentPage: page });
-      notify("Success fetching data", "success");
     } catch (error) {
       console.log(error);
       notify("Something went wrong", "error");
@@ -109,12 +170,14 @@ function AdminReport() {
     const mapData = async () => {
       const mapped = await Promise.all(
         (dataLoad || []).map(async (data) => {
-          const project = await fetchProjectById(data.projectId);
+          console.log(data);
+          const project = await fetchProjectById(data.violatorId);
           const user = await fetchUserById(data.reporterId);
+          const Violator = await fetchUserById(data.violatorId);
           return {
             Id: data.id,
-            reporterId: user ? user.userName : "Unknown",
-            projectId: project ? project.name : "Unknown",
+            reporter: user ? user.userName : "Unknown",
+            Violator: project ? project.name : Violator.userName,
             content: data.content,
             isHandle: data.isHandle ? "Handled" : "Not handled",
             date: formatDate(data.date),
@@ -133,25 +196,8 @@ function AdminReport() {
   const handleRowClick = async (reportId) => {
     try {
       console.log(reportId);
-      const token = Cookies.get("_auth");
-      console.log(token);
-      // Make sure the Authorization header is in the headers object
-      const response = await reportApiInstance.patch(
-        `?id=${reportId}`,
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      const data = response.data;
-      console.log(data);
-      if (data._isSuccess === true) {
-        notify("Report has been handled", "success");
-        fetchReportList();
-      }
+      setReportId(reportId);
+      handleOpenDialog();
     } catch (error) {
       console.log(error.response);
     }
@@ -172,7 +218,52 @@ function AdminReport() {
         onPageChange={handlePageChange}
         onPageSizeChange={handlePageSizeChange}
       />
-      <ToastContainer />
+      <Dialog open={openDialog} onClose={handleCloseDialog}>
+        <div className="fixed inset-0 flex justify-center items-center bg-gray-800 bg-opacity-75 z-50">
+          <div className="w-[75rem] bg-white p-10 rounded-3xl shadow-lg mb-10 overflow-y-auto max-h-[90vh]">
+            <h1 className="text-2xl text-center font-bold text-gray-800 mb-6">
+              Send Report Email
+            </h1>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                handleEmailSubmit();
+              }}
+            >
+              <div className="mb-4">
+                <label className="block text-gray-700 font-medium mb-2">
+                  Note
+                </label>
+                <ReactQuill value={content} onChange={setContent} />
+              </div>
+              <div className="flex justify-around gap-4">
+                <button
+                  type="submit"
+                  className="w-full bg-green-500 text-white py-3 rounded-lg hover:bg-green-600 transition-all duration-200"
+                >
+                  Submit Report
+                </button>
+                <button
+                  type="button"
+                  onClick={handleCloseDialog}
+                  className="w-full bg-gray-500 text-white py-3 rounded-lg hover:bg-gray-600 transition-all duration-200"
+                >
+                  Cancel
+                </button>
+              </div>
+            </form>
+            <ToastContainer
+              position="bottom-left"
+              autoClose={3000}
+              hideProgressBar={false}
+              closeOnClick
+              pauseOnHover
+              draggable
+              pauseOnFocusLoss
+            />
+          </div>
+        </div>
+      </Dialog>
     </>
   );
 }

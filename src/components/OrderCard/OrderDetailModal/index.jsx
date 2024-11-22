@@ -9,11 +9,13 @@ import {
     Typography,
     Accordion,
     AccordionSummary,
-    AccordionDetails
+    AccordionDetails,
+    Modal,
+    Box
 } from "@mui/material";
+import DownloadIcon from '@mui/icons-material/Download';
 import { FaArrowDown } from "react-icons/fa";
-import { BiSolidDiscount } from "react-icons/bi";
-import { IoRemoveCircle } from "react-icons/io5";
+import { Close } from "@mui/icons-material";
 import { RiDiscountPercentFill } from "react-icons/ri";
 const OrderDetailModal = ({ details }) => {
     const formatDate = (date) => {
@@ -32,8 +34,39 @@ const OrderDetailModal = ({ details }) => {
     const handleAccordionChange = (panel) => (event, isExpanded) => {
         setExpanded(isExpanded ? panel : null);
     };
+    const formatTableDate = (dateString) => {
+        const date = new Date(dateString);
+        return new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric", year: "numeric" }).format(date);
+    };
+    const [open, setOpen] = useState(false);
+    const [selectedKey, setSelectedKey] = useState("");
+
+    const handleOpen = (key) => {
+        setSelectedKey(key);
+        setOpen(true);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+        setSelectedKey("");
+    };
+
+    const handleCopy = () => {
+        navigator.clipboard.writeText(selectedKey);
+        alert("API Key copied to clipboard!");
+    };
+    const handleDownload = (url) => {
+        const link = document.createElement("a");
+        link.href = url; // Set the URL to the file
+        link.download = ""; // Use the `download` attribute to enable download behavior
+        document.body.appendChild(link); // Append the link to the DOM
+        link.click(); // Programmatically click the link to trigger the download
+        document.body.removeChild(link); // Remove the link from the DOM
+      };
     return (
         <div>
+            <Typography sx={{ color: 'var(--black)', fontWeight: '600', fontSize: '1.5rem', mb: '1rem' }}>Order details</Typography>
+
             <Paper
                 sx={{
                     display: 'flex',
@@ -80,7 +113,7 @@ const OrderDetailModal = ({ details }) => {
                                 px: "2rem",
                                 backgroundColor: "var(--white)",
                                 "& .MuiAccordionSummary-content": {
-                                  alignItems: "center",
+                                    alignItems: "center",
                                 },
                             }}
                         >
@@ -163,54 +196,190 @@ const OrderDetailModal = ({ details }) => {
                             )}
                         </AccordionSummary>
                         <AccordionDetails sx={{ px: "2rem", py: "1rem" }}>
-                            <Typography variant="body1" sx={{ mb: 2 }}>
-                                Detailed Table or Information Goes Here
+                            <Typography variant="body1" sx={{ mb: 2, fontSize: "1rem" }}>
+                                Your key game and download here
                             </Typography>
                             {/* Example table */}
-                            <table style={{ width: "100%", borderCollapse: "collapse" }}>
-                                <thead>
+                            <table
+                                style={{
+                                    width: "100%",
+                                    borderCollapse: "separate", // Use "separate" for borderRadius to work
+                                    borderSpacing: 0, // Removes gaps when using "separate"
+                                    borderRadius: "5px", // Apply borderRadius
+
+                                    overflow: "hidden", // Ensure borderRadius works
+                                    boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.2)", // Add shadow
+                                }}
+                            >
+                                <thead
+                                    style={{
+                                        backgroundColor: "#1BAA64", // Header background color
+                                        color: "#ffffff", // Header text color
+                                    }}
+                                >
                                     <tr>
                                         <th
                                             style={{
-                                                border: "1px solid #ddd",
-                                                padding: "8px",
+                                                padding: "12px", // Increased padding for better spacing
                                                 textAlign: "left",
                                             }}
                                         >
-                                            Column 1
+                                            Digital key
                                         </th>
                                         <th
                                             style={{
-                                                border: "1px solid #ddd",
-                                                padding: "8px",
+                                                padding: "12px",
                                                 textAlign: "left",
                                             }}
                                         >
-                                            Column 2
+                                            Created
+                                        </th>
+                                        <th
+                                            style={{
+                                                padding: "12px",
+                                                textAlign: "left",
+                                            }}
+                                        >
+                                            Expired
+                                        </th>
+                                        <th
+                                            style={{
+                                                padding: "12px",
+                                                textAlign: "left",
+                                            }}
+                                        >
+                                            Download
                                         </th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr>
                                         <td
+                                            onClick={() => handleOpen(item.digitalKey.keyString)}
                                             style={{
-                                                border: "1px solid #ddd",
-                                                padding: "8px",
+                                                padding: "12px",
+                                                cursor: "pointer",
+                                                textDecoration: "underline",
+                                                color: "#1BAA64",
                                             }}
                                         >
-                                            Data 1
+                                            ...{item.digitalKey.keyString.slice(-4)}
                                         </td>
                                         <td
                                             style={{
-                                                border: "1px solid #ddd",
-                                                padding: "8px",
+                                                padding: "12px",
                                             }}
                                         >
-                                            Data 2
+                                            {formatTableDate(item.digitalKey.createdDate)}
+                                        </td>
+                                        <td
+                                            style={{
+                                                padding: "12px",
+                                            }}
+                                        >
+                                            {formatTableDate(item.digitalKey.expiredDate)}
+                                        </td>
+                                        <td
+                                            style={{
+                                                padding: "12px",
+                                            }}
+                                        >
+                                            <Tooltip title="Download game file" arrow>
+                                                <Button
+                                                    variant="outlined"
+                                                    className="outline-download-button"
+                                                    onClick={() => {
+                                                        const fileUrl = item.digitalKey.marketingProject.marketplaceFiles.find(file => file.fileType === 3)?.url;
+                                                        if (fileUrl) handleDownload(fileUrl);
+                                                      }}
+                                                >
+                                                    <DownloadIcon
+                                                        sx={{
+                                                            fontSize: "2rem !important",
+                                                            strokeWidth: "1",
+                                                            stroke: "#F5F7F8",
+                                                        }}
+                                                    />
+                                                </Button>
+                                            </Tooltip>
                                         </td>
                                     </tr>
                                 </tbody>
                             </table>
+                            {/* Modal */}
+                            <Modal
+                                open={open}
+                                onClose={handleClose}
+                                aria-labelledby="api-key-modal-title"
+                                aria-describedby="api-key-modal-description"
+                            >
+                                <Box
+                                    sx={{
+                                        position: "absolute",
+                                        top: "50%",
+                                        left: "50%",
+                                        transform: "translate(-50%, -50%)",
+                                        width: 400,
+                                        bgcolor: "background.paper",
+                                        boxShadow: 24,
+                                        p: 4,
+                                        borderRadius: 2,
+                                    }}
+                                >
+                                    <Box
+                                        sx={{
+                                            display: "flex",
+                                            justifyContent: "space-between",
+                                            alignItems: "center",
+                                            mb: 2,
+                                        }}
+                                    >
+                                        <Typography id="api-key-modal-title" variant="h6" component="h2">
+                                            Digital Key Generated
+                                        </Typography>
+                                        <IconButton onClick={handleClose}>
+                                            <Close />
+                                        </IconButton>
+                                    </Box>
+                                    <Typography id="api-key-modal-description" sx={{ mb: 2 }}>
+                                        Use your Digital keys securely. Do not share them or embed them in code
+                                        the public can view.
+                                    </Typography>
+                                    <Box
+                                        sx={{
+                                            display: "flex",
+                                            alignItems: "center",
+                                            justifyContent: "space-between",
+                                            backgroundColor: "#f5f5f5",
+                                            padding: "0.5rem 1rem",
+                                            borderRadius: "4px",
+                                            mb: 2,
+                                        }}
+                                    >
+                                        <Typography
+                                            sx={{
+                                                fontFamily: "monospace",
+                                                fontSize: "0.875rem",
+                                                overflow: "hidden",
+                                                textOverflow: "ellipsis",
+                                                whiteSpace: "nowrap",
+                                            }}
+                                        >
+                                            {selectedKey}
+                                        </Typography>
+                                        <Button
+                                            onClick={handleCopy}
+                                            variant="outlined"
+                                            sx={{
+                                                ml: 2,
+                                                textTransform: "none",
+                                            }}
+                                        >
+                                            Copy
+                                        </Button>
+                                    </Box>
+                                </Box>
+                            </Modal>
                         </AccordionDetails>
                     </Accordion>
                 ))}

@@ -7,6 +7,7 @@ import fundingProjectApiInstace from "../../../utils/ApiInstance/fundingProjectA
 import Cookies from "js-cookie";
 import { Dialog } from "@mui/material";
 import ReactQuill from "react-quill";
+import marketplaceProjectApiInstace from "../../../utils/ApiInstance/marketplaceProjectApiInstance";
 
 const notify = (message, type) => {
   const options = {
@@ -68,32 +69,47 @@ function AdminReport() {
       console.log(error);
     }
   };
-  const sendEmail = async () => {
+  const fetchMarketplaceProjectById = async (Id) => {
     try {
-      const token = Cookies.get("_auth");
-      const response = await reportApiInstance.post(
-        `/send-email`,
-        {
-          reportId: reportId,
-          content: content,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      const data = response.data;
-      console.log(data);
-      if (data._isSuccess === true) {
-        notify("Email has been sent", "success");
-        fetchReportList();
-        handleCloseDialog();
-      }
+      const response = await marketplaceProjectApiInstace.get(`/${Id}`);
+      return response.data._data;
     } catch (error) {
       console.log(error);
     }
   };
+  const sendEmail = async () => {
+    try {
+      const token = Cookies.get("_auth");
+      if (!token) {
+        notify("Authentication required", "error");
+        return;
+      }
+
+      console.log("Sending email with content:", content);
+
+      const payload = {
+        ReportId: reportId,
+        Content: content,
+      };
+      console.log("Payload:", payload);
+      const response = await reportApiInstance.post(`/send-email`, payload, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      const data = response.data;
+      if (data._isSuccess) {
+        notify("Email has been sent", "success");
+        fetchReportList();
+        handleCloseDialog();
+      } else {
+        notify(data.message || "Failed to send email", "error");
+      }
+    } catch (error) {
+      console.error("Error while sending email:", error);
+      notify("An error occurred while sending the email", "error");
+    }
+  };
+
   const fetchUpdateStatus = async (reportId) => {
     try {
       const token = Cookies.get("_auth");
@@ -153,6 +169,7 @@ function AdminReport() {
           pageSize: pageSize,
         },
       });
+
       const { items, totalItems, totalPages } = response.data._data;
       setDataLoad(items || []); // Ensure items is an array
       updatePagination({ totalItems, totalPages, currentPage: page });
@@ -170,14 +187,28 @@ function AdminReport() {
     const mapData = async () => {
       const mapped = await Promise.all(
         (dataLoad || []).map(async (data) => {
-          console.log(data);
-          const project = await fetchProjectById(data.violatorId);
           const user = await fetchUserById(data.reporterId);
-          const Violator = await fetchUserById(data.violatorId);
+          let ViolatorParse = "";
+
+          if (data.type === 0) {
+            const Violator = await fetchUserById(data.violatorId);
+            ViolatorParse = Violator.userName;
+          } else if (data.type === 1) {
+            const fundingProject = await fetchProjectById(data.violatorId);
+            console.log("project found", fundingProject);
+            ViolatorParse = fundingProject.name;
+          } else {
+            const marketplaceProject = await fetchMarketplaceProjectById(
+              data.violatorId
+            );
+            console.log("Marketplace project found", marketplaceProject);
+            ViolatorParse = marketplaceProject.name;
+          }
+
           return {
             Id: data.id,
             reporter: user ? user.userName : "Unknown",
-            Violator: project ? project.name : Violator.userName,
+            Violator: ViolatorParse,
             content: data.content,
             isHandle: data.isHandle ? "Handled" : "Not handled",
             date: formatDate(data.date),
@@ -186,8 +217,9 @@ function AdminReport() {
           };
         })
       );
-      setMappedData(mapped); // Update the state with the mapped data
+      setMappedData(mapped);
     };
+
     if (dataLoad.length > 0) {
       mapData();
     }
@@ -232,9 +264,12 @@ function AdminReport() {
             >
               <div className="mb-4">
                 <label className="block text-gray-700 font-medium mb-2">
-                  Note
+                  Description
                 </label>
-                <ReactQuill value={content} onChange={setContent} />
+                <ReactQuill
+                  value={content}
+                  onChange={(value) => setContent(value)}
+                />
               </div>
               <div className="flex justify-around gap-4">
                 <button

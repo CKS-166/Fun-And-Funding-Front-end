@@ -41,7 +41,7 @@ const notify = (message, type) => {
     toast.error(message, options);
   }
 };
-function ReportForm({ projectId, closeDialog, openDialog }) {
+function ReportForm({ violatorId, type, closeDialog, openDialog }) {
   const [checkedItems, setCheckedItems] = useState([]);
   const [files, setFiles] = useState([]);
   const [content, setContent] = useState("");
@@ -54,12 +54,13 @@ function ReportForm({ projectId, closeDialog, openDialog }) {
 
   const handleSubmit = async () => {
     try {
-      console.log("report projectid:", projectId);
+      console.log("report projectid:", violatorId);
       console.log("files:", files);
       // Create FormData instance
       const formData = new FormData();
       // Append projectId and content to FormData
-      formData.append("ProjectId", projectId);
+      formData.append("ViolatorId", violatorId);
+      formData.append("Type", type);
       formData.append("Content", content);
       // Append each file (assuming `files` is an array of objects with a file property)
       files.forEach((file) => {

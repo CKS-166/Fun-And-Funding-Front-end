@@ -14,12 +14,14 @@ import {
 import React, { useEffect, useState } from "react";
 import { Outlet, useLocation } from "react-router";
 import { useNavigate, useParams } from "react-router-dom";
-import "sweetalert2";
+import Swal from "sweetalert2";
 import fundingProjectApiInstace from "../../utils/ApiInstance/fundingProjectApiInstance";
 import { toast, ToastContainer } from "react-toastify";
+import Cookies from "js-cookie";
 import { editorList } from "./UpdateMarketplaceProjectLayout";
 import { useUpdateMarketplaceProject } from "../../contexts/UpdateMarketplaceProjectContext";
 import marketplaceProjectApiInstace from "../../utils/ApiInstance/marketplaceProjectApiInstance";
+import { useLoading } from "../../contexts/LoadingContext";
 
 const notify = (message, type) => {
   const options = {
@@ -46,99 +48,69 @@ const notify = (message, type) => {
 
 function UpdateMarketplaceProjectLayout() {
   const { id } = useParams();
+  const token = Cookies.get("_auth");
   const navigate = useNavigate();
   const location = useLocation();
   const [isEditExpanded, setIsEditExpanded] = useState(false);
   const { marketplaceProject, setMarketplaceProject, edited, setEdited } =
     useUpdateMarketplaceProject();
+  const { isLoading, setIsLoading } = useLoading();
 
   const handleSaveAll = async (event) => {
     event.preventDefault();
     try {
-      console.log(project);
+      setIsLoading(true);
+      console.log(marketplaceProject);
 
       const formData = new FormData();
 
       formData.append("Id", id);
-      formData.append("Name", project.name);
-      formData.append("Description", project.description);
-      formData.append("Introduction", project.introduction);
+      formData.append("Name", marketplaceProject.name);
+      formData.append("Description", marketplaceProject.description);
+      formData.append("Introduction", marketplaceProject.introduction);
+      formData.append("Price", marketplaceProject.price);
 
-      if (project.wallet.bankAccount) {
-        formData.append("BankAccount.Id", project.wallet.bankAccount.id);
+      if (marketplaceProject.bankAccount) {
+        formData.append("BankAccount.Id", marketplaceProject.bankAccount.id);
         formData.append(
           "BankAccount.BankNumber",
-          project.wallet.bankAccount.bankNumber
+          marketplaceProject.bankAccount.bankNumber
         );
         formData.append(
           "BankAccount.BankCode",
-          project.wallet.bankAccount.bankCode
+          marketplaceProject.bankAccount.bankCode
         );
       }
 
-      project.packages.forEach((packageItem, index) => {
-        formData.append(`Packages[${index}].Id`, packageItem.id);
-        formData.append(`Packages[${index}].Name`, packageItem.name);
-        formData.append(
-          `Packages[${index}].RequiredAmount`,
-          packageItem.requiredAmount
-        );
-        formData.append(
-          `Packages[${index}].Description`,
-          packageItem.description
-        );
-        formData.append(
-          `Packages[${index}].LimitQuantity`,
-          packageItem.limitQuantity
-        );
-        if (packageItem.updatedImage) {
+      if (marketplaceProject.marketplaceFiles) {
+        marketplaceProject.marketplaceFiles.forEach((file, index) => {
+          formData.append(`MarketplaceFiles[${index}].Id`, file.id);
+          formData.append(`MarketplaceFiles[${index}].Name`, file.name);
+          formData.append(`MarketplaceFiles[${index}].URL`, file.url);
+          formData.append(`MarketplaceFiles[${index}].Version`, file.version);
           formData.append(
-            `Packages[${index}].UpdatedImage`,
-            packageItem.updatedImage
+            `MarketplaceFiles[${index}].Description`,
+            file.description
           );
-        }
-        packageItem.rewardItems.forEach((reward, rewardIndex) => {
+          formData.append(`MarketplaceFiles[${index}].FileType`, file.fileType);
           formData.append(
-            `Packages[${index}].RewardItems[${rewardIndex}].Id`,
-            reward.id
+            `MarketplaceFiles[${index}].IsDeleted`,
+            file.isDeleted
           );
-          formData.append(
-            `Packages[${index}].RewardItems[${rewardIndex}].Name`,
-            reward.name
-          );
-          formData.append(
-            `Packages[${index}].RewardItems[${rewardIndex}].Description`,
-            reward.description
-          );
-          formData.append(
-            `Packages[${index}].RewardItems[${rewardIndex}].Quantity`,
-            reward.quantity
-          );
-          if (reward.imageFile) {
-            formData.append(
-              `Packages[${index}].RewardItems[${rewardIndex}].ImageFile`,
-              reward.imageFile
-            );
-          }
-        });
-      });
-
-      if (project.fundingFiles) {
-        project.fundingFiles.forEach((file, index) => {
-          formData.append(`FundingFiles[${index}].Id`, file.id);
-          formData.append(`FundingFiles[${index}].Name`, file.name);
-          formData.append(`FundingFiles[${index}].UrlFile`, file.urlFile);
-          formData.append(`FundingFiles[${index}].Filetype`, file.filetype);
-          formData.append(`FundingFiles[${index}].IsDeleted`, file.isDeleted);
         });
       }
-      if (project.existedFile) {
-        project.existedFile.forEach((file, index) => {
-          formData.append(`ExistedFile[${index}].Id`, file.id);
-          formData.append(`ExistedFile[${index}].Name`, file.name);
-          formData.append(`ExistedFile[${index}].Url`, file.url);
-          formData.append(`ExistedFile[${index}].Filetype`, file.filetype);
-          formData.append(`ExistedFile[${index}].IsDeleted`, file.isDeleted);
+      if (marketplaceProject.existingFiles) {
+        marketplaceProject.existingFiles.forEach((file, index) => {
+          formData.append(`ExistingFiles[${index}].Id`, file.id);
+          formData.append(`ExistingFiles[${index}].Name`, file.name);
+          formData.append(`ExistingFiles[${index}].URL`, file.url);
+          formData.append(`ExistingFiles[${index}].Version`, file.version);
+          formData.append(
+            `ExistingFiles[${index}].Description`,
+            file.description
+          );
+          formData.append(`ExistingFiles[${index}].FileType`, file.fileType);
+          formData.append(`ExistingFiles[${index}].IsDeleted`, file.isDeleted);
         });
       }
 
@@ -147,11 +119,16 @@ function UpdateMarketplaceProjectLayout() {
         console.log(pair[0], pair[1]);
       }
 
-      const response = await marketplaceProjectApiInstace.put("", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      const response = await marketplaceProjectApiInstace.put(
+        `/${id}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       if (response.status === 200) {
         notify("Project saved successfully!", "success");
@@ -163,6 +140,7 @@ function UpdateMarketplaceProjectLayout() {
     } catch (error) {
       console.error("Error saving project:", error);
     } finally {
+      setIsLoading(false);
     }
   };
 

@@ -176,20 +176,26 @@ function MarketplaceProjectMediaFiles() {
   const handleBonusImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      const newImage = {
-        id: uuidv4(),
-        name: file.name,
-        url: file,
-        fileType: 4,
-        isDeleted: false,
-        version: "",
-        description: "",
-      };
-      setProjectImages([...projectImages, newImage]);
+      setProjectImages((prevImages) => {
+        const newImage = {
+          id: uuidv4(),
+          name: file.name,
+          url: file,
+          fileType: 4,
+          isDeleted: false,
+          version: "",
+          description: "",
+        };
+
+        return [...prevImages, newImage];
+      });
+
       setMediaEdited(true);
       e.target.value = null;
     }
   };
+
+  console.log(projectImages);
 
   const handleDeleteBonusImage = (bonusImage) => {
     console.log(projectImages);
@@ -211,21 +217,30 @@ function MarketplaceProjectMediaFiles() {
       }).then((result) => {
         if (result.isConfirmed) {
           setProjectImages((prevImages) => {
+            //find index to delete
             const imageIndex = prevImages.findIndex(
-              (item) => item.id === bonusImage.id
+              (item) =>
+                item.id === bonusImage.id && typeof item.url === "string"
             );
+
             const updatedImages = [...prevImages];
+
             if (imageIndex != -1) {
+              //index found => change isDeleted
               updatedImages[imageIndex].isDeleted = true;
             } else {
-              const filteredVideo = updatedImages.filter(
+              //not found => remove from the list
+              const filteredImages = updatedImages.filter(
+                //exclude file to delete
                 (item) => item.id !== bonusImage.id
               );
               updatedImages.length = 0;
-              updatedImages.push(...filteredVideo);
+              updatedImages.push(...filteredImages);
             }
+
             return [...updatedImages];
           });
+
           setIsImageOpen(false);
           setMediaEdited(true);
           Swal.fire("Delete successfully!", "", "success");
@@ -245,7 +260,10 @@ function MarketplaceProjectMediaFiles() {
 
   const handleSaveAll = async () => {
     const existingFiles = [...marketplaceProject.existingFiles];
-    const marketplaceFiles = [...marketplaceProject.marketplaceFiles];
+    const marketplaceFiles = [
+      ...marketplaceProject.marketplaceFiles.filter((f) => f.fileType === 3),
+    ];
+    console.log(marketplaceFiles);
 
     const classifyFiles = (files) => {
       files.forEach((file) => {

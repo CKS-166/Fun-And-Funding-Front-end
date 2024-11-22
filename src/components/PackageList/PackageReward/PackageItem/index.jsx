@@ -3,17 +3,17 @@ import React from 'react'
 const PackageItem = ({ item }) => {
   return (
     <>
-      <Box sx={{ display: 'flex', width: '283px', background: '#F5F7F8', borderRadius: '10px', padding: '10px', alignItems: 'center' }}>
-        <Box className='reward-image' sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '5px' }}>
-          {item.imageUrl && <img src={item.imageUrl} style={{ width: '40px', height: '40px' }} />}
+      <div className="bg-gray-200 rounded-lg flex items-center py-2 px-3 gap-3">
+        <Box className='reward-image'>
+          {item.imageUrl ? (<img src={item.imageUrl} style={{ width: '40px', height: '40px' }} />) : (<img className='w-[1.5rem] h-[1.5rem]' src="https://i.ibb.co/ZBwT1V2/gift.png" />)}
         </Box>
         <Box>
-          <Typography sx={{ fontSize: '10px', fontWeight: '400' }}>
+          <div className='text-xs'>
             {item.name}
-          </Typography>
-          <Typography sx={{ fontSize: '8px', fontWeight: '200', color: '#1BAA64', marginTop: '5px' }}>{item.quantity} item(s)</Typography>
+          </div>
+          <div className='font-semibold text-[.6rem] text-primary-green'>{item.quantity} item(s)</div>
         </Box>
-      </Box>
+      </div>
     </>
   )
 }

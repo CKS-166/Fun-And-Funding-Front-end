@@ -136,7 +136,6 @@ const UserDetailModal = ({ selectedUserId, openModal, setOpenModal, fetchUserLis
             notify(error.response?.data?.message || error.message || "An error occurred", "error");
         }
     }
-    console.log(selectedUserId);
 
     return (
         <>

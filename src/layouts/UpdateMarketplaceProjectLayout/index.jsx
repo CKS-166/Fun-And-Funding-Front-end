@@ -87,12 +87,15 @@ function UpdateMarketplaceProjectLayout() {
           formData.append(`MarketplaceFiles[${index}].Id`, file.id);
           formData.append(`MarketplaceFiles[${index}].Name`, file.name);
           formData.append(`MarketplaceFiles[${index}].URL`, file.url);
-          formData.append(`MarketplaceFiles[${index}].Version`, file.version);
+          formData.append(`MarketplaceFiles[${index}].Version`, file?.version);
           formData.append(
             `MarketplaceFiles[${index}].Description`,
             file.description
           );
-          formData.append(`MarketplaceFiles[${index}].FileType`, file.fileType);
+          formData.append(
+            `MarketplaceFiles[${index}].FileType`,
+            file?.fileType
+          );
           formData.append(
             `MarketplaceFiles[${index}].IsDeleted`,
             file.isDeleted
@@ -139,6 +142,8 @@ function UpdateMarketplaceProjectLayout() {
       }
     } catch (error) {
       console.error("Error saving project:", error);
+      notify("Save project failed.", "error");
+      fetchProject();
     } finally {
       setIsLoading(false);
     }
@@ -294,7 +299,7 @@ function UpdateMarketplaceProjectLayout() {
                     className="update-project-section"
                     onClick={() =>
                       navigate(
-                        `/account/marketplace-projects/update/${marketplaceProject.id}/preview`
+                        `/account/marketplace-projects/update/${id}/preview`
                       )
                     }
                   >
@@ -361,6 +366,18 @@ function UpdateMarketplaceProjectLayout() {
                       ))}
                     </List>
                   </Collapse>
+                </div>
+                <div className="">
+                  <Typography
+                    className="update-project-section"
+                    onClick={() =>
+                      navigate(
+                        `/account/marketplace-projects/update/${id}/coupons`
+                      )
+                    }
+                  >
+                    Project Coupons
+                  </Typography>
                 </div>
               </div>
             </div>

@@ -23,6 +23,7 @@ function MarketplaceProjectBasicInformation() {
 
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
+  const [price, setPrice] = useState(0);
   const [selectedCategory, setSelectedCategory] = useState([]);
   const [intro, setIntro] = useState(null);
 
@@ -30,6 +31,7 @@ function MarketplaceProjectBasicInformation() {
     setName(marketplaceProject.name);
     setDescription(marketplaceProject.description);
     setIntro(marketplaceProject.introduction);
+    setPrice(marketplaceProject.price);
     if (
       marketplaceProject.categories &&
       Array.isArray(marketplaceProject.categories)
@@ -44,27 +46,39 @@ function MarketplaceProjectBasicInformation() {
   const handleChangeName = (event) => {
     const updatedName = event.target.value;
     setName(updatedName);
-    checkIfEdited(updatedName, description, intro);
+    checkIfEdited(updatedName, description, intro, price);
   };
 
   const handleChangeDescription = (event) => {
     const updatedDescription = event.target.value;
     setDescription(updatedDescription);
-    checkIfEdited(name, updatedDescription, intro);
+    checkIfEdited(name, updatedDescription, intro, price);
   };
 
   const handleChangeIntroduction = (newIntro) => {
     console.log(newIntro);
     const updatedIntro = newIntro;
     setIntro(updatedIntro);
-    checkIfEdited(name, description, updatedIntro);
+    checkIfEdited(name, description, updatedIntro, price);
   };
 
-  const checkIfEdited = (updatedName, updatedDescription, updatedIntro) => {
+  const handleChangePrice = (event) => {
+    const updatedPrice = event.target.value;
+    setPrice(updatedPrice);
+    checkIfEdited(updatedPrice, name, description, intro);
+  };
+
+  const checkIfEdited = (
+    updatedName,
+    updatedDescription,
+    updatedIntro,
+    updatedPrice
+  ) => {
     if (
       updatedName !== marketplaceProject.name ||
       updatedDescription !== marketplaceProject.description ||
-      updatedIntro !== marketplaceProject.introduction
+      updatedIntro !== marketplaceProject.introduction ||
+      updatedPrice !== marketplaceProject.price
     ) {
       setBasicInfoEdited(true);
     } else {
@@ -78,6 +92,7 @@ function MarketplaceProjectBasicInformation() {
       name: name,
       description: description,
       introduction: intro,
+      price: price,
     };
     setMarketplaceProject(updatedProject);
     setEdited(true);
@@ -88,6 +103,7 @@ function MarketplaceProjectBasicInformation() {
     setName(marketplaceProject.name);
     setDescription(marketplaceProject.description);
     setIntro(marketplaceProject.introduction);
+    setPrice(marketplaceProject.price);
     setBasicInfoEdited(false);
   };
 
@@ -187,6 +203,24 @@ function MarketplaceProjectBasicInformation() {
             ))} */}
           </Select>
         </FormControl>
+      </div>
+      <div className="basic-info-section">
+        <Typography className="basic-info-title" sx={{ width: "70%" }}>
+          Project Price<span className="text-[#1BAA64]">*</span>
+        </Typography>
+        <Typography className="basic-info-subtitle" sx={{ width: "70%" }}>
+          Provide a price for your game project.
+        </Typography>
+        <TextField
+          placeholder="Project price..."
+          className="custom-update-textfield"
+          variant="outlined"
+          required={true}
+          type="number"
+          value={price}
+          onChange={handleChangePrice}
+          onWheel={(e) => e.target.blur()}
+        />
       </div>
       <Box className="basic-info-section">
         <div className="w-[70%]">

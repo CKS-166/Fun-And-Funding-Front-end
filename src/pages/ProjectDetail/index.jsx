@@ -39,7 +39,7 @@ import "./index.css";
 import { useNavigate } from "react-router-dom";
 import packageBackerApiInstance from "../../utils/ApiInstance/packageBackerApiInstance";
 import { AutoAwesome, Bookmark, Favorite, Report } from "@mui/icons-material";
-
+import followApiInstace from "../../utils/ApiInstance/followApiInstance";
 const ProjectDetail = () => {
   const token = Cookies.get("_auth");
   //sample owwner
@@ -278,6 +278,15 @@ const ProjectDetail = () => {
   };
   // bg-gradient-to-br from-dark-green via-primary-green to-gray-200 background-animate
 
+  const handleFollow = async () => {
+    await followApiInstace.post(`/${id}/funding-project`,{}, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    }).then(res => {
+      console.log(res.data)
+    });
+  }
   return (
     <Box>
       {isLoading && (
@@ -458,6 +467,7 @@ const ProjectDetail = () => {
                         <Grid size={6}>
                           <Button
                             variant="contained"
+                          onClick={handleFollow}
                             sx={{
                               width: "100%",
                               whiteSpace: "nowrap",

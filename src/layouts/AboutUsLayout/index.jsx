@@ -12,9 +12,12 @@ import Grid from '@mui/material/Grid2';
 import { Outlet } from 'react-router';
 const AboutUsLayout = () => {
     const titleList = [
-        { text: "Section 1", sectionId: "section1" },
-        { text: "Section 2", sectionId: "section2" },
-        { text: "Section 3", sectionId: "section3" },
+        { text: "Introduction", sectionId: "section1" },
+        { text: "Backer Restrictions", sectionId: "section2" },
+        { text: "Owner Policies", sectionId: "section3" },
+        { text: "Backer Policies", sectionId: "section4" },
+        { text: "Disclaimer of Responsibility", sectionId: "section5" },
+        { text: "Marketplace Promotion", sectionId: "section6" }
     ];
     const handleScrollToSection = (sectionId) => {
         const element = document.getElementById(sectionId);

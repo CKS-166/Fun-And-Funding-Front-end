@@ -22,7 +22,7 @@ export const checkAvailableMilestone = async (projectId, milestoneId) => {
             }
             const status = res.data._data.items[0].status
             console.log(status)
-            if(status == processing) {
+            if(status == processing || status == warning) {
                 if(res.data._data.items[0].projectMilestoneRequirements.length > 0
                 ){
                     return {

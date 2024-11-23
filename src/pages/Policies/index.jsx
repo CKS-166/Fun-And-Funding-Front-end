@@ -1,7 +1,12 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Typography, Box } from '@mui/material'
 import './index.css'
+import MilestonePolicyModal from '../../components/MilestonePolicyModal'
 const Policies = () => {
+  const [open, setOpen] = useState(false);
+
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
   return (
     <>
       <Typography variant="h4" sx={{ marginBottom: "20px" }}>
@@ -166,8 +171,9 @@ const Policies = () => {
                   project milestones rather than in a single payment.
                   This approach helps ensure backers' contributions are used as planned and allows progress to be tracked more closely. If an owner is unable to complete their project and fulfill rewards, they must make a
                   reasonable effort to conclude the project for backers.
-                  <span className="ml-1 text-[#1BAA64]">Milestones process here</span>
+                  <span className="ml-1 text-[#1BAA64] cursor-pointer text-[1.25srem]" onClick={handleOpen}>Milestones process here</span>
                 </Typography>
+                <MilestonePolicyModal open={open} handleClose={handleClose} />
               </li>
               <li>
                 <Typography>
@@ -283,15 +289,32 @@ const Policies = () => {
         {/* section 6 */}
         <Box id="section6">
           <Typography className="term-title">
-            Section 5. Policies for Project Promotion and Support
+            Section 6. Policies for Project Promotion and Support
           </Typography>
           <Box className="term-content">
             <Typography sx={{ fontStyle: 'italic' }}>
               Projects that successfully secure funding may be promoted on our marketplace, subject to the conditions outlined below.
             </Typography>
-            <Typography>
-              Our platform is designed specifically to support game projects developed using Unity. To ensure compatibility and consistency, developers must integrate our Unity package into their games. This package provides essential functionalities and allows for seamless verification of digital keys and other platform-specific requirements.
-            </Typography>
+            <Box
+              sx={{
+                p: 2, // Padding
+                mb: 3, // Margin bottom
+                borderLeft: "5px solid #1BAA64", // Green left border for emphasis
+                bgcolor: "#f5f5f5", // Light gray background
+                borderRadius: "5px", // Rounded corners
+              }}
+            >
+              <Typography
+                variant="body1"
+                fontWeight="bold"
+                sx={{ color: "#1BAA64" }} // Green text for emphasis
+              >
+                Important for Marketplace:
+              </Typography>
+              <Typography variant="body2" sx={{ color: "text.primary", mt: 1 }}>
+                Our platform is designed specifically to support game projects developed using Unity. To ensure compatibility and consistency, developers must integrate our Unity package into their games. This package provides essential functionalities and allows for seamless verification of digital keys and other platform-specific requirements.
+              </Typography>
+            </Box>
             <Typography>
               Developers are encouraged to create and manage their own promotional campaigns, including the addition of custom coupons, which can be used to attract and retain players. The platform facilitates these campaigns but does not manage or oversee them on behalf of developers.
             </Typography>

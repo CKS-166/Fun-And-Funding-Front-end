@@ -6,7 +6,8 @@
 
 .term-title {
     font-size: 18px;
-    font-weight: 600;
+    font-weight: 700 !important;
+    color: #1BAA64 !important;
 }
 
 .term-content{

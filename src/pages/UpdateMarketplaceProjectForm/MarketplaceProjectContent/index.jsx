@@ -58,8 +58,8 @@ function MarketplaceProjectContent() {
             }))
           : [];
       setGameFile(gameData);
-      setVersion(gameData[0].version);
-      setDescription(gameData[0].description);
+      setVersion(gameData[0]?.version);
+      setDescription(gameData[0]?.description);
 
       console.log(gameFile);
     }

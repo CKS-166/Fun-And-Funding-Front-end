@@ -44,7 +44,7 @@ const ProjectDetail = () => {
   const token = Cookies.get("_auth");
   //sample owwner
   const [isOwner, setIsOwner] = useState(false);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   //sample data
   const { id } = useParams();
@@ -79,18 +79,18 @@ const ProjectDetail = () => {
   //fetch backers
   const fetchBackers = async (id) => {
     try {
-      await packageBackerApiInstance.get(`/project-backers-detail?projectId=${id}`)
-        .then(res => {
+      await packageBackerApiInstance
+        .get(`/project-backers-detail?projectId=${id}`)
+        .then((res) => {
           console.log(res.data);
           if (res.data.result._isSuccess) {
             setPackBackers(res.data.result._data);
           }
-        })
+        });
     } catch (error) {
       console.error(error);
     }
-
-  }
+  };
   const handleOpenDialog = () => {
     setOpenDialog(true);
   };
@@ -122,41 +122,39 @@ const ProjectDetail = () => {
   };
   //check project owner
   const checkOwner = (status) => {
-    token && fundingProjectApiInstance
-      .get("/project-owner", {
-        params: {
-          projectId: id,
-        },
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((response) => {
-        console.log(response.data);
-        if (response.data._data) {
-          if (response.data._message == 'owner') {
-            setButtonBackerActive(true)
-            setIsOwner(response.data._data);
-            if (status == processing || status == fundedSuccessful) {
-              setButtonActive(false)
-            } else {
-              setButtonActive(true)
-
-            }
-          } else if (response.data._message == 'backer of this project') {
-            setIsBacker(response.data._data);
-            if (status == processing) {
-              setButtonActive(false)
-              setButtonBackerActive(false)
-            } else {
-              setButtonActive(true)
-              setButtonBackerActive(true)
+    token &&
+      fundingProjectApiInstance
+        .get("/project-owner", {
+          params: {
+            projectId: id,
+          },
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((response) => {
+          console.log(response.data);
+          if (response.data._data) {
+            if (response.data._message == "owner") {
+              setButtonBackerActive(true);
+              setIsOwner(response.data._data);
+              if (status == processing || status == fundedSuccessful) {
+                setButtonActive(false);
+              } else {
+                setButtonActive(true);
+              }
+            } else if (response.data._message == "backer of this project") {
+              setIsBacker(response.data._data);
+              if (status == processing) {
+                setButtonActive(false);
+                setButtonBackerActive(false);
+              } else {
+                setButtonActive(true);
+                setButtonBackerActive(true);
+              }
             }
           }
-
-        }
-
-      });
+        });
   };
   //fetch milestones
   const fetchMilestones = async () => {
@@ -252,70 +250,79 @@ const ProjectDetail = () => {
       const notification = {
         message: "User suongck donated to your project!",
         notificationType: 0,
-        objectId: '4fb92d5b-f332-4d12-4858-08dcf8e9388d',
+        objectId: "4fb92d5b-f332-4d12-4858-08dcf8e9388d",
         date: new Date(),
         isRead: false,
       };
 
-      const userIdList = ["f766c910-4f6a-421e-a1a3-61534e6005c3", "408D9BDB-7AAF-4AAA-B31A-968E0BEF4813"];
+      const userIdList = [
+        "f766c910-4f6a-421e-a1a3-61534e6005c3",
+        "408D9BDB-7AAF-4AAA-B31A-968E0BEF4813",
+      ];
 
       const payload = {
         notification,
         userIds: userIdList,
       };
 
-      await fetch('https://localhost:7044/api/notification/send', {
-        method: 'POST',
+      await fetch("https://localhost:7044/api/notification/send", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(payload),
       });
     } catch (error) {
-      console.error('Error sending notification:', error);
+      console.error("Error sending notification:", error);
     }
-
   };
   // bg-gradient-to-br from-dark-green via-primary-green to-gray-200 background-animate
 
   const handleFollow = async () => {
-    await followApiInstace.post(`/${id}/funding-project`,{}, {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    }).then(res => {
-      console.log(res.data)
-    });
-  }
+    await followApiInstace
+      .post(
+        `/${id}/funding-project`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then((res) => {
+        console.log(res.data);
+      });
+  };
   return (
     <Box>
       {isLoading && (
         <>
           <div className="bg-gradient-to-r from-primary-green via-dark-green to-primary-green background-animate h-[4rem] flex items-center">
             <div className="px-[7rem]">
-              {
-                isOwner
-                  ? (
-                    <div className="text-gray-200 font-semibold flex items-center gap-1">
-                      <AutoAwesome /> You are the owner of this funding project <AutoAwesome />
-                      <button
-                        onClick={() => navigate(`/account/projects/update/${id}/preview`)}
-                        className="text-sm ml-4 text-white bg-gray-200/40 px-2 py-1 rounded backdrop-blur-3xl">
-                        Manage project
-                      </button>
-                    </div>
-                  )
-                  : (
-                    <div className="text-gray-200 font-semibold flex items-center gap-1">
-                      Explore other funding project
-                      <button
-                        onClick={() => navigate(`/crowdfunding`)}
-                        className="text-sm ml-4 text-white bg-gray-200/40 px-2 py-1 rounded backdrop-blur-3xl">
-                        Explore
-                      </button>
-                    </div>
-                  )
-              }
+              {isOwner ? (
+                <div className="text-gray-200 font-semibold flex items-center gap-1">
+                  <AutoAwesome /> You are the owner of this funding project{" "}
+                  <AutoAwesome />
+                  <button
+                    onClick={() =>
+                      navigate(`/account/projects/update/${id}/preview`)
+                    }
+                    className="text-sm ml-4 text-white bg-gray-200/40 px-2 py-1 rounded backdrop-blur-3xl"
+                  >
+                    Manage project
+                  </button>
+                </div>
+              ) : (
+                <div className="text-gray-200 font-semibold flex items-center gap-1">
+                  Explore other funding project
+                  <button
+                    onClick={() => navigate(`/crowdfunding`)}
+                    className="text-sm ml-4 text-white bg-gray-200/40 px-2 py-1 rounded backdrop-blur-3xl"
+                  >
+                    Explore
+                  </button>
+                </div>
+              )}
             </div>
           </div>
           <div className="pt-[2.5rem] pb-[1rem] bg-gray-200/60">
@@ -336,11 +343,15 @@ const ProjectDetail = () => {
                       <div className="text-primary-green font-semibold">
                         Funding
                       </div>
-                      <Report className="text-red-700 hover:cursor-pointer" onClick={handleOpenDialog} />
+                      <Report
+                        className="text-red-700 hover:cursor-pointer"
+                        onClick={handleOpenDialog}
+                      />
                     </div>
 
                     <ReportForm
-                      projectId={id}
+                      violatorId={id}
+                      type={"1"}
                       closeDialog={handleCloseDialog}
                       openDialog={openDialog}
                     />
@@ -392,7 +403,7 @@ const ProjectDetail = () => {
                       </Box>
                       <BorderLinearProgress
                         variant="determinate"
-                        sx={{ width: "100%", my: 0, py: 1, }}
+                        sx={{ width: "100%", my: 0, py: 1 }}
                         value={convertPercentage(
                           projectData.balance,
                           projectData.target
@@ -424,10 +435,7 @@ const ProjectDetail = () => {
                     </Box>
 
                     {/* buttons interaction */}
-                    <Stack
-                      spacing={1}
-                      direction="column"
-                    >
+                    <Stack spacing={1} direction="column">
                       <Button
                         variant="contained"
                         disabled={buttonActive}
@@ -436,10 +444,10 @@ const ProjectDetail = () => {
                           whiteSpace: "nowrap",
                           background: "#1BAA64",
                           fontWeight: "900",
-                          height: '3rem',
-                          '&:hover': {
-                            boxShadow: 'none',
-                            border: '2px solid var(--primary-green)'
+                          height: "3rem",
+                          "&:hover": {
+                            boxShadow: "none",
+                            border: "2px solid var(--primary-green)",
                           },
                         }}
                         onClick={() => {
@@ -450,9 +458,16 @@ const ProjectDetail = () => {
                         className="like-btn"
                       >
                         {isOwner ? (
-                          <Typography sx={{ fontWeight: '600' }}>{renderButtonContent()}</Typography>
+                          <Typography sx={{ fontWeight: "600" }}>
+                            {renderButtonContent()}
+                          </Typography>
                         ) : (
-                          <Typography sx={{ fontWeight: '600' }} onClick={handleSendNotification}>Back this project</Typography>
+                          <Typography
+                            sx={{ fontWeight: "600" }}
+                            onClick={handleSendNotification}
+                          >
+                            Back this project
+                          </Typography>
                         )}
                       </Button>
                       {firstMilestone && (
@@ -467,7 +482,7 @@ const ProjectDetail = () => {
                         <Grid size={6}>
                           <Button
                             variant="contained"
-                          onClick={handleFollow}
+                            onClick={handleFollow}
                             sx={{
                               width: "100%",
                               whiteSpace: "nowrap",
@@ -475,17 +490,14 @@ const ProjectDetail = () => {
                               fontWeight: "900",
                               py: 1,
                               color: "rgba(0, 0, 0, 0.7)",
-                              boxShadow: 'none',
-                              border: '2px solid rgba(0, 0, 0, 0.5)',
-                              height: '3rem',
+                              boxShadow: "none",
+                              border: "2px solid rgba(0, 0, 0, 0.5)",
+                              height: "3rem",
                             }}
                             className="like-btn flex items-center gap-1"
                           >
-                            <Bookmark sx={{ fontSize: '1.2rem' }}
-                            />{" "}
-                            <span className="text-[1rem]">
-                              Follow
-                            </span>
+                            <Bookmark sx={{ fontSize: "1.2rem" }} />{" "}
+                            <span className="text-[1rem]">Follow</span>
                           </Button>
                         </Grid>
                         <Grid size={6}>
@@ -498,17 +510,14 @@ const ProjectDetail = () => {
                               fontWeight: "bold",
                               py: 1,
                               color: "rgba(0, 0, 0, 0.7)",
-                              boxShadow: 'none',
-                              border: '2px solid rgba(0, 0, 0, 0.5)',
-                              height: '3rem',
+                              boxShadow: "none",
+                              border: "2px solid rgba(0, 0, 0, 0.5)",
+                              height: "3rem",
                             }}
                             className="like-btn flex items-center gap-1"
                           >
-                            <Favorite sx={{ fontSize: '1.2rem' }}
-                            />{" "}
-                            <span className="text-[1rem]">
-                              Like
-                            </span>
+                            <Favorite sx={{ fontSize: "1.2rem" }} />{" "}
+                            <span className="text-[1rem]">Like</span>
                           </Button>
                         </Grid>
                       </Grid>
@@ -555,7 +564,7 @@ const ProjectDetail = () => {
                       fontWeight: "bold",
                       px: 4,
                       py: 2,
-                      fontSize: '.8rem',
+                      fontSize: ".8rem",
                       whiteSpace: "nowrap",
                       textTransform: "none",
                       color: "rgba(0, 0, 0, 0.6) !important",
@@ -580,7 +589,7 @@ const ProjectDetail = () => {
                       fontWeight: "bold",
                       px: 4,
                       py: 2,
-                      fontSize: '.8rem',
+                      fontSize: ".8rem",
                       whiteSpace: "nowrap",
                       textTransform: "none",
                       color: "rgba(0, 0, 0, 0.6) !important",
@@ -605,7 +614,7 @@ const ProjectDetail = () => {
                       fontWeight: "bold",
                       px: 4,
                       py: 2,
-                      fontSize: '.8rem',
+                      fontSize: ".8rem",
                       whiteSpace: "nowrap",
                       textTransform: "none",
                       color: "rgba(0, 0, 0, 0.6) !important",
@@ -629,7 +638,7 @@ const ProjectDetail = () => {
                       fontWeight: "bold",
                       px: 4,
                       py: 2,
-                      fontSize: '.8rem',
+                      fontSize: ".8rem",
                       whiteSpace: "nowrap",
                       textTransform: "none",
                       color: "rgba(0, 0, 0, 0.6) !important",
@@ -653,7 +662,7 @@ const ProjectDetail = () => {
                       fontWeight: "bold",
                       px: 4,
                       py: 2,
-                      fontSize: '.8rem',
+                      fontSize: ".8rem",
                       whiteSpace: "nowrap",
                       textTransform: "none",
                       color: "rgba(0, 0, 0, 0.6) !important",
@@ -701,7 +710,6 @@ const ProjectDetail = () => {
                   </div>
                 )}
                 {tabValue === "3" && (
-
                   <Grid2 container spacing={4}>
                     <Grid2 size={8} className="flex justify-center">
                       <div className="w-[80%]">
@@ -719,7 +727,6 @@ const ProjectDetail = () => {
                       />
                     </Grid2>
                   </Grid2>
-
                 )}
                 {tabValue === "4" && (
                   <Grid2 container spacing={4}>
@@ -730,7 +737,7 @@ const ProjectDetail = () => {
                         </Box>
                       </div>
                     </Grid2>
-                    <Grid2 size={4} sx={{ height: '100%' }}>
+                    <Grid2 size={4} sx={{ height: "100%" }}>
                       <PackageSide
                         isButtonActive={buttonBackerActive}
                         packageList={projectData.packages}
@@ -745,7 +752,6 @@ const ProjectDetail = () => {
                       <div className="w-[80%]">
                         <Box>
                           <BackerSection backers={packBackers} />
-
                         </Box>
                       </div>
                     </Grid2>
@@ -757,12 +763,9 @@ const ProjectDetail = () => {
                       />
                     </Grid2>
                   </Grid2>
-
                 )}
               </div>
             </div>
-
-
           </TabContext>
           <ToastContainer
             position="bottom-left"
@@ -774,9 +777,8 @@ const ProjectDetail = () => {
             pauseOnFocusLoss
           />
         </>
-      )
-      }
-    </Box >
+      )}
+    </Box>
 
     // tab value
   );

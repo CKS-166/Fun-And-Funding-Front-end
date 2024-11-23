@@ -46,11 +46,12 @@ import ChatLayout from "./layouts/ChatLayout";
 import CreateMarketplaceProjectLayout from "./layouts/CreateMarketplaceProjectLayout";
 import UpdateMarketplaceProjectLayout from "./layouts/UpdateMarketplaceProjectLayout";
 import AccountWallet from "./pages/AccountWallet";
+import AdminFundingProject from "./pages/AdminPages/AdminFundingProject";
 import AdminMilestone from "./pages/AdminPages/AdminMilestone";
 import AdminReport from "./pages/AdminPages/AdminReport";
+import AdminUsers from "./pages/AdminPages/AdminUser";
 import Dashboard from "./pages/AdminPages/Dashboard";
 import ManageCategory from "./pages/AdminPages/ManageCategory";
-import Users from "./pages/AdminPages/User";
 import AdminWithdrawRequest from "./pages/AdminWithdrawRequest";
 import Chat from "./pages/Chat";
 import CheckoutCart from "./pages/CheckoutCart";
@@ -65,6 +66,7 @@ import GetAllProject from "./pages/GetAllProject";
 import MarketplaceHomePage from "./pages/MarketplaceHomePage";
 import MarketplaceProjectDetail from "./pages/MarketplaceProjectDetail";
 import Milestones from "./pages/Milestones";
+import MyOrder from "./pages/MyOrder";
 import PageError from "./pages/PageError";
 import Policies from "./pages/Policies";
 import MilestoneForm from "./pages/TestCR/MilestoneForm";
@@ -82,7 +84,6 @@ import MarketplaceProjectBasicInformation from "./pages/UpdateMarketplaceProject
 import MarketplaceProjectContent from "./pages/UpdateMarketplaceProjectForm/MarketplaceProjectContent";
 import MarketplaceProjectMediaFiles from "./pages/UpdateMarketplaceProjectForm/MarketplaceProjectMedia";
 import MarketplaceProjectPreview from "./pages/UpdateMarketplaceProjectForm/MarketplaceProjectPreview";
-import MyOrder from "./pages/MyOrder";
 
 function App() {
   const location = useLocation();
@@ -220,7 +221,14 @@ function App() {
                 path="/admin-dashboard/dashboard"
                 element={<Dashboard />}
               />
-              <Route path="/admin-dashboard/users" element={<Users />} />
+              <Route
+                path="/admin-dashboard/users"
+                element={<AdminUsers />}
+              />
+              <Route
+                path="/admin-dashboard/funding-projects"
+                element={<AdminFundingProject />}
+              />
               <Route
                 path="/admin-dashboard/categories"
                 element={<ManageCategory />}

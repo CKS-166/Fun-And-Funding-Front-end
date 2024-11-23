@@ -1,40 +1,56 @@
 import React, { useEffect, useState } from 'react';
-import userApiInstance from "../../../utils/ApiInstance/userApiInstance";
-import CreateUserModal from './CreateUserModal';
-import UserDetailModal from './UserDetailModal';
+import { useLoading } from "../../../contexts/LoadingContext";
+import fundingProjectApiInstance from "../../../utils/ApiInstance/fundingProjectApiInstance";
+import FundingProjectDetailModal from './FundingProjectDetailModal';
 
-const userStatus = [
-    "Inactive",
-    "Active",
-];
 
-function Users() {
-    const [userList, setUserList] = useState([]);
+const projectStatus = {
+    0: { name: "Deleted", color: "var(--red)" },
+    1: { name: "Pending", color: "#FFC107" },
+    2: { name: "Processing", color: "#2196F3" },
+    3: { name: "Funded Successful", color: "var(--primary-green)" },
+    4: { name: "Successful", color: "var(--primary-green)" },
+    5: { name: "Failed", color: "var(--red)" },
+    6: { name: "Rejected", color: "var(--red)" },
+    7: { name: "Approved", color: "var(--primary-green)" },
+    8: { name: "Withdrawed", color: "#9C27B0" },
+    9: { name: "Refunded", color: "#FF5722" },
+    10: { name: "Reported", color: "#E91E63" },
+};
+
+
+function AdminFundingProject() {
+    const { isLoading, setIsLoading } = useLoading();
+    const [fundingProjectList, setFundingProjectList] = useState([]);
     const [pageIndex, setPageIndex] = useState(1);
     const [totalPage, setTotalPage] = useState(1);
     const [openModal, setOpenModal] = useState(false);
-    const [openCreateModal, setOpenCreateModal] = useState(false);
-    const [selectedUserId, setSelectedUserId] = useState("");
+    const [selectedFundingProjectId, setSelectedFundingProjectId] = useState("");
+    const [searchValue, setSearchValue] = useState("");
 
     useEffect(() => {
-        fetchUserList();
-    }, [pageIndex]);
+        fetchFundingProjectList();
+    }, [pageIndex, searchValue]);
 
-    const fetchUserList = async () => {
+    const fetchFundingProjectList = async () => {
         try {
-            const res = await userApiInstance.get(``, {
+            setIsLoading(true);
+            const res = await fundingProjectApiInstance.get(``, {
                 params: {
                     pageSize: 10,
-                    pageIndex: pageIndex
+                    pageIndex: pageIndex,
+                    searchValue: searchValue
                 }
             });
             if (res.data._statusCode == 200) {
-                setUserList(res.data._data);
+                setFundingProjectList(res.data._data);
                 setPageIndex(res.data._data.pageIndex);
                 setTotalPage(res.data._data.totalPages);
             }
         } catch (error) {
             console.log(error);
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -43,13 +59,10 @@ function Users() {
     };
 
     const handleOpenModal = (userId) => {
-        setSelectedUserId(userId);
+        setSelectedFundingProjectId(userId);
         setOpenModal(true);
     };
 
-    const handleOpenCreateModal = () => {
-        setOpenCreateModal(true);
-    };
 
     return (
         <>
@@ -60,9 +73,9 @@ function Users() {
                             <span className="text-base font-normal text-gray-500">
                                 Showing total of{" "}
                                 <span className="font-semibold text-gray-900">
-                                    {userList.totalItems ?? '0'}{" "}
+                                    {fundingProjectList?.totalItems ?? '0'}{" "}
                                 </span>
-                                Accounts
+                                Funding Projects
                             </span>
                         </div>
                     </div>
@@ -78,32 +91,11 @@ function Users() {
                                     </div>
                                     <input type="text" id="simple-search"
                                         className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-gray-500 focus:border-gray-400 block w-full pl-10 p-2"
-                                        placeholder="Search" required="" />
+                                        placeholder="Search" onChange={(e) => setSearchValue(e.target.value)} />
                                 </div>
                             </form>
                         </div>
                         <div className="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
-                            <button
-                                type="button"
-                                className="flex items-center justify-center text-white bg-[var(--primary-green)] hover:bg-[#159653] focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-4 py-2"
-                                onClick={() => handleOpenCreateModal()}
-                            >
-                                <svg
-                                    className="h-4 w-4 mr-2"
-                                    fill="currentColor"
-                                    viewBox="0 0 20 20"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    aria-hidden="true"
-                                >
-                                    <path
-                                        clipRule="evenodd"
-                                        fillRule="evenodd"
-                                        d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
-                                    />
-                                </svg>
-                                Add account
-                            </button>
-
                             <button
                                 id="filterDropdownButton"
                                 data-dropdown-toggle="filterDropdown"
@@ -139,26 +131,25 @@ function Users() {
                                 </svg>
                             </button>
                         </div>
-
                     </div>
                     <div className="overflow-x-auto">
                         <table className="w-full text-sm text-left text-gray-500">
                             <thead className="text-xs text-gray-700 uppercase bg-gray-50">
                                 <tr>
-                                    <th scope="col" className="px-4 py-3">
-                                        Email
+                                    <th scope="col" className="px-4 py-3 w-[12rem]">
+                                        Project Name
                                     </th>
                                     <th scope="col" className="px-4 py-3">
-                                        Username
+                                        Owner Name
                                     </th>
                                     <th scope="col" className="px-4 py-3">
-                                        Fullname
+                                        Start Date
                                     </th>
                                     <th scope="col" className="px-4 py-3">
-                                        Created Date
+                                        End Date
                                     </th>
-                                    <th scope="col" className="px-4 py-3">
-                                        Wallet Balance
+                                    <th scope="col" className="px-4 py-3 w-[8rem]">
+                                        Target
                                     </th>
                                     <th scope="col" className="px-4 py-3">
                                         Status
@@ -169,32 +160,32 @@ function Users() {
                                 </tr>
                             </thead>
                             <tbody>
-                                {userList.items &&
-                                    userList.items.length > 0 &&
-                                    userList.items.map((user, index) => (
+                                {fundingProjectList.items &&
+                                    fundingProjectList.items.length > 0 &&
+                                    fundingProjectList.items.map((project, index) => (
                                         <tr key={index} className="border-b">
                                             <th
                                                 scope="row"
-                                                className="px-4 py-3 font-medium text-gray-900 whitespace-nowrap"
+                                                className="px-4 py-3 font-medium text-gray-900 max-w-[12rem] overflow-hidden text-ellipsis whitespace-nowrap"
                                             >
-                                                {user.email}
+                                                {project.name}
                                             </th>
-                                            <td className="px-4 py-3">{user.userName}</td>
-                                            <td className="px-4 py-3">{user.fullName}</td>
+                                            <td className="px-4 py-3">{project.user?.userName}</td>
+                                            <td className="px-4 py-3">{new Date(project.startDate).toLocaleString()}</td>
                                             <td className="px-4 py-3">
-                                                {new Date(user.createdDate).toLocaleString()}
+                                                {new Date(project.endDate).toLocaleString()}
                                             </td>
-                                            <td className="px-4 py-3">
-                                                {formatPrice(user.wallet?.balance)} <span className="text-[0.75rem]">VND</span>
+                                            <td className="px-4 py-3 max-w-[8rem] overflow-hidden text-ellipsis whitespace-nowrap">
+                                                {formatPrice(project.target)} <span className="text-[0.75rem]">VND</span>
                                             </td>
                                             <td className="px-4 py-3">
                                                 <span
-                                                    className={`text-xs font-medium me-2 px-2.5 py-0.5 rounded ${user.userStatus === 1
-                                                        ? "bg-[var(--primary-green)] text-[var(--white)]"
-                                                        : "bg-[var(--red)] text-[var(--white)]"
-                                                        }`}
+                                                    className={`text-xs font-medium me-2 px-2.5 py-0.5 rounded text-white`}
+                                                    style={{
+                                                        backgroundColor: projectStatus[project.status]?.color || "#9E9E9E",
+                                                    }}
                                                 >
-                                                    {userStatus[user.userStatus]}
+                                                    {projectStatus[project.status]?.name || "Unknown"}
                                                 </span>
                                             </td>
 
@@ -202,7 +193,7 @@ function Users() {
                                                 <button
                                                     className="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none"
                                                     type="button"
-                                                    onClick={() => handleOpenModal(user.id)}
+                                                    onClick={() => handleOpenModal(project.id)}
                                                 >
                                                     <svg
                                                         className="w-5 h-5"
@@ -313,15 +304,12 @@ function Users() {
                     </nav>
                 </div>
             </div>
-            <UserDetailModal
-                openModal={openModal}
+            <FundingProjectDetailModal openModal={openModal}
                 setOpenModal={setOpenModal}
-                selectedUserId={selectedUserId}
-                fetchUserList={fetchUserList}
-            />
-            <CreateUserModal openCreateModal={openCreateModal} setOpenCreateModal={setOpenCreateModal} fetchUserList={fetchUserList} />
+                selectedFundingProjectId={selectedFundingProjectId}
+                fetchFundingProjectList={fetchFundingProjectList} />
         </>
     )
 }
 
-export default Users
+export default AdminFundingProject

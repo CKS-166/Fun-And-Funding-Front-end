@@ -77,8 +77,8 @@ const CreateUserModal = ({ openCreateModal, setOpenCreateModal, fetchUserList })
         if (!phone) {
             return true;
         }
-        const phoneRegex = /^\+?[1-9]\d{1,14}$/;
-        return phoneRegex.test(phone) || "Please enter a valid phone number.";
+        const phoneRegex = /^\d{10}$/;
+        return phoneRegex.test(phone) || "Please enter a valid 10-digit phone number.";
     };
 
     const validatePassword = (password) => {

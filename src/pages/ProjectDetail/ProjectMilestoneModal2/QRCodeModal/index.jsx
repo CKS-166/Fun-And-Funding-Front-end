@@ -46,7 +46,7 @@ const QRCodeModal = ({ pmData, openQRCode, setOpenQRCode }) => {
               </div>
             </div>
             <div className="w-[50%]">
-              <img src={`https://img.vietqr.io/image/${pmData?.fundingProject.wallet.bankAccount.bankCode}-${pmData?.fundingProject.wallet.bankAccount.bankNumber}-compact2.jpg?amount=${pmData?.fundingProject.balance * pmData?.milestone.disbursementPercentage}&addInfo=milestone%20request`} alt="QR Code" />
+              <img src={`https://img.vietqr.io/image/${pmData?.fundingProject.wallet.bankAccount.bankCode}-${pmData?.fundingProject.wallet.bankAccount.bankNumber}-compact2.jpg?amount=${pmData?.fundingProject.balance * pmData?.milestone.disbursementPercentage * 0.5}&addInfo=milestone%20request`} alt="QR Code" />
             </div>
           </div>
         </Box>

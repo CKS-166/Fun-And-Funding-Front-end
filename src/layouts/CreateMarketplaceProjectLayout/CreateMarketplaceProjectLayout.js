@@ -1,6 +1,6 @@
 export const steps = [
   {
-    label: "Basic information",
+    label: "Basic Information",
     description: `Provide basic information about your game along with the price.`,
   },
   {

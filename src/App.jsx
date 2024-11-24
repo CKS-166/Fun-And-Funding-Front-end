@@ -84,6 +84,7 @@ import MarketplaceProjectBasicInformation from "./pages/UpdateMarketplaceProject
 import MarketplaceProjectContent from "./pages/UpdateMarketplaceProjectForm/MarketplaceProjectContent";
 import MarketplaceProjectMediaFiles from "./pages/UpdateMarketplaceProjectForm/MarketplaceProjectMedia";
 import MarketplaceProjectPreview from "./pages/UpdateMarketplaceProjectForm/MarketplaceProjectPreview";
+import AdminMarketplaceProject from "./pages/AdminPages/AdminMarketplaceProject";
 
 function App() {
   const location = useLocation();
@@ -221,13 +222,14 @@ function App() {
                 path="/admin-dashboard/dashboard"
                 element={<Dashboard />}
               />
-              <Route
-                path="/admin-dashboard/users"
-                element={<AdminUsers />}
-              />
+              <Route path="/admin-dashboard/users" element={<AdminUsers />} />
               <Route
                 path="/admin-dashboard/funding-projects"
                 element={<AdminFundingProject />}
+              />
+              <Route
+                path="/admin-dashboard/marketplace-projects"
+                element={<AdminMarketplaceProject />}
               />
               <Route
                 path="/admin-dashboard/categories"

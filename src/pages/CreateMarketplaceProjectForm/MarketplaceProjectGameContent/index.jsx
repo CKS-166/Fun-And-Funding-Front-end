@@ -209,6 +209,17 @@ const MarketplaceProjectGameContent = () => {
               <p className="text-gray-500 text-xs">
                 Provide a list of coupons for your game (optional).
               </p>
+              <p className="text-gray-500 text-xs">
+                Download template{" "}
+                <span>
+                  <a
+                    href="https://funfundingmediafiles.blob.core.windows.net/fundingprojectfiles/CouponFileTemplate_149c720d-a6cc-44d0-9124-b80db1b55976.xlsx"
+                    style={{ color: "var(--primary-green)", fontWeight: "500" }}
+                  >
+                    here
+                  </a>
+                </span>
+              </p>
             </Grid2>
             <Grid2 size={9}>
               <FilePond

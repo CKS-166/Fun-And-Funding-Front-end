@@ -392,9 +392,9 @@ const ProjectMilestoneModal = ({ pmData, openModal, setOpenModal }) => {
                   pmData &&
                   (
                     <div>
-                      {isQualified && (
-                        <ProjectMilestoneReviewForm pmId={pmData.id} />
-                      )}
+                      {/* {isQualified && ( */}
+                      <ProjectMilestoneReviewForm pmId={pmData.id} />
+                      {/* )} */}
                       <ProjectMilestoneReviewList pmId={pmData.id} />
                     </div>
 

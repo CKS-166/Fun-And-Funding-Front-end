@@ -17,7 +17,7 @@ function OwnerProjectCard({ project, projectType }) {
             </div>
             <div className="flex-grow !w-[12rem] h-fit">
                 <div className="flex items-center mb-[0.5rem] gap-[1rem]">
-                    <a href={projectType == "Funding" ? `funding-detail/${project.id}` : `marketplace-detail/${project.id}`}>
+                    <a href={projectType == "Funding" ? `/funding-detail/${project.id}` : `/marketplace-detail/${project.id}`}>
                         <Typography
                             sx={{
                                 color: '#2F3645',

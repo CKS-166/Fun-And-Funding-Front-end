@@ -71,6 +71,7 @@ const PackageModal = ({ openModal, setOpenModal, selectedPackage, addPackage, ed
     const file = e.target.files[0];
     if (file) {
       const imageUrl = URL.createObjectURL(file);
+      console.log(imageUrl);
       setPackageData((prev) => ({
         ...prev,
         imageUrl: imageUrl,

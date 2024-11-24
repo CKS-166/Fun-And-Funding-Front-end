@@ -2,13 +2,17 @@ import { ArrowRightAlt, HelpOutline } from "@mui/icons-material"
 import { Box, Divider, Grid2, Modal, Step, StepLabel, Stepper, Tab, Tabs, Typography } from "@mui/material"
 // import projectMilestoneApiInstace from "../../../../utils/ApiInstance/projectMilestoneApiInstance"
 import projectMilestoneApiInstace from "../../../utils/ApiInstance/projectMilestoneApiInstance"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import QRCodeModal from "./QRCodeModal"
 import PMRequirementModal from "./PMRequirementModal"
 import ProjectMilestoneReviewList from "../../../components/ProjectMilestoneBacker/ProjectMilestoneReviewList"
 import ProjectMilestoneReviewForm from "../../../components/ProjectMilestoneBacker/ProjectMilestoneReviewForm"
 import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
 import { styled } from '@mui/material/styles';
+import projectMilestoneBackerApiInstance from "../../../utils/ApiInstance/projectMilestoneBackerApiInstance"
+import { ConsoleLogger } from "@microsoft/signalr/dist/esm/Utils"
+import { jwtDecode } from "jwt-decode";
+import Cookies from "js-cookie";
 
 const ProjectMilestoneModal = ({ pmData, openModal, setOpenModal }) => {
 
@@ -105,6 +109,37 @@ const ProjectMilestoneModal = ({ pmData, openModal, setOpenModal }) => {
     }
 
   };
+
+  const [isQualified, setIsQualified] = useState()
+
+  const token = Cookies.get("_auth")
+  const decoded = jwtDecode(token)
+  const userId = decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"]
+
+
+  useEffect(() => {
+    const handleCheckQualification = async () => {
+      try {
+        const response = await projectMilestoneBackerApiInstance.get("/CheckIfQualifiedForReview",
+          {
+            params: {
+              projectMilestoneId: pmData.id,
+              userId: userId,
+            },
+          }
+        );
+        setIsQualified(response.data._data)
+      } catch (err) {
+        console.log(
+          err.response?.data?.message || "An error occurred while checking qualification."
+        );
+      }
+    };
+
+    handleCheckQualification()
+  }, [])
+
+
 
 
   const milestones = [
@@ -357,7 +392,9 @@ const ProjectMilestoneModal = ({ pmData, openModal, setOpenModal }) => {
                   pmData &&
                   (
                     <div>
+                      {/* {isQualified && ( */}
                       <ProjectMilestoneReviewForm pmId={pmData.id} />
+                      {/* )} */}
                       <ProjectMilestoneReviewList pmId={pmData.id} />
                     </div>
 

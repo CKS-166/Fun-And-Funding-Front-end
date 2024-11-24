@@ -72,7 +72,9 @@ const UpdatesSection = () => {
                 {pmData && pmData.items.map((pm, index) => (
                     <TimelineItem>
                         <TimelineOppositeContent color="text.secondary">
-                            {new Date(pm.createdDate).toLocaleDateString()}
+                            <div className='text-sm'>
+                                {new Date(pm.createdDate).toLocaleDateString()}
+                            </div>
                         </TimelineOppositeContent>
                         <TimelineSeparator>
                             <TimelineDot />
@@ -88,7 +90,7 @@ const UpdatesSection = () => {
                             {pm.milestone.milestoneName}
                             <div className='w-[35rem] bg-white rounded mt-3 shadow-md '>
                                 <div className='p-8'>
-                                    <div className='text-sm italic font-semibold text-gray-500'>Milestone #{pm.milestone.milestoneOrder + 1}</div>
+                                    <div className='text-sm italic font-semibold text-gray-500'>Milestone #{pm.milestone.milestoneOrder}</div>
                                     <div class="flex items-center gap-4 my-3">
                                         {
                                             userData?.avatar
@@ -111,14 +113,12 @@ const UpdatesSection = () => {
                                     </div>
                                     <Divider sx={{ my: '1rem' }} />
                                     <div className='font-semibold text-xl mb-5'>
-                                        Milestone title (add field to prj milestone)
+                                        {pm.title}
                                     </div>
 
                                     <p className='text-sm'>
-                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
-                                        nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in
+                                        {pm.introduction}
                                     </p>
-                                    <div>*(thêm 2 field title với intro cho projectmilestone)</div>
                                 </div>
 
                                 <div className='px-8 py-5 border-t-2 flex justify-between'>

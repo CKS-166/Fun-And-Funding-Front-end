@@ -45,7 +45,7 @@ const MilestoneForm = () => {
       const data = await checkAvailableMilestone(projectId, id);
       setMilestoneData(data); // Set data after fetching
       console.log(data);
-      if (data.status === 'create' || data.status === 'edit') {
+      if (data.status === 'create' || data.status === 'edit' || data.status === 'warning') {
         setIsLoading(false)
       } else {
         setIsBackdropHidden(true)
@@ -286,7 +286,8 @@ const MilestoneForm = () => {
           </form>
         ) : <UpdateMilestone render={() => getMilestoneData(milestoneId)}
           milestones={milestoneData?.data[0]?.projectMilestoneRequirements}
-          issueLog={milestoneData?.data[0]?.issueLog} pmId={milestoneData?.data[0]?.id} />}
+          issueLog={milestoneData?.data[0]?.issueLog} pmId={milestoneData?.data[0]?.id}
+          status={milestoneData?.status} />}
       </div>
     </div>
   );

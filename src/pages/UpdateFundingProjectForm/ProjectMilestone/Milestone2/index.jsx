@@ -206,7 +206,7 @@ function Milestone2() {
                         </Typography>
                     </Box>
                     <Box>
-                        <CompleteMilestoneButton render={() => getMilestoneData(milestoneId)} status={milestoneData.status} pmId={milestoneData.status == 'edit' && milestoneData.data[0].id} />
+                        <CompleteMilestoneButton  render={() => getMilestoneData(milestoneId)} status={milestoneData.status} pmId={milestoneData.status == 'edit' && milestoneData.data[0].id} />
                     </Box>
 
                 </Box>

@@ -24,6 +24,7 @@ const BasicInfo = () => {
 
   const { setFormIndex, setProjectData } = useOutletContext();
   const [categories, setCategories] = useState([]);
+  const [selectedCates, setSelectedCates] = useState([])
   const navigate = useNavigate();
 
   const fetchCates = async () => {
@@ -101,8 +102,17 @@ const BasicInfo = () => {
                 <InputLabel>Category</InputLabel>
                 <Select
                   label='Category'
+                  multiple
+                  value={selectedCates}
                   // {...register("categories", { required: "Category is required" })}
-                  onChange={(e) => setValue("categories", [{ id: e.target.value }])} // Update the category id here
+                  onChange={(e) => {
+                    const selectedValues = e.target.value;
+                    setSelectedCates(selectedValues);
+                
+                    // Set categories as an array of objects with id
+                    const categoryObjects = selectedValues.map((id) => ({ id }));
+                    setValue("categories", categoryObjects); // Update the value in react-hook-form
+                  }}
                 >
                   {categories.map((category) => (
                     <MenuItem key={category.id} value={category.id}>{category.name}</MenuItem>

@@ -1,53 +1,48 @@
 import { FormControl, MenuItem, Select, Typography } from '@mui/material';
 import { alpha } from "@mui/material/styles";
 import React, { useState } from 'react';
-import ktm from '../../../assets/images/ktm.jpg';
 import "./index.css";
 
-const options = [
-    'Edit campaign',
-    'Remove campaign',
-];
-
-function OwnerProjectCard({ project }) {
-    const [selectedOption, setSelectedOption] = useState('');
+function OwnerProjectCard({ project, projectType }) {
+    const [selectedValue, setSelectedValue] = useState('');
 
     const handleChange = (event) => {
+        setSelectedValue(event.target.value);
     };
-
+    console.log(project);
     return (
         <div className="flex items-center rounded-md gap-[2rem]">
             <div className="w-[10rem] h-[10rem] bg-[#EAEAEA] flex justify-center items-center">
-                <img src={ktm} style={{ width: '10rem', height: '10rem', objectFit: 'cover', borderRadius: '5px' }} />
+                <img src={projectType == "Funding" ? project?.fundingFiles?.find(p => p.filetype == 2 && p.isDeleted == false).url : project?.marketplaceFiles?.find(p => p.fileType == 2 && p.isDeleted == false).url} style={{ width: '10rem', height: '10rem', objectFit: 'cover', borderRadius: '5px' }} />
             </div>
             <div className="flex-grow !w-[12rem] h-fit">
                 <div className="flex items-center mb-[0.5rem] gap-[1rem]">
-                    <Typography
-                        sx={{
-                            color: '#2F3645',
-                            width: '12rem',
-                            overflow: 'hidden',
-                            textOverflow: 'ellipsis',
-                            WebkitBoxOrient: 'vertical',
-                        }}
-                        className='user-project-card'
-                    >
-                        Hollow Knight
-                    </Typography>
+                    <a href={projectType == "Funding" ? `/funding-detail/${project.id}` : `/marketplace-detail/${project.id}`}>
+                        <Typography
+                            sx={{
+                                color: '#2F3645',
+                                width: '12rem',
+                                overflow: 'hidden',
+                                textOverflow: 'ellipsis',
+                                WebkitBoxOrient: 'vertical',
+                            }}
+                            className='user-project-card'
+                        >
+                            {project.name}
+                        </Typography>
+                    </a>
                     <div className='flex items-center'>
-                        <span className="ml-[1rem] bg-[#EAEAEA] text-[0.75rem] text-[#2F3645] px-[0.5rem] py-[0.25rem] rounded">
-                            Draft
-                        </span>
-                        <span className="ml-[1rem] bg-[#1BAA64] text-[0.75rem] text-[#EAEAEA] px-[0.5rem] py-[0.25rem] rounded">
-                            Funding
-                        </span>
-                        <span className="ml-[1rem] bg-[#FABC3F] text-[0.75rem] text-[#F5F7F8] px-[0.5rem] py-[0.25rem] rounded">
-                            Marketing
-                        </span>
+                        {projectType == "Funding" ?
+                            <span className="ml-[1rem] bg-[#1BAA64] text-[0.75rem] text-[#EAEAEA] px-[0.5rem] py-[0.25rem] rounded">
+                                Funding
+                            </span> : <span className="ml-[1rem] bg-[#FABC3F] text-[0.75rem] text-[#F5F7F8] px-[0.5rem] py-[0.25rem] rounded">
+                                Marketing
+                            </span>
+                        }
                     </div>
                 </div>
                 <Typography sx={{ color: '#2F3645', fontWeight: '600', fontSize: '1rem', mb: '1.25rem' }} >
-                    by <span className='text-[#1BAA64]'>Do yoo lim</span>
+                    by <span className='text-[#1BAA64]'>{project?.user.userName}</span>
                 </Typography>
                 <Typography
                     sx={{
@@ -61,7 +56,7 @@ function OwnerProjectCard({ project }) {
                         WebkitLineClamp: 2,
                     }}
                 >
-                    A beautiful and mysterious 2D adventure through a surreal world of insects and heroes. A game for PC, Mac, Xbox and Linux.
+                    {project.description}
                 </Typography>
             </div>
             <FormControl sx={{
@@ -75,12 +70,16 @@ function OwnerProjectCard({ project }) {
                 },
             }}>
                 <Select
-                    value={selectedOption}
+                    value={selectedValue}
                     onChange={handleChange}
                     displayEmpty
-                    renderValue={(selected) => {
-                        return selected.length === 0 ? <Typography>Action</Typography> : <Typography>{selected}</Typography>;
-                    }}
+                    renderValue={(value) =>
+                        value ? (
+                            <Typography>{value}</Typography>
+                        ) : (
+                            <Typography sx={{ color: 'var(--black)' }}>Action</Typography>
+                        )
+                    }
                     sx={{
                         backgroundColor: '#EAEAEA',
                         border: 'none !important',
@@ -92,8 +91,8 @@ function OwnerProjectCard({ project }) {
                             alignItems: 'center',
                             height: '2.5rem',
                         },
-                        "&:hover": {
-                            backgroundColor: alpha("#EAEAEA", 0.85),
+                        '&:hover': {
+                            backgroundColor: alpha('#EAEAEA', 0.85),
                         },
                         height: '2.5rem',
                     }}
@@ -107,11 +106,12 @@ function OwnerProjectCard({ project }) {
                         },
                     }}
                 >
-                    {options.map((option) => (
-                        <MenuItem key={option} value={option}>
-                            <Typography>{option}</Typography>
-                        </MenuItem>
-                    ))}
+                    <MenuItem value="edit" onClick={() => window.open(`/account/projects/update/${project.id}/basic-info`, '_blank')}>
+                        <Typography>Edit campaign</Typography>
+                    </MenuItem>
+                    <MenuItem value="remove">
+                        <Typography>Remove campaign</Typography>
+                    </MenuItem>
                 </Select>
             </FormControl>
         </div>

@@ -305,7 +305,7 @@ const ProjectDetail = () => {
                   <AutoAwesome />
                   <button
                     onClick={() =>
-                      navigate(`/account/projects/update/${id}/preview`)
+                      navigate(`/account/projects/update/${id}/basic-info`)
                     }
                     className="text-sm ml-4 text-white bg-gray-200/40 px-2 py-1 rounded backdrop-blur-3xl"
                   >

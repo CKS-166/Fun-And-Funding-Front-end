@@ -8,7 +8,7 @@ import NavigateButton from "../../../components/CreateProject/ProjectForm/Naviga
 import PackageModal from "./PackageModal"
 import fundingProjectApiInstace from "../../../utils/ApiInstance/fundingProjectApiInstance"
 import Cookies from "js-cookie";
-import {Backdrop, CircularProgress} from "@mui/material"
+import { Backdrop, CircularProgress } from "@mui/material"
 import Swal from "sweetalert2"
 const SetupDonatePackage = () => {
   const token = Cookies.get("_auth");
@@ -94,7 +94,7 @@ const SetupDonatePackage = () => {
     //append categories
     console.log(projectData.categories[0]);
     for (let i = 0; i < projectData.categories.length; i++) {
-    formData.append(`Categories[0].Id`, projectData.categories[i].id);
+      formData.append(`Categories[${i}].Id`, projectData.categories[i].id);
     }
     // Add other files (e.g., Funding Files)
     for (let i = 0; i < projectData.fundingFiles.length; i++) {
@@ -107,13 +107,13 @@ const SetupDonatePackage = () => {
     for (let pair of formData.entries()) {
       console.log(pair[0], pair[1]);
     }
-    
+
     try {
       setIsLoading(true);
-      const response = await fundingProjectApiInstace.post("",formData, {
+      const response = await fundingProjectApiInstace.post("", formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
-          'Authorization' : `Bearer ${token}`
+          'Authorization': `Bearer ${token}`
         },
       });
       console.log(response.data);
@@ -124,20 +124,21 @@ const SetupDonatePackage = () => {
         icon: "error"
       });
       console.error('Error creating project:', error);
-    }finally{
+    } finally {
       Swal.fire({
         title: `Your funding project request has been sent!`,
         text: "The waiting process can take 2-5 days. Thank you for your patience.Please check your email for more details.",
         icon: "success"
       });
       setIsLoading(false);
+      navigate("/account/projects")
     }
     console.log(projectData);
   }
 
   return (
     <>
-    <Backdrop sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }} open={false}>
+      <Backdrop sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }} open={false}>
         <CircularProgress color="inherit" />
       </Backdrop>
       <Paper elevation={1} className="bg-white w-full overflow-hidden]">

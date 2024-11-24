@@ -68,7 +68,7 @@ const FunFundingAppBar = () => {
   const projectMenu = [
     {
       label: "My Projects",
-      route: "/account/profile",
+      route: "/account/projects",
       icon: <FaFolderOpen style={{ fontSize: '1.25rem' }} />,
     },
     {

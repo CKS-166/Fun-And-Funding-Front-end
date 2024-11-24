@@ -339,7 +339,7 @@ function CheckoutCart() {
                             <Typography className="checkout-cart-title">
                                 Checkout cart
                             </Typography>
-                            <CheckoutGameTable order={order} handleDeleteCartItem={handleDeleteCartItem} handleAddCoupon={handleAddCoupon} handleRemoveCoupon={handleRemoveCoupon} onCouponNotification={(message, type) => handleCouponNotification(message, type)} />
+                            <CheckoutGameTable order={order} handleDeleteCartItem={handleDeleteCartItem} handleAddCoupon={handleAddCoupon} handleRemoveCoupon={handleRemoveCoupon} />
                         </Grid2>
                         <Grid2 size={4} sx={{ flexGrow: 1, position: "sticky", top: '2rem', zIndex: 10, alignSelf: 'flex-start' }}>
                             <Typography className='checkout-cart-title'>
@@ -489,21 +489,25 @@ function CheckoutCart() {
                                 <BrowseMarketingCard />
                                 <BrowseMarketingCard />
                             </div>
-                            <Button
-                                variant="contained"
-                                className='checkout-cart-more-button'
-                                endIcon={
-                                    <ArrowForwardOutlinedIcon
-                                        sx={{
-                                            fontSize: "1.5rem !important",
-                                            strokeWidth: "1",
-                                            stroke: "#F5F7F8",
-                                        }}
-                                    />
-                                }
-                            >
-                                See more games
-                            </Button>
+                            <div>
+                                <a href="/marketplace">
+                                    <Button
+                                        variant="contained"
+                                        className='checkout-cart-more-button !w-[15rem]'
+                                        endIcon={
+                                            <ArrowForwardOutlinedIcon
+                                                sx={{
+                                                    fontSize: "1.5rem !important",
+                                                    strokeWidth: "1",
+                                                    stroke: "#F5F7F8",
+                                                }}
+                                            />
+                                        }
+                                    >
+                                        See more games
+                                    </Button>
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>

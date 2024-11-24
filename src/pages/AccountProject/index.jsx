@@ -1,5 +1,4 @@
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { Accordion, AccordionDetails, AccordionSummary, Button, Divider, Paper, Typography } from '@mui/material';
+import { Button, Divider, Paper, Typography } from '@mui/material';
 import { alpha } from "@mui/material/styles";
 import Cookies from "js-cookie";
 import React, { useEffect, useState } from 'react';
@@ -10,6 +9,7 @@ import OwnerProjectCard from '../../components/UserProjectCard/OwnerProjectCard'
 import PublicProjectCard from '../../components/UserProjectCard/PublicProjectCard';
 import { useLoading } from "../../contexts/LoadingContext";
 import fundingProjectApiInstance from "../../utils/ApiInstance/fundingProjectApiInstance";
+import marketplaceProjectApiInstance from "../../utils/ApiInstance/marketplaceProjectApiInstance";
 import userApiInstance from "../../utils/ApiInstance/userApiInstance";
 
 function AccountProject() {
@@ -17,25 +17,29 @@ function AccountProject() {
     const token = Cookies.get("_auth");
     const [user, setUser] = useState({});
     const [role, setRole] = useState("Backer");
-    const [gameOwnerProject, setGameOwnerProject] = useState([]);
+    const [gameOwnerFundingProject, setGameOwnerFundingProject] = useState([]);
+    const [gameOwnerMarketplaceProject, setGameOwnerMarketplaceProject] = useState([]);
     const [backerDonationProject, setBackerDonationProject] = useState([]);
-    const [searchOwnerProject, setSearchOwnerProject] = useState('');
+    const [backerPurchaseProject, setBackerPurchaseProject] = useState([]);
+    const [searchOwnerFundingProject, setSearchOwnerFundingProject] = useState('');
     const [searchDonationProject, setSearchDonationProject] = useState('');
+    const [searchOwnerMarketplaceProject, setSearchOwnerMarketplaceProject] = useState('');
+    const [searchPurchaseProject, setSearchPurchaseProject] = useState('');
     const [selectedSortOptions, setSelectedSortOptions] = useState([]);
 
     useEffect(() => {
         setIsLoading(true);
         fetchUser();
-        fetchGameOwnerProject();
+        fetchGameOwnerFundingProject();
         fetchBackerDonationProject();
         setIsLoading(false);
     }, [token]);
 
     useEffect(() => {
         setIsLoading(true);
-        fetchGameOwnerProject(searchOwnerProject);
+        fetchGameOwnerFundingProject(searchOwnerFundingProject);
         setIsLoading(false);
-    }, [searchOwnerProject]);
+    }, [searchOwnerFundingProject]);
 
     useEffect(() => {
         setIsLoading(true);
@@ -43,8 +47,20 @@ function AccountProject() {
         setIsLoading(false);
     }, [searchDonationProject]);
 
+    useEffect(() => {
+        setIsLoading(true);
+        fetchGameOwnerMarketplaceProject(searchOwnerMarketplaceProject);
+        setIsLoading(false);
+    }, [searchOwnerMarketplaceProject]);
+
+    useEffect(() => {
+        setIsLoading(true);
+        fetchBackerPurchaseProject(searchPurchaseProject);
+        setIsLoading(false);
+    }, [searchPurchaseProject]);
+
     const handleOwnerProjectSearchChange = (value) => {
-        setSearchOwnerProject(value);
+        setSearchOwnerFundingProject(value);
     };
 
     const handleDonationProjectSearchChange = (value) => {
@@ -88,7 +104,7 @@ function AccountProject() {
         }
     };
 
-    const fetchGameOwnerProject = async (searchOwnerProject) => {
+    const fetchGameOwnerFundingProject = async (searchOwnerFundingProject) => {
         try {
             const res = await fundingProjectApiInstance.get(`/game-owner-projects`, {
                 headers: { Authorization: `Bearer ${token}` },
@@ -98,8 +114,7 @@ function AccountProject() {
                 }
             });
             if (res.data._statusCode == 200) {
-                console.log(res.data._data.items);
-                setGameOwnerProject(res.data._data.items);
+                setGameOwnerFundingProject(res.data._data.items);
             }
         } catch (error) {
             console.log(error);
@@ -116,7 +131,42 @@ function AccountProject() {
                 }
             });
             if (res.data._statusCode == 200) {
-                setBackerDonationProject(res.data._data);
+                setBackerDonationProject(res.data._data.items);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    const fetchGameOwnerMarketplaceProject = async (searchOwnerMarketplaceProject) => {
+        try {
+            const res = await marketplaceProjectApiInstance.get(`/game-owner-projects`, {
+                headers: { Authorization: `Bearer ${token}` },
+                params: {
+                    pageSize: 999999,
+                    pageIndex: 1,
+                }
+            });
+            if (res.data._statusCode == 200) {
+                setGameOwnerMarketplaceProject(res.data._data.items);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    const fetchBackerPurchaseProject = async (searchPurchaseProject) => {
+        try {
+            const res = await marketplaceProjectApiInstance.get(`/backer-purchase-projects`, {
+                headers: { Authorization: `Bearer ${token}` },
+                params: {
+                    pageSize: 999999,
+                    pageIndex: 1,
+                }
+            });
+            if (res.data._statusCode == 200) {
+                console.log(res.data._data)
+                setBackerPurchaseProject(res.data._data.items);
             }
         } catch (error) {
             console.log(error);
@@ -125,83 +175,131 @@ function AccountProject() {
 
     return (
         <div>
-            {role == "GameOwner" &&
-                <Accordion defaultExpanded elevation={3} sx={{ mb: '2rem', borderRadius: '0.25rem !important', backgroundColor: '#F5F7F8', px: '1rem' }}>
-                    <AccordionSummary
-                        expandIcon={<ExpandMoreIcon />}
-                        aria-controls="panel1-content"
-                        id="panel1-header"
-                    >
-                        <Typography sx={{ fontWeight: '700', fontSize: '1.25rem' }}>Dashboard</Typography>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                        <Typography>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-                            malesuada lacus ex, sit amet blandit leo lobortis eget.
-                        </Typography>
-                    </AccordionDetails>
-                </Accordion>
-            }
-            {role == "GameOwner" ? <Paper elevation={3} sx={{ borderRadius: '0.25rem !important', px: '1rem', height: 'fit-content', backgroundColor: '#F5F7F8', mb: '2rem', pb: '1rem' }}>
-                <div className='py-[1.5rem] mx-[1rem]'>
-                    <Typography sx={{ fontWeight: '700', fontSize: '1.25rem', mb: '2rem' }}>Your funding Project</Typography>
-                    <div className='flex flex-row justify-between gap-[1rem] mb-[2rem]'>
-                        <SearchBar onSearchChange={handleOwnerProjectSearchChange} />
-                        <Button sx={{
-                            height: '2.5rem',
-                            backgroundColor: '#EAEAEA',
-                            boxShadow: '0.4rem',
-                            p: '0.75rem',
-                            color: '#2F3645',
-                            "&:hover": {
-                                backgroundColor: alpha("#EAEAEA", 0.85),
-                            },
-                            letterSpacing: '0.5px',
-                        }}>
-                            <FaSliders size={"1rem"} style={{ color: '#2F3645' }} />
-                        </Button>
-                        <SortDropdown options={sortOptions} onValueChange={handleSortChange} />
-                    </div>
-                    {gameOwnerProject != null && gameOwnerProject.length > 0 ? gameOwnerProject.map((project, index) => (
-                        <div key={index}>
-                            <OwnerProjectCard project={project} projectType={"Funding"} />
-                            {index !== gameOwnerProject.length - 1 && (
-                                <Divider sx={{ my: '1.5rem' }} />
-                            )}
+            {role == "GameOwner" ? <>
+                <Paper elevation={3} sx={{ borderRadius: '0.25rem !important', px: '1rem', height: 'fit-content', backgroundColor: '#F5F7F8', mb: '2rem', pb: '1rem' }}>
+                    <div className='py-[1.5rem] mx-[1rem]'>
+                        <Typography sx={{ fontWeight: '700', fontSize: '1.25rem', mb: '2rem' }}>Your funding Project</Typography>
+                        <div className='flex flex-row justify-between gap-[1rem] mb-[2rem]'>
+                            <SearchBar onSearchChange={handleOwnerProjectSearchChange} />
+                            <Button sx={{
+                                height: '2.5rem',
+                                backgroundColor: '#EAEAEA',
+                                boxShadow: '0.4rem',
+                                p: '0.75rem',
+                                color: '#2F3645',
+                                "&:hover": {
+                                    backgroundColor: alpha("#EAEAEA", 0.85),
+                                },
+                                letterSpacing: '0.5px',
+                            }}>
+                                <FaSliders size={"1rem"} style={{ color: '#2F3645' }} />
+                            </Button>
+                            <SortDropdown options={sortOptions} onValueChange={handleSortChange} />
                         </div>
-                    )) : <Typography>Nothing to show</Typography>}
-                </div>
-            </Paper> : <Paper elevation={3} sx={{ borderRadius: '0.25rem !important', px: '1rem', height: 'fit-content', backgroundColor: '#F5F7F8', pb: '1rem', mb: '2rem' }}>
-                <div className='py-[1.5rem] mx-[1rem]'>
-                    <Typography sx={{ fontWeight: '700', fontSize: '1.25rem', mb: '2rem' }}>All donated funding projects</Typography>
-                    <div className='flex flex-row justify-between gap-[1rem] mb-[2rem]'>
-                        <SearchBar onSearchChange={handleDonationProjectSearchChange} />
-                        <Button sx={{
-                            height: '2.5rem',
-                            backgroundColor: '#EAEAEA',
-                            boxShadow: '0.4rem',
-                            p: '0.75rem',
-                            color: '#2F3645',
-                            "&:hover": {
-                                backgroundColor: alpha("#EAEAEA", 0.85),
-                            },
-                            letterSpacing: '0.5px',
-                        }}>
-                            <FaSliders size={"1rem"} style={{ color: '#2F3645' }} />
-                        </Button>
-                        <SortDropdown options={sortOptions} onValueChange={handleSortChange} />
-                    </div>
-                    {backerDonationProject != null && backerDonationProject.length > 0 ?
-                        backerDonationProject.map((project, index) => (
+                        {gameOwnerFundingProject != null && gameOwnerFundingProject.length > 0 ? gameOwnerFundingProject.map((project, index) => (
                             <div key={index}>
-                                <PublicProjectCard project={project} projectType={"Funding"} />
-                                {index !== backerDonationProject.length - 1 && (
+                                <OwnerProjectCard project={project} projectType={"Funding"} />
+                                {index !== gameOwnerFundingProject.length - 1 && (
                                     <Divider sx={{ my: '1.5rem' }} />
                                 )}
                             </div>
                         )) : <Typography>Nothing to show</Typography>}
-                </div>
-            </Paper>}
+                    </div>
+                </Paper>
+                <Paper elevation={3} sx={{ borderRadius: '0.25rem !important', px: '1rem', height: 'fit-content', backgroundColor: '#F5F7F8', mb: '2rem', pb: '1rem' }}>
+                    <div className='py-[1.5rem] mx-[1rem]'>
+                        <Typography sx={{ fontWeight: '700', fontSize: '1.25rem', mb: '2rem' }}>Your Marketplace Project</Typography>
+                        <div className='flex flex-row justify-between gap-[1rem] mb-[2rem]'>
+                            <SearchBar onSearchChange={handleOwnerProjectSearchChange} />
+                            <Button sx={{
+                                height: '2.5rem',
+                                backgroundColor: '#EAEAEA',
+                                boxShadow: '0.4rem',
+                                p: '0.75rem',
+                                color: '#2F3645',
+                                "&:hover": {
+                                    backgroundColor: alpha("#EAEAEA", 0.85),
+                                },
+                                letterSpacing: '0.5px',
+                            }}>
+                                <FaSliders size={"1rem"} style={{ color: '#2F3645' }} />
+                            </Button>
+                            <SortDropdown options={sortOptions} onValueChange={handleSortChange} />
+                        </div>
+                        {gameOwnerMarketplaceProject != null && gameOwnerMarketplaceProject.length > 0 ? gameOwnerMarketplaceProject.map((project, index) => (
+                            <div key={index}>
+                                <OwnerProjectCard project={project} projectType={"Marketplace"} />
+                                {index !== gameOwnerMarketplaceProject.length - 1 && (
+                                    <Divider sx={{ my: '1.5rem' }} />
+                                )}
+                            </div>
+                        )) : <Typography>Nothing to show</Typography>}
+                    </div>
+                </Paper>
+            </> : <>
+                <Paper elevation={3} sx={{ borderRadius: '0.25rem !important', px: '1rem', height: 'fit-content', backgroundColor: '#F5F7F8', pb: '1rem', mb: '2rem' }}>
+                    <div className='py-[1.5rem] mx-[1rem]'>
+                        <Typography sx={{ fontWeight: '700', fontSize: '1.25rem', mb: '2rem' }}>All donated funding projects</Typography>
+                        <div className='flex flex-row justify-between gap-[1rem] mb-[2rem]'>
+                            <SearchBar onSearchChange={handleDonationProjectSearchChange} />
+                            <Button sx={{
+                                height: '2.5rem',
+                                backgroundColor: '#EAEAEA',
+                                boxShadow: '0.4rem',
+                                p: '0.75rem',
+                                color: '#2F3645',
+                                "&:hover": {
+                                    backgroundColor: alpha("#EAEAEA", 0.85),
+                                },
+                                letterSpacing: '0.5px',
+                            }}>
+                                <FaSliders size={"1rem"} style={{ color: '#2F3645' }} />
+                            </Button>
+                            <SortDropdown options={sortOptions} onValueChange={handleSortChange} />
+                        </div>
+                        {backerDonationProject != null && backerDonationProject.length > 0 ?
+                            backerDonationProject.map((project, index) => (
+                                <div key={index}>
+                                    <PublicProjectCard project={project} projectType={"Funding"} />
+                                    {index !== backerDonationProject.length - 1 && (
+                                        <Divider sx={{ my: '1.5rem' }} />
+                                    )}
+                                </div>
+                            )) : <Typography>Nothing to show</Typography>}
+                    </div>
+                </Paper>
+                <Paper elevation={3} sx={{ borderRadius: '0.25rem !important', px: '1rem', height: 'fit-content', backgroundColor: '#F5F7F8', pb: '1rem', mb: '2rem' }}>
+                    <div className='py-[1.5rem] mx-[1rem]'>
+                        <Typography sx={{ fontWeight: '700', fontSize: '1.25rem', mb: '2rem' }}>All purchased marketplace projects</Typography>
+                        <div className='flex flex-row justify-between gap-[1rem] mb-[2rem]'>
+                            <SearchBar onSearchChange={handleDonationProjectSearchChange} />
+                            <Button sx={{
+                                height: '2.5rem',
+                                backgroundColor: '#EAEAEA',
+                                boxShadow: '0.4rem',
+                                p: '0.75rem',
+                                color: '#2F3645',
+                                "&:hover": {
+                                    backgroundColor: alpha("#EAEAEA", 0.85),
+                                },
+                                letterSpacing: '0.5px',
+                            }}>
+                                <FaSliders size={"1rem"} style={{ color: '#2F3645' }} />
+                            </Button>
+                            <SortDropdown options={sortOptions} onValueChange={handleSortChange} />
+                        </div>
+                        {backerPurchaseProject != null && backerPurchaseProject.length > 0 ?
+                            backerPurchaseProject.map((project, index) => (
+                                <div key={index}>
+                                    <PublicProjectCard project={project} projectType={"Marketplace"} />
+                                    {index !== backerPurchaseProject.length - 1 && (
+                                        <Divider sx={{ my: '1.5rem' }} />
+                                    )}
+                                </div>
+                            )) : <Typography>Nothing to show</Typography>}
+                    </div>
+                </Paper>
+            </>}
         </div>
     )
 }

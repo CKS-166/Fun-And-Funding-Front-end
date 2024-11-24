@@ -1,6 +1,7 @@
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { Button, Collapse, Container, Grid2, IconButton, List, ListItem, ListItemText, Typography } from '@mui/material';
+import Cookies from "js-cookie";
 import React, { useEffect, useState } from 'react';
 import { Outlet, useLocation } from 'react-router';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -38,6 +39,7 @@ const notify = (message, type) => {
 };
 
 function UpdateFundingProjectLayout() {
+    const token = Cookies.get("_auth");
     const { id } = useParams();
     const navigate = useNavigate();
     const location = useLocation();
@@ -125,6 +127,7 @@ function UpdateFundingProjectLayout() {
             const response = await fundingProjectApiInstace.put('', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
+                    Authorization: `Bearer ${token}`,
                 },
             });
 
@@ -134,9 +137,10 @@ function UpdateFundingProjectLayout() {
                 setIsEdited(false);
             } else {
                 console.error(`Unexpected status code: ${response.error}`);
+                notify(response.error || "An error occurred", "error");
             }
         } catch (error) {
-            console.error('Error saving project:', error);
+            notify(error.response?.data?.message || error.message || "An error occurred", "error");
         } finally {
             setIsLoading(false);
             setLoadingStatus(0);

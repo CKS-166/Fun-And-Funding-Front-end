@@ -3,6 +3,20 @@ import { alpha } from "@mui/material/styles";
 import React, { useState } from 'react';
 import "./index.css";
 
+const projectStatus = {
+    0: { name: "Deleted", color: "var(--red)" },
+    1: { name: "Pending", color: "#FFC107" },
+    2: { name: "Processing", color: "#2196F3" },
+    3: { name: "Funded Successful", color: "var(--primary-green)" },
+    4: { name: "Successful", color: "var(--primary-green)" },
+    5: { name: "Failed", color: "var(--red)" },
+    6: { name: "Rejected", color: "var(--red)" },
+    7: { name: "Approved", color: "var(--primary-green)" },
+    8: { name: "Withdrawed", color: "#9C27B0" },
+    9: { name: "Refunded", color: "#FF5722" },
+    10: { name: "Reported", color: "#E91E63" },
+};
+
 function OwnerProjectCard({ project, projectType }) {
     const [selectedValue, setSelectedValue] = useState('');
 
@@ -12,7 +26,7 @@ function OwnerProjectCard({ project, projectType }) {
     console.log(project);
     return (
         <div className="flex items-center rounded-md gap-[2rem]">
-            <div className="w-[10rem] h-[10rem] bg-[#EAEAEA] flex justify-center items-center">
+            <div className="w-[10rem] h-[10rem] bg-[#EAEAEA] flex justify-center items-center rounded-lg">
                 <img src={projectType == "Funding" ? project?.fundingFiles?.find(p => p.filetype == 2 && p.isDeleted == false).url : project?.marketplaceFiles?.find(p => p.fileType == 2 && p.isDeleted == false).url} style={{ width: '10rem', height: '10rem', objectFit: 'cover', borderRadius: '5px' }} />
             </div>
             <div className="flex-grow !w-[12rem] h-fit">
@@ -32,13 +46,10 @@ function OwnerProjectCard({ project, projectType }) {
                         </Typography>
                     </a>
                     <div className='flex items-center'>
-                        {projectType == "Funding" ?
-                            <span className="ml-[1rem] bg-[#1BAA64] text-[0.75rem] text-[#EAEAEA] px-[0.5rem] py-[0.25rem] rounded">
-                                Funding
-                            </span> : <span className="ml-[1rem] bg-[#FABC3F] text-[0.75rem] text-[#F5F7F8] px-[0.5rem] py-[0.25rem] rounded">
-                                Marketing
-                            </span>
-                        }
+                        <span className="ml-[1rem] bg-[#1BAA64] text-[0.75rem] text-[#EAEAEA] px-[0.5rem] py-[0.25rem] rounded font-semibold"
+                            style={{ backgroundColor: projectStatus[project.status].color }}>
+                            {projectStatus[project.status].name}
+                        </span>
                     </div>
                 </div>
                 <Typography sx={{ color: '#2F3645', fontWeight: '600', fontSize: '1rem', mb: '1.25rem' }} >
@@ -75,7 +86,7 @@ function OwnerProjectCard({ project, projectType }) {
                     displayEmpty
                     renderValue={(value) =>
                         value ? (
-                            <Typography>{value}</Typography>
+                            <Typography sx={{ color: 'var(--black)' }}>Action</Typography>
                         ) : (
                             <Typography sx={{ color: 'var(--black)' }}>Action</Typography>
                         )
@@ -112,6 +123,10 @@ function OwnerProjectCard({ project, projectType }) {
                     <MenuItem value="remove">
                         <Typography>Remove campaign</Typography>
                     </MenuItem>
+                    {project.status == 4 &&
+                        <MenuItem value="publish" onClick={() => window.open(`/request-marketplace-project/${project.id}/basic-info`, '_blank')}>
+                            <Typography>Publish to marketplace</Typography>
+                        </MenuItem>}
                 </Select>
             </FormControl>
         </div>

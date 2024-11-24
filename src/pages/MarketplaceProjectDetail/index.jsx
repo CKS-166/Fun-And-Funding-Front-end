@@ -2,7 +2,6 @@
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import ReportGmailerrorredIcon from "@mui/icons-material/ReportGmailerrorred";
 import { TabContext, TabList } from "@mui/lab";
-import ReportForm from "../../components/ReportPopUp";
 import {
   Avatar,
   Box,
@@ -31,6 +30,7 @@ import MarketplaceProjectImage from "../../components/MarketplaceProjectImage";
 import MarketplaceProjectIntro from "../../components/MarketplaceProjectIntro";
 import MarketplaceUpdateContent from "../../components/MarketplaceUpdateContent";
 import AuthDialog from "../../components/Popup";
+import ReportForm from "../../components/ReportPopUp";
 import { useCart } from "../../contexts/CartContext";
 import { useLoading } from "../../contexts/LoadingContext";
 import cartApiInstance from "../../utils/ApiInstance/cartApiInstance";
@@ -72,7 +72,7 @@ function MarketplaceProjectDetail() {
 
   const [marketplaceProject, setMarketplaceProject] = useState({});
   const [backgroundImageUrl, setBackgroundImageUrl] = useState("");
-  const [tabValue, setTabValue] = useState("2");
+  const [tabValue, setTabValue] = useState("1");
   const [saniIntro, setSaniIntro] = useState("");
   const [liked, isLiked] = useState(false);
   const [comment, setComment] = useState("");
@@ -132,6 +132,7 @@ function MarketplaceProjectDetail() {
         notify("Add to cart successfully", "success");
       }
     } catch (error) {
+      console.log(error);
       notify(
         error.response?.data?.message || error.message || "An error occurred",
         "error"
@@ -565,9 +566,8 @@ function MarketplaceProjectDetail() {
                     value="1"
                   />
                   <Tab
-                    label={`Comments (${
-                      commentList != null ? commentList.length : 0
-                    })`}
+                    label={`Comments (${commentList != null ? commentList.length : 0
+                      })`}
                     className="marketplace-project-tab"
                     value="2"
                   />
@@ -693,7 +693,7 @@ function MarketplaceProjectDetail() {
                                       fontSize: "0.75rem",
                                     }}
                                     onClick={() => handleCommentProject()}
-                                    disabled={sendLoading}
+                                    disabled={sendLoading || comment.trim() === ""}
                                   >
                                     {sendLoading ? (
                                       <CircularProgress

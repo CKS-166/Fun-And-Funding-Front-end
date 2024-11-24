@@ -1,8 +1,9 @@
 import ArrowForwardOutlinedIcon from "@mui/icons-material/ArrowForwardOutlined";
 import DownloadIcon from '@mui/icons-material/Download';
-import { Button, Divider, Paper, Tooltip, Typography } from '@mui/material';
+import { Box, Button, Divider, Modal, Paper, Tooltip, Typography } from '@mui/material';
 import Cookies from "js-cookie";
 import React, { useEffect, useState } from 'react';
+import { FaKey } from "react-icons/fa";
 import { FaMoneyBillTransfer } from "react-icons/fa6";
 import { HiOutlineHome } from "react-icons/hi2";
 import { TbListDetails } from "react-icons/tb";
@@ -50,12 +51,24 @@ function CheckoutSuccess() {
     const navigate = useNavigate();
     const [order, setOrder] = useState(null);
     const [detailList, setDetailList] = useState([]);
+    const [open, setOpen] = useState(false);
+    const [selectedKey, setSelectedKey] = useState("");
+    const [clipboardCopied, setClipboardCopied] = useState(false);
 
     useEffect(() => {
         if (isLogined) {
             fetchOrder();
         }
     }, [isLogined, id]);
+
+    const handleDownload = (url) => {
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = "";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
 
     const fetchOrder = async () => {
         try {
@@ -87,8 +100,24 @@ function CheckoutSuccess() {
         return new Intl.NumberFormat('de-DE').format(price);
     };
 
+    const handleOpen = (key) => {
+        setSelectedKey(key);
+        setOpen(true);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+        setSelectedKey("");
+        setClipboardCopied(false);
+    };
+
+    const handleCopy = () => {
+        navigator.clipboard.writeText(selectedKey);
+        setClipboardCopied(true);
+    };
+
     return (
-        <div>
+        <>
             <div className='relative-container'>
                 <div className="success-background">
                     <img src={Confetti} alt="Confetti Background" />
@@ -135,13 +164,13 @@ function CheckoutSuccess() {
                                             detailList.map((item, index) => (
                                                 <div
                                                     key={index}
-                                                    className="border-[2px] border-[var(--grey)] pl-[1rem] pr-[2rem] py-[1rem] flex flex-row justify-between items-center rounded-[0.625rem] gap-[4rem] w-[40rem]"
+                                                    className="border-[2px] border-[var(--light-grey)] pl-[1rem] pr-[2rem] py-[1rem] flex flex-row justify-between items-center rounded-[0.625rem] gap-[1rem] w-[40rem]"
                                                     style={{
                                                         backgroundColor: 'var(--white)',
                                                         marginBottom: index === detailList.length - 1 ? 0 : '1rem',
                                                     }}
                                                 >
-                                                    <div className="!flex-grow-0 flex flex-row justify-between items-center rounded-[0.625rem] gap-[0.5rem] w-[25rem]">
+                                                    <div className="!flex-grow-0 flex flex-row justify-start items-center rounded-[0.625rem] gap-[2rem] w-[25rem]">
                                                         <div className="flex-shrink-0">
                                                             <img
                                                                 className="w-[8rem] h-[8rem] object-cover rounded-[0.25rem] flex-shrink-0"
@@ -170,7 +199,7 @@ function CheckoutSuccess() {
                                                                 <Typography
                                                                     sx={{
                                                                         fontSize: '1rem',
-                                                                        fontWeight: '600',
+                                                                        fontWeight: '700',
                                                                         color: 'var(--primary-green)',
                                                                     }}
                                                                 >
@@ -183,7 +212,23 @@ function CheckoutSuccess() {
                                                                         color: 'var(--black)',
                                                                     }}
                                                                 >
-                                                                    Game unlock key: <br /><span className="font-bold">{item.keyString}</span>
+                                                                    Game unlock key: <br />
+                                                                    <Button
+                                                                        variant="outlined"
+                                                                        sx={{ height: '2rem', mt: '0.5rem', textTransform: 'none', color: 'var(--primary-green)', borderColor: 'var(--primary-green)', fontSize: '0.75rem' }}
+                                                                        startIcon={
+                                                                            <FaKey
+                                                                                sx={{
+                                                                                    fontSize: "1rem !important",
+                                                                                    strokeWidth: "1",
+                                                                                    stroke: "#F5F7F8",
+                                                                                }}
+                                                                            />
+                                                                        }
+                                                                        onClick={() => handleOpen(item.keyString)}
+                                                                    >
+                                                                        Click To Show
+                                                                    </Button>
                                                                 </Typography>
                                                             </div>
                                                         </div>
@@ -192,6 +237,10 @@ function CheckoutSuccess() {
                                                         <Button
                                                             variant="outlined"
                                                             className="outline-download-button"
+                                                            onClick={() => {
+                                                                const fileUrl = item.gameFile;
+                                                                if (fileUrl) handleDownload(fileUrl);
+                                                            }}
                                                         >
                                                             <DownloadIcon
                                                                 sx={{
@@ -210,38 +259,40 @@ function CheckoutSuccess() {
                         </div>
                     }
                     <div className="flex flex-row justify-center items-center gap-[2rem] mb-[2rem]">
-                        <Button
-                            variant="outlined"
-                            className="outline-button"
-                            startIcon={
-                                <HiOutlineHome
-                                    sx={{
-                                        fontSize: "1.5rem !important",
-                                        strokeWidth: "1",
-                                        stroke: "#F5F7F8",
-                                    }}
-                                />
-                            }
-                            onClick={() => navigate('/home')}
-                        >
-                            Back to Home
-                        </Button>
-                        <Button
-                            variant="contained"
-                            className='checkout-success-button'
-                            startIcon={
-                                <TbListDetails
-                                    sx={{
-                                        fontSize: "1.5rem !important",
-                                        strokeWidth: "1",
-                                        stroke: "#F5F7F8",
-                                    }}
-                                />
-                            }
-                            onClick={() => navigate('/home')}
-                        >
-                            See more details
-                        </Button>
+                        <a href='/home'>
+                            <Button
+                                variant="outlined"
+                                className="outline-button"
+                                startIcon={
+                                    <HiOutlineHome
+                                        sx={{
+                                            fontSize: "1.5rem !important",
+                                            strokeWidth: "1",
+                                            stroke: "#F5F7F8",
+                                        }}
+                                    />
+                                }
+                            >
+                                Back to Home
+                            </Button>
+                        </a>
+                        <a href='/account/orders'>
+                            <Button
+                                variant="contained"
+                                className='checkout-success-button'
+                                startIcon={
+                                    <TbListDetails
+                                        sx={{
+                                            fontSize: "1.5rem !important",
+                                            strokeWidth: "1",
+                                            stroke: "#F5F7F8",
+                                        }}
+                                    />
+                                }
+                            >
+                                See more details
+                            </Button>
+                        </a>
                     </div>
                 </div>
             </div >
@@ -274,7 +325,81 @@ function CheckoutSuccess() {
                     </Button>
                 </div>
             </div>
-        </div >
+            <Modal
+                open={open}
+                onClose={handleClose}
+                aria-labelledby="api-key-modal-title"
+                aria-describedby="api-key-modal-description"
+            >
+                <Box
+                    sx={{
+                        position: "absolute",
+                        top: "50%",
+                        left: "50%",
+                        transform: "translate(-50%, -50%)",
+                        width: 400,
+                        bgcolor: "background.paper",
+                        boxShadow: 24,
+                        px: 4,
+                        py: 3,
+                        borderRadius: 2,
+                    }}
+                >
+                    <Box
+                        sx={{
+                            display: "flex",
+                            justifyContent: "flex-start",
+                            alignItems: "center",
+                            mb: 2,
+                        }}
+                    >
+                        <Typography sx={{ fontSize: '1.5rem', fontWeight: '600', mb: '1rem' }}>
+                            Digital Key Generated
+                        </Typography>
+                    </Box>
+                    <Typography id="api-key-modal-description" sx={{ mb: '1rem' }}>
+                        Use your Digital keys securely. Do not share them or embed them in code
+                        the public can view.
+                    </Typography>
+                    <Box
+                        sx={{
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "space-between",
+                            backgroundColor: "#f5f5f5",
+                            padding: "0.5rem 1rem",
+                            borderRadius: "4px",
+                            mb: 2,
+                        }}
+                    >
+                        <Typography
+                            sx={{
+                                fontFamily: "monospace",
+                                fontSize: "0.875rem",
+                                overflow: "hidden",
+                                textOverflow: "ellipsis",
+                                whiteSpace: "nowrap",
+                            }}
+                        >
+                            {selectedKey}
+                        </Typography>
+                        <Button
+                            onClick={handleCopy}
+                            variant="outlined"
+                            sx={{
+                                ml: 2,
+                                textTransform: "none",
+                                color: 'var(--primary-green)',
+                                borderColor: 'var(--primary-green)'
+                            }}
+                        >
+                            Copy
+                        </Button>
+                    </Box>
+                    <Typography sx={{ fontSize: '0.875rem', color: 'var(--primary-green)', display: clipboardCopied ? 'block' : 'none', fontWeight: '600' }}>Digital Key copied to clipboard!</Typography>
+                </Box>
+            </Modal>
+        </>
     );
 }
 

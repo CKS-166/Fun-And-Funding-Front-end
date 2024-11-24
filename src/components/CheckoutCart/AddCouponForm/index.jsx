@@ -44,7 +44,7 @@ const notify = (message, type) => {
     }
 };
 
-function AddCouponForm({ marketplaceProject, open, handleCloseCoupon, handleAddCoupon, onCouponNotification }) {
+function AddCouponForm({ marketplaceProject, open, handleCloseCoupon, handleAddCoupon }) {
     const [couponSending, isCouponSending] = useState(false);
     const [sendingSuccess, isSendingSuccess] = useState(false);
     const [couponKey, setCouponKey] = useState("")
@@ -56,12 +56,12 @@ function AddCouponForm({ marketplaceProject, open, handleCloseCoupon, handleAddC
             isSendingSuccess(true);
             isCouponSending(false);
             setTimeout(() => {
-                onCouponNotification("Coupon applied successfully", "success");
+
                 isSendingSuccess(false);
                 handleCloseCoupon();
             }, 100);
         } else {
-            notify(`Error: ${status.message}`, "error");
+            notify(`${status.message}`, "error");
             isCouponSending(false);
         }
     };

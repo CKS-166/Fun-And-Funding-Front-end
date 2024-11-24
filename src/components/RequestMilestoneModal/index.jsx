@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
-import { Modal, Box, Typography, Button, Stack, Alert } from '@mui/material';
+import { Modal, Box, Typography, Button, Stack, Alert, TextField } from '@mui/material';
 import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
@@ -12,6 +12,7 @@ import zIndex from '@mui/material/styles/zIndex';
 import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import utc from "dayjs/plugin/utc";
+import fundingProjectApiInstace from '../../utils/ApiInstance/fundingProjectApiInstance';
 const RequestMilestoneModal = ({ open, handleClose, milestone, projectId, handleCloseBackdrop }) => {
   const modalStyle = {
     position: "absolute",
@@ -23,10 +24,31 @@ const RequestMilestoneModal = ({ open, handleClose, milestone, projectId, handle
     boxShadow: 24,
     p: 4,
     borderRadius: "8px",
-    zIndex : 9999
+    zIndex: 9999,
+
   };
   const [startDate, setStartDate] = useState(null);
   const [alert, setAlert] = useState(false);
+  const [pmIntro, setPmIntro] = useState("")
+  const [pmTitle, setPmTitle] = useState("")
+  const [project, setProject] = useState(null);
+  const [totalAmount, setTotalAmount] = useState()
+  useEffect(() => {
+    const fetchProject = async () => {
+      try {
+        const response = await fundingProjectApiInstace.get(`/${projectId}`);
+        setProject(response.data._data);
+        setTotalAmount(project.balance * milestone.disbursementPercentage)
+      } catch (err) {
+        console.log(err.message || "Something went wrong");
+      }
+    };
+
+    if (projectId) {
+      fetchProject();
+    }
+  }, [projectId]);
+
 
   const handleSubmit = () => {
     dayjs.extend(utc);
@@ -39,35 +61,38 @@ const RequestMilestoneModal = ({ open, handleClose, milestone, projectId, handle
     const createdDate = dayjs.utc(startDate.format("YYYY-MM-DD")).toISOString();
     console.log(createdDate);
     try {
-      projectMilestoneApiInstance.post("",{
+      projectMilestoneApiInstance.post("", {
         "createdDate": createdDate,
         "status": 0,
         "milestoneId": milestone.id,
-        "fundingProjectId": projectId
+        "fundingProjectId": projectId,
+        "title": pmTitle,
+        "introduction": pmIntro,
+        // "totalAmount": totalAmount
       })
-      .then(res => {
-        console.log(res);
-        if(res.data._isSuccess) {
-          handleCloseBackdrop && handleCloseBackdrop();
-          Swal.fire({
-            title: `Request for ${milestone.milestoneName} sent!`,
-            text: "The waiting process can take 2-5 days. Thank you for your patience.Please check your email for more details.",
-            icon: "success"
-          });
+        .then(res => {
+          console.log(res);
+          if (res.data._isSuccess) {
+            handleCloseBackdrop && handleCloseBackdrop();
+            Swal.fire({
+              title: `Request for ${milestone.milestoneName} sent!`,
+              text: "The waiting process can take 2-5 days. Thank you for your patience.Please check your email for more details.",
+              icon: "success"
+            });
+            handleClose();
+          } else {
+            toast.warn(res.data._message[0])
+          }
+        })
+        .catch(error => {
           handleClose();
-        }else{
-          toast.warn(res.data._message[0])
-        }
-      })
-      .catch(error => {
-        handleClose();
-        console.log(error)
-        Swal.fire({
-          title: "Error",
-          text: error.response.data.message,
-          icon: "error"
+          console.log(error)
+          Swal.fire({
+            title: "Error",
+            text: error.response.data.message,
+            icon: "error"
+          });
         });
-      });
     } catch (error) {
       console.log(error);
       Swal.fire({
@@ -83,11 +108,11 @@ const RequestMilestoneModal = ({ open, handleClose, milestone, projectId, handle
   return (
     <Modal open={open} onClose={handleClose} sx={{ margin: '20px 0' }}>
       <Box sx={modalStyle}>
-      <ToastContainer />
-        <Typography variant="h5" gutterBottom 
-        sx={{display :'flex', alignItems: 'center', justifyContent: 'space-between'}}>
+        <ToastContainer />
+        <Typography variant="h5" gutterBottom
+          sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <span>{milestone.milestoneName}</span>
-          <IoMdClose onClick={handleClose} style={{cursor: 'pointer'}}/>
+          <IoMdClose onClick={handleClose} style={{ cursor: 'pointer' }} />
         </Typography>
 
         <Typography variant="body1" gutterBottom>
@@ -154,6 +179,32 @@ const RequestMilestoneModal = ({ open, handleClose, milestone, projectId, handle
               </ul>
             </li>
           </ul> */}
+        <div className='flex gap-3 w-[100%] justify-between'>
+          <div className='w-[50%]'>
+            <div className='font-semibold text-xl'>Title</div>
+            <TextField
+              placeholder='Project milestone title...'
+              fullWidth
+              variant="outlined"
+              required
+              value={pmTitle}
+              onChange={(e) => setPmTitle(e.target.value)}
+            />
+          </div>
+          <div className='w-[50%]'>
+            <div className='font-semibold text-xl'>Description</div>
+            <TextField
+              placeholder='Project milestone description...'
+              fullWidth
+              rows={4}
+              multiline
+              variant="outlined"
+              value={pmIntro}
+              onChange={(e) => setPmIntro(e.target.value)}
+            />
+          </div>
+        </div>
+
 
         <Stack spacing={2} mt={2}>
           <LocalizationProvider dateAdapter={AdapterDayjs}>

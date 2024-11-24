@@ -26,6 +26,8 @@ const BackdropRequestMilestone = ({ isHidden, milestone, projectId, onCloseBackd
                 return <Typography variant='h4'>Milestone has been submmited</Typography>;
             case 'failed':
                 return <Typography variant='h4'>Milestone has been failed</Typography>;
+            case 'reSubmitted':
+                return <Typography variant='h4'>Milestone has been re-submmited</Typography>;
         }
     }
     return (
@@ -54,7 +56,7 @@ const BackdropRequestMilestone = ({ isHidden, milestone, projectId, onCloseBackd
             )}
 
             {/* when milestone is completed */}
-            {status !== 'not requested' && (status !== 'pending' || status === 'edit') && (
+            {status !== 'not requested' && (status !== 'pending' || status === 'edit' || status === 'warning') && (
                 <Backdrop
                     // className="overlay"
                     sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1, position :'absolute' }}

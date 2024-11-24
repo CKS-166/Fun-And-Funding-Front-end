@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button, Backdrop, CircularProgress, Box,  Tab } from "@mui/material";
+import { Button, Backdrop, CircularProgress, Box, Tab } from "@mui/material";
 import axios from "axios";
 import MilestoneQuill from "../../../../components/UpdateProject/MilestoneQuill";
 import UploadButton from "../../../../components/UpdateProject/UploadFiles/UploadButton";
@@ -9,7 +9,7 @@ import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
 import CompleteMilestoneButton from "../../../../components/UpdateProject/CompleteMilestoneButton";
-const UpdateMilestone = ({ milestones, render, issueLog,pmId }) => {
+const UpdateMilestone = ({ milestones, render, issueLog, pmId, status }) => {
 
   const [milestoneData, setMilestoneData] = useState([]);
   const [anchorEls, setAnchorEls] = useState({});
@@ -103,7 +103,10 @@ const UpdateMilestone = ({ milestones, render, issueLog,pmId }) => {
       await axios.put("https://localhost:7044/api/project-milestone-requirements", data, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-      alert("Milestones updated successfully!");
+      Swal.fire({
+        title: `Milestones updated successfully`,
+        icon: "success"
+      });
     } catch (error) {
       console.error("Failed to update milestones:", error);
       alert("Error updating milestones.");
@@ -113,7 +116,7 @@ const UpdateMilestone = ({ milestones, render, issueLog,pmId }) => {
     }
   };
   console.log(milestoneData)
-  
+
 
 
   const handleCompleteSubmit = async () => {
@@ -162,62 +165,62 @@ const UpdateMilestone = ({ milestones, render, issueLog,pmId }) => {
       <Backdrop sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }} open={loading}>
         <CircularProgress color="inherit" />
       </Backdrop>
-
+      <Box sx={{position : 'absolute', left : '300px', top : '120px'}}>
+        <CompleteMilestoneButton submit={handleCompleteSubmit} render={() => handleCompleteSubmit()} status={status} pmId={pmId} />
+      </Box>
       {!loading && milestones && milestones.length === 0 && <h2>No milestones found.</h2>}
 
       {!loading && milestones && milestones.length > 0 && (
         <form onSubmit={handleSubmit}>
-          <Box>
-            <CompleteMilestoneButton submit={handleCompleteSubmit} render={() => handleCompleteSubmit()} status={milestoneData.status} pmId={pmId} />
-          </Box>
+
           <TabContext value={value}>
             <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
               <TabList onChange={handleChange} aria-label="lab API tabs example">
-              <Tab label="Requirements" value="1" />
-              <Tab label="Issue Logs" value="2" />
+                <Tab label="Requirements" value="1" />
+                <Tab label="Issue Logs" value="2" />
               </TabList>
             </Box>
             {/* milestone evidence */}
             <TabPanel value="1">
-            {milestoneData.map((milestone, index) => (
-            <div key={milestone.id} style={{ marginBottom: "20px" }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '70%', marginBottom: '20px' }}>
-                <h3 style={{ fontWeight: '600' }}>{milestones[index].reqDescription}</h3>
-                <Button variant="contained" component="label" onClick={(e) => openDropdown(e, index)}
-                  sx={{ backgroundColor: '#1BAA64', textTransform: 'none', fontWeight: '600' }} startIcon={<ChangeCircleIcon />}>
-                  Additional Files
-                  <input
-                    type="file"
-                    multiple
-                    hidden
-                    onChange={(e) => handleFilesSelected(Array.from(e.target.files), index)}
+              {milestoneData.map((milestone, index) => (
+                <div key={milestone.id} style={{ marginBottom: "20px" }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '70%', marginBottom: '20px' }}>
+                    <h3 style={{ fontWeight: '600' }}>{milestones[index].reqDescription}</h3>
+                    <Button variant="contained" component="label" onClick={(e) => openDropdown(e, index)}
+                      sx={{ backgroundColor: '#1BAA64', textTransform: 'none', fontWeight: '600' }} startIcon={<ChangeCircleIcon />}>
+                      Additional Files
+                      <input
+                        type="file"
+                        multiple
+                        hidden
+                        onChange={(e) => handleFilesSelected(Array.from(e.target.files), index)}
+                      />
+                    </Button>
+                  </Box>
+
+                  <div className="w-[70%]">
+                    <MilestoneQuill
+                      value={milestone.content}
+                      onChange={(value) => handleQuillChange(value, index)}
+                    />
+                  </div>
+
+
+                  <FileUploadDropdown
+                    uploadedFiles={milestone.addedFiles}
+                    requirementFiles={milestone.requirementFiles}
+                    anchorEl={anchorEls[index]}
+                    onClose={() => closeDropdown(index)}
+                    onRemoveFile={(fileIndex, fileSource) => handleRemoveFile(fileIndex, index, fileSource)}
                   />
-                </Button>
-              </Box>
-
-              <div className="w-[70%]">
-                <MilestoneQuill
-                  value={milestone.content}
-                  onChange={(value) => handleQuillChange(value, index)}
-                />
-              </div>
-
-
-              <FileUploadDropdown
-                uploadedFiles={milestone.addedFiles}
-                requirementFiles={milestone.requirementFiles}
-                anchorEl={anchorEls[index]}
-                onClose={() => closeDropdown(index)}
-                onRemoveFile={(fileIndex, fileSource) => handleRemoveFile(fileIndex, index, fileSource)}
-              />
-            </div>
-          ))}
+                </div>
+              ))}
             </TabPanel>
             <TabPanel value="2">
-            <MilestoneQuill
-                  value={issueLogData}
-                  onChange={(value) => setIssueLogData(value)}
-                />
+              <MilestoneQuill
+                value={issueLogData}
+                onChange={(value) => setIssueLogData(value)}
+              />
             </TabPanel>
           </TabContext>
 

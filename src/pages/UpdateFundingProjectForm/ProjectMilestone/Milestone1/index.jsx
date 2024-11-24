@@ -59,7 +59,7 @@ const MilestoneForm = () => {
   const fetchFixedMilestone = async () => {
     try {
       const response = await milestoneApiInstace.get(
-        `/${milestoneId}`
+        `/${milestoneId}?filter=1`
       );
       console.log(response.data);
       if (response.data.result._isSuccess) {
@@ -99,6 +99,12 @@ const MilestoneForm = () => {
     setFormDataArray(updatedFormData);
   };
 
+  const categorizeFileType = (mimeType) => {
+    if (mimeType.startsWith("image/")) return 6;
+    if (mimeType.startsWith("video/")) return 7;
+    return 8; // Default to 2 for documents or other types
+  };
+  //form submitted
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log(formDataArray);
@@ -114,7 +120,7 @@ const MilestoneForm = () => {
       formData.requirementFiles.forEach((file, fileIndex) => {
         data.append(`request[${i}].RequirementFiles[${fileIndex}].URL`, file);
         data.append(`request[${i}].RequirementFiles[${fileIndex}].Name`, file.name);
-        data.append(`request[${i}].RequirementFiles[${fileIndex}].Filetype`, 0);
+        data.append(`request[${i}].RequirementFiles[${fileIndex}].Filetype`, categorizeFileType(file.type));
       });
     });
     data.append("issueLog", issueLog);
@@ -132,6 +138,8 @@ const MilestoneForm = () => {
       getMilestoneData(milestoneId);
     }
   };
+
+  //resubmit when complete
 
   //dropdown files
   const [anchorEl, setAnchorEl] = useState(null); // Tracks dropdown state
@@ -203,9 +211,7 @@ const MilestoneForm = () => {
               {milestone.description}
             </Typography>
           </Box>
-          <Box>
-            <CompleteMilestoneButton render={() => getMilestoneData(milestoneId)} status={milestoneData.status} pmId={milestoneData.status == 'edit' && milestoneData.data[0].id} />
-          </Box>
+
 
         </Box>
 
@@ -222,7 +228,21 @@ const MilestoneForm = () => {
               <TabPanel value="1">
                 {milestone.requirements.map((req, index) => (
                   <div key={req.id} style={{ marginBottom: "20px" }}>
-                    <h3>{req.title}</h3>
+                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '70%', marginBottom: '20px' }}>
+                      <h3 style={{ fontWeight: '600' }}>{req.title}</h3>
+                      <Button variant="contained" component="label" onClick={(e) => openDropdown(e, index)}
+                        sx={{ backgroundColor: '#1BAA64', textTransform: 'none', fontWeight: '600' }} startIcon={<ChangeCircleIcon />}>
+                        Upload Files
+                        <input
+                          type="file"
+                          multiple
+                          hidden
+                          onChange={(e) => handleFilesSelected(Array.from(e.target.files), index)}
+
+                        />
+                      </Button>
+                    </Box>
+
                     <p>{req.description}</p>
                     <div className="w-[80%]">
                       <>
@@ -232,19 +252,6 @@ const MilestoneForm = () => {
                             onChange={(value) => handleQuillChange(value, index)}
                           />
                         </div>
-
-
-                        <Button variant="contained" component="label" onClick={(e) => openDropdown(e, index)}
-                          sx={{ backgroundColor: '#1BAA64', textTransform: 'none', fontWeight: '600' }} startIcon={<ChangeCircleIcon />}>
-                          Upload Files
-                          <input
-                            type="file"
-                            multiple
-                            hidden
-                            onChange={(e) => handleFilesSelected(Array.from(e.target.files), index)}
-
-                          />
-                        </Button>
                         {formDataArray[index] && formDataArray[index].requirementFiles && (
                           <FileUploadDropdown
                             uploadedFiles={formDataArray[index].requirementFiles}
@@ -272,11 +279,14 @@ const MilestoneForm = () => {
             </TabContext>
 
 
-            <button type="submit">Save</button>
+            <Button ype="submit" variant="contained" color="primary" sx={{ backgroundColor: '#1BAA64'
+              , textTransform: 'none', fontWeight: '600', width : '100px' }}  type="submit">
+              Save
+            </Button >
           </form>
         ) : <UpdateMilestone render={() => getMilestoneData(milestoneId)}
           milestones={milestoneData?.data[0]?.projectMilestoneRequirements}
-          issueLog={milestoneData?.data[0]?.issueLog} />}
+          issueLog={milestoneData?.data[0]?.issueLog} pmId={milestoneData?.data[0]?.id} />}
       </div>
     </div>
   );

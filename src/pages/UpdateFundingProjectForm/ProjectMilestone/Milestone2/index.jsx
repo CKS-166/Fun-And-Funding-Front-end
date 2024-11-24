@@ -262,7 +262,7 @@ function Milestone2() {
                                 </Grid>
                             </>
                     ))}
-                        </Box >
+                    </Box >
 
             </div >
 

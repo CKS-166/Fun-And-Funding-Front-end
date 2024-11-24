@@ -3,15 +3,16 @@ import { Button } from '@mui/material'
 import { FaPlus } from 'react-icons/fa'
 import projectMilestoneApiInstace from '../../../utils/ApiInstance/projectMilestoneApiInstance'
 import Swal from 'sweetalert2'
-const CompleteMilestoneButton = ({ status, pmId, render }) => {
+const CompleteMilestoneButton = ({submit, status, pmId, render }) => {
     const processing = 1;
     const submitted = 5;
     console.log(status)
     console.log(pmId)
     const submitMilestone = async () => {
         try {
+            await submit();
             await projectMilestoneApiInstace.put("/",
-                { projectMilestoneId: pmId, Status: submitted })
+                { projectMilestoneId: pmId, status: submitted })
                 .then(res => {
                     console.log(res.data);
                     Swal.fire({
@@ -22,7 +23,13 @@ const CompleteMilestoneButton = ({ status, pmId, render }) => {
                     })
                 })
         } catch (error) {
-
+            console.log(error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Milestone submitted successfully',
+                showConfirmButton: false,
+                timer: 1500
+            })
         }finally{
             render()
         }

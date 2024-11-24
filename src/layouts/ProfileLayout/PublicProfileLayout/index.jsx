@@ -176,6 +176,7 @@ function PublicProfileLayout() {
                     fontSize: "1rem",
                     color: "#F5F7F8",
                   }}
+                  onClick={() => (window.location.href = `/chat/${user?.id}`)}
                 >
                   Contact
                 </Button>

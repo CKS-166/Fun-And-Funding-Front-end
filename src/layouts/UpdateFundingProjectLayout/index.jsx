@@ -12,7 +12,8 @@ import './index.css';
 import { toast, ToastContainer } from "react-toastify";
 import ProjectContext from './UpdateFundingProjectContext';
 import { editorList } from './UpdateFundingProjectLayout';
-
+import Cookie from 'js-cookie';
+import Swal from 'sweetalert2';
 const notify = (message, type) => {
     const options = {
         position: "top-right",
@@ -48,7 +49,7 @@ function UpdateFundingProjectLayout() {
     const [loadingStatus, setLoadingStatus] = useState(0);
     const [milestoneList, setMilestoneList] = useState([]);
     console.log(project);
-
+    const token = Cookie.get("_auth");
     //fetch milestones
     const fetchMilestones = async () => {
         setIsLoading(true);
@@ -163,9 +164,18 @@ function UpdateFundingProjectLayout() {
     };
 
     const fetchProject = async () => {
+        console.log(token)
         try {
+            if(!token){
+                navigate('/home');
+            }
             setIsLoading(true);
-            const response = await fundingProjectApiInstace.get(`/${id}`);
+            const response = await fundingProjectApiInstace.get(`/owner/${id}`,{
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            console.log(response)
             if (response && response.data) {
                 const project = response.data._data;
                 const filteredPackages = project.packages.filter(pkg => pkg.packageTypes !== 0);
@@ -190,6 +200,15 @@ function UpdateFundingProjectLayout() {
                 console.error('No project data found');
             }
         } catch (error) {
+            console.log(error);
+            if(error){
+                Swal.fire({
+                    title: 'Error',
+                    text: "You are not owner of this project",
+                    icon: 'error',
+                });
+                navigate("/home")
+            }
             if (error.response) {
                 console.error('Server responded with an error:', error.response.data);
                 console.error('Status code:', error.response.status);
@@ -292,7 +311,7 @@ function UpdateFundingProjectLayout() {
                             <div>
                                 <div className='mt-[2rem]'>
                                     <Typography className='update-project-section'
-                                        onClick={() => navigate(`/account/projects/update/${project.id}/preview`)} >
+                                        onClick={() => handleNavigatePreview(id)} >
                                         Project Preview
                                     </Typography>
                                 </div>

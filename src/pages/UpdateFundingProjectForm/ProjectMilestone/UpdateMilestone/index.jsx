@@ -8,14 +8,15 @@ import ChangeCircleIcon from '@mui/icons-material/ChangeCircle';
 import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
-const UpdateMilestone = ({ milestones, render, issueLog }) => {
+import CompleteMilestoneButton from "../../../../components/UpdateProject/CompleteMilestoneButton";
+const UpdateMilestone = ({ milestones, render, issueLog,pmId }) => {
 
   const [milestoneData, setMilestoneData] = useState([]);
   const [anchorEls, setAnchorEls] = useState({});
   const [loading, setLoading] = useState(false);
   const [issueLogData, setIssueLogData] = useState(issueLog || "");
   console.log(milestones)
-  console.log(issueLog)
+  console.log(pmId)
   useEffect(() => {
     if (milestones && milestones.length > 0) {
       // Initialize milestone data if milestones are available
@@ -70,6 +71,11 @@ const UpdateMilestone = ({ milestones, render, issueLog }) => {
     setMilestoneData(updatedMilestones);
   };
 
+  const categorizeFileType = (mimeType) => {
+    if (mimeType.startsWith("image/")) return 6;
+    if (mimeType.startsWith("video/")) return 7;
+    return 8; // Default to 2 for documents or other types
+  };
   const handleSubmit = async (e) => {
     setLoading(true);
     e.preventDefault();
@@ -87,7 +93,7 @@ const UpdateMilestone = ({ milestones, render, issueLog }) => {
       milestone.addedFiles.forEach((file, fileIndex) => {
         data.append(`request[${i}].AddedFiles[${fileIndex}].URL`, file);
         data.append(`request[${i}].AddedFiles[${fileIndex}].Name`, file.name);
-        data.append(`request[${i}].AddedFiles[${fileIndex}].Filetype`, 0);
+        data.append(`request[${i}].AddedFiles[${fileIndex}].Filetype`, categorizeFileType(file.type));
       });
     });
     data.append("issueLog", issueLogData);
@@ -106,7 +112,45 @@ const UpdateMilestone = ({ milestones, render, issueLog }) => {
       render();
     }
   };
+  console.log(milestoneData)
+  
 
+
+  const handleCompleteSubmit = async () => {
+    setLoading(true);
+    const data = new FormData();
+    milestoneData.forEach((milestone, i) => {
+      data.append(`request[${i}].Id`, milestone.id);
+      data.append(`request[${i}].RequirementStatus`, milestone.requirementStatus);
+      data.append(`request[${i}].UpdateDate`, milestone.updateDate);
+      data.append(`request[${i}].Content`, milestone.content);
+      milestone.requirementFiles.forEach((file, fileIndex) => {
+        data.append(`request[${i}].RequirementFiles[${fileIndex}].Id`, file.id);
+        data.append(`request[${i}].RequirementFiles[${fileIndex}].URL`, file.url);
+        data.append(`request[${i}].RequirementFiles[${fileIndex}].Name`, file.name);
+      });
+      milestone.addedFiles.forEach((file, fileIndex) => {
+        // console.log(categorizeFileType(file.type));
+        data.append(`request[${i}].AddedFiles[${fileIndex}].URL`, file);
+        data.append(`request[${i}].AddedFiles[${fileIndex}].Name`, file.name);
+        data.append(`request[${i}].AddedFiles[${fileIndex}].Filetype`, categorizeFileType(file.type));
+      });
+    });
+    data.append("issueLog", issueLogData);
+    console.log(milestoneData);
+
+    try {
+      await axios.put("https://localhost:7044/api/project-milestone-requirements", data, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      console.log(data);
+    } catch (error) {
+      console.error("Failed to update milestones:", error);
+    } finally {
+      setLoading(false);
+      render();
+    }
+  };
   const [value, setValue] = React.useState('1');
 
   const handleChange = (event, newValue) => {
@@ -123,6 +167,9 @@ const UpdateMilestone = ({ milestones, render, issueLog }) => {
 
       {!loading && milestones && milestones.length > 0 && (
         <form onSubmit={handleSubmit}>
+          <Box>
+            <CompleteMilestoneButton submit={handleCompleteSubmit} render={() => handleCompleteSubmit()} status={milestoneData.status} pmId={pmId} />
+          </Box>
           <TabContext value={value}>
             <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
               <TabList onChange={handleChange} aria-label="lab API tabs example">

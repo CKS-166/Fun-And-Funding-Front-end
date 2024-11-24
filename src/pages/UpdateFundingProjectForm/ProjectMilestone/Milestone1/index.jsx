@@ -130,9 +130,17 @@ const MilestoneForm = () => {
         data,
         { headers: { "Content-Type": "multipart/form-data" } }
       );
-      alert("Requirements submitted successfully!");
+      Swal.fire({
+        title: "You have been successfully updated evidence for this milestone",
+        text: "Milestone created successfully",
+        icon: "success"
+      });
     } catch (error) {
-      console.error("Error submitting requirements:", error);
+      Swal.fire({
+        title: "Error",
+        text: "Failed to submit requirements",
+        icon: "erro"
+      });
       alert("Failed to submit requirements.");
     } finally {
       getMilestoneData(milestoneId);

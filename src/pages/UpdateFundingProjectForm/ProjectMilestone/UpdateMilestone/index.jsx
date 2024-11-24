@@ -8,9 +8,9 @@ import ChangeCircleIcon from '@mui/icons-material/ChangeCircle';
 import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
+import Swal from "sweetalert2";
 import CompleteMilestoneButton from "../../../../components/UpdateProject/CompleteMilestoneButton";
 const UpdateMilestone = ({ milestones, render, issueLog, pmId, status }) => {
-
   const [milestoneData, setMilestoneData] = useState([]);
   const [anchorEls, setAnchorEls] = useState({});
   const [loading, setLoading] = useState(false);

@@ -4,6 +4,7 @@ import RequestMilestoneModal from '../../RequestMilestoneModal';
 import './index.css'
 const BackdropRequestMilestone = ({ isHidden, milestone, projectId, onCloseBackdrop, status }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
+    console.log(status);
     const handleProcess = () => {
         setIsModalOpen(true);
     }
@@ -56,7 +57,8 @@ const BackdropRequestMilestone = ({ isHidden, milestone, projectId, onCloseBackd
             )}
 
             {/* when milestone is completed */}
-            {status !== 'not requested' && (status !== 'pending' || status === 'edit' || status === 'warning') && (
+            {status !== 'not requested' && (status === 'pending' || status === 'edit' || status === 'warning' 
+            || status === 'completed' || status === 'failed' || status === 'submitted' || status === 'reSubmitted') && (
                 <Backdrop
                     // className="overlay"
                     sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1, position :'absolute' }}

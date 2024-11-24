@@ -110,8 +110,8 @@ function App() {
           <Routes>
             <Route path="*" element={<Navigate to="/error" />} />
             <Route path="/" element={<Navigate to="/home" />} />
+            <Route path="/error" element={<PageError />} />
             <Route element={<UserLayout />}>
-              <Route path="/error" element={<PageError />} />
               <Route path="/checkout-cart" element={<CheckoutCart />} />
               <Route
                 path="/checkout-success/:id"

@@ -18,7 +18,7 @@ import empty from "../../../assets/images/image_empty.png";
 import NoImage from '../../../assets/images/no-image.png';
 import AddCouponForm from '../AddCouponForm';
 
-function CheckoutGameTable({ order, handleDeleteCartItem, handleAddCoupon, handleRemoveCoupon, onCouponNotification }) {
+function CheckoutGameTable({ order, handleDeleteCartItem, handleAddCoupon, handleRemoveCoupon }) {
     const [isDeletingMap, setIsDeletingMap] = useState({});
     const [open, setIsOpen] = useState(false);
 
@@ -175,7 +175,7 @@ function CheckoutGameTable({ order, handleDeleteCartItem, handleAddCoupon, handl
                                         Remove coupon
                                     </Button>
                                 </div>
-                                <AddCouponForm marketplaceProject={item.marketplaceProject} open={open} handleCloseCoupon={handleCloseCoupon} onCouponNotification={onCouponNotification} />
+                                <AddCouponForm marketplaceProject={item.marketplaceProject} open={open} handleCloseCoupon={handleCloseCoupon} />
                             </Paper>
                         ) : (
                             <Paper
@@ -269,12 +269,12 @@ function CheckoutGameTable({ order, handleDeleteCartItem, handleAddCoupon, handl
                                         Add coupon
                                     </Button>
                                 </div>
-                                <AddCouponForm marketplaceProject={item.marketplaceProject} open={open} handleCloseCoupon={handleCloseCoupon} handleAddCoupon={handleAddCoupon} onCouponNotification={onCouponNotification} />
+                                <AddCouponForm marketplaceProject={item.marketplaceProject} open={open} handleCloseCoupon={handleCloseCoupon} handleAddCoupon={handleAddCoupon} />
                             </Paper>
                         )
                     ))
                 ) : (
-                    <div className='flex flex-col justify-center items-center rounded-[0.625rem] bg-[var(--grey)] h-[20rem] mt-[2rem]'>
+                    <div className='flex flex-col justify-center items-center rounded-[0.625rem] bg-[var(--light-grey)] h-[20rem] mt-[2rem]'>
                         <img src={empty} className='h-[10rem] mb-[2rem]'></img>
                         <Typography
                             sx={{

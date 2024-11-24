@@ -6,13 +6,15 @@ import Swal from 'sweetalert2'
 const CompleteMilestoneButton = ({submit, status, pmId, render }) => {
     const processing = 1;
     const submitted = 5;
+    const warning = 3;
+    const reSubmitted = 6;
     console.log(status)
     console.log(pmId)
     const submitMilestone = async () => {
         try {
-            await submit();
+            submit && await submit();
             await projectMilestoneApiInstace.put("/",
-                { projectMilestoneId: pmId, status: submitted })
+                { projectMilestoneId: pmId, status: status == 'edit' ? submitted : reSubmitted})
                 .then(res => {
                     console.log(res.data);
                     Swal.fire({
@@ -26,7 +28,7 @@ const CompleteMilestoneButton = ({submit, status, pmId, render }) => {
             console.log(error);
             Swal.fire({
                 icon: 'error',
-                title: 'Milestone submitted successfully',
+                title: 'Milestone submitted unsuccessfully',
                 showConfirmButton: false,
                 timer: 1500
             })

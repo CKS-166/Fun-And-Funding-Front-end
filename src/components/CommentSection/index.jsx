@@ -14,7 +14,7 @@ const CommentSection = ({ isBacker, projectId }) => {
   const formattedDate = new Date(present).toLocaleDateString();
   // get comment list
   const fetchComment = async () => {
-    commentApiInstace.get("/all").then(res => {
+    commentApiInstace.get(`/funding/${projectId}`).then(res => {
       console.log(res.data);
       setComments(res.data);
     })

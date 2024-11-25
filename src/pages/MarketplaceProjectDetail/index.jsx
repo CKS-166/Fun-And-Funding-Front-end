@@ -308,7 +308,7 @@ function MarketplaceProjectDetail() {
                   sx={{ padding: "3rem", bgcolor: "rgba(245, 247, 248, 0.6)" }}
                 >
                   <div
-                    className="flex flex-row gap-[0.5rem] mb-[0.75rem] overflow-x-auto pb-[0.5rem] w-[15rem]"
+                    className="flex flex-row gap-[0.5rem] mb-[0.75rem] overflow-x-auto pb-[0.5rem] w-[60rem]"
                     style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
                   >
                     <style>
@@ -479,9 +479,10 @@ function MarketplaceProjectDetail() {
                         fontSize: "1rem",
                       }}
                       onClick={() => addGametoCart()}
+                      disabled={marketplaceProject.status == 10}
                     >
-                      <AddShoppingCartIcon sx={{ mr: "1rem" }} />
-                      Add to cart
+                      {marketplaceProject.status == 10 ? 'Project Reported' : <><AddShoppingCartIcon sx={{ mr: "1rem" }} />
+                        Add to cart</>}
                     </Button>
                     <Grid2 container spacing={2} sx={{ marginTop: "20px" }}>
                       <Grid2 size={6}>

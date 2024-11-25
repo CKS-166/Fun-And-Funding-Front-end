@@ -1,4 +1,5 @@
-import React, { useRef, useState } from 'react';
+import axios from 'axios';
+import React, { useCallback, useRef, useState } from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import './index.css';
@@ -11,43 +12,54 @@ const QuillEditor = ({ introductionData, setIntroductionData }) => {
         setIntroductionData(value);
     };
 
-    const imageHandler = () => {
-        const input = document.createElement('input');
-        input.setAttribute('type', 'file');
-        input.setAttribute('accept', 'image/*');
+    const imageHandler = useCallback(() => {
+        const input = document.createElement("input");
+        input.setAttribute("type", "file");
+        input.setAttribute("accept", "image/*");
         input.click();
 
         input.onchange = async () => {
             const file = input.files[0];
             const formData = new FormData();
-            formData.append('image', file);
+            formData.append("file", file);
 
-            const res = await fetch('https://api.example.com/upload', {
-                method: 'POST',
-                body: formData,
-            });
+            try {
+                const res = await axios.post(
+                    "https://localhost:7044/api/storage",
+                    formData
+                );
+                const imageUrl = res.data;
 
-            const data = await res.json();
-            const imageUrl = data.url;
-
-            const quillEditor = quillRef.current.getEditor();
-            const range = quillEditor.getSelection();
-            quillEditor.insertEmbed(range.index, 'image', imageUrl);
+                const quill = quillRef.current?.getEditor();
+                if (quill) {
+                    const range = quill.getSelection(true);
+                    if (range) {
+                        quill.insertEmbed(range.index, "image", imageUrl);
+                        quill.setSelection(range.index + 1);
+                    }
+                }
+            } catch (error) {
+                console.error("Image upload failed:", error);
+            }
         };
-    };
+    }, []);
 
     const modules = {
         toolbar: {
             container: [
-                [{ 'header': '1' }, { 'header': '2' }, { 'font': [] }],
-                [{ size: [] }],
-                ['bold', 'italic', 'underline', 'strike', 'blockquote'],
-                [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-                ['link', 'image'],
+                [{ header: [3, 4, 5, 6, false] }],
+                ["bold", "italic", "underline", "strike", "blockquote", "code"],
+                [{ color: [] }, { background: [] }],
+                [{ list: "ordered" }, { list: "bullet" }, { indent: "-1" }, { indent: "+1" }],
+                ["link", "image"],
+                ["clean"],
             ],
             handlers: {
-
+                image: imageHandler,
             },
+        },
+        clipboard: {
+            matchVisual: false,
         },
     };
 

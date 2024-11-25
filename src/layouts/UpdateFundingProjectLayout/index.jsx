@@ -22,10 +22,9 @@ import milestoneApiInstace from "../../utils/ApiInstance/milestoneApiInstance";
 import "./index.css";
 // import LoadingProjectBackDrop from '../../components/LoadingProjectBackdrop';
 import { toast, ToastContainer } from "react-toastify";
-import ProjectContext from "./UpdateFundingProjectContext";
-import { editorList } from "./UpdateFundingProjectLayout";
-import Cookie from "js-cookie";
-import Swal from "sweetalert2";
+import Swal from 'sweetalert2';
+import ProjectContext from './UpdateFundingProjectContext';
+import { editorList } from './UpdateFundingProjectLayout';
 const notify = (message, type) => {
     const options = {
         position: "top-right",
@@ -61,8 +60,6 @@ function UpdateFundingProjectLayout() {
     const [isLoading, setIsLoading] = useState(true);
     const [loadingStatus, setLoadingStatus] = useState(0);
     const [milestoneList, setMilestoneList] = useState([]);
-    console.log(project);
-
     //fetch milestones
     const fetchMilestones = async () => {
         setIsLoading(true);
@@ -82,94 +79,36 @@ function UpdateFundingProjectLayout() {
 
             const formData = new FormData();
 
-            formData.append("Id", id);
-            formData.append("Name", project.name);
-            formData.append("Description", project.description);
-            formData.append("Introduction", project.introduction);
+            formData.append('Id', id);
+            formData.append('Name', project.name);
+            formData.append('Description', project.description);
+            formData.append('Introduction', project.introduction);
 
-            const fetchProject = async () => {
-                console.log(token)
-                try {
-                    if (!token) {
-                        navigate('/home');
-                    }
-                    setIsLoading(true);
-                    const response = await fundingProjectApiInstace.get(`/owner/${id}`, {
-                        headers: {
-                            Authorization: `Bearer ${token}`
-                        }
-                    });
-                    console.log(response)
-                    if (response && response.data) {
-                        const project = response.data._data;
-                        const filteredPackages = project.packages.filter(pkg => pkg.packageTypes !== 0);
+            if (project.wallet.bankAccount) {
+                formData.append('BankAccount.Id', project.wallet.bankAccount.id);
+                formData.append('BankAccount.BankNumber', project.wallet.bankAccount.bankNumber);
+                formData.append('BankAccount.BankCode', project.wallet.bankAccount.bankCode);
+            }
 
-                        const existedFile = project.fundingFiles.map(file => ({
-                            id: file.id,
-                            name: file.name,
-                            url: file.url,
-                            urlFile: null,
-                            filetype: file.filetype,
-                            isDeleted: file.isDeleted,
-                            newlyAdded: false,
-                        }));
-
-                        setProject({
-                            ...project,
-                            packages: filteredPackages,
-                            fundingFiles: null,
-                            existedFile: existedFile,
-                        });
-                    } else {
-                        console.error('No project data found');
-                    }
-                } catch (error) {
-                    console.log(error);
-                    if (error) {
-                        Swal.fire({
-                            title: 'Error',
-                            text: "You are not owner of this project",
-                            icon: 'error',
-                        });
-                        navigate("/home")
-                    }
-                    if (error.response) {
-                        console.error('Server responded with an error:', error.response.data);
-                        console.error('Status code:', error.response.status);
-                        console.error('Headers:', error.response.headers);
-                    } else if (error.request) {
-                        console.error('No response received:', error.request);
-                    } else {
-                        console.error('Error setting up request:', error.message);
-                    }
-                } finally {
-                    setIsLoading(false);
+            project.packages.forEach((packageItem, index) => {
+                formData.append(`Packages[${index}].Id`, packageItem.id);
+                formData.append(`Packages[${index}].Name`, packageItem.name);
+                formData.append(`Packages[${index}].RequiredAmount`, packageItem.requiredAmount);
+                formData.append(`Packages[${index}].Description`, packageItem.description);
+                formData.append(`Packages[${index}].LimitQuantity`, packageItem.limitQuantity);
+                if (packageItem.updatedImage) {
+                    formData.append(`Packages[${index}].UpdatedImage`, packageItem.updatedImage);
                 }
                 packageItem.rewardItems.forEach((reward, rewardIndex) => {
-                    formData.append(
-                        `Packages[${index}].RewardItems[${rewardIndex}].Id`,
-                        reward.id
-                    );
-                    formData.append(
-                        `Packages[${index}].RewardItems[${rewardIndex}].Name`,
-                        reward.name
-                    );
-                    formData.append(
-                        `Packages[${index}].RewardItems[${rewardIndex}].Description`,
-                        reward.description
-                    );
-                    formData.append(
-                        `Packages[${index}].RewardItems[${rewardIndex}].Quantity`,
-                        reward.quantity
-                    );
+                    formData.append(`Packages[${index}].RewardItems[${rewardIndex}].Id`, reward.id);
+                    formData.append(`Packages[${index}].RewardItems[${rewardIndex}].Name`, reward.name);
+                    formData.append(`Packages[${index}].RewardItems[${rewardIndex}].Description`, reward.description);
+                    formData.append(`Packages[${index}].RewardItems[${rewardIndex}].Quantity`, reward.quantity);
                     if (reward.imageFile) {
-                        formData.append(
-                            `Packages[${index}].RewardItems[${rewardIndex}].ImageFile`,
-                            reward.imageFile
-                        );
+                        formData.append(`Packages[${index}].RewardItems[${rewardIndex}].ImageFile`, reward.imageFile);
                     }
                 });
-            };
+            });
 
             if (project.fundingFiles) {
                 project.fundingFiles.forEach((file, index) => {
@@ -195,15 +134,15 @@ function UpdateFundingProjectLayout() {
                 console.log(pair[0], pair[1]);
             }
 
-            const response = await fundingProjectApiInstace.put("", formData, {
+            const response = await fundingProjectApiInstace.put('', formData, {
                 headers: {
-                    "Content-Type": "multipart/form-data",
+                    'Content-Type': 'multipart/form-data',
                     Authorization: `Bearer ${token}`,
                 },
             });
 
             if (response.status === 200) {
-                notify("Project saved successfully!", "success");
+                notify('Project saved successfully!', "success");
                 console.log(response);
                 setIsEdited(false);
             } else {
@@ -211,10 +150,7 @@ function UpdateFundingProjectLayout() {
                 notify(response.error || "An error occurred", "error");
             }
         } catch (error) {
-            notify(
-                error.response?.data?.message || error.message || "An error occurred",
-                "error"
-            );
+            notify(error.response?.data?.message || error.message || "An error occurred", "error");
         } finally {
             setIsLoading(false);
             setLoadingStatus(0);
@@ -244,7 +180,7 @@ function UpdateFundingProjectLayout() {
         console.log(token);
         try {
             if (!token) {
-                navigate("/home");
+                navigate('/home');
             }
             setIsLoading(true);
             const response = await fundingProjectApiInstace.get(`/owner/${id}`, {
@@ -398,8 +334,8 @@ function UpdateFundingProjectLayout() {
                             <div className="flex flex-col gap-[0.5rem] px-[2rem]">
                                 <span
                                     className={`bg-[#1BAA64] text-[#EAEAEA] text-[0.75rem] px-[0.5rem] py-[0.25rem] rounded w-fit font-semibold ${project.status >= 0 && project.status <= 8
-                                            ? "bg-[#1BAA64]"
-                                            : "bg-[#FABC3F]"
+                                        ? "bg-[#1BAA64]"
+                                        : "bg-[#FABC3F]"
                                         } `}
                                 >
                                     {project.status >= 0 && project.status <= 8

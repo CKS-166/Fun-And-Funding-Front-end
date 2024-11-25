@@ -201,11 +201,11 @@ const PackageModal = ({ openModal, setOpenModal, selectedPackage, addPackage, ed
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <div className='w-[100%] flex justify-start gap-1 px-5'>
-            <button className='inline-block text-blue-800 font-normal py-2 mb-4 rounded px-3' onClick={handleSubmit}>
+          <div className='w-[100%] flex items-center justify-start gap-1 px-5'>
+            <button className='text-white bg-primary-green font-normal py-1 px-2 mb-4 rounded' onClick={handleSubmit}>
               {selectedPackage ? 'Save changes' : 'Add package'}
             </button>
-            <button onClick={() => setOpenModal(false)}>Cancel</button>
+            <button className='text-white bg-[var(--red)] font-normal py-1 px-2 mb-4 rounded' onClick={() => setOpenModal(false)}>Cancel</button>
           </div>
         </DialogActions>
       </Dialog >

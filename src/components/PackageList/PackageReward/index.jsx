@@ -179,8 +179,8 @@ const PackageReward = ({ packageList, reloadDetail, isButtonActive }) => {
                 </div>
               </Grid>
             ) : (
-              <Grid key={index} size={6} sx={{ overflowY: "auto" }} spacing={5}>
-                <div className="border-2 border-gray-300 p-4 rounded h-[25rem]">
+              <Grid key={index} size={6} sx={{ overflowY: "auto" }} className="border-2 border-gray-300" spacing={5}>
+                <div className=" p-4 rounded min-h-[25rem]">
                   <div className="flex">
                     <div className="package-image rounded overflow-hidden">
                       <img src={item.url} />
@@ -207,7 +207,7 @@ const PackageReward = ({ packageList, reloadDetail, isButtonActive }) => {
                     </Box>
                   </div>
                   <div className="my-[1.5rem] font-semibold text-lg">This package consists of</div>
-                  <div className="package-item">
+                  <div className="package-item ">
                     <Grid container spacing={5}>
                       {item.rewardItems.map((rItem, index) => (
                         <Grid size={6}>

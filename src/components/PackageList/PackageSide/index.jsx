@@ -73,13 +73,15 @@ const PackageSide = ({ packageList, reloadDetail, isButtonActive }) => {
 
         console.log('abcd')
     }
+
+
     return (
         <div>
             {fixedPackageList && fixedPackageList.map((item, index) => (
                 <Card sx={{
                     borderRadius: 0,
-                    border: ".1rem solid rgba(0, 0, 0, 0.12)", mb: 3, mx: 1, position: 'relative', width: '307px'
-                    , height: '399px',
+                    border: ".1rem solid rgba(0, 0, 0, 0.12)", mb: 3, mx: 1, position: 'relative', width: '307px',
+                    // , height: '399px',
                     cursor: 'pointer',
                 }}
                     onClick={() => handleOpen(item)}
@@ -88,7 +90,7 @@ const PackageSide = ({ packageList, reloadDetail, isButtonActive }) => {
                         component="img"
                         alt="green iguana"
                         image={item.url}
-                        sx={{ height: "9rem" }}
+                        sx={{ height: "9rem", objectFit: 'contain' }}
                     />
 
                     <CardContent>

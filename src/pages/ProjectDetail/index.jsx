@@ -2,6 +2,7 @@
 /* eslint-disable no-unused-vars */
 import ReportProblemIcon from "@mui/icons-material/ReportProblem";
 import { TabContext, TabList } from "@mui/lab";
+import ReportGmailerrorredIcon from "@mui/icons-material/ReportGmailerrorred";
 import {
   Avatar,
   Box,
@@ -38,7 +39,7 @@ import milestoneApiInstace from "../../utils/ApiInstance/milestoneApiInstance";
 import "./index.css";
 import { useNavigate } from "react-router-dom";
 import packageBackerApiInstance from "../../utils/ApiInstance/packageBackerApiInstance";
-import { AutoAwesome, Bookmark, Favorite, Report } from "@mui/icons-material";
+import { AutoAwesome, Bookmark, Favorite, Report, ReportGmailerrorred } from "@mui/icons-material";
 import followApiInstace from "../../utils/ApiInstance/followApiInstance";
 const ProjectDetail = () => {
   const token = Cookies.get("_auth");
@@ -236,7 +237,7 @@ const ProjectDetail = () => {
     const fixStatus = projectData.status;
     switch (fixStatus) {
       case processing:
-        return "Update Project";
+        return "Manage Project";
       case fundedSuccessful:
         return "Request Milestone";
       default:
@@ -293,6 +294,20 @@ const ProjectDetail = () => {
         console.log(res.data);
       });
   };
+
+  const projectStatusString = [
+    'Deleted',
+    'Pending',
+    'Processing',
+    'FundedSuccessful',
+    'Successful',
+    'Failed',
+    'Rejected',
+    'Approved',
+    'Withdrawed',
+    'Refunded',
+    'Reported'
+  ]
   return (
     <Box>
       {isLoading && (
@@ -341,12 +356,12 @@ const ProjectDetail = () => {
                   <Container>
                     <div className="flex justify-between">
                       <div className="text-primary-green font-semibold">
-                        Funding
+                        {projectStatusString[projectData.status]}
                       </div>
-                      <Report
+                      {/* <Report
                         className="text-red-700 hover:cursor-pointer"
                         onClick={handleOpenDialog}
-                      />
+                      /> */}
                     </div>
 
                     <ReportForm
@@ -503,21 +518,17 @@ const ProjectDetail = () => {
                         <Grid size={6}>
                           <Button
                             variant="contained"
-                            sx={{
-                              width: "100%",
-                              whiteSpace: "nowrap",
-                              background: "#FFFFFF",
-                              fontWeight: "bold",
-                              py: 1,
-                              color: "rgba(0, 0, 0, 0.7)",
-                              boxShadow: "none",
-                              border: "2px solid rgba(0, 0, 0, 0.5)",
-                              height: "3rem",
-                            }}
-                            className="like-btn flex items-center gap-1"
+                            className="marketplace-project-report-button"
+                            onClick={handleOpenDialog}
+
                           >
-                            <Favorite sx={{ fontSize: "1.2rem" }} />{" "}
-                            <span className="text-[1rem]">Like</span>
+                            <ReportGmailerrorredIcon
+                              style={{
+                                marginRight: "0.5rem",
+                                fontSize: "1.5rem",
+                              }}
+                            />
+                            Report
                           </Button>
                         </Grid>
                       </Grid>

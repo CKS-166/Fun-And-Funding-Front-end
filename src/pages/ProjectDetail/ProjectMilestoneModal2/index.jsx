@@ -123,13 +123,14 @@ const ProjectMilestoneModal = ({ pmData, openModal, setOpenModal }) => {
         const response = await projectMilestoneBackerApiInstance.get("/CheckIfQualifiedForReview",
           {
             params: {
-              projectMilestoneId: pmData.id,
+              projectMilestoneId: pmData?.id,
               userId: userId,
             },
           }
         );
         setIsQualified(response.data._data)
       } catch (err) {
+        console.log("Error occurred during qualification check:", err);
         console.log(
           err.response?.data?.message || "An error occurred while checking qualification."
         );
@@ -137,9 +138,7 @@ const ProjectMilestoneModal = ({ pmData, openModal, setOpenModal }) => {
     };
 
     handleCheckQualification()
-  }, [])
-
-
+  }, [pmData, userId])
 
 
   const milestones = [
@@ -205,7 +204,7 @@ const ProjectMilestoneModal = ({ pmData, openModal, setOpenModal }) => {
 
               <div className="p-4 md:p-5 flex-grow overflow-auto">
                 {/* Stepper and Tabs */}
-                <Stepper activeStep={pmData?.milestone.milestoneOrder} alternativeLabel>
+                <Stepper activeStep={pmData?.milestone.milestoneOrder - 1} alternativeLabel>
                   {milestones.map((milestone) => (
                     <Step key={milestone}>
                       <StepLabel
@@ -278,7 +277,7 @@ const ProjectMilestoneModal = ({ pmData, openModal, setOpenModal }) => {
                             </HtmlTooltip>
                           </th>
                           <td className="px-6 py-4 font-bold text-black text-lg">
-                            {(pmData?.milestone.disbursementPercentage * pmData?.fundingProject.balance).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")} đ
+                            {(pmData?.milestone.disbursementPercentage * pmData?.fundingProject.balance * 0.5).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")} đ
                           </td>
                         </tr>
                       </tbody>
@@ -392,9 +391,9 @@ const ProjectMilestoneModal = ({ pmData, openModal, setOpenModal }) => {
                   pmData &&
                   (
                     <div>
-                      {/* {isQualified && ( */}
-                      <ProjectMilestoneReviewForm pmId={pmData.id} />
-                      {/* )} */}
+                      {isQualified && (
+                        <ProjectMilestoneReviewForm pmId={pmData.id} />
+                      )}
                       <ProjectMilestoneReviewList pmId={pmData.id} />
                     </div>
 

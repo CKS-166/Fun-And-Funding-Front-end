@@ -51,7 +51,6 @@ function UpdateFundingProjectLayout() {
     const [loadingStatus, setLoadingStatus] = useState(0);
     const [milestoneList, setMilestoneList] = useState([]);
     console.log(project);
-    const token = Cookie.get("_auth");
     //fetch milestones
     const fetchMilestones = async () => {
         setIsLoading(true);
@@ -170,11 +169,11 @@ function UpdateFundingProjectLayout() {
     const fetchProject = async () => {
         console.log(token)
         try {
-            if(!token){
+            if (!token) {
                 navigate('/home');
             }
             setIsLoading(true);
-            const response = await fundingProjectApiInstace.get(`/owner/${id}`,{
+            const response = await fundingProjectApiInstace.get(`/owner/${id}`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -205,7 +204,7 @@ function UpdateFundingProjectLayout() {
             }
         } catch (error) {
             console.log(error);
-            if(error){
+            if (error) {
                 Swal.fire({
                     title: 'Error',
                     text: "You are not owner of this project",

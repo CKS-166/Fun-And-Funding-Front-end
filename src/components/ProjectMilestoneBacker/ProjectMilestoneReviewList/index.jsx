@@ -14,7 +14,7 @@ const ProjectMilestoneReviewList = ({ pmId }) => {
           <p className="text-center text-gray-500">No reviews yet.</p>
         ) : (
           data && data._data.map((value, index) => (
-            <article key={index} className="p-6 text-base bg-white rounded-lg">
+            <article key={index} className="p-6 text-base bg-white rounded-lg border">
               <footer className="flex justify-between items-center mb-2">
                 <div className="flex items-center">
                   <div>

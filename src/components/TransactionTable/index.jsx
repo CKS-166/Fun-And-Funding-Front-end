@@ -44,7 +44,7 @@ const TransactionTable = ({ transactions }) => {
         <TableHead>
           <TableRow>
             <TableCell><strong>Amount</strong></TableCell>
-            <TableCell><strong>Balance</strong></TableCell>
+            {/* <TableCell><strong>Balance</strong></TableCell> */}
             <TableCell><strong>Transfer Date</strong></TableCell>
             <TableCell><strong>Type</strong></TableCell>
           </TableRow>
@@ -53,7 +53,7 @@ const TransactionTable = ({ transactions }) => {
           {transactions.slice(0, visibleRows).map((transaction, index) => (
             <TableRow key={transaction.id || index}>
               <TableCell>{transaction.totalAmount.toLocaleString()}</TableCell>
-              <TableCell>{transaction.balance || "N/A"}</TableCell>
+              {/* <TableCell>{transaction.balance || "N/A"}</TableCell> */}
               <TableCell>
                 {new Date(transaction.createdDate).toLocaleDateString()}{" "}
                 {new Date(transaction.createdDate).toLocaleTimeString()}

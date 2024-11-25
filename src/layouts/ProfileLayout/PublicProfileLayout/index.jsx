@@ -1,3 +1,4 @@
+/* eslint-disable no-constant-condition */
 import { useParams } from "react-router";
 import PersonAddAlt1Icon from "@mui/icons-material/PersonAddAlt1";
 import ReportIcon from "@mui/icons-material/Report";
@@ -19,7 +20,8 @@ import userApiInstace from "../../../utils/ApiInstance/userApiInstance";
 import EmptyDocument from "../../../assets/images/Empty-Document.png";
 import "./index.css";
 import Footer from "../../../components/Footer";
-
+import ReportForm from "../../../components/ReportPopUp";
+import { ToastContainer } from "react-toastify";
 const createMarkup = (htmlContent) => {
   return { __html: DOMPurify.sanitize(htmlContent) };
 };
@@ -27,6 +29,14 @@ const createMarkup = (htmlContent) => {
 function PublicProfileLayout() {
   const { id } = useParams();
   const [user, setUser] = useState(null);
+  const [openDialog, setOpenDialog] = useState(false);
+  const handleOpenDialog = () => {
+    setOpenDialog(true);
+  };
+
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+  };
 
   useEffect(() => {
     fetchUserData();
@@ -190,9 +200,25 @@ function PublicProfileLayout() {
                     fontSize: "1rem",
                     color: "#F5F7F8",
                   }}
+                  onClick={handleOpenDialog}
                 >
                   Report
                 </Button>
+                <ReportForm
+                  violatorId={id}
+                  type={"0"}
+                  closeDialog={handleCloseDialog}
+                  openDialog={openDialog}
+                />
+                <ToastContainer
+                  position="bottom-left"
+                  autoClose={3000}
+                  hideProgressBar={false}
+                  closeOnClick
+                  pauseOnHover
+                  draggable
+                  pauseOnFocusLoss
+                />
               </div>
             </div>
             <Divider

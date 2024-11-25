@@ -9,7 +9,7 @@ import logo from "../../assets/OnlyLogo.png";
 import { ToastContainer, toast } from "react-toastify"; // Import ToastContainer
 import { Navigate, useNavigate } from "react-router";
 import authApiInstance from "../../utils/ApiInstance/authApiInstance";
-
+import { useLoading } from "../../contexts/LoadingContext";
 function setCookie(name, value, expiresIn) {
   var now = new Date();
   var time = now.getTime() + 7 * 60 * 60 * 1000;
@@ -27,6 +27,7 @@ function BackerForm({ onClose, onOpenLogin, onBack, onOpenOTPForm }) {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const { isLoading, setIsLoading } = useLoading();
   const Navigate = useNavigate();
   const notify = (message, type) => {
     const options = {
@@ -72,6 +73,7 @@ function BackerForm({ onClose, onOpenLogin, onBack, onOpenOTPForm }) {
     };
     // Add your form submission logic here
     try {
+      setIsLoading(true);
       authApiInstance.post("/backer", jsonData).then((res) => {
         if (!res.data._isSuccess) {
           notify(`${res.data._message[0] || "Register failed"}`, "warn");
@@ -85,6 +87,8 @@ function BackerForm({ onClose, onOpenLogin, onBack, onOpenOTPForm }) {
     } catch (error) {
       console.log(error);
       notify(`${error.message || "Register failed"}`, "warn");
+    } finally {
+      setIsLoading(false);
     }
   };
 

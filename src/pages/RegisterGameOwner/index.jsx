@@ -8,7 +8,7 @@ import PortraitIcon from "@mui/icons-material/Portrait";
 import logo from "../../assets/OnlyLogo.png";
 import { ToastContainer, toast } from "react-toastify";
 import authApiInstance from "../../utils/ApiInstance/authApiInstance";
-
+import { useLoading } from "../../contexts/LoadingContext";
 function setCookie(name, value, expiresIn) {
   var now = new Date();
   var time = now.getTime() + 7 * 60 * 60 * 1000;
@@ -26,6 +26,8 @@ function OwnerForm({ onClose, onOpenLogin, onBack, onOpenOTPForm }) {
   const [password, setPassword] = useState("");
   const [confirmPassword, setconfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const { isLoading, setIsLoading } = useLoading();
+
   const notify = (message, type) => {
     const options = {
       position: "top-right",
@@ -79,6 +81,7 @@ function OwnerForm({ onClose, onOpenLogin, onBack, onOpenOTPForm }) {
       confirmPassword: confirmPassword,
     };
     try {
+      setIsLoading(true);
       authApiInstance.post("/game-owner", jsonData).then((res) => {
         if (!res.data._isSuccess) {
           notify(`${res.data._message[0] || "Register failed"}`, "warn");
@@ -93,6 +96,8 @@ function OwnerForm({ onClose, onOpenLogin, onBack, onOpenOTPForm }) {
     } catch (error) {
       console.log(error);
       notify(`${error.message || "Register failed"}`, "warn");
+    } finally {
+      setIsLoading(false);
     }
     // Add your form submission logic here
   };

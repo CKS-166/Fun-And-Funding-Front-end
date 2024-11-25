@@ -85,7 +85,7 @@ import MarketplaceProjectContent from "./pages/UpdateMarketplaceProjectForm/Mark
 import MarketplaceProjectMediaFiles from "./pages/UpdateMarketplaceProjectForm/MarketplaceProjectMedia";
 import MarketplaceProjectPreview from "./pages/UpdateMarketplaceProjectForm/MarketplaceProjectPreview";
 import AdminMarketplaceProject from "./pages/AdminPages/AdminMarketplaceProject";
-
+import MarketplaceProjectCoupon from "./pages/UpdateMarketplaceProjectForm/MarketplaceProjectCoupon";
 function App() {
   const location = useLocation();
   const hideAppBar = location.pathname.includes("admin-dashboard");
@@ -214,6 +214,10 @@ function App() {
               <Route
                 path="/account/marketplace-projects/update/:id/media-files"
                 element={<MarketplaceProjectMediaFiles />}
+              />
+              <Route
+                path="/account/marketplace-projects/update/:id/coupons"
+                element={<MarketplaceProjectCoupon />}
               />
             </Route>
 

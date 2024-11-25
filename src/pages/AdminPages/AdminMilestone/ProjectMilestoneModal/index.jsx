@@ -19,6 +19,7 @@ import QRCodeModal from "./QRCodeModal";
 import PMRequirementModal from "./PMRequirementModal";
 import { styled } from '@mui/material/styles';
 import WarnModal from "./WarnModal";
+import ProjectMilestoneReviewList from "../../../../components/ProjectMilestoneBacker/ProjectMilestoneReviewList";
 
 const ProjectMilestoneModal = ({ pmData, openModal, setOpenModal }) => {
   const handleClose = () => {
@@ -299,6 +300,7 @@ const ProjectMilestoneModal = ({ pmData, openModal, setOpenModal }) => {
                   >
                     <Tab value={0} label="Overview" />
                     <Tab value={1} label="Project evidence" />
+                    <Tab value={2} label="Reviews" />
                   </Tabs>
                 </Box>
 
@@ -436,87 +438,95 @@ const ProjectMilestoneModal = ({ pmData, openModal, setOpenModal }) => {
                         <WarnModal openWarn={openWarn} setOpenWarn={setOpenWarn} pmData={pmData} newEndDate={newEndDate} setNewEndDate={setNewEndDate} handleWarn={handleWarn} />
 
                       </div>
-                    ) : (
-                      <div>
-                        {/* <div className="flex justify-center">
+                    ) :
+                    activeTab === 1
+                      ?
+                      (
+                        < div >
+                          {/* <div className="flex justify-center">
                           <Divider sx={{ fontWeight: 'bold', color: 'rgba(0, 0, 0, 0.7)', my: '1rem', width: '60%', textAlign: 'center' }}>Milestone evidence</Divider>
                         </div> */}
-                        <div class="relative overflow-x-auto">
-                          <table class="w-full text-sm text-left rtl:text-right text-gray-500">
-                            <caption class="px-5 pb-5 text-lg font-semibold text-left rtl:text-right text-gray-900 bg-white dark:text-white">
-                              {/* Project milestone requirement */}
-                              <p class="mt-1 text-sm font-normal text-gray-500 dark:text-gray-400">
-                                At each milestone, game owners must fulfill the
-                                corresponding requirements before they can withdraw
-                                the funds raised.
-                              </p>
-                            </caption>
-                            <thead class="text-xs text-gray-700 uppercase bg-gray-50">
-                              <tr>
-                                <th scope="col" class="px-6 py-3">
-                                  Requirement
-                                </th>
-                                <th scope="col" class="px-6 py-3">
-                                  Last update
-                                </th>
-                                <th scope="col" class="px-6 py-3">
-                                  Status
-                                </th>
-                                <th scope="col" class="px-6 py-3">
-                                  {/* Action */}
-                                </th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              {pmData?.projectMilestoneRequirements.map(
-                                (pmr, index) => (
-                                  <tr class="bg-white border-b">
-                                    <td
-                                      scope="row"
-                                      class="px-6 py-4 font-medium text-gray-900"
-                                    >
-                                      <div className="">
-                                        <span className="py-.5">
-                                          {pmr.requirementTitle}
-                                        </span>
-                                      </div>
-                                      <div className="font-normal italic">
-                                        {pmr.reqDescription}
-                                      </div>
-                                    </td>
-                                    <td class="px-6 py-4">
-                                      <span className="text-xs text-right text-gray-600 italic font-semibold">
-                                        {new Date(pmr.updateDate).toLocaleString()}
-                                      </span>
-                                    </td>
-                                    <td class="px-6 py-4">
-                                      <span className="bg-blue-200 text-blue-800 px-2 py-.5 ml-2 rounded font-semibold">
-                                        {pmrStatusString[pmr.requirementStatus]}
-                                      </span>
-                                    </td>
-                                    <td class="px-6 py-4">
-                                      <a
-                                        href="#"
-                                        onClick={() => handleOpenPMR(pmr)}
-                                        class="font-medium text-blue-600 hover:underline"
+                          <div div class="relative overflow-x-auto">
+                            <table class="w-full text-sm text-left rtl:text-right text-gray-500">
+                              <caption class="px-5 pb-5 text-lg font-semibold text-left rtl:text-right text-gray-900 bg-white dark:text-white">
+                                {/* Project milestone requirement */}
+                                <p class="mt-1 text-sm font-normal text-gray-500 dark:text-gray-400">
+                                  At each milestone, game owners must fulfill the
+                                  corresponding requirements before they can withdraw
+                                  the funds raised.
+                                </p>
+                              </caption>
+                              <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                                <tr>
+                                  <th scope="col" class="px-6 py-3">
+                                    Requirement
+                                  </th>
+                                  <th scope="col" class="px-6 py-3">
+                                    Last update
+                                  </th>
+                                  <th scope="col" class="px-6 py-3">
+                                    Status
+                                  </th>
+                                  <th scope="col" class="px-6 py-3">
+                                    {/* Action */}
+                                  </th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {pmData?.projectMilestoneRequirements.map(
+                                  (pmr, index) => (
+                                    <tr class="bg-white border-b">
+                                      <td
+                                        scope="row"
+                                        class="px-6 py-4 font-medium text-gray-900"
                                       >
-                                        View
-                                      </a>
-                                    </td>
-                                  </tr>
-                                )
-                              )}
-                            </tbody>
-                          </table>
-                        </div>
+                                        <div className="">
+                                          <span className="py-.5">
+                                            {pmr.requirementTitle}
+                                          </span>
+                                        </div>
+                                        <div className="font-normal italic">
+                                          {pmr.reqDescription}
+                                        </div>
+                                      </td>
+                                      <td class="px-6 py-4">
+                                        <span className="text-xs text-right text-gray-600 italic font-semibold">
+                                          {new Date(pmr.updateDate).toLocaleString()}
+                                        </span>
+                                      </td>
+                                      <td class="px-6 py-4">
+                                        <span className="bg-blue-200 text-blue-800 px-2 py-.5 ml-2 rounded font-semibold">
+                                          {pmrStatusString[pmr.requirementStatus]}
+                                        </span>
+                                      </td>
+                                      <td class="px-6 py-4">
+                                        <a
+                                          href="#"
+                                          onClick={() => handleOpenPMR(pmr)}
+                                          class="font-medium text-blue-600 hover:underline"
+                                        >
+                                          View
+                                        </a>
+                                      </td>
+                                    </tr>
+                                  )
+                                )}
+                              </tbody>
+                            </table>
+                          </div>
 
-                        <PMRequirementModal
-                          pmrData={selectedPMR}
-                          openPMRequirement={openPMRequirement}
-                          setOpenPMRequirement={setOpenPMRequirement}
-                        />
-                      </div>
-                    )}
+                          <PMRequirementModal
+                            pmrData={selectedPMR}
+                            openPMRequirement={openPMRequirement}
+                            setOpenPMRequirement={setOpenPMRequirement}
+                          />
+                        </div>
+                      )
+                      :
+                      (
+                        <ProjectMilestoneReviewList pmId={pmData?.id} />
+                      )
+                }
               </div>
               <div className="w-[100%] bg-gray-100 rounded-b">
                 <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
@@ -534,8 +544,8 @@ const ProjectMilestoneModal = ({ pmData, openModal, setOpenModal }) => {
               </div>
             </div>
           </div>
-        </div>
-      </Modal>
+        </div >
+      </Modal >
     </>
   );
 };

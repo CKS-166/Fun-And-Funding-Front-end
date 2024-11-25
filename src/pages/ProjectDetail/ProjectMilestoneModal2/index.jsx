@@ -145,7 +145,6 @@ const ProjectMilestoneModal = ({ pmData, openModal, setOpenModal }) => {
     'Milestone 1',
     'Milestone 2',
     'Milestone 3',
-    'Milestone 4'
   ];
 
   const handleChange = (event, newValue) => {

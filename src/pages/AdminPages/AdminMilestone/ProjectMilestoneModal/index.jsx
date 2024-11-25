@@ -20,6 +20,8 @@ import PMRequirementModal from "./PMRequirementModal";
 import { styled } from '@mui/material/styles';
 import WarnModal from "./WarnModal";
 import ProjectMilestoneReviewList from "../../../../components/ProjectMilestoneBacker/ProjectMilestoneReviewList";
+import { toast, ToastContainer } from "react-toastify";
+
 
 const ProjectMilestoneModal = ({ pmData, openModal, setOpenModal }) => {
   const handleClose = () => {
@@ -65,7 +67,7 @@ const ProjectMilestoneModal = ({ pmData, openModal, setOpenModal }) => {
         ProjectMilestoneId: pmData?.id,
         Status: 2,
       });
-      console.log("Milestone approved:", response.data);
+      toast.success("Milestone approved!");
     } catch (error) {
       console.error("Error approving milestone:", error);
     } finally {
@@ -80,7 +82,7 @@ const ProjectMilestoneModal = ({ pmData, openModal, setOpenModal }) => {
         Status: 3,
         NewEndDate: newEndDate
       });
-      console.log("Milestone rejected:", response.data);
+      toast.success("Milestone rejected!");
     } catch (error) {
       console.error("Error rejecting milestone:", error);
     } finally {
@@ -95,7 +97,7 @@ const ProjectMilestoneModal = ({ pmData, openModal, setOpenModal }) => {
         ProjectMilestoneId: pmData?.id,
         Status: 1,
       });
-      console.log("Milestone rejected:", response.data);
+      toast.success("Milestone updated!");
     } catch (error) {
       console.error("Error rejecting milestone:", error);
     } finally {
@@ -109,7 +111,7 @@ const ProjectMilestoneModal = ({ pmData, openModal, setOpenModal }) => {
         ProjectMilestoneId: pmData?.id,
         Status: 4,
       });
-      console.log("Milestone rejected:", response.data);
+      toast.success("Milestone rejected!");
     } catch (error) {
       console.error("Error rejecting milestone:", error);
     } finally {
@@ -211,7 +213,6 @@ const ProjectMilestoneModal = ({ pmData, openModal, setOpenModal }) => {
     "Milestone 1",
     "Milestone 2",
     "Milestone 3",
-    "Milestone 4",
   ];
 
   const handleChange = (event, newValue) => {
@@ -233,6 +234,7 @@ const ProjectMilestoneModal = ({ pmData, openModal, setOpenModal }) => {
 
   return (
     <>
+      <ToastContainer />
       <Modal open={openModal} onClose={handleClose}>
         <div className="flex justify-center items-center w-full h-full">
           <div class="relative p-4 w-full max-w-[55%] max-h-full overflow-auto scrollbar-hidden">

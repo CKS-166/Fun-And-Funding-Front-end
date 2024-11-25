@@ -9,13 +9,15 @@ import StatBox from '../../../components/Chart/StatBox/index.jsx';
 import { FaWallet, FaEnvelope } from "react-icons/fa";
 import Grid from '@mui/material/Grid2';
 import BarChartDashboard from '../../../components/Chart/BarChartDashboard/index.jsx';
-
+import transactionApiInstance from '../../../utils/ApiInstance/transactionApiInstance';
+import TransactionTable from '../../../components/TransactionTable/index.jsx';
 function ProjectPreview() {
     const { id } = useParams();
     const [project, setProject] = useState(null);
     const [loading, setLoading] = useState(false);
     const [lineData, setLineData] = useState([]);
     const [barData, setBarData] = useState([]);
+    const [transactionData, setTransactionData] = useState([]);
     useEffect(() => {
         getProject();
         console.log("a")
@@ -29,6 +31,7 @@ function ProjectPreview() {
             console.log(response.data);
             fetchLineChart(response.data._data.id);
             fetchBarData(response.data._data.id);
+            fetchTransaction()
         } catch (error) {
             console.error('Error fetching project:', error);
             setLoading(false);
@@ -55,6 +58,16 @@ function ProjectPreview() {
             setBarData(res.data.result._data);
         } catch (error) {
             console.error('Error fetching bar chart data:', error);
+        }
+    }
+    //fetch transaction data
+    const fetchTransaction = async () => {
+        try {
+            const res = await transactionApiInstance.get(`?projectId=${id}`);
+            console.log(res);
+            setTransactionData(res.data._data)
+        } catch (error) {
+            console.error('Error fetching transaction data:', error);
         }
     }
     return (
@@ -103,6 +116,7 @@ function ProjectPreview() {
                     <Grid container spacing={2} justifyContent={"center"} m="2rem">
                         <Grid sx={8}>
                             <LineChartDashBoard apiData={lineData} />
+                            <TransactionTable transactions={transactionData} />
                         </Grid>
                         <Grid sx={4}>
                             <BarChartDashboard data={barData} />

@@ -7,7 +7,6 @@ import './index.css'
 import marketplaceProjectApiInstace from '../../utils/ApiInstance/marketplaceProjectApiInstance';
 import { useNavigate } from 'react-router';
 const MarketplaceHomePage = () => {
-
     const [markets, setMarkets] = useState([]);
     const fetchAllMarketProjects = async () => {
         try {
@@ -36,12 +35,11 @@ const MarketplaceHomePage = () => {
                 </Typography>
             </div>
             {/* <div className="container mx-auto"> */}
-            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '5rem' }}>
+            <Box sx={{  marginTop: '5rem' }}>
                 <Grid container spacing={2} sx={{ justifyContent: 'center', alignItems: 'center' }}>
                     {markets.map((item, index) => {
                         // Get the file with fileType = 2
                         const fileWithType2 = item.marketplaceFiles.find(file => file.fileType === 2);
-
                         return (
                             <Grid
                                 key={index}

@@ -84,7 +84,7 @@ const MarketplaceProjectCoupon = () => {
         if (error.response) {
           Swal.fire({
             title: "Error",
-            text: error.response.data.message,
+            text: "Import file failed",
             icon: "error",
             showConfirmButton: false,
             timer: 1500,
@@ -99,6 +99,17 @@ const MarketplaceProjectCoupon = () => {
   return (
     <>
       <div className="m-2 p-4">
+        <p className="text-gray-500 text-l mb-2">
+          Download template{" "}
+          <span>
+            <a
+              href="https://funfundingmediafiles.blob.core.windows.net/fundingprojectfiles/CouponFileTemplate_149c720d-a6cc-44d0-9124-b80db1b55976.xlsx"
+              style={{ color: "var(--primary-green)", fontWeight: "500" }}
+            >
+              here
+            </a>
+          </span>
+        </p>
         <Box
           sx={{
             display: "flex",

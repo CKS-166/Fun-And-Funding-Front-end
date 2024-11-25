@@ -17,6 +17,7 @@ const AdminMilestone = () => {
     "Warning",
     "Failed",
     "Submitted",
+    "Resubmitted"
   ];
 
   const handleOpenModal = (fundingProject) => {

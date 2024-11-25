@@ -254,7 +254,7 @@ function AdminReport() {
         <div className="fixed inset-0 flex justify-center items-center bg-gray-800 bg-opacity-75 z-50">
           <div className="w-[75rem] bg-white p-10 rounded-3xl shadow-lg mb-10 overflow-y-auto max-h-[90vh]">
             <h1 className="text-2xl text-center font-bold text-gray-800 mb-6">
-              Send Report Email
+              Send Report Email Description
             </h1>
             <form
               onSubmit={(e) => {
@@ -276,7 +276,7 @@ function AdminReport() {
                   type="submit"
                   className="w-full bg-green-500 text-white py-3 rounded-lg hover:bg-green-600 transition-all duration-200"
                 >
-                  Submit Report
+                  Send email
                 </button>
                 <button
                   type="button"

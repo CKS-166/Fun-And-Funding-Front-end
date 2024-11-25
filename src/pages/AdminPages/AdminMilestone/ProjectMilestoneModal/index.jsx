@@ -185,6 +185,24 @@ const ProjectMilestoneModal = ({ pmData, openModal, setOpenModal }) => {
           </div>
         );
 
+      case 6: // resubmitted
+        return (
+          <div>
+            <button
+              onClick={handleApprove}
+              className="text-white bg-gradient-to-r from-primary-green/70 via-primary-green/80 to-primary-green hover:bg-gradient-to-br font-medium rounded-lg text-sm px-5 py-2 text-center me-2 mb-2"
+            >
+              Approve project milestone
+            </button>
+            <button
+              onClick={handleFail}
+              className="text-white bg-red-500 hover:bg-gradient-to-br font-medium rounded-lg text-sm px-5 py-2 text-center me-2 mb-2"
+            >
+              Fail project milestone
+            </button>
+          </div>
+        );
+
       case 3: // Warning
         return (
           <div>

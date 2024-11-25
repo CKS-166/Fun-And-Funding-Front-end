@@ -33,7 +33,9 @@ const TransactionTable = ({ transactions }) => {
   };
 
   return (
-    <TableContainer component={Paper}>
+    <>
+        {transactions && transactions.length > 0 && (
+      <TableContainer component={Paper}>
       <Typography
         variant="h5"
         sx={{ padding: "16px", backgroundColor: "#1BAA64", color: "white" }}
@@ -75,6 +77,9 @@ const TransactionTable = ({ transactions }) => {
         </Button>
       )}
     </TableContainer>
+    ) }
+    </>
+
   );
 };
 

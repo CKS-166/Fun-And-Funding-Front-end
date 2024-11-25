@@ -68,7 +68,7 @@ const RequestMilestoneModal = ({ open, handleClose, milestone, projectId, handle
         "fundingProjectId": projectId,
         "title": pmTitle,
         "introduction": pmIntro,
-        // "totalAmount": totalAmount
+        "totalAmount": totalAmount
       })
         .then(res => {
           console.log(res);

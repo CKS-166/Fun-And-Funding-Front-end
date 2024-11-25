@@ -87,38 +87,63 @@ function UpdateFundingProjectLayout() {
       formData.append("Description", project.description);
       formData.append("Introduction", project.introduction);
 
-      if (project.wallet.bankAccount) {
-        formData.append("BankAccount.Id", project.wallet.bankAccount.id);
-        formData.append(
-          "BankAccount.BankNumber",
-          project.wallet.bankAccount.bankNumber
-        );
-        formData.append(
-          "BankAccount.BankCode",
-          project.wallet.bankAccount.bankCode
-        );
-      }
+    const fetchProject = async () => {
+        console.log(token)
+        try {
+            if (!token) {
+                navigate('/home');
+            }
+            setIsLoading(true);
+            const response = await fundingProjectApiInstace.get(`/owner/${id}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            console.log(response)
+            if (response && response.data) {
+                const project = response.data._data;
+                const filteredPackages = project.packages.filter(pkg => pkg.packageTypes !== 0);
 
-      project.packages.forEach((packageItem, index) => {
-        formData.append(`Packages[${index}].Id`, packageItem.id);
-        formData.append(`Packages[${index}].Name`, packageItem.name);
-        formData.append(
-          `Packages[${index}].RequiredAmount`,
-          packageItem.requiredAmount
-        );
-        formData.append(
-          `Packages[${index}].Description`,
-          packageItem.description
-        );
-        formData.append(
-          `Packages[${index}].LimitQuantity`,
-          packageItem.limitQuantity
-        );
-        if (packageItem.updatedImage) {
-          formData.append(
-            `Packages[${index}].UpdatedImage`,
-            packageItem.updatedImage
-          );
+                const existedFile = project.fundingFiles.map(file => ({
+                    id: file.id,
+                    name: file.name,
+                    url: file.url,
+                    urlFile: null,
+                    filetype: file.filetype,
+                    isDeleted: file.isDeleted,
+                    newlyAdded: false,
+                }));
+
+                setProject({
+                    ...project,
+                    packages: filteredPackages,
+                    fundingFiles: null,
+                    existedFile: existedFile,
+                });
+            } else {
+                console.error('No project data found');
+            }
+        } catch (error) {
+            console.log(error);
+            if (error) {
+                Swal.fire({
+                    title: 'Error',
+                    text: "You are not owner of this project",
+                    icon: 'error',
+                });
+                navigate("/home")
+            }
+            if (error.response) {
+                console.error('Server responded with an error:', error.response.data);
+                console.error('Status code:', error.response.status);
+                console.error('Headers:', error.response.headers);
+            } else if (error.request) {
+                console.error('No response received:', error.request);
+            } else {
+                console.error('Error setting up request:', error.message);
+            }
+        } finally {
+            setIsLoading(false);
         }
         packageItem.rewardItems.forEach((reward, rewardIndex) => {
           formData.append(

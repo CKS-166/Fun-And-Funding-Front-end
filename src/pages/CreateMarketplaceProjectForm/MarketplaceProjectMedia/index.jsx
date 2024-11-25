@@ -58,7 +58,7 @@ const MarketplaceProjectMedia = () => {
 
     if (thumbnail.length > 0) {
       marketplaceFiles.push({
-        name: "marketplace_project_thumbnail",
+        name: thumbnail[0].file.name,
         url: thumbnail[0].file || thumbnail[0].source, // Use source if previously uploaded
         filetype: 2,
       });
@@ -66,7 +66,7 @@ const MarketplaceProjectMedia = () => {
 
     if (projectVideo.length > 0) {
       marketplaceFiles.push({
-        name: "marketplace_project_video",
+        name: projectVideo[0].file.name,
         url: projectVideo[0].file || projectVideo[0].source,
         filetype: 1,
       });
@@ -75,7 +75,7 @@ const MarketplaceProjectMedia = () => {
     if (projectImages.length > 0) {
       projectImages.forEach((image, index) => {
         marketplaceFiles.push({
-          name: `marketplace_project_image_${index + 1}`,
+          name: image.file.name,
           url: image.file || image.source,
           filetype: 4,
         });

@@ -54,7 +54,8 @@ const NotificationCard = ({ notiData }) => {
                   <Avatar alt="User avatar" src={noti.actor.avatar} sx={{ height: '2.5rem', width: '2.5rem', marginTop: '.2rem' }} />
                   <div className="message">
                     <a href={`/profile/${noti.actor._id}`} className="text-black font-bold text-sm hover:underline">@{noti.actor.UserName}</a><br />
-                    <a href={notificationLink} target="_blank" className="text-black text-sm whitespace-nowrap hover:underline" dangerouslySetInnerHTML={{ __html: noti.message }}></a><br />
+                    <a href={notificationLink} target="_blank"
+                      className="text-black text-sm whitespace-pre-line hover:underline" dangerouslySetInnerHTML={{ __html: noti.message }}></a><br />
                     <div className="text-gray-600 italic text-xs mt-2">
                       {new Date(noti.date).toLocaleString()}
                     </div>

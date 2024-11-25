@@ -139,7 +139,7 @@ const UpdatesSection = () => {
             </Timeline>
 
             {
-                pmData &&
+                pmData && selectedPm &&
                 <ProjectMilestoneModal2 openModal={openModal} setOpenModal={setOpenModal} pmData={selectedPm} />
             }
         </>

@@ -267,7 +267,7 @@ const ProjectMilestoneModal = ({ pmData, openModal, setOpenModal }) => {
 
               <div class="p-4 md:p-5 h-[35rem] overflow-y-auto">
                 <Stepper
-                  activeStep={pmData?.milestone.milestoneOrder}
+                  activeStep={pmData?.milestone.milestoneOrder - 1}
                   alternativeLabel
                 >
                   {milestones.map((milestone) => (
@@ -413,13 +413,18 @@ const ProjectMilestoneModal = ({ pmData, openModal, setOpenModal }) => {
                         </div>
 
                         <div className="flex justify-end mt-3">
-                          <button
-                            type="button"
-                            onClick={() => setOpenQRCode(true)}
-                            class="text-white bg-primary-green font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 "
-                          >
-                            Transfer fund
-                          </button>
+                          {pmData?.status == 2
+                            ? ('')
+                            : (
+                              <button
+                                type="button"
+                                onClick={() => setOpenQRCode(true)}
+                                class="text-white bg-primary-green font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 "
+                              >
+                                Transfer fund
+                              </button>
+                            )}
+
                         </div>
                         {pmData && (
                           <QRCodeModal

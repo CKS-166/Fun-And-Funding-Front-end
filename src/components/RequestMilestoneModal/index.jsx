@@ -60,12 +60,10 @@ const RequestMilestoneModal = ({ open, handleClose, milestone, projectId, handle
     console.log("Start Date:", startDate.format("YYYY-MM-DD"));
     const createdDate = dayjs.utc(startDate.format("YYYY-MM-DD")).toISOString();
     console.log(createdDate);
-    var now = new Date();
-    var newCreatedDate = dayjs.utc(now.format("YYYY-MM-DD")).toISOString();
 
     try {
       projectMilestoneApiInstance.post("", {
-        "createdDate": newCreatedDate,
+        "createdDate": createdDate,
         "status": 0,
         "milestoneId": milestone.id,
         "fundingProjectId": projectId,

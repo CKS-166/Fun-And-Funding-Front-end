@@ -14,6 +14,7 @@ import Swal from "sweetalert2";
 import Cookies from "js-cookie";
 import marketplaceProjectApiInstace from "../../../utils/ApiInstance/marketplaceProjectApiInstance";
 import { useLoading } from "../../../contexts/LoadingContext";
+import couponApiInstace from "../../../utils/ApiInstance/couponApiInstance";
 
 registerPlugin(FilePondPluginFileValidateType, FilePondPluginImagePreview);
 
@@ -58,7 +59,7 @@ const MarketplaceProjectGameContent = () => {
 
     if (gameFile.length > 0) {
       files.push({
-        name: "game_file",
+        name: gameFile[0].file.name,
         url: gameFile[0].file || gameFile[0].source,
         filetype: 3,
       });
@@ -67,7 +68,7 @@ const MarketplaceProjectGameContent = () => {
     if (evidenceFiles.length > 0) {
       evidenceFiles.forEach((evidence, index) => {
         files.push({
-          name: `evidence_file_${index + 1}`,
+          name: evidence.file.name,
           url: evidence.file || evidence.source,
           filetype: 5,
         });
@@ -177,6 +178,10 @@ const MarketplaceProjectGameContent = () => {
           showConfirmButton: false,
           timer: 1500,
         });
+
+        const marketplaceProjectId = response.data._data.id;
+
+        navigate(`/marketplace-detail/${marketplaceProjectId}`);
       }
     } catch (error) {
       console.log(error);
@@ -202,7 +207,7 @@ const MarketplaceProjectGameContent = () => {
         </div>
 
         <div className="px-5">
-          <FormDivider title="Coupon" />
+          {/* <FormDivider title="Coupon" />
           <Grid2 container spacing={2} className="my-8">
             <Grid2 size={3}>
               <h4 className="font-semibold text-sm mb-1">Coupon</h4>
@@ -232,7 +237,7 @@ const MarketplaceProjectGameContent = () => {
                 labelIdle='Drag & drop a file here or <span class="filepond--label-action">Browse</span>'
               />
             </Grid2>
-          </Grid2>
+          </Grid2> */}
 
           <FormDivider title="Game file" />
           <Grid2 container spacing={2} className="my-8">

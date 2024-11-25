@@ -51,7 +51,6 @@ function UpdateFundingProjectLayout() {
     const [loadingStatus, setLoadingStatus] = useState(0);
     const [milestoneList, setMilestoneList] = useState([]);
     console.log(project);
-    const token = Cookie.get("_auth");
     //fetch milestones
     const fetchMilestones = async () => {
         setIsLoading(true);

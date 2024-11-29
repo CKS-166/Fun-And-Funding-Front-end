@@ -66,7 +66,9 @@ function MilestoneTable({ dataLoad, notify }) {
 
   const fetchMilestoneData = async () => {
     try {
-      const res = await milestoneApiInstance.get("/group-latest-milestone");
+      const res = await milestoneApiInstance.get(
+        "/group-latest-milestone?status=false"
+      );
 
       if (res.data._isSuccess) {
         setDataReload(res.data._data);
@@ -365,7 +367,7 @@ function MilestoneTable({ dataLoad, notify }) {
                                       <TableCell align="center">
                                         <div className="requirementsButtons">
                                           <button
-                                            className="w-full bg-green-500 text-white py-3 rounded-lg my-4 hover:bg-green-600 transition-all duration-20"
+                                            className="w-full bg-green-500 text-white p-3 rounded-lg my-4 hover:bg-green-600 transition-all duration-20"
                                             onClick={() =>
                                               handleUpdateRequirement(
                                                 requirement.id

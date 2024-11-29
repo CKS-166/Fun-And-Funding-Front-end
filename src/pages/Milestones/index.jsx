@@ -39,7 +39,8 @@ function Milestones() {
       <h1 className="text-3xl font-bold mb-6 text-center text-[#1BAA64]">
         Milestone Management
       </h1>
-      <CreateMilestone setDataLoad={setDataLoad} notify={notify} />
+
+      {/* <CreateMilestone setDataLoad={setDataLoad} notify={notify} /> */}
       <TableMilestones dataLoad={dataLoad} notify={notify} />
       <ToastContainer
         position="bottom-left"

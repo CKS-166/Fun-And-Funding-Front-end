@@ -33,7 +33,6 @@ import userApiInstance from '../../utils/ApiInstance/userApiInstance';
 import "./index.css";
 
 function HomePage() {
-  const { isLoading, setIsLoading } = useLoading();
   const [mailSending, isMailSending] = useState(false);
   const [sendingSuccess, isSendingSuccess] = useState(false);
   const [openReportForm, setOpenReportForm] = useState(false);
@@ -61,14 +60,6 @@ function HomePage() {
   useEffect(() => {
     fetchStatistic();
   }, [])
-
-  useEffect(() => {
-    if (!fetchPlatformStatistic || !fetchBackers || !fetchComments || !fetchFundingProject || !fetchMarketplaceProject) {
-      setIsLoading(true);
-    } else {
-      setIsLoading(false);
-    }
-  }, [fetchPlatformStatistic, fetchBackers, fetchComments, fetchFundingProject, fetchMarketplaceProject])
 
   const fetchStatistic = async () => {
     try {

@@ -37,7 +37,7 @@ function AdminFundingProject() {
             setIsLoading(true);
             const res = await fundingProjectApiInstance.get(``, {
                 params: {
-                    pageSize: 10,
+                    pageSize: 999999,
                     pageIndex: pageIndex,
                     searchValue: searchValue
                 }

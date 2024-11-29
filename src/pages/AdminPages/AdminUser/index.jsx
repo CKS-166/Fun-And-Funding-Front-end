@@ -28,7 +28,7 @@ function AdminUsers() {
             setIsLoading(true);
             const res = await userApiInstance.get(``, {
                 params: {
-                    pageSize: 10,
+                    pageSize: 99999,
                     pageIndex: pageIndex,
                     searchValue: searchValue
                 }

@@ -402,9 +402,20 @@ const ProjectMilestoneModal = ({ pmData, openModal, setOpenModal }) => {
                               <tr class="border-b border-gray-200 dark:border-gray-700">
                                 <th
                                   scope="row"
+                                  class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 dark:text-white"
+                                >
+                                  (3) Actual received fund (Commission fee: 5%)
+                                </th>
+                                <td class="px-6 py-4">
+                                  95%
+                                </td>
+                              </tr>
+                              <tr class="border-b border-gray-200 dark:border-gray-700">
+                                <th
+                                  scope="row"
                                   class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 flex items-center gap-2"
                                 >
-                                  Milestone requested amount = (1) x (2) x <u>50%</u>
+                                  Milestone requested amount = (1) x (2) x (3) x <u>50%</u>
                                   <HtmlTooltip
                                     title={
                                       <>
@@ -423,7 +434,7 @@ const ProjectMilestoneModal = ({ pmData, openModal, setOpenModal }) => {
                                 <td class="px-6 py-4 font-bold text-black text-lg">
                                   {(
                                     pmData?.milestone.disbursementPercentage *
-                                    pmData?.fundingProject.balance * 0.5
+                                    pmData?.fundingProject.balance * 0.5 * 0.95
                                   )
                                     .toString()
                                     .replace(/\B(?=(\d{3})+(?!\d))/g, ".")}{" "}

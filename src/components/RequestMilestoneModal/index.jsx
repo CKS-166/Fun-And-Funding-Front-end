@@ -13,7 +13,7 @@ import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import utc from "dayjs/plugin/utc";
 import fundingProjectApiInstace from '../../utils/ApiInstance/fundingProjectApiInstance';
-const RequestMilestoneModal = ({ open, handleClose, milestone, projectId, handleCloseBackdrop }) => {
+const RequestMilestoneModal = ({ render,open, handleClose, milestone, projectId, handleCloseBackdrop }) => {
   const modalStyle = {
     position: "absolute",
     top: "50%",
@@ -27,7 +27,7 @@ const RequestMilestoneModal = ({ open, handleClose, milestone, projectId, handle
     zIndex: 9999,
 
   };
-  const [startDate, setStartDate] = useState(null);
+  console.log(render);
   const [alert, setAlert] = useState(false);
   const [pmIntro, setPmIntro] = useState("")
   const [pmTitle, setPmTitle] = useState("")
@@ -51,19 +51,8 @@ const RequestMilestoneModal = ({ open, handleClose, milestone, projectId, handle
 
 
   const handleSubmit = () => {
-    dayjs.extend(utc);
-    if (!startDate) {
-      setAlert(true); // Show alert if no date selected
-      return;
-    }
-
-    console.log("Start Date:", startDate.format("YYYY-MM-DD"));
-    const createdDate = dayjs.utc(startDate.format("YYYY-MM-DD")).toISOString();
-    console.log(createdDate);
-
     try {
       projectMilestoneApiInstance.post("", {
-        "createdDate": createdDate,
         "status": 0,
         "milestoneId": milestone.id,
         "fundingProjectId": projectId,
@@ -79,8 +68,14 @@ const RequestMilestoneModal = ({ open, handleClose, milestone, projectId, handle
               title: `Request for ${milestone.milestoneName} sent!`,
               text: "The waiting process can take 2-5 days. Thank you for your patience.Please check your email for more details.",
               icon: "success"
+            }).then((result) => {
+              if (result.isConfirmed) {
+                // Run the render function only when the user clicks "OK"
+                render && render();
+              }
             });
             handleClose();
+            
           } else {
             toast.warn(res.data._message[0])
           }
@@ -101,9 +96,8 @@ const RequestMilestoneModal = ({ open, handleClose, milestone, projectId, handle
         text: error.message,
         icon: "error"
       });
+    }finally{
     }
-    console.log("Start Date:", startDate.format("YYYY-MM-DD"));
-    // Close the modal after submitting
   };
 
   return (
@@ -208,21 +202,6 @@ const RequestMilestoneModal = ({ open, handleClose, milestone, projectId, handle
 
 
         <Stack spacing={2} mt={2}>
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DatePicker
-              label="Select Start Date"
-              value={startDate}
-              onChange={(newDate) => setStartDate(newDate)}
-              renderInput={(params) => <TextField {...params} fullWidth />}
-            />
-          </LocalizationProvider>
-
-          {alert && (
-            <Alert severity="error" onClose={() => setAlert(false)}>
-              Please select a start date!
-            </Alert>
-          )}
-
           <Button variant="contained" color="primary" onClick={handleSubmit}>
             Submit
           </Button>

@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Backdrop, Button, Typography, Box } from '@mui/material'
 import RequestMilestoneModal from '../../RequestMilestoneModal';
 import './index.css'
-const BackdropRequestMilestone = ({ isHidden, milestone, projectId, onCloseBackdrop, status }) => {
+const BackdropRequestMilestone = ({ render, isHidden, milestone, projectId, onCloseBackdrop, status }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     console.log(status);
     const handleProcess = () => {
@@ -51,6 +51,7 @@ const BackdropRequestMilestone = ({ isHidden, milestone, projectId, onCloseBackd
                         <Typography>Request Milestone</Typography>
                     </Button>
                     <RequestMilestoneModal
+                        render={render}
                         open={isModalOpen} handleClose={handleModalClose}
                         milestone={milestone} projectId={projectId} handleCloseBackdrop={onCloseBackdrop} />
                 </Backdrop>

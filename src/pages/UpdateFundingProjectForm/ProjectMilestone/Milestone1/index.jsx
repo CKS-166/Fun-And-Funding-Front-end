@@ -20,6 +20,7 @@ import milestoneApiInstace from "../../../../utils/ApiInstance/milestoneApiInsta
 import BackdropRequestMilestone from "../../../../components/UpdateProject/BackdropRequestMilestone";
 import Swal from "sweetalert2";
 import CompleteMilestoneButton from "../../../../components/UpdateProject/CompleteMilestoneButton";
+import Timer from "../../../../components/Timer";
 
 const MilestoneForm = () => {
   const { id } = useParams(); // Get the project ID from the URL
@@ -38,6 +39,7 @@ const MilestoneForm = () => {
   const [isBackdropHidden, setIsBackdropHidden] = useState(false);
   const [buttonActive, setButtonActive] = useState(false)
   const [issueLog, setIssueLog] = useState("");
+  const [daysLeft, setDaysLeft] = useState(0);
   //check available project milestone
   const getMilestoneData = async (id) => {
     setIsLoading(true); // Start loading when data fetch begins
@@ -45,6 +47,11 @@ const MilestoneForm = () => {
       const data = await checkAvailableMilestone(projectId, id);
       setMilestoneData(data); // Set data after fetching
       console.log(data);
+      const start = new Date(data.data[0].createdDate);
+      const end = new Date(data.data[0].endDate);
+      const timeDiff = end - start;
+      const dayDiff = Math.round(timeDiff / (1000 * 60 * 60 * 24));
+      setDaysLeft(dayDiff);
       if (data.status === 'create' || data.status === 'edit' || data.status === 'warning') {
         setIsLoading(false)
       } else {
@@ -199,7 +206,8 @@ const MilestoneForm = () => {
           projectId={projectId}
           milestone={milestone}
           status={milestoneData.status}
-          onCloseBackdrop={handleBackdropClose} />}
+          onCloseBackdrop={handleBackdropClose}
+          render={() => getMilestoneData(milestoneId)} />}
       {/* Backdrop with loading spinner */}
       <Backdrop sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }} open={false}>
         <CircularProgress color="inherit" />
@@ -219,7 +227,9 @@ const MilestoneForm = () => {
               {milestone.description}
             </Typography>
           </Box>
-
+          <Box>
+            <Timer days={daysLeft}/>
+          </Box>
 
         </Box>
 
@@ -287,8 +297,10 @@ const MilestoneForm = () => {
             </TabContext>
 
 
-            <Button ype="submit" variant="contained" color="primary" sx={{ backgroundColor: '#1BAA64'
-              , textTransform: 'none', fontWeight: '600', width : '100px' }}  type="submit">
+            <Button ype="submit" variant="contained" color="primary" sx={{
+              backgroundColor: '#1BAA64'
+              , textTransform: 'none', fontWeight: '600', width: '100px'
+            }} type="submit">
               Save
             </Button >
           </form>

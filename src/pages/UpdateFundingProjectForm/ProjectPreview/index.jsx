@@ -18,6 +18,7 @@ function ProjectPreview() {
     const [lineData, setLineData] = useState([]);
     const [barData, setBarData] = useState([]);
     const [transactionData, setTransactionData] = useState([]);
+    
     useEffect(() => {
         getProject();
         console.log("a")

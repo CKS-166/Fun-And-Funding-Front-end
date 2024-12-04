@@ -47,8 +47,8 @@ const MilestoneForm = () => {
       const data = await checkAvailableMilestone(projectId, id);
       setMilestoneData(data); // Set data after fetching
       console.log(data);
-      const start = new Date(data.data[0].createdDate);
-      const end = new Date(data.data[0].endDate);
+      const start = data.data[0] && new Date(data.data[0].createdDate);
+      const end = data.data[0] && new Date(data.data[0].endDate);
       const timeDiff = end - start;
       const dayDiff = Math.round(timeDiff / (1000 * 60 * 60 * 24));
       setDaysLeft(dayDiff);
@@ -146,7 +146,7 @@ const MilestoneForm = () => {
       Swal.fire({
         title: "Error",
         text: "Failed to submit requirements",
-        icon: "erro"
+        icon: "error"
       });
       alert("Failed to submit requirements.");
     } finally {

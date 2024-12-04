@@ -28,7 +28,7 @@ const CompleteMilestoneButton = ({submit, status, pmId, render }) => {
             console.log(error);
             Swal.fire({
                 icon: 'error',
-                title: 'Milestone submitted unsuccessfully',
+                title: error.response.data.message || 'Milestone submitted unsuccessfully',
                 showConfirmButton: false,
                 timer: 1500
             })

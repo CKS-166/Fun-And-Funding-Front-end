@@ -31,7 +31,7 @@ function Milestone2() {
     //get fixed milestone
     const fetchFixedMilestone = async () => {
         try {
-            await milestoneApiInstace.get(`/${milestoneId}`).then(response => {
+            await milestoneApiInstace.get(`/${milestoneId}?filter=1`).then(response => {
                 setMilestone(response.data.result._data);
                 console.log(response.data)
             });

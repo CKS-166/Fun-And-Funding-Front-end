@@ -151,6 +151,7 @@ function UpdateFundingProjectLayout() {
             }
         } catch (error) {
             notify(error.response?.data?.message || error.message || "An error occurred", "error");
+            console.log(error)
         } finally {
             setIsLoading(false);
             setLoadingStatus(0);

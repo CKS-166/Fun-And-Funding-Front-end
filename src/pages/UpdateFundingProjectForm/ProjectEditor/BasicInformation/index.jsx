@@ -47,9 +47,14 @@ function BasicInformation() {
     };
 
     const checkIfEdited = (updatedName, updatedDescription, updatedIntro) => {
-        if (
+        if (updatedName == null || updatedName.trim().length === 0 || updatedDescription == null || updatedDescription.trim().length === 0
+            || updatedIntro == null || updatedIntro.trim().length === 0) {
+            setBasicInfoEdited(false);
+        }
+        else if (
             updatedName !== project.name ||
             updatedDescription !== project.description || updatedIntro !== project.introduction
+
         ) {
             setBasicInfoEdited(true);
         } else {
@@ -122,11 +127,13 @@ function BasicInformation() {
                     What is the title of your project?
                 </Typography>
                 <TextField
-                    placeholder='Project name...'
+                    placeholder="Project name..."
                     className="custom-update-textfield"
                     variant="outlined"
-                    required={true}
+                    required
                     value={name}
+                    error={!name || name.trim().length === 0}
+                    helperText={!name || name.trim().length === 0 ? "Project Name cannot be null" : ""}
                     onChange={handleChangeName}
                 />
             </div>
@@ -151,6 +158,8 @@ function BasicInformation() {
                     variant="outlined"
                     required={true}
                     value={description}
+                    error={!description || description.trim().length === 0}
+                    helperText={!description || description.trim().length === 0 ? "Project Description cannot be null" : ""}
                     onChange={handleChangeDescription}
                 />
             </div>
@@ -207,6 +216,11 @@ function BasicInformation() {
                     sx={{ width: '70%', }}
                 >
                     Share and introduce the story behind the project.
+                </Typography>
+                <Typography
+                    sx={{ color: '#d9534f', fontWeight: '500', display: intro != null && intro.trim().length !== 0 ? 'none' : 'block' }}
+                >
+                    Project Introduction cannot be null
                 </Typography>
                 <QuillEditor introductionData={intro} setIntroductionData={handleChangeIntroduction} />
             </div>

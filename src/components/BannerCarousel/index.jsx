@@ -173,7 +173,8 @@ function BannerCarousel() {
                                     backgroundPosition: 'center',
                                 }}
                             ></div>
-                            <div className="rounded-lg absolute inset-0 bg-black opacity-60 hover:bg-black hover:opacity-40 transition-all duration-300 ease-in-out"></div>
+                            <div className={`rounded-lg absolute inset-0 bg-black hover:bg-black hover:opacity-20 transition-all duration-300 ease-in-out ${index === currentIndex ? 'opacity-20' : 'opacity-60'
+                                }`}></div>
                         </div>
                     ))}
                 </div>

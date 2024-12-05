@@ -33,6 +33,7 @@ import userApiInstance from '../../utils/ApiInstance/userApiInstance';
 import "./index.css";
 
 function HomePage() {
+  const { isLoading, setIsLoading } = useLoading();
   const [mailSending, isMailSending] = useState(false);
   const [sendingSuccess, isSendingSuccess] = useState(false);
   const [openReportForm, setOpenReportForm] = useState(false);
@@ -58,8 +59,17 @@ function HomePage() {
   };
 
   useEffect(() => {
+    setIsLoading(true);
     fetchStatistic();
-  }, [])
+  }, []);
+
+  useEffect(() => {
+    if (isFetchFundingProject && isFetchMarketplaceProject && isFetchPlatformStatistic && isFetchBackers && isFetchComments) {
+      setIsLoading(false);
+    } else {
+      setIsLoading(true);
+    }
+  }, [isFetchFundingProject, isFetchMarketplaceProject, isFetchPlatformStatistic, isFetchBackers, isFetchComments])
 
   const fetchStatistic = async () => {
     try {
@@ -128,12 +138,13 @@ function HomePage() {
             py: "2rem",
             mx: "18.125rem",
             boxShadow: "1rem",
+            borderRadius: '0.625rem'
           }}
         >
           <Typography
             sx={{
               fontWeight: "400",
-              fontSize: "1.5rem",
+              fontSize: "1.25rem",
               color: "#2F3645",
               textAlign: "center",
               mb: "1.5rem",
@@ -177,7 +188,7 @@ function HomePage() {
                   },
                 },
               }}
-              sx={{ height: "3.875rem" }}
+              sx={{ height: "3rem" }}
             />
             <Button
               variant="contained"
@@ -187,7 +198,7 @@ function HomePage() {
                 borderTopLeftRadius: "0",
                 borderBottomLeftRadius: "0",
                 textTransform: "none",
-                fontSize: "1.5rem",
+                fontSize: "1.25rem",
                 padding: "0.813rem 2.25rem",
                 width: "8.375rem",
                 fontWeight: "600",

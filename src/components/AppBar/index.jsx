@@ -197,6 +197,7 @@ const FunFundingAppBar = () => {
     justifyContent: "center",
     display: "flex",
     px: "4rem",
+    zIndex: '100'
   };
 
   const tabStyles = {
@@ -547,7 +548,8 @@ const FunFundingAppBar = () => {
                   fontWeight: "600",
                   textTransform: "none",
                   px: "3rem",
-                  fontSize: "1.2rem",
+                  height: "2.5rem",
+                  fontSize: "1rem",
                 }}
                 onClick={openAuthDialog}
               >
@@ -558,7 +560,6 @@ const FunFundingAppBar = () => {
           </Toolbar>
         </Container>
       </AppBar>
-      <Divider />
       <CartDrawer cartOpen={cartOpen} setCartOpen={handleCartOpen} />
     </div>
   );

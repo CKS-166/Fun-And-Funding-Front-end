@@ -44,7 +44,6 @@ function TestimonialCard({ testimonial }) {
                 </div>
             </CardContent>
         </Card>
-
     )
 }
 

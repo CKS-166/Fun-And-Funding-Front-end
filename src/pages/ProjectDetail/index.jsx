@@ -180,8 +180,11 @@ const ProjectDetail = () => {
         .then((response) => {
           setProjectData(response.data._data);
           setIsLoading(true);
-          const start = new Date(response.data._data.startDate);
+          const start = new Date();
           const end = new Date(response.data._data.endDate);
+          // Set both dates to midnight to only compare calendar dates
+          start.setHours(0, 0, 0, 0);
+          end.setHours(0, 0, 0, 0);
           const timeDiff = end - start;
           const sanitizeIntro = DOMPurify.sanitize(
             response.data._data.introduction
@@ -422,7 +425,7 @@ const ProjectDetail = () => {
                         value={convertPercentage(
                           projectData.balance,
                           projectData.target
-                        )}
+                        ) <= 100 ? convertPercentage(projectData.balance, projectData.target) : 100}
                       />
                       <Box
                         sx={{

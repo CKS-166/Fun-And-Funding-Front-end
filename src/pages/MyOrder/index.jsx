@@ -21,8 +21,7 @@ const MyOrder = () => {
             }
             setIsLoading(false);
         }).catch(err => {
-            console.log(err);
-            alert(err)
+           setOrders([]);
         })
     }
     useEffect(() => {

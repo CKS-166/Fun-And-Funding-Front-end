@@ -32,10 +32,17 @@ const TransactionTable = ({ transactions }) => {
     setVisibleRows((prev) => prev + 10); // Increment visible rows by 10
   };
 
+  // Check if transactions is valid and is an array
+  if (!Array.isArray(transactions) || transactions.length === 0 || !transactions) {
+    return (
+      <Typography variant="h6" sx={{ textAlign: "center", marginTop: "20px" }}>
+        No transactions available.
+      </Typography>
+    );
+  }
+
   return (
-    <>
-        {transactions && transactions.length > 0 && (
-      <TableContainer component={Paper}>
+    <TableContainer component={Paper}>
       <Typography
         variant="h5"
         sx={{ padding: "16px", backgroundColor: "#1BAA64", color: "white" }}
@@ -46,7 +53,6 @@ const TransactionTable = ({ transactions }) => {
         <TableHead>
           <TableRow>
             <TableCell><strong>Amount</strong></TableCell>
-            {/* <TableCell><strong>Balance</strong></TableCell> */}
             <TableCell><strong>Transfer Date</strong></TableCell>
             <TableCell><strong>Type</strong></TableCell>
           </TableRow>
@@ -55,7 +61,6 @@ const TransactionTable = ({ transactions }) => {
           {transactions.slice(0, visibleRows).map((transaction, index) => (
             <TableRow key={transaction.id || index}>
               <TableCell>{transaction.totalAmount.toLocaleString()}</TableCell>
-              {/* <TableCell>{transaction.balance || "N/A"}</TableCell> */}
               <TableCell>
                 {new Date(transaction.createdDate).toLocaleDateString()}{" "}
                 {new Date(transaction.createdDate).toLocaleTimeString()}
@@ -77,9 +82,6 @@ const TransactionTable = ({ transactions }) => {
         </Button>
       )}
     </TableContainer>
-    ) }
-    </>
-
   );
 };
 

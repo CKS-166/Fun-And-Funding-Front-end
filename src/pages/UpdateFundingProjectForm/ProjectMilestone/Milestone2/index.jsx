@@ -48,7 +48,7 @@ function Milestone2() {
             setMilestoneData(data); // Set data after fetching
             console.log(data);
 
-            if (data.status === 'create' || data.status === 'edit') {
+            if (data.status === 'create' || data.status === 'edit' || data.status === 'warning') {
                 setIsBackdropHidden(false)
                 setTasks(data.data[0].projectMilestoneRequirements)
             }
@@ -189,7 +189,8 @@ function Milestone2() {
                     projectId={projectId}
                     milestone={milestone}
                     status={milestoneData.status}
-                    onCloseBackdrop={handleBackdropClose} />}
+                    onCloseBackdrop={handleBackdropClose}
+                    render={() => getMilestoneData(milestoneId)} />}
             <div className='basic-info-section'>
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingRight: '5rem' }}>
                     <Box>
@@ -206,7 +207,7 @@ function Milestone2() {
                         </Typography>
                     </Box>
                     <Box>
-                        <CompleteMilestoneButton  render={() => getMilestoneData(milestoneId)} status={milestoneData.status} pmId={milestoneData.status == 'edit' && milestoneData.data[0].id} />
+                        <CompleteMilestoneButton  render={() => getMilestoneData(milestoneId)} status={milestoneData.status} pmId={milestoneData.status == 'edit' || milestoneData.status == 'warning' && milestoneData.data[0].id} />
                     </Box>
 
                 </Box>

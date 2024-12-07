@@ -135,7 +135,7 @@ function BannerCarousel() {
                                             }
                                             onClick={handleButtonClick}
                                         >
-                                            Explore Now!
+                                            Start now
                                         </Button>
                                     </Box>
                                 </>

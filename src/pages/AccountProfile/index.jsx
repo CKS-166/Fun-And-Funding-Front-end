@@ -208,11 +208,10 @@ function AccountProfile() {
       dayOfBirth:
         userBirthDate == null
           ? null
-          : `${userBirthDate.get("year")} - ${
-              userBirthDate.get("month") + 1 < 10
-                ? `0${userBirthDate.get("month") + 1}`
-                : userBirthDate.get("month") + 1
-            } - ${userBirthDate.get("date")}`,
+          : `${userBirthDate.get("year")} - ${userBirthDate.get("month") + 1 < 10
+            ? `0${userBirthDate.get("month") + 1}`
+            : userBirthDate.get("month") + 1
+          } - ${userBirthDate.get("date")}`,
       address: userAddress,
       gender: Object.keys(genderMapping).find(
         (key) => genderMapping[key] === selectedGender
@@ -245,12 +244,23 @@ function AccountProfile() {
             showConfirmButton: false,
             timer: 1500,
           }).then(() => {
+            fetchUserData();
             setTimeout();
           });
         }
       })
       .catch((error) => {
-        console.error("Update profile failed:", error);
+        console.log(error)
+        Swal.fire({
+          title: "Error",
+          text: "Update failed!",
+          icon: "error",
+          showConfirmButton: false,
+          timer: 1500,
+        }).then(() => {
+          fetchUserData();
+          setTimeout();
+        });
       })
       .finally(() => {
         setIsEditProfile(false);

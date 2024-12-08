@@ -31,7 +31,7 @@ const MarketplaceProjectBasicInfo = () => {
       categories: marketplaceProject?.categories,
       name: marketplaceProject?.name,
       description: marketplaceProject?.description,
-      price: 1000,
+      price: marketplaceProject?.price,
     },
   });
 
@@ -63,7 +63,7 @@ const MarketplaceProjectBasicInfo = () => {
         categories: marketplaceProject.categories,
         name: marketplaceProject.name,
         description: marketplaceProject.description,
-        price: 1000,
+        price: marketplaceProject?.price,
       });
     }
   }, [marketplaceProject, reset]);

@@ -70,7 +70,7 @@ const MarketplaceProjectCoupon = () => {
         if (response.status === 200) {
           Swal.fire({
             title: "Success",
-            text: response.data._message[0],
+            text: "The coupons are imported successfully",
             icon: "success",
             showConfirmButton: false,
             timer: 1500,

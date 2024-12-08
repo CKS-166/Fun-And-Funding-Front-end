@@ -4,7 +4,8 @@ import { useChat } from "../../contexts/ChatContext";
 import chatApiInstace from "../../utils/ApiInstance/chatApiInstance";
 import Cookies from "js-cookie";
 import userApiInstace from "../../utils/ApiInstance/userApiInstance";
-import { Box, Button, TextField, Typography } from "@mui/material";
+import { Box, Button, TextField, Tooltip, Typography } from "@mui/material";
+import { MdSend } from "react-icons/md";
 
 function Chat() {
   const token = Cookies.get("_auth");
@@ -183,6 +184,11 @@ function Chat() {
                 mb: 1,
               }}
             >
+              {/* <Tooltip
+                title={`${new Date(msg.createdDate).toLocaleString()}`}
+                arrow
+                placement="left"
+              > */}
               <Box
                 sx={{
                   maxWidth: "70%",
@@ -196,6 +202,7 @@ function Chat() {
               >
                 {msg.message}
               </Box>
+              {/* </Tooltip> */}
             </Box>
           ))
         ) : (
@@ -262,17 +269,23 @@ function Chat() {
             },
           }}
         />
-        <Button
+        {/* <Button
           variant="contained"
           onClick={sendMessage}
           sx={{
             borderRadius: "0.625rem",
-            minWidth: "6.25rem",
+            // minWidth: "6.25rem",
             backgroundColor: "#1BAA64",
+            maxHeight: "100%",
           }}
+        > */}
+        <span
+          onClick={sendMessage}
+          className="text-[#1BAA64] hover:cursor-pointer"
         >
-          Send
-        </Button>
+          <MdSend size={"2rem"} />
+        </span>
+        {/* </Button> */}
       </Box>
     </Box>
   );

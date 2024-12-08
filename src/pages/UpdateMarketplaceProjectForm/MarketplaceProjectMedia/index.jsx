@@ -205,7 +205,7 @@ function MarketplaceProjectMediaFiles() {
     if (deleteProjectImage.length <= 1) {
       Swal.fire({
         title: "Unable to delete",
-        text: "You must have at least 1 bonus image.",
+        text: "You must have at least 1 image.",
         icon: "error",
       });
     } else {
@@ -434,7 +434,7 @@ function MarketplaceProjectMediaFiles() {
       </div>
       <div className="basic-info-section">
         <Typography className="basic-info-title" sx={{ width: "70%" }}>
-          Project demo<span className="text-[#1BAA64]">*</span>
+          Project video<span className="text-[#1BAA64]">*</span>
         </Typography>
         <Typography className="basic-info-subtitle" sx={{ width: "70%" }}>
           Provide a 1-3 minute video introducing your project.
@@ -526,7 +526,7 @@ function MarketplaceProjectMediaFiles() {
       </div>
       <div className="basic-info-section !mb-[2rem]">
         <Typography className="basic-info-title" sx={{ width: "70%" }}>
-          Project bonus images
+          Project images
         </Typography>
         <Typography className="basic-info-subtitle" sx={{ width: "70%" }}>
           Provide images that showcase different aspects of your project.

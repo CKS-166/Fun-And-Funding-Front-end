@@ -47,7 +47,7 @@ const FunFundingAppBar = () => {
 
   const pages = [
     { label: "Home", route: "/home", index: 0 },
-    { label: "Crowdfunding", route: "/crowdfunding", index: 1 },
+    { label: "Crowdfunding", route: "/funding", index: 1 },
     { label: "About Us", route: "/about-us", index: 2 },
     { label: "Marketplace", route: "/marketplace", index: 3 },
   ];
@@ -80,10 +80,11 @@ const FunFundingAppBar = () => {
 
   const navigate = useNavigate();
   const location = useLocation();
-  const isLogined = Cookies.get("_auth") !== undefined;
   const token = Cookies.get("_auth");
+  const [isLogined, setIsLogined] = useState(Cookies.get("_auth") !== undefined);
 
   const [name, setName] = useState("");
+  const [role, setRole] = useState("");
 
   const [anchorEl, setAnchorEl] = useState(null);
   const [user, setUser] = useState(null);
@@ -98,10 +99,10 @@ const FunFundingAppBar = () => {
 
   useEffect(() => {
     Aos.init({ duration: 2000 });
-    if (isLogined) {
+    if (token) {
       fetchUser();
     }
-  }, [isLogined]);
+  }, [isLogined, token]);
 
   useEffect(() => {
     const activePage = pages.find((page) => page.route === location.pathname);
@@ -124,6 +125,15 @@ const FunFundingAppBar = () => {
         const user = res.data._data;
         setUser(user);
         setName(user.userName);
+        const roleRes = await userApiInstace.get(`/user-role/${user.id}`);
+        if (roleRes.data._statusCode == 200) {
+          if (roleRes.data._data == "Administrator") {
+            setIsLogined(false);
+          } else {
+            setIsLogined(true);
+            setRole(roleRes.data._data);
+          }
+        }
       }
     } catch (err) {
       console.log(err);
@@ -191,7 +201,7 @@ const FunFundingAppBar = () => {
     location.pathname === "/home" ||
     location.pathname === "/choose-project-plan";
   const appBarStyles = {
-    background: isPage ? "transparent" : "white",
+    background: isPage ? "transparent" : "var(--white)",
     boxShadow: "none",
     height: "4rem",
     justifyContent: "center",
@@ -425,13 +435,32 @@ const FunFundingAppBar = () => {
                         <>
                           <Typography
                             sx={{
-                              fontSize: '1.25rem',
+                              fontSize: '0.75rem',
                               fontWeight: '600',
-                              width: '13rem',
+                              width: 'fit-content',
+                              padding: '4px 8px',
                               whiteSpace: 'nowrap',
                               overflow: 'hidden',
                               textOverflow: 'ellipsis',
-                              textAlign: 'center'
+                              textAlign: 'center',
+                              bgcolor: 'var(--primary-green)',
+                              color: 'var(--white)',
+                              borderRadius: '0.5rem',
+                              mb: '0.5rem'
+                            }}
+                          >
+                            {role.replace(/([a-z])([A-Z])/g, '$1 $2')}
+                          </Typography>
+                          <Typography
+                            sx={{
+                              fontSize: '1.25rem',
+                              fontWeight: '600',
+                              width: '10rem',
+                              whiteSpace: 'nowrap',
+                              overflow: 'hidden',
+                              textOverflow: 'ellipsis',
+                              textAlign: 'center',
+                              mb: '0.25rem'
                             }}
                           >
                             {name}

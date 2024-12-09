@@ -1,17 +1,17 @@
 /* eslint-disable react/prop-types */
-import { useState } from "react";
 import HttpsIcon from "@mui/icons-material/Https";
-import InputField from "../../components/InputField";
-import { FaGoogle } from "react-icons/fa";
-import logo from "../../assets/OnlyLogo.png";
-import useSignIn from "react-auth-kit/hooks/useSignIn";
-import { useNavigate } from "react-router-dom";
-import authApiInstance from "../../utils/ApiInstance/authApiInstance";
-import { jwtDecode } from "jwt-decode";
-import Swal from "sweetalert2";
 import Cookies from "js-cookie";
+import { jwtDecode } from "jwt-decode";
+import { useState } from "react";
+import useSignIn from "react-auth-kit/hooks/useSignIn";
+import { FaGoogle } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify"; // Import ToastContainer
 import "react-toastify/dist/ReactToastify.css";
+import Swal from "sweetalert2";
+import logo from "../../assets/OnlyLogo.png";
+import InputField from "../../components/InputField";
+import authApiInstance from "../../utils/ApiInstance/authApiInstance";
 import "./index.css"; // Import toast styles
 
 function setCookie(name, value, expiresIn) {
@@ -68,7 +68,10 @@ function LoginForm({ onClose, onOpenRoleSelection, onOpenForgotPassword }) {
           console.log("Login failed:", res.data._message);
         } else {
           const decodedToken = jwtDecode(res.data._data);
-          const userRole = decodedToken.role;
+          const userRole =
+            decodedToken[
+            "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
+            ];
           console.log(userRole);
 
           signIn({
@@ -107,7 +110,7 @@ function LoginForm({ onClose, onOpenRoleSelection, onOpenForgotPassword }) {
             const decodedToken = jwtDecode(token);
             const userRole =
               decodedToken[
-                "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
+              "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
               ];
             console.log(userRole);
             if (userRole === "Backer") {

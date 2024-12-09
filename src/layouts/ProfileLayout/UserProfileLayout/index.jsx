@@ -10,15 +10,15 @@ import {
   Paper,
 } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
+import Cookies from "js-cookie";
 import React, { useEffect, useRef, useState } from "react";
 import { FaClipboardList } from "react-icons/fa";
 import { FaBookBookmark, FaFolderOpen, FaUserTie } from "react-icons/fa6";
 import { IoMdWallet } from "react-icons/io";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 import Footer from "../../../components/Footer";
 import userApiInstace from "../../../utils/ApiInstance/userApiInstance";
-import Swal from "sweetalert2";
-import Cookies from "js-cookie";
 import "./index.css";
 
 function UserProfileLayout() {
@@ -35,7 +35,7 @@ function UserProfileLayout() {
   const titleList = [
     { text: "Account", path: "/account/profile" },
     { text: "Projects", path: "/account/projects" },
-    { text: "Bookmarks", path: "/account/bookmarks" },
+    { text: "Interactions", path: "/account/interactions" },
     { text: "Orders", path: "/account/orders" },
     { text: "Wallet", path: "/account/wallet" },
   ];
@@ -50,7 +50,7 @@ function UserProfileLayout() {
   const onClickMapping = {
     0: () => navigate("/account/profile"),
     1: () => navigate("/account/projects"),
-    2: () => navigate("/account/bookmarks"),
+    2: () => navigate("/account/interactions"),
     3: () => navigate("/account/orders"),
     4: () => navigate("/account/wallet"),
   };

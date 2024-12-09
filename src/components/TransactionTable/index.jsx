@@ -12,17 +12,17 @@ import {
 } from "@mui/material";
 
 const transactionTypes = [
-  "PackageDonation",
-  "AddWalletMoney",
-  "WithdrawWalletMoney",
-  "FundingWithdraw",
+  "Donation",
+  "Wallet transfer",
+  "Withdraw Wallet Money",
+  "Funding Withdraw",
   "CommissionFee",
-  "FundingRefund",
-  "FundingPurchase",
-  "OrderPurchase",
-  "MarketplaceWithdraw",
-  "MilestoneFirstHalf",
-  "MilestoneSecondHalf",
+  "Funding Refund",
+  "Funding Purchase",
+  "Order Purchase",
+  "Marketplace Withdraw",
+  "Transfer First Half",
+  "Transfer Second Half",
 ];
 
 const TransactionTable = ({ transactions }) => {
@@ -42,7 +42,7 @@ const TransactionTable = ({ transactions }) => {
   }
 
   return (
-    <TableContainer component={Paper}>
+    <TableContainer component={Paper} sx={{marginTop:'45px'}}>
       <Typography
         variant="h5"
         sx={{ padding: "16px", backgroundColor: "#1BAA64", color: "white" }}

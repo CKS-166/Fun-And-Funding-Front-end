@@ -246,35 +246,36 @@ function HomePage() {
           to life!
         </Typography>
         <HomeFundingCardList fetchFundingProject={fetchFundingProject} isFetchFundingProject={(value) => isFetchFundingProject(value)} />
-        <Button
-          sx={{
-            borderRadius: "0.625rem",
-            textTransform: "none",
-            fontSize: "1.2rem",
-            padding: "0.813rem 3.5rem",
-            width: "fit-content",
-            fontWeight: "600",
-            height: "3.875rem",
-            backgroundColor: "#1BAA64",
-            boxShadow: "none",
-            color: "#F5F7F8",
-            marginTop: "4.5rem",
-            mx: "auto",
-          }}
-          variant="contained"
-          endIcon={
-            <ArrowForwardOutlinedIcon
-              sx={{
-                fontSize: "1.5rem !important",
-                marginLeft: "0.6rem",
-                strokeWidth: "1",
-                stroke: "#F5F7F8",
-              }}
-            />
-          }
-        >
-          See more opportunities
-        </Button>
+        <a href="/funding" className="mx-auto">
+          <Button
+            sx={{
+              borderRadius: "0.625rem",
+              textTransform: "none",
+              fontSize: "1.2rem",
+              padding: "0.813rem 3.5rem",
+              width: "fit-content",
+              fontWeight: "600",
+              height: "3.875rem",
+              backgroundColor: "#1BAA64",
+              boxShadow: "none",
+              color: "#F5F7F8",
+              marginTop: "4.5rem",
+            }}
+            variant="contained"
+            endIcon={
+              <ArrowForwardOutlinedIcon
+                sx={{
+                  fontSize: "1.5rem !important",
+                  marginLeft: "0.6rem",
+                  strokeWidth: "1",
+                  stroke: "#F5F7F8",
+                }}
+              />
+            }
+          >
+            See more opportunities
+          </Button>
+        </a>
       </div>
       <div className="flex flex-col justify-center px-[6rem] py-[3.75rem]">
         <Typography
@@ -300,35 +301,36 @@ function HomePage() {
           Discover and buy the latest games directly from our platform!
         </Typography>
         <HomeMarketingCardList fetchMarketplaceProject={fetchMarketplaceProject} isFetchMarketplaceProject={(value) => isFetchMarketplaceProject(value)} />
-        <Button
-          sx={{
-            borderRadius: "0.625rem",
-            textTransform: "none",
-            fontSize: "1.2rem",
-            padding: "0.813rem 3.5rem",
-            width: "fit-content",
-            fontWeight: "600",
-            height: "3.875rem",
-            backgroundColor: "#1BAA64",
-            boxShadow: "none",
-            color: "#F5F7F8",
-            marginTop: "4.5rem",
-            mx: "auto",
-          }}
-          variant="contained"
-          endIcon={
-            <ArrowForwardOutlinedIcon
-              sx={{
-                fontSize: "1.5rem !important",
-                marginLeft: "0.6rem",
-                strokeWidth: "1",
-                stroke: "#F5F7F8",
-              }}
-            />
-          }
-        >
-          See more games
-        </Button>
+        <a href="/marketplace" className="mx-auto">
+          <Button
+            sx={{
+              borderRadius: "0.625rem",
+              textTransform: "none",
+              fontSize: "1.2rem",
+              padding: "0.813rem 3.5rem",
+              width: "fit-content",
+              fontWeight: "600",
+              height: "3.875rem",
+              backgroundColor: "#1BAA64",
+              boxShadow: "none",
+              color: "#F5F7F8",
+              marginTop: "4.5rem",
+            }}
+            variant="contained"
+            endIcon={
+              <ArrowForwardOutlinedIcon
+                sx={{
+                  fontSize: "1.5rem !important",
+                  marginLeft: "0.6rem",
+                  strokeWidth: "1",
+                  stroke: "#F5F7F8",
+                }}
+              />
+            }
+          >
+            See more games
+          </Button>
+        </a>
       </div>
       <div className="flex flex-col mt-[3.75rem] h-[56rem] justify-between bg-[#F5F7F8] relative pb-[3.75rem]">
         <div className="achievement-background">

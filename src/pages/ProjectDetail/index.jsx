@@ -103,10 +103,8 @@ const ProjectDetail = () => {
   const handleRequestMilestone = () => {
     setIsModalOpen(true);
     console.log(firstMilestone);
-    console.log("a");
   };
   const handleUpdateProject = () => {
-    console.log("b");
   };
 
   const handleProcess = () => {

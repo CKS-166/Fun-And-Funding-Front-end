@@ -11,6 +11,8 @@ import Grid from '@mui/material/Grid2';
 import BarChartDashboard from '../../../components/Chart/BarChartDashboard/index.jsx';
 import transactionApiInstance from '../../../utils/ApiInstance/transactionApiInstance';
 import TransactionTable from '../../../components/TransactionTable/index.jsx';
+import { FaUser } from "react-icons/fa";
+import { MdOutlineAttachMoney } from "react-icons/md";
 function ProjectPreview() {
     const { id } = useParams();
     const [project, setProject] = useState(null);
@@ -18,7 +20,7 @@ function ProjectPreview() {
     const [lineData, setLineData] = useState([]);
     const [barData, setBarData] = useState([]);
     const [transactionData, setTransactionData] = useState([]);
-    
+    const [backerCount, setBackerCount] = useState(0);
     useEffect(() => {
         getProject();
         console.log("a")
@@ -45,7 +47,7 @@ function ProjectPreview() {
         try {
             const res = await packageBackerApiInstance.get(`/project-backers?projectId=${projectId}`);
             console.log(res);
-
+            setBackerCount(res.data.result._data.length);
             setLineData(res.data.result._data);
         } catch (error) {
             console.error('Error fetching line chart data:', error);
@@ -79,7 +81,7 @@ function ProjectPreview() {
             {/* statbox */}
             {project && (
                 <>
-                    <Grid container spacing={4} justifyContent="center" m="2rem">
+                    <Grid container spacing={6} justifyContent="center" m="2rem">
                         <Grid item xs={12} sm={6} md={3}>
                             <StatBox
                                 title={project.wallet.balance.toLocaleString("en-US")}
@@ -91,26 +93,16 @@ function ProjectPreview() {
                         </Grid>
                         <Grid item xs={12} sm={6} md={3}>
                             <StatBox
-                                title="12,361"
-                                subtitle="Emails Sent"
-                                increase="+14%"
-                                icon={<FaEnvelope size={26} />}
+                                title={backerCount || 0}
+                                subtitle="Backers"
+                                icon={<FaUser size={26} />}
                             />
                         </Grid>
                         <Grid item xs={12} sm={6} md={3}>
                             <StatBox
-                                title="32,441"
-                                subtitle="New Clients"
-                                increase="+5%"
-                                icon={<FaWallet size={26} />}
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={6} md={3}>
-                            <StatBox
-                                title="1,325,134"
-                                subtitle="Traffic Received"
-                                increase="+43%"
-                                icon={<FaWallet size={26} />}
+                                title={(project.balance - project.wallet.balance).toLocaleString("en-US")}
+                                subtitle="Transfered Amount"
+                                icon={<MdOutlineAttachMoney size={26} />}
                             />
                         </Grid>
                     </Grid>

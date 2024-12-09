@@ -256,7 +256,6 @@ const MilestoneForm = () => {
                           multiple
                           hidden
                           onChange={(e) => handleFilesSelected(Array.from(e.target.files), index)}
-
                         />
                       </Button>
                     </Box>

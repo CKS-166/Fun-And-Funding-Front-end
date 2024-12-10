@@ -28,9 +28,9 @@ import UpdateFundingProjectLayout from "./layouts/UpdateFundingProjectLayout";
 import UpdateMarketplaceProjectLayout from "./layouts/UpdateMarketplaceProjectLayout";
 import UserLayout from "./layouts/UserLayout";
 import AboutUs from "./pages/AboutUs";
-import AccountInteraction from "./pages/AccountInteraction";
 import AccountProfile from "./pages/AccountProfile";
 import AccountProject from "./pages/AccountProject";
+import AccountSocial from "./pages/AccountSocial";
 import AccountWallet from "./pages/AccountWallet";
 import AdminFundingProject from "./pages/AdminPages/AdminFundingProject";
 import AdminMarketplaceProject from "./pages/AdminPages/AdminMarketplaceProject";
@@ -128,7 +128,7 @@ function App() {
                 <Route element={<UserProfileLayout />}>
                   <Route path="/account/profile" element={<AccountProfile />} />
                   <Route path="/account/projects" element={<AccountProject />} />
-                  <Route path="/account/interactions" element={<AccountInteraction />} />
+                  <Route path="/account/social" element={<AccountSocial />} />
                   <Route path="/account/wallet" element={<AccountWallet />} />
                   <Route path="/account/orders" element={<MyOrder />} />
                 </Route>
@@ -151,42 +151,15 @@ function App() {
                     <Route path="request-funding-project/setup-donate-package" element={<SetupDonatePackage />} />
                   </Route>
                   <Route element={<UpdateFundingProjectLayout />}>
-                    <Route
-                      path="/account/projects/update/:id/preview"
-                      element={<ProjectPreview />}
-                    />
-                    <Route
-                      path="/account/projects/update/:id/basic-info"
-                      element={<BasicInformation />}
-                    />
-                    <Route
-                      path="/account/projects/update/:id/bank-account"
-                      element={<BankAccount />}
-                    />
-                    <Route
-                      path="/account/projects/update/:id/donation-packages"
-                      element={<DonationPackages />}
-                    />
-                    <Route
-                      path="/account/projects/update/:id/media-files"
-                      element={<Media />}
-                    />
-                    <Route
-                      path="/account/projects/update/:id/milestone1"
-                      element={<Milestone1 />}
-                    />
-                    <Route
-                      path="/account/projects/update/:id/milestone2"
-                      element={<Milestone2 />}
-                    />
-                    <Route
-                      path="/account/projects/update/:id/milestone3"
-                      element={<Milestone3 />}
-                    />
-                    <Route
-                      path="/account/projects/update/:id/milestone4"
-                      element={<Milestone4 />}
-                    />
+                    <Route path="/account/projects/update/:id/preview" element={<ProjectPreview />} />
+                    <Route path="/account/projects/update/:id/basic-info" element={<BasicInformation />} />
+                    <Route path="/account/projects/update/:id/bank-account" element={<BankAccount />} />
+                    <Route path="/account/projects/update/:id/donation-packages" element={<DonationPackages />} />
+                    <Route path="/account/projects/update/:id/media-files" element={<Media />} />
+                    <Route path="/account/projects/update/:id/milestone1" element={<Milestone1 />} />
+                    <Route path="/account/projects/update/:id/milestone2" element={<Milestone2 />} />
+                    <Route path="/account/projects/update/:id/milestone3" element={<Milestone3 />} />
+                    <Route path="/account/projects/update/:id/milestone4" element={<Milestone4 />} />
                   </Route>
                   <Route
                     element={
@@ -195,30 +168,12 @@ function App() {
                       </UpdateMarketplaceProjectProvider>
                     }
                   >
-                    <Route
-                      path="/account/marketplace-projects/update/:id/preview"
-                      element={<MarketplaceProjectPreview />}
-                    />
-                    <Route
-                      path="/account/marketplace-projects/update/:id/basic-info"
-                      element={<MarketplaceProjectBasicInformation />}
-                    />
-                    <Route
-                      path="/account/marketplace-projects/update/:id/bank-account"
-                      element={<MarketplaceProjectBankAccount />}
-                    />
-                    <Route
-                      path="/account/marketplace-projects/update/:id/game-content"
-                      element={<MarketplaceProjectContent />}
-                    />
-                    <Route
-                      path="/account/marketplace-projects/update/:id/media-files"
-                      element={<MarketplaceProjectMediaFiles />}
-                    />
-                    <Route
-                      path="/account/marketplace-projects/update/:id/coupons"
-                      element={<MarketplaceProjectCoupon />}
-                    />
+                    <Route path="/account/marketplace-projects/update/:id/preview" element={<MarketplaceProjectPreview />} />
+                    <Route path="/account/marketplace-projects/update/:id/basic-info" element={<MarketplaceProjectBasicInformation />} />
+                    <Route path="/account/marketplace-projects/update/:id/bank-account" element={<MarketplaceProjectBankAccount />} />
+                    <Route path="/account/marketplace-projects/update/:id/game-content" element={<MarketplaceProjectContent />} />
+                    <Route path="/account/marketplace-projects/update/:id/media-files" element={<MarketplaceProjectMediaFiles />} />
+                    <Route path="/account/marketplace-projects/update/:id/coupons" element={<MarketplaceProjectCoupon />} />
                   </Route>
                   <Route
                     element={
@@ -227,26 +182,11 @@ function App() {
                       </CreateMarketplaceProjectProvider>
                     }
                   >
-                    <Route
-                      path="/request-marketplace-project/:id/basic-info"
-                      element={<MarketplaceProjectBasicInfo />}
-                    />
-                    <Route
-                      path="/request-marketplace-project/:id/introduction"
-                      element={<MarketplaceProjectIntroduction />}
-                    />
-                    <Route
-                      path="request-marketplace-project/:id/project-media"
-                      element={<MarketplaceProjectMedia />}
-                    />
-                    <Route
-                      path="request-marketplace-project/:id/bank-account"
-                      element={<MarketplaceProjectSetupBankAccount />}
-                    />
-                    <Route
-                      path="request-marketplace-project/:id/game-content"
-                      element={<MarketplaceProjectGameContent />}
-                    />
+                    <Route path="/request-marketplace-project/:id/basic-info" element={<MarketplaceProjectBasicInfo />} />
+                    <Route path="/request-marketplace-project/:id/introduction" element={<MarketplaceProjectIntroduction />} />
+                    <Route path="request-marketplace-project/:id/project-media" element={<MarketplaceProjectMedia />} />
+                    <Route path="request-marketplace-project/:id/bank-account" element={<MarketplaceProjectSetupBankAccount />} />
+                    <Route path="request-marketplace-project/:id/game-content" element={<MarketplaceProjectGameContent />} />
                   </Route>
                 </Route>
               </Route>

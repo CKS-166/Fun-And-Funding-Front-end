@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  Divider,
   FormControl,
   Grid2,
   IconButton,
@@ -8,10 +9,9 @@ import {
   InputLabel,
   MenuItem,
   Modal,
-  Paper,
   Select,
   TextField,
-  Typography,
+  Typography
 } from "@mui/material";
 import dayjs from "dayjs";
 import Cookies from "js-cookie";
@@ -31,17 +31,14 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import {
-  FaAddressCard,
   FaBirthdayCake,
-  FaLock,
   FaTransgenderAlt,
-  FaUser,
+  FaUser
 } from "react-icons/fa";
 import { GoHomeFill } from "react-icons/go";
 import { ImBin2 } from "react-icons/im";
 import { MdEmail, MdSwitchAccount } from "react-icons/md";
 import { PiPasswordFill } from "react-icons/pi";
-import { RiProfileFill } from "react-icons/ri";
 import QuillEditor from "../../components/AccountProfile/QuillEditor";
 
 //date variables
@@ -419,33 +416,36 @@ function AccountProfile() {
   };
 
   return (
-    <>
-      <Paper
-        elevation={3}
-        sx={{
+    <div className="pl-[4rem] pr-[5.5rem] mt-[2rem] mb-[4rem]">
+      <div
+        style={{
           width: "100%",
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
           flexDirection: "column",
-          px: "2rem",
-          py: "1.6rem",
-          backgroundColor: "#F5F7F8",
         }}
       >
-        <h1 className="text-left w-full text-[1.25rem] font-bold mb-[3.2rem] text-[#2F3645]">
-          Profile
-        </h1>
-        <div className="w-full mb-[3.2rem]">
-          <div className="flex justify-between gap-[1rem] items-center mb-[1.2rem]">
-            <div className="flex justify-between gap-[1rem] items-center">
-              <FaAddressCard style={{ color: "#2F3645", fontSize: "1.4rem" }} />
-              <h1 className="text-[1rem] text-left font-bold text-[#2F3645]">
+        <div className="w-full">
+          <div className="flex justify-between gap-[1rem] items-center mb-[4rem]">
+            <div className="flex justify-start gap-[1rem] items-start flex-col">
+              <h1 className="!text-[1.5rem] text-left font-bold text-[#2F3645]">
                 Personal Information
               </h1>
+              <Typography
+                sx={{
+                  color: '#2F3645',
+                  fontSize: '1rem',
+                  fontWeight: '400',
+                  userSelect: 'none',
+                  width: '85%',
+                }}
+              >
+                Manage and update your personal details, including your name, email, phone number, and other essential information to keep your account up to date.
+              </Typography>
             </div>
             {!isEditProfile ? (
-              <div className="flex justify-center gap-4 profileButton">
+              <div className="flex justify-end gap-4 profileButton !w-[20rem]">
                 <Button
                   variant="contained"
                   startIcon={<EditIcon />}
@@ -528,7 +528,7 @@ function AccountProfile() {
             )}
           </div>
 
-          <Grid2 container columnSpacing={4} rowSpacing={8} marginTop={8}>
+          <Grid2 container columnSpacing={4} rowSpacing={8}>
             <Grid2 size={6}>
               <CustomTextField
                 label="Email"
@@ -674,12 +674,9 @@ function AccountProfile() {
               />
             </Grid2>
             <Grid2 size={12} marginBottom={6}>
-              <div className="flex gap-[1rem] items-center mb-16">
-                <RiProfileFill
-                  style={{ color: "#2F3645", fontSize: "1.4rem" }}
-                />
-                <h1 className="text-[1rem] text-left font-bold text-[#2F3645]">
-                  Bio
+              <div className="flex gap-[1rem] items-center mb-[1.5rem]">
+                <h1 className="!text-[1rem] text-left font-bold text-[#2F3645]">
+                  Biography
                 </h1>
               </div>
               <QuillEditor
@@ -695,35 +692,41 @@ function AccountProfile() {
             </Grid2>
           </Grid2>
         </div>
-      </Paper>
-
-      <Paper
-        elevation={3}
-        sx={{
+      </div>
+      <Box>
+        <div className='my-[4rem]'>
+          <Divider sx={{ border: '1px solid #EAEAEA', borderRadius: '0.625rem' }} />
+        </div>
+      </Box>
+      <div
+        style={{
           width: "100%",
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
           flexDirection: "column",
-          px: "2rem",
-          py: "1.6rem",
-          backgroundColor: "#F5F7F8",
-          marginTop: "2rem",
         }}
       >
-        <h1 className="text-left w-full text-[1.25rem] font-bold mb-[3.2rem] text-[#2F3645]">
-          Password
-        </h1>
         <div className="w-full mb-[3.2rem]">
-          <div className="flex justify-between gap-[1rem] items-center mb-[1.2rem]">
-            <div className="flex justify-between gap-[1rem] items-center">
-              <FaLock style={{ color: "#2F3645", fontSize: "1.4rem" }} />
+          <div className="flex justify-between gap-[1rem] items-center mb-[4rem]">
+            <div className="flex justify-between gap-[1rem] items-start flex-col">
               <h1 className="text-[1rem] text-left font-bold text-[#2F3645]">
                 Change Password
               </h1>
+              <Typography
+                sx={{
+                  color: '#2F3645',
+                  fontSize: '1rem',
+                  fontWeight: '400',
+                  userSelect: 'none',
+                  width: '85%',
+                }}
+              >
+                Secure your account by managing your password. Update your current password or reset it to enhance account protection.
+              </Typography>
             </div>
             {!isEditPassword ? (
-              <div className="flex justify-center gap-4 profileButton">
+              <div className="flex justify-end gap-4 profileButton !w-[20rem]">
                 <Button
                   variant="contained"
                   startIcon={<EditIcon />}
@@ -806,7 +809,7 @@ function AccountProfile() {
             )}
           </div>
 
-          <Grid2 container columnSpacing={4} rowSpacing={0} marginTop={8}>
+          <Grid2 container columnSpacing={4} rowSpacing={0}>
             <Grid2 size={6}>
               <CustomTextField
                 label="New Password"
@@ -885,7 +888,7 @@ function AccountProfile() {
             </Grid2>
           </Grid2>
         </div>
-      </Paper>
+      </div>
 
       <Modal
         open={open}
@@ -904,21 +907,22 @@ function AccountProfile() {
             flexDirection: "column", // Ensure items stack vertically
             justifyContent: "center", // Center content within the box
             alignItems: "center", // Center content within the box
-            height: "40vh",
-            padding: 8,
+            height: "28vh",
+            px: "4rem",
             backgroundColor: "#F5F7F8",
             margin: "auto",
-            width: "45%",
+            width: "40%",
             borderRadius: 1,
           }}
         >
           <Typography
             sx={{
-              fontWeight: "600",
+              fontWeight: "700",
               fontSize: "1.5rem",
               color: "#2F3645",
               textAlign: "center",
               marginBottom: "2rem",
+              width: '100%'
             }}
           >
             Enter your password to continue
@@ -934,7 +938,7 @@ function AccountProfile() {
               justifyContent: "center",
             }}
           >
-            <Grid2 size={9}>
+            <Grid2 size={8.5}>
               <CustomTextField
                 label="Password"
                 variant="outlined"
@@ -960,18 +964,16 @@ function AccountProfile() {
                 }}
               />
             </Grid2>
-            <Grid2 size={3}>
+            <Grid2 size={3.5}>
               <Button
-                variant="text"
+                variant="contained"
                 endIcon={<ArrowForward />}
                 onClick={handleValidatePassword}
                 sx={{
-                  color: "#2F3645",
-                  backgroundColor: "#F5F7F8",
+                  color: "var(--white)",
+                  backgroundColor: "var(--primary-green)",
+                  px: '1rem',
                   textTransform: "none !important",
-                  "&:hover": {
-                    color: "#1BAA64",
-                  },
                   "&:active": {
                     outline: "none !important",
                   },
@@ -980,6 +982,7 @@ function AccountProfile() {
                   },
                   fontWeight: "bold",
                   height: "51px",
+                  borderRadius: '0.625rem'
                 }}
               >
                 Continue
@@ -988,7 +991,7 @@ function AccountProfile() {
           </Grid2>
         </Box>
       </Modal>
-    </>
+    </div>
   );
 }
 

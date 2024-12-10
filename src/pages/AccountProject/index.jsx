@@ -174,41 +174,54 @@ function AccountProject() {
     };
 
     return (
-        <div>
+        <div className="pl-[4rem] pr-[5.5rem] mt-[2rem] mb-[4rem]">
             {role == "GameOwner" ? <>
-                <Paper elevation={3} sx={{ borderRadius: '0.25rem !important', px: '1rem', height: 'fit-content', backgroundColor: '#F5F7F8', mb: '2rem', pb: '1rem' }}>
-                    <div className='py-[1.5rem] mx-[1rem]'>
-                        <Typography sx={{ fontWeight: '700', fontSize: '1.25rem', mb: '2rem' }}>Your funding Project</Typography>
-                        <div className='flex flex-row justify-between gap-[1rem] mb-[2rem]'>
-                            <SearchBar onSearchChange={handleOwnerProjectSearchChange} />
-                            <Button sx={{
-                                height: '2.5rem',
-                                backgroundColor: '#EAEAEA',
-                                boxShadow: '0.4rem',
-                                p: '0.75rem',
+                <div className='w-[100%] mb-[4rem]'>
+                    <div className="flex justify-start gap-[1rem] items-start flex-col mb-[4rem]">
+                        <h1 className="!text-[1.5rem] text-left font-bold text-[#2F3645]">
+                            Your Funding Project
+                        </h1>
+                        <Typography
+                            sx={{
                                 color: '#2F3645',
-                                "&:hover": {
-                                    backgroundColor: alpha("#EAEAEA", 0.85),
-                                },
-                                letterSpacing: '0.5px',
-                            }}>
-                                <FaSliders size={"1rem"} style={{ color: '#2F3645' }} />
-                            </Button>
-                            <SortDropdown options={sortOptions} onValueChange={handleSortChange} />
-                        </div>
-                        {gameOwnerFundingProject != null && gameOwnerFundingProject.length > 0 ? gameOwnerFundingProject.map((project, index) => (
-                            <div key={index}>
-                                <OwnerProjectCard project={project} projectType={"Funding"} />
-                                {index !== gameOwnerFundingProject.length - 1 && (
-                                    <Divider sx={{ my: '1.5rem' }} />
-                                )}
-                            </div>
-                        )) : <Typography>Nothing to show</Typography>}
+                                fontSize: '1rem',
+                                fontWeight: '400',
+                                userSelect: 'none',
+                                width: '85%',
+                            }}
+                        >
+                            Manage and update your personal details, including your name, email, phone number, and other essential information to keep your account up to date.
+                        </Typography>
                     </div>
-                </Paper>
-                <Paper elevation={3} sx={{ borderRadius: '0.25rem !important', px: '1rem', height: 'fit-content', backgroundColor: '#F5F7F8', mb: '2rem', pb: '1rem' }}>
-                    <div className='py-[1.5rem] mx-[1rem]'>
-                        <Typography sx={{ fontWeight: '700', fontSize: '1.25rem', mb: '2rem' }}>Your Marketplace Project</Typography>
+                    <div className='flex flex-row justify-between gap-[1rem] mb-[2rem]'>
+                        <SearchBar onSearchChange={handleOwnerProjectSearchChange} />
+                        <SortDropdown options={sortOptions} onValueChange={handleSortChange} />
+                    </div>
+                    {gameOwnerFundingProject != null && gameOwnerFundingProject.length > 0 ? gameOwnerFundingProject.map((project, index) => (
+                        <div key={index}>
+                            <OwnerProjectCard project={project} projectType={"Funding"} />
+                            {index !== gameOwnerFundingProject.length - 1 && (
+                                <Divider sx={{ my: '1.5rem' }} />
+                            )}
+                        </div>
+                    )) : <Typography>Nothing to show</Typography>}
+                </div>
+                <div className='w-[100%]'>
+                    <div className="flex justify-start gap-[1rem] items-start flex-col mb-[4rem]">
+                        <h1 className="!text-[1.5rem] text-left font-bold text-[#2F3645]">
+                            Your Marketplace Project
+                        </h1>
+                        <Typography
+                            sx={{
+                                color: '#2F3645',
+                                fontSize: '1rem',
+                                fontWeight: '400',
+                                userSelect: 'none',
+                                width: '85%',
+                            }}
+                        >
+                            Manage and update your personal details, including your name, email, phone number, and other essential information to keep your account up to date.
+                        </Typography>
                         <div className='flex flex-row justify-between gap-[1rem] mb-[2rem]'>
                             <SearchBar onSearchChange={handleOwnerProjectSearchChange} />
                             <Button sx={{
@@ -235,7 +248,7 @@ function AccountProject() {
                             </div>
                         )) : <Typography>Nothing to show</Typography>}
                     </div>
-                </Paper>
+                </div>
             </> : <>
                 <Paper elevation={3} sx={{ borderRadius: '0.25rem !important', px: '1rem', height: 'fit-content', backgroundColor: '#F5F7F8', pb: '1rem', mb: '2rem' }}>
                     <div className='py-[1.5rem] mx-[1rem]'>

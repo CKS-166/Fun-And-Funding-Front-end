@@ -1,23 +1,24 @@
-import CameraAltIcon from "@mui/icons-material/CameraAlt";
+import EditIcon from '@mui/icons-material/Edit';
 import {
   Box,
+  Container,
   Grid2,
   List,
   ListItem,
   ListItemButton,
   ListItemIcon,
   ListItemText,
-  Paper,
+  Typography
 } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
 import Cookies from "js-cookie";
 import React, { useEffect, useRef, useState } from "react";
 import { FaClipboardList } from "react-icons/fa";
-import { FaBookBookmark, FaFolderOpen, FaUserTie } from "react-icons/fa6";
+import { FaFolderOpen, FaUserTie } from "react-icons/fa6";
+import { HiMiniUserGroup } from "react-icons/hi2";
 import { IoMdWallet } from "react-icons/io";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
-import Footer from "../../../components/Footer";
 import userApiInstace from "../../../utils/ApiInstance/userApiInstance";
 import "./index.css";
 
@@ -25,7 +26,9 @@ function UserProfileLayout() {
   const location = useLocation();
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
+
   const [avatar, setAvatar] = useState(null);
+  const [role, setRole] = useState("");
   const [avatarName, setAvatarName] = useState(null);
   const fileInputRef = useRef(null);
 
@@ -33,24 +36,24 @@ function UserProfileLayout() {
   const token = Cookies.get("_auth");
 
   const titleList = [
-    { text: "Account", path: "/account/profile" },
+    { text: "My Profile", path: "/account/profile" },
     { text: "Projects", path: "/account/projects" },
-    { text: "Interactions", path: "/account/interactions" },
-    { text: "Orders", path: "/account/orders" },
-    { text: "Wallet", path: "/account/wallet" },
+    { text: "Social", path: "/account/social" },
+    { text: "My Orders", path: "/account/orders" },
+    { text: "My Wallet", path: "/account/wallet" },
   ];
 
   const iconMapping = {
     0: <FaUserTie style={{ fontSize: "1.6rem" }} />,
     1: <FaFolderOpen style={{ fontSize: "1.6rem" }} />,
-    2: <FaBookBookmark style={{ fontSize: "1.6rem" }} />,
+    2: <HiMiniUserGroup style={{ fontSize: "1.6rem" }} />,
     3: <FaClipboardList style={{ fontSize: "1.6rem" }} />,
     4: <IoMdWallet style={{ fontSize: "1.6rem" }} />,
   };
   const onClickMapping = {
     0: () => navigate("/account/profile"),
     1: () => navigate("/account/projects"),
-    2: () => navigate("/account/interactions"),
+    2: () => navigate("/account/social"),
     3: () => navigate("/account/orders"),
     4: () => navigate("/account/wallet"),
   };
@@ -70,6 +73,12 @@ function UserProfileLayout() {
 
         setUser(userData);
         setAvatar(userData.avatar);
+        console.log(userData)
+        userApiInstace.get(`/user-role/${userData.id}`).then((roleRes) => {
+          if (roleRes.data._statusCode == 200) {
+            setRole(roleRes.data._data);
+          }
+        });
       })
       .catch((error) => {
         console.error("Error fetching user profile:", error);
@@ -122,146 +131,204 @@ function UserProfileLayout() {
     }
   };
 
+  const getActiveSection = () => {
+    const location = useLocation();
+    const currentPath = location.pathname;
+
+    const activeTitle = titleList.find(item => currentPath.startsWith(item.path));
+
+    return activeTitle ? activeTitle.text : "Unknown Section";
+  };
+
   return (
-    <div className="mt-[2rem]">
-      <div className="mx-[5.5rem]">
-        <Grid2 container columnSpacing={"4rem"}>
-          <Grid2 size={3.5}>
-            <Paper
-              elevation={3}
-              sx={{
-                zIndex: 1,
-                display: "flex",
-                flexDirection: "column",
-                overflow: "hidden",
-                alignItems: "center",
-                position: "sticky",
-                top: "4.8rem",
-                backgroundColor: "#F5F7F8",
-              }}
-            >
-              <div className="flex w-full flex-col justify-center items-center">
-                <div className="h-[8rem] w-full bg-[#1BAA64]"></div>
-                <div className="rounded-full bg-[#F5F7F8] w-[11.6rem] h-[11.6rem] flex justify-center items-center mt-[-4.8rem] relative">
-                  {true ? (
-                    <Avatar
-                      alt="User"
-                      src={user?.avatar || ""}
-                      sx={{ width: "10rem", height: "10rem" }}
-                    />
-                  ) : (
-                    <Avatar
-                      alt="User"
-                      src={""}
-                      sx={{ width: "10rem", height: "10rem" }}
-                    />
-                  )}
-                  <div
-                    style={{
-                      position: "absolute",
-                      bottom: 8,
-                      right: 12,
+    <Container
+      sx={{
+        mx: "0",
+        px: "0 !important",
+        width: "100% !important",
+        maxWidth: "100% !important",
+      }}
+    >
+      <Grid2 container>
+        <Grid2 size={2.5}
+          sx={{
+            minHeight: "100vh",
+            backgroundColor: "#2F3645",
+            color: "#F5F7F8",
+            display: "flex",
+            flexDirection: "column",
+            pt: '2.4rem',
+            justifyContent: "space-between",
+            position: "relative",
+            overflow: "visible",
+          }}>
+          <div className="sticky top-[2.4rem] z-10">
+            <div className="flex w-full flex-row justify-start items-center px-[2rem] mb-[1.5rem]">
+              <div className="rounded-sm bg-[var(--white)] w-[10rem] h-[10rem] flex justify-center items-center relative">
+                {true ? (
+                  <Avatar
+                    alt="User"
+                    src={user?.avatar || ""}
+                    variant="square"
+                    sx={{ width: "9.2rem", height: "9.2rem" }}
+                  />
+                ) : (
+                  <Avatar
+                    alt="User"
+                    src={""}
+                    variant="square"
+                    sx={{ width: "9.2rem", height: "9.2rem" }}
+                  />
+                )}
+                <div
+                  style={{
+                    position: "absolute",
+                    bottom: -8,
+                    right: -10,
+                  }}
+                >
+                  <Avatar
+                    sx={{
+                      cursor: "pointer",
+                      backgroundColor: "white",
+                      boxShadow: "0 0 5px rgba(0, 0, 0, 0.2)",
+                      color: "#2F3645",
+                      "&:hover": {
+                        backgroundColor: "#1BAA64",
+                        color: "white",
+                        transition: "all 0.3s",
+                      },
+                      width: '2rem',
+                      height: '2rem'
                     }}
                   >
-                    <Avatar
-                      sx={{
-                        cursor: "pointer",
-                        backgroundColor: "white",
-                        boxShadow: "0 0 5px rgba(0, 0, 0, 0.2)",
-                        color: "#2F3645",
-                        "&:hover": {
-                          backgroundColor: "#1BAA64",
-                          color: "white",
-                          transition: "all 0.3s",
-                        },
-                      }}
-                    >
-                      <CameraAltIcon onClick={handleChangeAvatar} />
-                      <input
-                        type="file"
-                        ref={fileInputRef}
-                        style={{ display: "none" }}
-                        onChange={handleUpdateAvatar}
-                      />
-                    </Avatar>
-                  </div>
+                    <EditIcon sx={{ width: '1.2rem', height: '1.2rem' }} onClick={handleChangeAvatar} />
+                    <input
+                      type="file"
+                      ref={fileInputRef}
+                      style={{ display: "none" }}
+                      onChange={handleUpdateAvatar}
+                    />
+                  </Avatar>
                 </div>
               </div>
-              {true ? (
-                <div className="flex flex-col justify-center items-center overflow-hidden mx-[2rem]">
-                  <h1 className="text-[1.4rem] text-[#2F3645] font-bold leading-relaxed my-[0.4rem]">
+            </div>
+            {user ? (
+              <div className="flex flex-col justify-start items-start overflow-hidden px-[2rem] mb-[1rem]">
+                <Typography
+                  sx={{
+                    fontSize: '0.875rem',
+                    fontWeight: '700',
+                    width: 'fit-content',
+                    padding: '4px 8px',
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    textAlign: 'center',
+                    bgcolor: 'var(--primary-green)',
+                    color: 'var(--white)',
+                    borderRadius: '0.25rem',
+                    mb: '0.25rem'
+                  }}
+                >
+                  {role.replace(/([a-z])([A-Z])/g, '$1 $2')}
+                </Typography>
+                <div className="w-[14rem] overflow-hidden">
+                  <h1 className="!text-[1.5rem] text-[var(--white)] font-bold leading-relaxed overflow-hidden text-ellipsis mb-[0.25rem]">
                     {user?.userName}
                   </h1>
+                  <h1
+                    className="!text-[1rem] text-[var(--white)] font-medium leading-relaxed overflow-hidden text-ellipsis whitespace-nowrap"
+                  >
+                    {user?.email}
+                  </h1>
                 </div>
-              ) : null}
-              <Box
-                sx={{
-                  width: "100%",
-                  flexGrow: 1,
-                  display: "flex",
-                  flexDirection: "column",
-                }}
+              </div>
+            ) : null}
+            <Box
+              sx={{
+                width: "100%",
+                flexGrow: 1,
+                display: "flex",
+                flexDirection: "column",
+              }}
+            >
+              <List
+                sx={{ mx: "2rem", flexGrow: 1, mt: "0.8rem" }}
               >
-                <List
-                  sx={{ mx: "2.4rem", flexGrow: 1, mb: "1.2rem", mt: "0.8rem" }}
-                >
-                  {titleList.map((item, index) => {
-                    const isActive = location.pathname === item.path;
-                    return (
-                      <ListItem
-                        key={item.text}
-                        onClick={onClickMapping[index]}
-                        sx={{ p: 0, mb: "0.8rem", borderRadius: "0.4rem" }}
+                {titleList.map((item, index) => {
+                  const isActive = location.pathname === item.path;
+                  return (
+                    <ListItem
+                      key={item.text}
+                      onClick={onClickMapping[index]}
+                      sx={{ p: 0, mb: "0.8rem", borderRadius: "0.4rem" }}
+                    >
+                      <ListItemButton
+                        sx={{
+                          borderRadius: "0.4rem",
+                          backgroundColor: isActive
+                            ? "#1BAA64"
+                            : "transparent",
+                          color: "var(--white)",
+                          "&:hover": {
+                            boxShadow: "inset 0 0 0 1px #1BAA64",
+                            backgroundColor: "var(--primary-green)",
+                            borderColor: 'var(--primary-green) !important',
+                            color: "var(--white) !important",
+                            "& .MuiListItemIcon-root": {
+                              color: "var(--white)",
+                            },
+                          },
+                        }}
                       >
-                        <ListItemButton
+                        <ListItemIcon
                           sx={{
-                            borderRadius: "0.4rem",
-                            backgroundColor: isActive
-                              ? "#1BAA64"
-                              : "transparent",
-                            color: isActive ? "#F5F7F8" : "#2F3645",
+                            color: "var(--white)",
                             "&:hover": {
-                              boxShadow: "inset 0 0 0 1px #1BAA64",
-                              backgroundColor: "#F5F7F8",
-                              color: "#1BAA64 !important",
-                              "& .MuiListItemIcon-root": {
-                                color: "#1BAA64",
-                              },
+                              color: "#F5F7F8",
                             },
                           }}
                         >
-                          <ListItemIcon
-                            sx={{
-                              color: isActive ? "#F5F7F8" : "#2F3645",
-                              "&:hover": {
-                                color: "#F5F7F8",
-                              },
-                            }}
-                          >
-                            {iconMapping[index]}
-                          </ListItemIcon>
-                          <ListItemText
-                            primary={item.text}
-                            primaryTypographyProps={{
-                              fontSize: "1rem",
-                              fontWeight: "600",
-                            }}
-                          />
-                        </ListItemButton>
-                      </ListItem>
-                    );
-                  })}
-                </List>
-              </Box>
-            </Paper>
-          </Grid2>
-          <Grid2 size={8.5}>
-            <Outlet />
-          </Grid2>
+                          {iconMapping[index]}
+                        </ListItemIcon>
+                        <ListItemText
+                          primary={item.text}
+                          primaryTypographyProps={{
+                            fontSize: "1rem",
+                            fontWeight: "600",
+                          }}
+                        />
+                      </ListItemButton>
+                    </ListItem>
+                  );
+                })}
+              </List>
+            </Box>
+          </div>
         </Grid2>
-      </div>
-      <Footer />
-    </div>
+        <Grid2 size={9.5} style={{ position: "relative" }}>
+          <div>
+            <div className="fixed-update-header">
+              <div>
+                <Typography
+                  sx={{
+                    color: "#2F3645",
+                    fontSize: "1rem",
+                    fontWeight: "700",
+                    userSelect: "none",
+                    width: "100%",
+                  }}
+                >
+                  Account / {getActiveSection()}
+                </Typography>
+              </div>
+            </div>
+            <Outlet />
+          </div>
+        </Grid2>
+      </Grid2>
+    </Container>
   );
 }
 

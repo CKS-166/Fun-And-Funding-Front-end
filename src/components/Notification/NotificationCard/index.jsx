@@ -42,15 +42,15 @@ const NotificationCard = ({ notiData }) => {
             const notificationLink = getNotificationLink(noti.notificationType, noti.objectId);
 
             return (
-              <div className={`${isUnread ? 'bg-red-50' : 'bg-white'} relative z-10`}>
+              <div className={`${isUnread ? 'bg-gray-100' : 'bg-white'} relative z-[100]`}>
                 <div key={index} className={` py-2 px-4 w-[100%] flex gap-3 items-start`}>
-                  {
+                  {/* {
                     isUnread
                       ? (
                         <div className="rounded-2xl bg-primary-green h-3 w-3 absolute right-3 top-3.5 animate-pulse"></div>
                       )
                       : ''
-                  }
+                  } */}
                   <Avatar alt="User avatar" src={noti.actor.avatar} sx={{ height: '2.5rem', width: '2.5rem', marginTop: '.2rem' }} />
                   <div className="message">
                     <a href={`/profile/${noti.actor._id}`} className="text-black font-bold text-sm hover:underline">@{noti.actor.UserName}</a><br />

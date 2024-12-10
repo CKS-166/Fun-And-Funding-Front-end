@@ -13,6 +13,9 @@ import projectMilestoneBackerApiInstance from "../../../utils/ApiInstance/projec
 import { ConsoleLogger } from "@microsoft/signalr/dist/esm/Utils"
 import { jwtDecode } from "jwt-decode";
 import Cookies from "js-cookie";
+import { useLoading } from "../../../contexts/LoadingContext"
+import commissionApiInstance from "../../../utils/ApiInstance/commisionApiInstance"
+import milestoneApiInstace from "../../../utils/ApiInstance/milestoneApiInstance"
 
 const ProjectMilestoneModal = ({ pmData, openModal, setOpenModal }) => {
 
@@ -51,64 +54,48 @@ const ProjectMilestoneModal = ({ pmData, openModal, setOpenModal }) => {
     'Failed'
   ]
 
-  const handleApprove = async () => {
-    try {
-      const response = await projectMilestoneApiInstace.put("/", {
-        ProjectMilestoneId: pmData?.id,
-        Status: 2
-      });
-      console.log("Milestone approved:", response.data);
-    } catch (error) {
-      console.error("Error approving milestone:", error);
-    } finally {
-      handleClose()
-    }
-  };
+  const [commissionFee, setCommissionFee] = useState(null);
+  const [latestMilestone, setLatestMilestone] = useState(null);
+  const { isLoading, setIsLoading } = useLoading()
 
-  const handleWarn = async () => {
-    try {
-      const response = await projectMilestoneApiInstace.put("/", {
-        ProjectMilestoneId: pmData?.id,
-        Status: 3
-      });
-      console.log("Milestone rejected:", response.data);
-    } catch (error) {
-      console.error("Error rejecting milestone:", error);
-    } finally {
-      handleClose()
-    }
+  useEffect(() => {
+    const fetchCommissionFee = async () => {
+      setIsLoading(true);
+      try {
+        const type = 0; // funding fee
+        const response = await commissionApiInstance.get("/latest-commission-fee", {
+          params: { type },
+        });
+        setCommissionFee(response.data._data.rate);
+        // console.log(response.data._data)
+      } catch (err) {
+        console.error("Error fetching latest commission fee:", err);
+      }
+    };
 
-  };
+    const fetchLatestMilestone = async () => {
+      try {
+        const response = await milestoneApiInstace.get("/group-latest-milestone", {
+          params: { status: true },
+        });
+        const milestones = response.data._data;
+        // setLatestMilestone(milestones.map((m) => m.milestoneName));
+        setLatestMilestone(response.data._data);
+        console.log(latestMilestone)
+      } catch (err) {
+        console.error("Error fetching latest milestone:", err);
+      }
+    };
 
-  const handleProcess = async () => {
-    try {
-      const response = await projectMilestoneApiInstace.put("/", {
-        ProjectMilestoneId: pmData?.id,
-        Status: 1
-      });
-      console.log("Milestone rejected:", response.data);
-    } catch (error) {
-      console.error("Error rejecting milestone:", error);
-    } finally {
-      handleClose()
-    }
+    const fetchData = async () => {
+      await fetchCommissionFee();
+      await fetchLatestMilestone();
+      setIsLoading(false);
+    };
 
-  };
+    fetchData();
+  }, [setIsLoading]);
 
-  const handleFail = async () => {
-    try {
-      const response = await projectMilestoneApiInstace.put("/", {
-        ProjectMilestoneId: pmData?.id,
-        Status: 4
-      });
-      console.log("Milestone rejected:", response.data);
-    } catch (error) {
-      console.error("Error rejecting milestone:", error);
-    } finally {
-      handleClose()
-    }
-
-  };
 
   const [isQualified, setIsQualified] = useState()
 
@@ -171,7 +158,7 @@ const ProjectMilestoneModal = ({ pmData, openModal, setOpenModal }) => {
       >
         <div className="flex justify-center items-center w-full h-full scrollbar-hidden">
           <div className="relative p-4 w-full max-w-[60%] max-h-full overflow-auto flex scrollbar-hidden flex-col">
-            <div className="relative bg-white rounded-lg shadow min-h-[100vh] pb-[7rem] overflow-auto scrollbar-hidden flex-grow">
+            <div className="relative bg-gray-100 rounded-lg shadow min-h-[100vh] pb-[7rem] overflow-auto scrollbar-hidden flex-grow">
               <div className="flex items-center justify-between p-4 md:p-5 border-b rounded-t bg-primary-green">
                 <h3 className="text-xl font-semibold text-white flex uppercase">
                   Project milestone
@@ -203,8 +190,9 @@ const ProjectMilestoneModal = ({ pmData, openModal, setOpenModal }) => {
 
               <div className="p-4 md:p-5 flex-grow overflow-auto">
                 {/* Stepper and Tabs */}
-                <Stepper activeStep={pmData?.milestone.milestoneOrder - 1} alternativeLabel>
-                  {milestones.map((milestone) => (
+                <Stepper activeStep={pmData?.latestMilestone.milestoneOrder - 1}
+                  alternativeLabel>
+                  {latestMilestone?.map((milestone) => (
                     <Step key={milestone}>
                       <StepLabel
                         sx={{
@@ -216,7 +204,10 @@ const ProjectMilestoneModal = ({ pmData, openModal, setOpenModal }) => {
                           },
                         }}
                       >
-                        {milestone}
+                        <span className={`${(milestone.milestoneOrder == pmData?.milestone.milestoneOrder) ? 'bg-primary-green/80 text-white py-0.5 px-1 rounded' : ''}`}>
+                          {milestone.milestoneName}
+
+                        </span>
                       </StepLabel>
                     </Step>
                   ))}
@@ -262,10 +253,21 @@ const ProjectMilestoneModal = ({ pmData, openModal, setOpenModal }) => {
                             scope="row"
                             class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 dark:text-white"
                           >
-                            (3) Actual received fund (Commission fee: 5%)
+                            (3) Actual received amount (100% - <span className="font-semibold"><u>{commissionFee * 100}%</u></span>){' '}
+                            <HtmlTooltip
+                              title={
+                                <>
+                                  <em className="text-md">{"Funding commission fee: "}</em> <b className="text-md">{'5%'}</b>
+                                </>
+                              }
+                            >
+                              <div className="inline">
+                                <HelpOutline sx={{ fontSize: '1rem' }} />
+                              </div>
+                            </HtmlTooltip>
                           </th>
                           <td class="px-6 py-4">
-                            95%
+                            {(1 - commissionFee) * 100}%
                           </td>
                         </tr>
                         <tr className="border-b border-gray-200 dark:border-gray-700">

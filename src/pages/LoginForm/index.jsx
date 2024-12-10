@@ -146,6 +146,10 @@ function LoginForm({ onClose, onOpenRoleSelection, onOpenForgotPassword }) {
     setShowPassword(!showPassword);
   };
 
+  const signInGoogle = () => {
+    window.location.href = "https://localhost:7044/api/authentication/signin-google"
+  }
+
   return (
     <div className="fixed inset-0 flex justify-center items-center bg-gray-800 bg-opacity-75 z-50">
       <div className="py-10 px-10 bg-white rounded-3xl relative shadow-lg w-[45rem]">
@@ -169,6 +173,7 @@ function LoginForm({ onClose, onOpenRoleSelection, onOpenForgotPassword }) {
         <form onSubmit={handleSubmit}>
           <div className="flex flex-col gap-4 mb-6">
             <button
+              onClick={() => signInGoogle()}
               type="button"
               className="flex items-center justify-center gap-2 w-full py-3 bg-white border border-gray-300 rounded-md shadow-sm text-gray-600 hover:bg-gray-50 transition-all duration-200"
             >

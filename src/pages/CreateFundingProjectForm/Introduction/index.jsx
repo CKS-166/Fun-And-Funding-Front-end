@@ -7,15 +7,15 @@ import NavigateButton from "../../../components/CreateProject/ProjectForm/Naviga
 
 const Introduction = () => {
 
-  const { setFormIndex, setProjectData } = useOutletContext()
+  const { setFormIndex, setProjectData, projectData } = useOutletContext()
   const navigate = useNavigate()
 
-  const [introductionData, setIntroductionData] = useState('')
+  const [introductionData, setIntroductionData] = useState(projectData.description || '')
 
   useEffect(() => {
     setProjectData((prev) => ({
       ...prev,
-      'introduction': introductionData
+      'description': introductionData
     }))
 
     const handleBeforeUnload = (event) => {
@@ -51,7 +51,7 @@ const Introduction = () => {
 
         <div className="flex justify-center gap-5 my-10">
           <NavigateButton text={'Back'} onClick={() => { navigate('/request-funding-project/basic-info') }} />
-          <NavigateButton text={'Next'} onClick={() => { navigate('/request-funding-project/project-media') }} />
+          <NavigateButton text={'Next'} disabled={introductionData == ''} onClick={() => { navigate('/request-funding-project/project-media') }} />
         </div>
       </Paper>
 

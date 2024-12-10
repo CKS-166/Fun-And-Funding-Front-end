@@ -83,7 +83,7 @@ const AdminMilestone = () => {
               <thead className="text-xs text-gray-700 uppercase bg-gray-50">
                 <tr>
                   <th scope="col" className="px-4 py-3">
-                    Milestone
+                    Funding Project
                   </th>
                   <th scope="col" className="px-4 py-3">
                     Created date
@@ -92,7 +92,7 @@ const AdminMilestone = () => {
                     End date
                   </th>
                   <th scope="col" className="px-4 py-3">
-                    Funding Project
+                    Milestone
                   </th>
                   <th scope="col" className="px-4 py-3">
                     Amount
@@ -110,9 +110,11 @@ const AdminMilestone = () => {
                   <tr key={index} className="border-b">
                     <th
                       scope="row"
-                      className="px-4 py-3 font-medium text-gray-900 whitespace-nowrap"
+                      className="px-4 py-3 font-medium text-gray-900 whitespace-nowrap "
                     >
-                      {pm.milestoneName}
+                      <div className="truncate w-48">
+                        {pm.fundingProject.name}
+                      </div>
                     </th>
                     <td className="px-4 py-3">
                       {new Date(pm.createdDate).toLocaleString()}
@@ -122,7 +124,7 @@ const AdminMilestone = () => {
                     </td>
                     <td className="px-4 py-3">
                       {/* <img className="w-10 h-10 rounded" src={pm.fundingProject.fundingFiles.} alt="Default avatar" /> */}
-                      {pm.fundingProject.name}
+                      {pm.milestoneName}
                     </td>
                     <td className="px-4 py-3">
                       {(

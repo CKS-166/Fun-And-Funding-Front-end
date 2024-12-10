@@ -22,10 +22,24 @@ const BasicInfo = () => {
     }
   });
 
-  const { setFormIndex, setProjectData } = useOutletContext();
+  const { setFormIndex, setProjectData, projectData } = useOutletContext();
   const [categories, setCategories] = useState([]);
   const [selectedCates, setSelectedCates] = useState([])
   const navigate = useNavigate();
+
+
+  useEffect(() => {
+    if (projectData) {
+      const categoryObjects = projectData.categories?.map((id) => ({ id }));
+      setValue('categories', categoryObjects || [{ id: '' }]);
+      setSelectedCates(projectData.categories?.map((cate) => cate.id) || []);
+      setValue('name', projectData.name || '');
+      setValue('description', projectData.description || '');
+      setValue('target', projectData.target || '');
+      setValue('startDate', projectData.startDate || '');
+      setValue('endDate', projectData.endDate || '');
+    }
+  }, [projectData, setValue]);
 
   const fetchCates = async () => {
     try {
@@ -108,7 +122,7 @@ const BasicInfo = () => {
                   onChange={(e) => {
                     const selectedValues = e.target.value;
                     setSelectedCates(selectedValues);
-                
+
                     // Set categories as an array of objects with id
                     const categoryObjects = selectedValues.map((id) => ({ id }));
                     setValue("categories", categoryObjects); // Update the value in react-hook-form
@@ -194,7 +208,7 @@ const BasicInfo = () => {
               <h4 className="font-semibold text-sm mb-1">Project duration*</h4>
               <p className="text-gray-500 text-xs">How many days will you be running your campaign for?</p>
             </Grid2>
-            <Grid2 size={8}>
+            <Grid2 size={8} className="flex justify-center gap-3">
               <TextField
                 className="w-[50%]"
                 label='Start date'

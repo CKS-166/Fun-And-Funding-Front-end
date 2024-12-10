@@ -5,16 +5,19 @@ import { useEffect, useState } from "react"
 import { useNavigate, useOutletContext } from "react-router"
 import FormDivider from "../../../components/CreateProject/ProjectForm/Divider"
 import NavigateButton from "../../../components/CreateProject/ProjectForm/NavigateButton"
+import { useLoading } from "../../../contexts/LoadingContext"
 
 
 const SetupBankAccount = () => {
 
-  const { setFormIndex, setProjectData } = useOutletContext();
+  const { setFormIndex, setProjectData, projectData } = useOutletContext();
   const navigate = useNavigate()
 
-  const [selectedBank, setSelectedBank] = useState(setProjectData.bankAccount?.bankCode || null)
+  const { isLoading, setIsLoading } = useLoading()
+
+  const [selectedBank, setSelectedBank] = useState(projectData.bankAccount?.bankCode || null)
   const [bankList, setBankList] = useState([])
-  const [bankAccountNumber, setBankaccountNumber] = useState(setProjectData.bankAccount?.bankNumber || '')
+  const [bankAccountNumber, setBankaccountNumber] = useState(projectData.bankAccount?.bankNumber || '')
   const [ownerName, setOwnerName] = useState('')
   useEffect(() => {
 
@@ -28,6 +31,7 @@ const SetupBankAccount = () => {
   }, [])
 
   const checkBankAccount = async () => {
+    setIsLoading(true)
     axios.post("https://api.httzip.com/api/bank/id-lookup-prod", {
       "bank": selectedBank && selectedBank.code,
       "account": bankAccountNumber
@@ -39,6 +43,7 @@ const SetupBankAccount = () => {
     }).then(res => {
       console.log(res)
       setOwnerName(res.data.data.ownerName)
+      setIsLoading(false)
     })
   }
 
@@ -147,7 +152,7 @@ const SetupBankAccount = () => {
 
           <div className="flex justify-center gap-5 my-5">
             <NavigateButton text={'Back'} onClick={() => { navigate('/request-funding-project/project-media') }} />
-            <NavigateButton text={'Next'} onClick={() => onSubmit()} />
+            <NavigateButton text={'Next'} disabled={ownerName == ''} onClick={() => onSubmit()} />
           </div>
         </div>
       </Paper>

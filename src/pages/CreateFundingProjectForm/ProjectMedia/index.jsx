@@ -13,40 +13,51 @@ import NavigateButton from "../../../components/CreateProject/ProjectForm/Naviga
 registerPlugin(FilePondPluginFileValidateType, FilePondPluginImagePreview);
 
 const ProjectMedia = () => {
-  const { setFormIndex, setProjectData } = useOutletContext();
+  const { setFormIndex, setProjectData, projectData } = useOutletContext();
   const navigate = useNavigate();
 
   const [thumbnail, setThumbnail] = useState([]);
   const [projectVideo, setProjectVideo] = useState([]);
   const [projectImages, setProjectImages] = useState([]);
   // const { thumbnail, setThumbnail, projectVideo, setProjectVideo, projectImages, setProjectImages } = useOutletContext();
+  const [fundingFiles, setFundingFiles] = useState()
 
   useEffect(() => {
+    if (projectData?.fundingFiles) {
+      const initialFundingFiles = projectData.fundingFiles || [];
+      setThumbnail(initialFundingFiles.filter(file => file.filetype === 2).map(file => file.url));
+      setProjectVideo(initialFundingFiles.filter(file => file.filetype === 1).map(file => file.url));
+      setProjectImages(initialFundingFiles.filter(file => file.filetype === 4).map(file => file.url));
+    }
     setFormIndex(2);
-  }, []);
+  }, [projectData, setFormIndex]);
+
+  console.log('vid', projectVideo)
+
+
 
   useEffect(() => {
-    const fundingFiles = [];
+    const updatedFundingFiles = [];
 
-    if (thumbnail.length > 0) {
-      fundingFiles.push({
+    if (thumbnail?.length > 0) {
+      updatedFundingFiles.push({
         name: "thumbnail",
         url: thumbnail[0].file,
         filetype: 2,
       });
     }
 
-    if (projectVideo.length > 0) {
-      fundingFiles.push({
+    if (projectVideo?.length > 0) {
+      updatedFundingFiles.push({
         name: "video",
         url: projectVideo[0].file,
         filetype: 1,
       });
     }
 
-    if (projectImages.length > 0) {
+    if (projectImages?.length > 0) {
       projectImages.forEach((image, index) => {
-        fundingFiles.push({
+        updatedFundingFiles.push({
           name: `image_${index + 1}`,
           url: image.file,
           filetype: 4,
@@ -54,10 +65,7 @@ const ProjectMedia = () => {
       });
     }
 
-    setProjectData((prev) => ({
-      ...prev,
-      fundingFiles,
-    }));
+    setFundingFiles(updatedFundingFiles);
   }, [thumbnail, projectVideo, projectImages]);
 
   return (
@@ -106,7 +114,7 @@ const ProjectMedia = () => {
               {projectVideo.length > 0 && (
                 <div className="mt-4">
                   <ReactPlayer
-                    url={URL.createObjectURL(projectVideo[0].file)}
+                    url={URL.createObjectURL(projectVideo[0].file || projectVideo[0])}
                     width="100%"
                     height="100%"
                     controls
@@ -115,7 +123,7 @@ const ProjectMedia = () => {
               )}
             </Grid2>
           </Grid2>
-
+          <div className="mt-4"></div>
           <FormDivider title="Project story images" />
           <Grid2 container spacing={2} className="my-8">
             <Grid2 size={3}>
@@ -137,7 +145,13 @@ const ProjectMedia = () => {
 
           <div className="flex justify-center gap-5 my-5">
             <NavigateButton text="Back" onClick={() => navigate('/request-funding-project/introduction')} />
-            <NavigateButton text="Next" onClick={() => navigate('/request-funding-project/setup-bank-account')} />
+            <NavigateButton text="Next" disabled={thumbnail?.length == 0 || projectVideo?.length == 0 || projectImages?.length == 0} onClick={() => {
+              setProjectData((prev) => ({
+                ...prev,
+                fundingFiles,
+              }));
+              navigate('/request-funding-project/setup-bank-account')
+            }} />
           </div>
         </div>
       </Paper>

@@ -3,6 +3,9 @@ import { useState } from "react"
 import { useWalletApi } from "../../utils/Hooks/AccountWallet"
 import BankAccountSettingModal from "./BankAccountSettingModal"
 import WalletModal from "./WalletModal"
+import { jwtDecode } from "jwt-decode";
+import Cookies from "js-cookie";
+import { useNavigate } from "react-router"
 
 
 const AccountWallet = () => {
@@ -11,8 +14,23 @@ const AccountWallet = () => {
 
   const [openModal, setOpenModal] = useState(false)
   const [modalAddMoney, setModalAddMoney] = useState(false)
+  const [userRole, setUserRole] = useState()
+  const navigate = useNavigate()
 
   const [openBankSetting, setOpenBankSetting] = useState(false)
+
+  const token = Cookies.get("_auth")
+
+  useEffect(() => {
+    if (token) {
+      const decoded = jwtDecode(token)
+      setUserRole(decoded["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"])
+      console.log('user role', userRole)
+      if (userRole == "GameOwner")
+        navigate("/account/wallet-game-owner")
+    }
+  }, [token, userRole])
+
 
   const handleOpenAddMoneyModal = () => {
     setModalAddMoney(true)
@@ -46,7 +64,7 @@ const AccountWallet = () => {
         <div class="w-3/6 p-6 bg-white border border-gray-200 rounded-lg shadow">
           <span class="mb-3 font-semibold text-gray-500">Total Balance</span>
           <p className="h-[3.5rem]">
-            <h5 class="mb-2 py-1 text-4xl font-bold tracking-tight text-gray-900">
+            <h5 class="mb-2 py-1 text-3xl font-bold tracking-tight text-gray-900">
               {data?._data.balance.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")} <span class="mb-3 text-lg font-normal text-gray-700">VND</span>
             </h5>
           </p>
@@ -78,7 +96,7 @@ const AccountWallet = () => {
                 )
                 :
                 (
-                  <div className="text-4xl font-bold tracking-tight text-gray-900 flex items-center gap-2">
+                  <div className="text-3xl font-bold tracking-tight text-gray-900 flex items-center gap-2">
                     <AccountBalance sx={{ fontSize: '2rem', color: 'var(--primary-green)' }} /> {bankAccData?._data.bankCode} - {bankAccData?._data.bankNumber}
                   </div>
                 )

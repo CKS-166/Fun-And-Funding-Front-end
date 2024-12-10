@@ -21,6 +21,7 @@ import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import userApiInstace from "../../../utils/ApiInstance/userApiInstance";
 import "./index.css";
+import { jwtDecode } from "jwt-decode";
 
 function UserProfileLayout() {
   const location = useLocation();
@@ -34,13 +35,25 @@ function UserProfileLayout() {
 
   //cookie
   const token = Cookies.get("_auth");
+  const [walletPath, setWalletPath] = useState("")
+
+  useEffect(() => {
+    if (token) {
+      const decoded = jwtDecode(token)
+      const userRole = decoded["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"]
+      if (userRole == "GameOwner")
+        setWalletPath("/account/wallet-game-owner")
+      else
+        setWalletPath("/account/wallet")
+    }
+  }, [token, walletPath])
 
   const titleList = [
     { text: "My Profile", path: "/account/profile" },
     { text: "Projects", path: "/account/projects" },
     { text: "Social", path: "/account/social" },
     { text: "My Orders", path: "/account/orders" },
-    { text: "My Wallet", path: "/account/wallet" },
+    { text: "My Wallet", path: walletPath },
   ];
 
   const iconMapping = {

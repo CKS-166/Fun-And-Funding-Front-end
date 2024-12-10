@@ -1,4 +1,4 @@
-import { ArrowRightAlt, HelpOutline } from "@mui/icons-material";
+import { ArrowDropUp, ArrowRight, ArrowRightAlt, HelpOutline } from "@mui/icons-material";
 import {
   Box,
   Button,
@@ -14,13 +14,16 @@ import {
 } from "@mui/material";
 import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
 import projectMilestoneApiInstace from "../../../../utils/ApiInstance/projectMilestoneApiInstance";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import QRCodeModal from "./QRCodeModal";
 import PMRequirementModal from "./PMRequirementModal";
 import { styled } from '@mui/material/styles';
 import WarnModal from "./WarnModal";
 import ProjectMilestoneReviewList from "../../../../components/ProjectMilestoneBacker/ProjectMilestoneReviewList";
 import { toast, ToastContainer } from "react-toastify";
+import { useLoading } from "../../../../contexts/LoadingContext";
+import commissionApiInstance from "../../../../utils/ApiInstance/commisionApiInstance";
+import milestoneApiInstace from "../../../../utils/ApiInstance/milestoneApiInstance";
 
 
 const ProjectMilestoneModal = ({ pmData, openModal, setOpenModal }) => {
@@ -60,6 +63,48 @@ const ProjectMilestoneModal = ({ pmData, openModal, setOpenModal }) => {
   ];
 
   const pmrStatusString = ["ToDo", "Doing", "Done", "Warning", "Failed"];
+
+  const [commissionFee, setCommissionFee] = useState(null);
+  const [latestMilestone, setLatestMilestone] = useState(null);
+  const { isLoading, setIsLoading } = useLoading()
+
+  useEffect(() => {
+    const fetchCommissionFee = async () => {
+      setIsLoading(true);
+      try {
+        const type = 0; // funding fee
+        const response = await commissionApiInstance.get("/latest-commission-fee", {
+          params: { type },
+        });
+        setCommissionFee(response.data._data.rate);
+        // console.log(response.data._data)
+      } catch (err) {
+        console.error("Error fetching latest commission fee:", err);
+      }
+    };
+
+    const fetchLatestMilestone = async () => {
+      try {
+        const response = await milestoneApiInstace.get("/group-latest-milestone", {
+          params: { status: true },
+        });
+        const milestones = response.data._data;
+        // setLatestMilestone(milestones.map((m) => m.milestoneName));
+        setLatestMilestone(response.data._data);
+        console.log(latestMilestone)
+      } catch (err) {
+        console.error("Error fetching latest milestone:", err);
+      }
+    };
+
+    const fetchData = async () => {
+      await fetchCommissionFee();
+      await fetchLatestMilestone();
+      setIsLoading(false);
+    };
+
+    fetchData();
+  }, [setIsLoading]);
 
   const handleApprove = async () => {
     try {
@@ -138,7 +183,7 @@ const ProjectMilestoneModal = ({ pmData, openModal, setOpenModal }) => {
         return (
           <button
             onClick={handleProcess}
-            className="text-white bg-gradient-to-r from-primary-green/70 via-primary-green/80 to-primary-green hover:bg-gradient-to-br font-medium rounded-lg text-sm px-5 py-2 text-center me-2 mb-2"
+            className="text-white bg-gradient-to-r from-primary-green/70 via-primary-green/80 to-primary-green hover:bg-gradient-to-br font-medium rounded-md text-sm px-5 py-2 text-center me-2 mb-2"
           >
             Change to processing
           </button>
@@ -148,7 +193,7 @@ const ProjectMilestoneModal = ({ pmData, openModal, setOpenModal }) => {
           <div>
             {/* <button
               onClick={handleProcess}
-              className="text-white bg-gradient-to-r from-primary-green/70 via-primary-green/80 to-primary-green hover:bg-gradient-to-br font-medium rounded-lg text-sm px-5 py-2 text-center me-2 mb-2">
+              className="text-white bg-gradient-to-r from-primary-green/70 via-primary-green/80 to-primary-green hover:bg-gradient-to-br font-medium rounded-md text-sm px-5 py-2 text-center me-2 mb-2">
               Process
             </button> */}
             Game owner is working on evidence
@@ -171,14 +216,14 @@ const ProjectMilestoneModal = ({ pmData, openModal, setOpenModal }) => {
           <div>
             <button
               onClick={handleApprove}
-              className="text-white bg-gradient-to-r from-primary-green/70 via-primary-green/80 to-primary-green hover:bg-gradient-to-br font-medium rounded-lg text-sm px-5 py-2 text-center me-2 mb-2"
+              className="text-white bg-gradient-to-r from-primary-green/70 via-primary-green/80 to-primary-green hover:bg-gradient-to-br font-medium rounded-md text-sm px-5 py-2 text-center me-2 mb-2"
             >
               Approve project milestone
             </button>
             <button
               // onClick={handleWarn}
               onClick={handleOpenWarn}
-              className="text-white bg-red-500 hover:bg-gradient-to-br font-medium rounded-lg text-sm px-5 py-2 text-center me-2 mb-2"
+              className="text-white bg-red-500 hover:bg-gradient-to-br font-medium rounded-md text-sm px-5 py-2 text-center me-2 mb-2"
             >
               Warn this project milestone
             </button>
@@ -190,13 +235,13 @@ const ProjectMilestoneModal = ({ pmData, openModal, setOpenModal }) => {
           <div>
             <button
               onClick={handleApprove}
-              className="text-white bg-gradient-to-r from-primary-green/70 via-primary-green/80 to-primary-green hover:bg-gradient-to-br font-medium rounded-lg text-sm px-5 py-2 text-center me-2 mb-2"
+              className="text-white bg-gradient-to-r from-primary-green/70 via-primary-green/80 to-primary-green hover:bg-gradient-to-br font-medium rounded-md text-sm px-5 py-2 text-center me-2 mb-2"
             >
               Approve project milestone
             </button>
             <button
               onClick={handleFail}
-              className="text-white bg-red-500 hover:bg-gradient-to-br font-medium rounded-lg text-sm px-5 py-2 text-center me-2 mb-2"
+              className="text-white bg-red-500 hover:bg-gradient-to-br font-medium rounded-md text-sm px-5 py-2 text-center me-2 mb-2"
             >
               Fail project milestone
             </button>
@@ -208,13 +253,13 @@ const ProjectMilestoneModal = ({ pmData, openModal, setOpenModal }) => {
           <div>
             <button
               onClick={handleApprove}
-              className="text-white bg-gradient-to-r from-primary-green/70 via-primary-green/80 to-primary-green hover:bg-gradient-to-br font-medium rounded-lg text-sm px-5 py-2 text-center me-2 mb-2"
+              className="text-white bg-gradient-to-r from-primary-green/70 via-primary-green/80 to-primary-green hover:bg-gradient-to-br font-medium rounded-md text-sm px-5 py-2 text-center me-2 mb-2"
             >
               Approve project milestone
             </button>
             <button
               onClick={handleFail}
-              className="text-white bg-red-500 hover:bg-gradient-to-br font-medium rounded-lg text-sm px-5 py-2 text-center me-2 mb-2"
+              className="text-white bg-red-500 hover:bg-gradient-to-br font-medium rounded-md text-sm px-5 py-2 text-center me-2 mb-2"
             >
               Fail project milestone
             </button>
@@ -227,11 +272,11 @@ const ProjectMilestoneModal = ({ pmData, openModal, setOpenModal }) => {
     }
   }
 
-  const milestones = [
-    "Milestone 1",
-    "Milestone 2",
-    "Milestone 3",
-  ];
+  // const milestones = [
+  //   "Milestone 1",
+  //   "Milestone 2",
+  //   "Milestone 3",
+  // ];
 
   const handleChange = (event, newValue) => {
     setActiveTab(newValue);
@@ -256,7 +301,7 @@ const ProjectMilestoneModal = ({ pmData, openModal, setOpenModal }) => {
       <Modal open={openModal} onClose={handleClose}>
         <div className="flex justify-center items-center w-full h-full">
           <div class="relative p-4 w-full max-w-[55%] max-h-full overflow-auto scrollbar-hidden">
-            <div class="relative bg-white rounded-lg shadow min-h-[100%]">
+            <div class="relative bg-gray-100 rounded-md shadow min-h-[100%]">
               <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t bg-primary-green">
                 <h3 class="text-xl font-semibold text-white flex uppercase">
                   Funding withdraw request
@@ -264,7 +309,7 @@ const ProjectMilestoneModal = ({ pmData, openModal, setOpenModal }) => {
                 <button
                   type="button"
                   onClick={handleClose}
-                  class="end-2.5 text-gray-400 bg-transparent text-white hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
+                  class="end-2.5 text-gray-400 bg-transparent text-white hover:bg-gray-200 hover:text-gray-900 rounded-md text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
                   data-modal-hide="authentication-modal"
                 >
                   <svg
@@ -288,10 +333,10 @@ const ProjectMilestoneModal = ({ pmData, openModal, setOpenModal }) => {
 
               <div class="p-4 md:p-5 h-[35rem] overflow-y-auto">
                 <Stepper
-                  activeStep={pmData?.milestone.milestoneOrder - 1}
+                  activeStep={pmData?.latestMilestone.milestoneOrder - 1}
                   alternativeLabel
                 >
-                  {milestones.map((milestone) => (
+                  {latestMilestone?.map((milestone) => (
                     <Step key={milestone}>
                       <StepLabel
                         sx={{
@@ -303,7 +348,11 @@ const ProjectMilestoneModal = ({ pmData, openModal, setOpenModal }) => {
                           },
                         }}
                       >
-                        {milestone}
+                        <span className={`${(milestone.milestoneOrder == pmData?.milestone.milestoneOrder) ? 'bg-primary-green/80 text-white py-0.5 px-1 rounded' : ''}`}>
+                          {milestone.milestoneName}
+
+                        </span>
+
                       </StepLabel>
                     </Step>
                   ))}
@@ -328,11 +377,11 @@ const ProjectMilestoneModal = ({ pmData, openModal, setOpenModal }) => {
                   activeTab === 0
                     ? (
                       <div>
-                        <div className="flex justify-center items-center gap-5 my-2 bg-gray-100 rounded overflow-hidden shadow-md">
-                          <div className="w-[50%] h-[12rem] overflow-hidden flex justify-center items-center">
-                            <img class=" h-auto object-contain transition-transform hover:scale-75" alt="Funding project image" src={pmData?.fundingProject.fundingFiles.find((e) => e.filetype == 2)?.url} />
+                        <div className="flex justify-center items-center gap-5 my-2 bg-white rounded overflow-hidden shadow">
+                          <div className="w-[50%] h-[14rem] overflow-hidden flex justify-center items-center">
+                            <img class=" w-[100%] object-cover transition-transform hover:scale-75" alt="Funding project image" src={pmData?.fundingProject.fundingFiles.find((e) => e.filetype == 2)?.url} />
                           </div>
-                          <div className="w-[50%] h-[12rem] py-2">
+                          <div className="w-[50%] h-[14rem] py-2">
                             <div className="text-primary-green items-center">
                               {statusString[pmData?.fundingProject.status]}
 
@@ -340,10 +389,10 @@ const ProjectMilestoneModal = ({ pmData, openModal, setOpenModal }) => {
                             <div className="text-2xl font-bold">
                               {pmData?.fundingProject.name}
                             </div>
-                            <div className="text-sm font-norml">
+                            <div className="text-xs text-gray-700 line-clamp-2 mb-1">
                               {pmData?.fundingProject.description}
                             </div>
-                            <div className="text-sm font-light text-gray-500">
+                            <div className="text-sm font-light text-gray-500 mb-1">
                               by <span className="italic font-semibold">{pmData?.fundingProject.user.email}</span>
                             </div>
                             <div className="text-sm mb-2.5">
@@ -351,13 +400,13 @@ const ProjectMilestoneModal = ({ pmData, openModal, setOpenModal }) => {
                             </div>
                             <button
                               onClick={() => { window.location.href = `/funding-detail/${pmData?.fundingProject.id}` }}
-                              className="text-white bg-gradient-to-r text-xs from-primary-green/70 via-primary-green/80 to-primary-green hover:bg-gradient-to-br font-medium rounded-lg px-3 text-center me-2 mb-2">
+                              className="text-white bg-gradient-to-r text-xs from-primary-green/70 via-primary-green/80 to-primary-green hover:bg-gradient-to-br font-medium rounded-md px-3 text-center me-2 mb-2">
                               Go to project <ArrowRightAlt />
                             </button>
                           </div>
                         </div>
 
-                        <div class="relative overflow-x-auto sm:rounded-lg mt-[1rem] shadow-md">
+                        <div class="relative overflow-x-auto sm:rounded-md mt-[1rem] shadow">
                           <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                             <caption class="p-5 text-lg font-semibold text-left rtl:text-right text-gray-900 bg-white dark:text-white dark:bg-gray-800">
                               Milestone request
@@ -378,8 +427,7 @@ const ProjectMilestoneModal = ({ pmData, openModal, setOpenModal }) => {
                                   scope="row"
                                   class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 dark:text-white"
                                 >
-                                  (1) {pmData?.milestone.milestoneName} disbursement
-                                  percentage
+                                  (1) {pmData?.milestone.milestoneName} disbursement percentage
                                 </th>
                                 <td class="px-6 py-4">
                                   {pmData?.milestone.disbursementPercentage * 100}%
@@ -404,10 +452,21 @@ const ProjectMilestoneModal = ({ pmData, openModal, setOpenModal }) => {
                                   scope="row"
                                   class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 dark:text-white"
                                 >
-                                  (3) Actual received fund (Commission fee: 5%)
+                                  (3) Actual received amount (100% - <span className="font-semibold"><u>{commissionFee * 100}%</u></span>){' '}
+                                  <HtmlTooltip
+                                    title={
+                                      <>
+                                        <em className="text-md">{"Funding commission fee: "}</em> <b className="text-md">{'5%'}</b>
+                                      </>
+                                    }
+                                  >
+                                    <div className="inline">
+                                      <HelpOutline sx={{ fontSize: '1rem' }} />
+                                    </div>
+                                  </HtmlTooltip>
                                 </th>
                                 <td class="px-6 py-4">
-                                  95%
+                                  {(1 - commissionFee) * 100}%
                                 </td>
                               </tr>
                               <tr class="border-b border-gray-200 dark:border-gray-700">
@@ -446,17 +505,23 @@ const ProjectMilestoneModal = ({ pmData, openModal, setOpenModal }) => {
                         </div>
 
                         <div className="flex justify-end mt-3">
-                          {pmData?.status == 2
-                            ? ('')
-                            : (
-                              <button
-                                type="button"
-                                onClick={() => setOpenQRCode(true)}
-                                class="text-white bg-primary-green font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 "
-                              >
-                                Transfer fund
-                              </button>
-                            )}
+                          {
+                            pmData?.status == 0 || pmData?.status == 5 || pmData?.status == 6
+                              ? (
+                                <button
+                                  type="button"
+                                  onClick={() => setOpenQRCode(true)}
+                                  class="text-white bg-primary-green font-medium rounded-md text-sm px-5 py-2.5 me-2 mb-2 "
+                                >
+                                  {
+                                    pmData?.status == 0
+                                      ? ('Transfer Initial Fund')
+                                      : ('Transfer Remaining Fund')
+                                  }
+                                </button>
+                              )
+                              : ('')
+                          }
 
                         </div>
                         {pmData && (
@@ -477,9 +542,9 @@ const ProjectMilestoneModal = ({ pmData, openModal, setOpenModal }) => {
                           {/* <div className="flex justify-center">
                           <Divider sx={{ fontWeight: 'bold', color: 'rgba(0, 0, 0, 0.7)', my: '1rem', width: '60%', textAlign: 'center' }}>Milestone evidence</Divider>
                         </div> */}
-                          <div div class="relative overflow-x-auto">
+                          <div div class="relative overflow-x-auto rounded overflow-hidden">
                             <table class="w-full text-sm text-left rtl:text-right text-gray-500">
-                              <caption class="px-5 pb-5 text-lg font-semibold text-left rtl:text-right text-gray-900 bg-white dark:text-white">
+                              <caption class="px-5 py-3 text-lg font-semibold text-left rtl:text-right text-gray-900 bg-white dark:text-white">
                                 {/* Project milestone requirement */}
                                 <p class="mt-1 text-sm font-normal text-gray-500 dark:text-gray-400">
                                   At each milestone, game owners must fulfill the
@@ -490,7 +555,7 @@ const ProjectMilestoneModal = ({ pmData, openModal, setOpenModal }) => {
                               <thead class="text-xs text-gray-700 uppercase bg-gray-50">
                                 <tr>
                                   <th scope="col" class="px-6 py-3">
-                                    Requirement
+                                    Milestone Requirement
                                   </th>
                                   <th scope="col" class="px-6 py-3">
                                     Last update
@@ -509,19 +574,19 @@ const ProjectMilestoneModal = ({ pmData, openModal, setOpenModal }) => {
                                     <tr class="bg-white border-b">
                                       <td
                                         scope="row"
-                                        class="px-6 py-4 font-medium text-gray-900"
+                                        class="px-6 py-4 font-medium w-[35%] text-gray-900"
                                       >
                                         <div className="">
                                           <span className="py-.5">
                                             {pmr.requirementTitle}
                                           </span>
                                         </div>
-                                        <div className="font-normal italic">
+                                        <div className="font-normal text-xs italic">
                                           {pmr.reqDescription}
                                         </div>
                                       </td>
                                       <td class="px-6 py-4">
-                                        <span className="text-xs text-right text-gray-600 italic font-semibold">
+                                        <span className="text-xs text-right text-gray-600 font-semibold">
                                           {new Date(pmr.updateDate).toLocaleString()}
                                         </span>
                                       </td>
@@ -559,8 +624,8 @@ const ProjectMilestoneModal = ({ pmData, openModal, setOpenModal }) => {
                       )
                 }
               </div>
-              <div className="w-[100%] bg-gray-100 rounded-b">
-                <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
+              <div className="w-[100%] bg-gray-200 rounded-b">
+                <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600 font-semibold">
                   {pmData
                     ? renderStatusButton(
                       pmData,

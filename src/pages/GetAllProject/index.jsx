@@ -77,7 +77,7 @@ const GetAllProject = () => {
   return (
     <div>
       <div className='crowBanner flex flex-col justify-center items-center h-[240px]' >
-        <Typography variant='h1' className="!text-[20px] text-[#FFFF] !my-[14rem] !text-[6rem]">Games collection</Typography>
+        <Typography variant='h1' className="!text-[20px] text-[#FFFF] !my-[14rem] !text-[6rem]">Funding Collection</Typography>
       </div>
       <Box sx={{ marginTop: '5rem', padding: '30px' }}>
         <Grid container spacing={2}>
@@ -159,7 +159,7 @@ const GetAllProject = () => {
 
             {/* Pagination */}
             <Pagination
-                sx={{marginTop: '2rem', display: 'flex', justifyContent: 'center'}}
+              sx={{ marginTop: '2rem', display: 'flex', justifyContent: 'center' }}
               count={projects.totalPages}
               page={projects.pageIndex}
               onChange={(e, page) => {

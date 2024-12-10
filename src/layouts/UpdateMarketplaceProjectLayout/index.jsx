@@ -196,6 +196,10 @@ function UpdateMarketplaceProjectLayout() {
               id: category.id || "",
               name: category.name || "",
             })) || [],
+          wallet : {
+            id: data.wallet?.id || "",
+            balance: data.wallet?.balance || 0
+          }
         });
       } else {
         console.error("No project data found");

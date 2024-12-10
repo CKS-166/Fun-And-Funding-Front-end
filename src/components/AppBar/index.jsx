@@ -428,7 +428,7 @@ const FunFundingAppBar = () => {
                         },
                       }}
                     >
-                      <Avatar alt="User" src={user?.avatar} sx={{ mb: '1rem', width: '5rem', height: '5rem' }} />
+                      <Avatar alt="User" src={user?.avatar} sx={{ mb: '1rem', width: '6rem', height: '6rem' }} />
                       {userLoading ?
                         <CircularProgress sx={{ color: 'var(--grey)', fontSize: '1rem' }}></CircularProgress>
                         :

@@ -1,11 +1,8 @@
-import { useEffect, useState } from "react"
-import payOSApiInstance from "../../utils/ApiInstance/payOSApiInstance"
-import WalletModal from "./WalletModal"
-import { useWalletApi } from "../../utils/Hooks/AccountWallet"
-import TestNotification from "../TestNotification"
-import NotificationMenu from "../../components/Notification/NotificationMenu"
-import BankAccountSettingModal from "./BankAccountSettingModal"
 import { AccountBalance } from "@mui/icons-material"
+import { useState } from "react"
+import { useWalletApi } from "../../utils/Hooks/AccountWallet"
+import BankAccountSettingModal from "./BankAccountSettingModal"
+import WalletModal from "./WalletModal"
 
 
 const AccountWallet = () => {
@@ -44,7 +41,7 @@ const AccountWallet = () => {
   ]
 
   return (
-    <>
+    <div className="pr-[5.5rem] pl-[3rem] mt-[2rem]">
       <div className="flex gap-4">
         <div class="w-3/6 p-6 bg-white border border-gray-200 rounded-lg shadow">
           <span class="mb-3 font-semibold text-gray-500">Total Balance</span>
@@ -161,7 +158,7 @@ const AccountWallet = () => {
 
       <NotificationMenu /> */}
 
-    </>
+    </div>
   )
 }
 

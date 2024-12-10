@@ -39,6 +39,10 @@ export const UpdateMarketplaceProjectProvider = ({ children }) => {
       bankCode: "",
     },
     categories: [{ id: "", name: "" }],
+    wallet : {
+      id: "",
+      balance : 0
+    }
   });
 
   return (

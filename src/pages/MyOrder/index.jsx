@@ -10,7 +10,7 @@ const MyOrder = () => {
     const [orders, setOrders] = useState([]);
     const fetchOrders = async () => {
         setIsLoading(true);
-        await orderApiInstace.get('', {
+        await orderApiInstace.get('all-orders', {
             headers: {
                 Authorization: `Bearer ${token}`
             }

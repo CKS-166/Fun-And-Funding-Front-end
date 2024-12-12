@@ -161,7 +161,7 @@ function CommissionFee() {
 
     return {
       Id: data.id,
-      Rate: data.rate + "%",
+      Rate: data.rate,
       Version: data.version,
       Type: data.commissionType === 0 ? "Funding" : "Marketplace",
       "Last Updated": formatDate(data.updateDate),

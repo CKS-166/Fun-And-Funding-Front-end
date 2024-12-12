@@ -127,9 +127,9 @@ const ProjectMilestoneModal = ({ pmData, openModal, setOpenModal }) => {
         Status: 3,
         NewEndDate: newEndDate
       });
-      toast.success("Milestone rejected!");
+      toast.success("Milestone warned!");
     } catch (error) {
-      console.error("Error rejecting milestone:", error);
+      console.error("Error warning milestone:", error);
     } finally {
       handleClose();
     }
@@ -142,9 +142,9 @@ const ProjectMilestoneModal = ({ pmData, openModal, setOpenModal }) => {
         ProjectMilestoneId: pmData?.id,
         Status: 1,
       });
-      toast.success("Milestone updated!");
+      toast.success("Milestone is now available for processing!");
     } catch (error) {
-      console.error("Error rejecting milestone:", error);
+      console.error("Error processing milestone:", error);
     } finally {
       handleClose();
     }

@@ -25,9 +25,8 @@ const RequestMilestoneModal = ({ render,open, handleClose, milestone, projectId,
     p: 4,
     borderRadius: "8px",
     zIndex: 9999,
-
   };
-  console.log(render);
+  console.log(milestone);
   const [alert, setAlert] = useState(false);
   const [pmIntro, setPmIntro] = useState("")
   const [pmTitle, setPmTitle] = useState("")

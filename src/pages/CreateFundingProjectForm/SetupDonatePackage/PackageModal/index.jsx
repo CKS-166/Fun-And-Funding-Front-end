@@ -76,10 +76,8 @@ const PackageModal = ({ openModal, setOpenModal, selectedPackage, addPackage, ed
         ...prev,
         imageUrl: imageUrl,
         imageFile: file
-
       }));
     }
-
   };
 
 

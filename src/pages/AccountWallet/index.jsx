@@ -1,5 +1,5 @@
 import { AccountBalance } from "@mui/icons-material"
-import { useState } from "react"
+import { useState,useEffect } from "react"
 import { useWalletApi } from "../../utils/Hooks/AccountWallet"
 import BankAccountSettingModal from "./BankAccountSettingModal"
 import WalletModal from "./WalletModal"

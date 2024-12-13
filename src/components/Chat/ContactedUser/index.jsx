@@ -2,6 +2,50 @@ import React from "react";
 import { Avatar, Typography } from "@mui/material";
 
 function ContactedUser({ user, isSelected, onSelect }) {
+  const formatDate = (date) => {
+    if (!(date instanceof Date)) {
+      return "Invalid date";
+    }
+    return date.toLocaleString(undefined, {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  };
+
+  const timeDifference = (date) => {
+    if (!(date instanceof Date)) {
+      return "Invalid date";
+    }
+
+    const now = new Date();
+    const diffInMs = now - date;
+
+    // Time units in milliseconds
+    const minute = 60 * 1000;
+    const hour = 60 * minute;
+    const day = 24 * hour;
+    const week = 7 * day;
+
+    if (diffInMs < minute) {
+      return "Now";
+    } else if (diffInMs < hour) {
+      const minutes = Math.floor(diffInMs / minute);
+      return `${minutes}m`;
+    } else if (diffInMs < day) {
+      const hours = Math.floor(diffInMs / hour);
+      return `${hours}h`;
+    } else if (diffInMs < week) {
+      const days = Math.floor(diffInMs / day);
+      return `${days}d`;
+    } else {
+      const weeks = Math.floor(diffInMs / week);
+      return `${weeks}w`;
+    }
+  };
+
   return (
     <div
       className={`flex flex-row p-4 gap-x-4 ${
@@ -51,7 +95,7 @@ function ContactedUser({ user, isSelected, onSelect }) {
               textAlign: "right",
             }}
           >
-            {`${new Date(user.createdDate).toLocaleString()}`}
+            {timeDifference(new Date(user.createdDate))}
           </Typography>
         </div>
       </div>

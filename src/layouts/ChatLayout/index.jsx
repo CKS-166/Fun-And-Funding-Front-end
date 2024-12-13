@@ -214,7 +214,7 @@ function ChatLayout() {
               </Typography>
             </Box>
           </Box>
-          <Box sx={{ px: "1.5rem", py: "1rem" }}>
+          <Box sx={{ px: "1.5rem" }}>
             <Outlet />
           </Box>
         </Grid2>

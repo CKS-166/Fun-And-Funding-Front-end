@@ -159,8 +159,8 @@ const MarketplaceProjectDetailModal = ({
               fetchMarketplaceProject();
               fetchMarketplaceProjectList();
               Swal.fire({
-                title: `${actionText}ed!`,
-                text: `${actionText} the user successfully.`,
+                title: `${actionText}d!`,
+                text: `${actionText} the project successfully.`,
                 icon: "success",
                 confirmButtonColor: "var(--primary-green)",
                 confirmButtonText: "I understand",

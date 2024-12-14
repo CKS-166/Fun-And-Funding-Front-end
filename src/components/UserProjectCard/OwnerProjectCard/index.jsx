@@ -31,11 +31,11 @@ function OwnerProjectCard({ project, projectType }) {
           src={
             projectType == "Funding"
               ? project?.fundingFiles?.find(
-                  (p) => p.filetype == 2 && p.isDeleted == false
-                ).url
+                (p) => p.filetype == 2 && p.isDeleted == false
+              ).url
               : project?.marketplaceFiles?.find(
-                  (p) => p.fileType == 2 && p.isDeleted == false
-                ).url
+                (p) => p.fileType == 2 && p.isDeleted == false
+              ).url
           }
           style={{
             width: "10rem",
@@ -57,7 +57,7 @@ function OwnerProjectCard({ project, projectType }) {
             <Typography
               sx={{
                 color: "#2F3645",
-                width: "12rem",
+                width: "25rem",
                 overflow: "hidden",
                 textOverflow: "ellipsis",
                 WebkitBoxOrient: "vertical",
@@ -110,9 +110,9 @@ function OwnerProjectCard({ project, projectType }) {
             border: "0 !important",
           },
           "&.MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline":
-            {
-              border: "0 !important",
-            },
+          {
+            border: "0 !important",
+          },
         }}
       >
         <Select
@@ -156,8 +156,7 @@ function OwnerProjectCard({ project, projectType }) {
             value="edit"
             onClick={() =>
               window.open(
-                `/account/${
-                  projectType == "Funding" ? "projects" : "marketplace-projects"
+                `/account/${projectType == "Funding" ? "projects" : "marketplace-projects"
                 }/update/${project.id}/basic-info`,
                 "_blank"
               )

@@ -12,6 +12,7 @@ import {
 } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
 import Cookies from "js-cookie";
+import { jwtDecode } from "jwt-decode";
 import React, { useEffect, useRef, useState } from "react";
 import { FaClipboardList } from "react-icons/fa";
 import { FaFolderOpen, FaUserTie } from "react-icons/fa6";
@@ -21,7 +22,6 @@ import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import userApiInstace from "../../../utils/ApiInstance/userApiInstance";
 import "./index.css";
-import { jwtDecode } from "jwt-decode";
 
 function UserProfileLayout() {
   const location = useLocation();
@@ -52,8 +52,8 @@ function UserProfileLayout() {
     { text: "My Profile", path: "/account/profile" },
     { text: "Projects", path: "/account/projects" },
     { text: "Social", path: "/account/social" },
-    { text: "My Orders", path: "/account/orders" },
-    { text: "My Wallet", path: walletPath },
+    { text: "Orders", path: "/account/orders" },
+    { text: "My Wallet", path: "/account/wallet" },
   ];
 
   const iconMapping = {
@@ -176,28 +176,26 @@ function UserProfileLayout() {
             overflow: "visible",
           }}>
           <div className="sticky top-[2.4rem] z-10">
-            <div className="flex w-full flex-row justify-start items-center px-[2rem] mb-[1.5rem]">
-              <div className="rounded-sm bg-[var(--white)] w-[10rem] h-[10rem] flex justify-center items-center relative">
+            <div className="flex w-full flex-row justify-center items-center px-[2rem] mb-[1.5rem]">
+              <div className="rounded-full bg-[var(--white)] w-[10rem] h-[10rem] flex justify-center items-center relative">
                 {true ? (
                   <Avatar
                     alt="User"
                     src={user?.avatar || ""}
-                    variant="square"
-                    sx={{ width: "9.2rem", height: "9.2rem" }}
+                    sx={{ width: "8.8rem", height: "8.8rem" }}
                   />
                 ) : (
                   <Avatar
                     alt="User"
                     src={""}
-                    variant="square"
-                    sx={{ width: "9.2rem", height: "9.2rem" }}
+                    sx={{ width: "8.8rem", height: "8.8rem" }}
                   />
                 )}
                 <div
                   style={{
                     position: "absolute",
-                    bottom: -8,
-                    right: -10,
+                    bottom: 4,
+                    right: 8,
                   }}
                 >
                   <Avatar
@@ -227,7 +225,7 @@ function UserProfileLayout() {
               </div>
             </div>
             {user ? (
-              <div className="flex flex-col justify-start items-start overflow-hidden px-[2rem] mb-[1rem]">
+              <div className="flex flex-col justify-center items-center overflow-hidden px-[2rem] mb-[1rem]">
                 <Typography
                   sx={{
                     fontSize: '0.875rem',
@@ -247,11 +245,11 @@ function UserProfileLayout() {
                   {role.replace(/([a-z])([A-Z])/g, '$1 $2')}
                 </Typography>
                 <div className="w-[14rem] overflow-hidden">
-                  <h1 className="!text-[1.5rem] text-[var(--white)] font-bold leading-relaxed overflow-hidden text-ellipsis mb-[0.25rem]">
+                  <h1 className="!text-[1.5rem] text-[var(--white)] font-bold leading-relaxed overflow-hidden text-ellipsis mb-[0.25rem] text-center">
                     {user?.userName}
                   </h1>
                   <h1
-                    className="!text-[1rem] text-[var(--white)] font-medium leading-relaxed overflow-hidden text-ellipsis whitespace-nowrap"
+                    className="!text-[1rem] text-[var(--white)] font-medium leading-relaxed overflow-hidden text-ellipsis whitespace-nowrap text-center"
                   >
                     {user?.email}
                   </h1>

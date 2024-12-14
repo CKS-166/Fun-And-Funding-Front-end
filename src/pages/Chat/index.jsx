@@ -176,7 +176,7 @@ function Chat() {
           overflowY: "auto",
           display: "flex",
           flexDirection: "column-reverse",
-          padding: "0 !important",
+          paddingTop: "1rem",
           margin: "0 !important",
         }}
         className="scrollbar-hidden"
@@ -241,7 +241,7 @@ function Chat() {
           bottom: 0,
           left: 0,
           right: 0,
-          py: 2,
+          py: 3,
           backgroundColor: "#F5F7F9",
           display: "flex",
           gap: 2,

@@ -233,8 +233,8 @@ const FunFundingAppBar = () => {
   const decoded = token ? jwtDecode(token) : null;
   const userId = token
     ? decoded[
-        "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
-      ]
+    "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
+    ]
     : null;
   const [openNoti, setOpenNoti] = useState(false);
 
@@ -316,8 +316,8 @@ const FunFundingAppBar = () => {
                           ? "#1BAA64"
                           : "#F5F7F8"
                         : tabValue === index
-                        ? "#1BAA64"
-                        : "#2F3645",
+                          ? "#1BAA64"
+                          : "#2F3645",
                       fontWeight: "700 !important",
                     }}
                     error="false"
@@ -330,7 +330,7 @@ const FunFundingAppBar = () => {
                 sx={{ maxWidth: "100%", display: "flex", alignItems: "center" }}
               >
                 <Badge
-                  badgeContent={cartCount}
+                  badgeContent={cartCount == 0 ? null : cartCount}
                   max={9}
                   showZero
                   sx={{
@@ -378,11 +378,7 @@ const FunFundingAppBar = () => {
                       }}
                     />
                   </Badge>
-                  <div
-                    className={`${
-                      openNoti ? "" : "hidden"
-                    } absolute z-20 right-0 top-11`}
-                  >
+                  <div className={`${openNoti ? '' : 'hidden'} absolute z-[100001] right-0 top-11`}>
                     <NotificationMenu notiData={notiData} />
                   </div>
                 </div>

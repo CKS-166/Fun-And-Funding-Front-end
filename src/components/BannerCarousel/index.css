@@ -72,7 +72,7 @@
   right: 0;
   bottom: 4rem;
   padding-right: var(--side-margin);
-  z-index: 100;
+  z-index: 20;
   display: flex;
   gap: 2rem;
   width: 55rem !important;

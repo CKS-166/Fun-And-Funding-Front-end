@@ -37,6 +37,7 @@ import commentApiInstace from "../../utils/ApiInstance/commentApiInstance";
 import likeApiInstace from "../../utils/ApiInstance/likeApiInstance";
 import marketplaceFileApiInstance from "../../utils/ApiInstance/marketplaceFileApiInstance";
 import marketplaceProjectApiInstace from "../../utils/ApiInstance/marketplaceProjectApiInstance";
+import orderDetailApiInstance from "../../utils/ApiInstance/orderDetailApiInstance";
 import "./index.css";
 
 const notify = (message, type) => {
@@ -77,6 +78,8 @@ function MarketplaceProjectDetail() {
   const [comment, setComment] = useState("");
   const [commentList, setCommentList] = useState([]);
   const [updateList, setUpdateList] = useState([]);
+  const [orderCount, setOrderCount] = useState(0);
+  const [ownerGameCount, setOwnerGameCount] = useState(0);
   const [sendLoading, setSendLoading] = useState(false);
 
   const [isAuthDialogOpen, setIsAuthDialogOpen] = useState(false);
@@ -93,10 +96,40 @@ function MarketplaceProjectDetail() {
 
   useEffect(() => {
     fetchMarketplaceProject();
+    // fetchOwnerMarketplaceGame();
     fetchUserLike();
     fetchComments();
     fetchUpdates();
+    fetchOrderCount();
   }, [id]);
+
+  const fetchOrderCount = async () => {
+    try {
+      const res = await orderDetailApiInstance.get(`/${id}/purchases`);
+      if (res.data._statusCode == 200) {
+        console.log(res.data._data)
+        setOrderCount(res.data._data.length);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // const fetchOwnerMarketplaceGame = async () => {
+  //   try {
+  //     const res = await marketplaceProjectApiInstace.get(`/game-owner-projects`, {
+  //       params: {
+  //           pageSize: 999999,
+  //           pageIndex: 1,
+  //       }
+  //   });
+  //   if (res.data._statusCode == 200) {
+  //       setOwnerGameCount(1);
+  //   }
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
   const fetchMarketplaceProject = async () => {
     try {
@@ -454,7 +487,7 @@ function MarketplaceProjectDetail() {
                           color: "var(--black)",
                         }}
                       >
-                        3
+                        {orderCount}
                       </Typography>
                     </div>
                   </Box>

@@ -1,8 +1,6 @@
 /* eslint-disable no-constant-condition */
-import { useParams } from "react-router";
 import PersonAddAlt1Icon from "@mui/icons-material/PersonAddAlt1";
 import ReportIcon from "@mui/icons-material/Report";
-import DOMPurify from "dompurify";
 import {
   Avatar,
   Button,
@@ -11,17 +9,18 @@ import {
   Paper,
   Typography,
 } from "@mui/material";
-import { useState, useEffect } from "react";
 import dayjs from "dayjs";
+import DOMPurify from "dompurify";
+import { useEffect, useState } from "react";
 import { ImUserCheck } from "react-icons/im";
 import { IoChatbubbleEllipsesSharp } from "react-icons/io5";
-import { Outlet } from "react-router";
-import userApiInstace from "../../../utils/ApiInstance/userApiInstance";
+import { Outlet, useParams } from "react-router";
+import { ToastContainer } from "react-toastify";
 import EmptyDocument from "../../../assets/images/Empty-Document.png";
-import "./index.css";
 import Footer from "../../../components/Footer";
 import ReportForm from "../../../components/ReportPopUp";
-import { ToastContainer } from "react-toastify";
+import userApiInstace from "../../../utils/ApiInstance/userApiInstance";
+import "./index.css";
 const createMarkup = (htmlContent) => {
   return { __html: DOMPurify.sanitize(htmlContent) };
 };
@@ -278,7 +277,7 @@ function PublicProfileLayout() {
           </div>
           <Divider
             sx={{
-              my: "2rem",
+              my: "4rem",
               border: "1px solid #EAEAEA",
               borderRadius: "0.625rem",
             }}

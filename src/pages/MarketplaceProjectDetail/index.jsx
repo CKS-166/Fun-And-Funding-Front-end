@@ -12,11 +12,10 @@ import {
   Divider,
   Grid2,
   Paper,
-  Rating,
   Stack,
   Tab,
   TextareaAutosize,
-  Typography,
+  Typography
 } from "@mui/material";
 import DOMPurify from "dompurify";
 import Cookies from "js-cookie";
@@ -355,7 +354,7 @@ function MarketplaceProjectDetail() {
                     sx={{
                       display: "flex",
                       alignItems: "center",
-                      justifyContent: "space-between",
+                      justifyContent: "flex-start",
                       marginBottom: "2rem",
                     }}
                   >
@@ -397,14 +396,6 @@ function MarketplaceProjectDetail() {
                           1 game selling
                         </Typography>
                       </Box>
-                    </div>
-                    <div className="flex-shrink-0 flex flex-row space-x-[0.25rem] items-center">
-                      <Rating
-                        defaultValue={2.5}
-                        precision={0.5}
-                        readOnly
-                      ></Rating>
-                      <span className="text-[1rem] opacity-[0.6]">(3.5)</span>
                     </div>
                   </Box>
                   <Box
@@ -500,7 +491,7 @@ function MarketplaceProjectDetail() {
                                 color: "var(--red)",
                               }}
                             />
-                            Followed
+                            Liked
                           </Button>
                         ) : (
                           <Button
@@ -515,7 +506,7 @@ function MarketplaceProjectDetail() {
                                 strokeWidth: 1,
                               }}
                             />
-                            Follow
+                            Like
                           </Button>
                         )}
                       </Grid2>
@@ -547,7 +538,7 @@ function MarketplaceProjectDetail() {
             </Grid2>
           </div>
         </div>
-        <div className="w-full max-w-[1600px]">
+        <div className="w-full">
           <TabContext value={tabValue}>
             <Box className="marketplace-project-tab-context">
               <Box>

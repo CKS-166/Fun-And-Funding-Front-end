@@ -15,8 +15,7 @@ const projectStatus = {
     10: { name: "Reported", color: "#E91E63" },
 };
 
-function PublicProjectCard({ project, projectType }) {
-
+function AccountFundingFollowing({ project }) {
     return (
         <div className="flex items-center rounded-lg gap-[2rem]">
             <div className="w-[10rem] h-[10rem] bg-[#EAEAEA] flex justify-center items-center rounded-lg">
@@ -64,7 +63,7 @@ function PublicProjectCard({ project, projectType }) {
                 </Typography>
             </div>
         </div>
-    );
+    )
 }
 
-export default PublicProjectCard;
+export default AccountFundingFollowing

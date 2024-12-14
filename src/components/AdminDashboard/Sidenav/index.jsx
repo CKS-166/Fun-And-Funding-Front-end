@@ -74,8 +74,7 @@ const Sidenav = () => {
               <NavLink
                 to="/admin-dashboard/dashboard"
                 className={({ isActive }) =>
-                  `${
-                    isActive ? activeBg : "text-gray-200"
+                  `${isActive ? activeBg : "text-gray-200"
                   } flex items-center p-2 rounded-lg hover:bg-gray-100 group`
                 }
               >
@@ -138,8 +137,7 @@ const Sidenav = () => {
                     <NavLink
                       to="/admin-dashboard/users"
                       className={({ isActive }) =>
-                        `${
-                          isActive ? activeBg : "text-gray-200"
+                        `${isActive ? activeBg : "text-gray-200"
                         } flex items-center p-2 rounded-lg hover:bg-gray-100 group-hover:text-gray-900 group`
                       }
                     >
@@ -153,7 +151,7 @@ const Sidenav = () => {
                         <path d="M14 2a3.963 3.963 0 0 0-1.4.267 6.439 6.439 0 0 1-1.331 6.638A4 4 0 1 0 14 2Zm1 9h-1.264A6.957 6.957 0 0 1 15 15v2a2.97 2.97 0 0 1-.184 1H19a1 1 0 0 0 1-1v-1a5.006 5.006 0 0 0-5-5ZM6.5 9a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9ZM8 10H5a5.006 5.006 0 0 0-5 5v2a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-2a5.006 5.006 0 0 0-5-5Z" />
                       </svg>
                       <span className="flex-1 ms-3 whitespace-nowrap group-hover:text-gray-900">
-                        Users
+                        Accounts
                       </span>
                     </NavLink>
                   </li>
@@ -161,8 +159,7 @@ const Sidenav = () => {
                     <NavLink
                       to="/admin-dashboard/categories"
                       className={({ isActive }) =>
-                        `${
-                          isActive ? activeBg : "text-gray-200"
+                        `${isActive ? activeBg : "text-gray-200"
                         } flex items-center p-2 rounded-lg hover:bg-gray-100 group`
                       }
                     >
@@ -229,8 +226,7 @@ const Sidenav = () => {
                     <NavLink
                       to="/admin-dashboard/funding-projects"
                       className={({ isActive }) =>
-                        `${
-                          isActive ? activeBg : "text-gray-200"
+                        `${isActive ? activeBg : "text-gray-200"
                         } flex items-center p-2 rounded-lg hover:bg-gray-100 group`
                       }
                     >
@@ -256,8 +252,7 @@ const Sidenav = () => {
                     <NavLink
                       to="/admin-dashboard/milestone-request"
                       className={({ isActive }) =>
-                        `${
-                          isActive ? activeBg : "text-gray-200"
+                        `${isActive ? activeBg : "text-gray-200"
                         } flex items-center p-2 rounded-lg hover:bg-gray-100 hover:text-gray-900 group`
                       }
                     >
@@ -283,8 +278,7 @@ const Sidenav = () => {
                     <NavLink
                       to="/admin-dashboard/marketplace-projects"
                       className={({ isActive }) =>
-                        `${
-                          isActive ? activeBg : "text-gray-200"
+                        `${isActive ? activeBg : "text-gray-200"
                         } flex items-center p-2 rounded-lg hover:bg-gray-100 group`
                       }
                     >
@@ -309,8 +303,7 @@ const Sidenav = () => {
                     <NavLink
                       to="/admin-dashboard/withdraw-table"
                       className={({ isActive }) =>
-                        `${
-                          isActive ? activeBg : "text-gray-200"
+                        `${isActive ? activeBg : "text-gray-200"
                         } flex items-center p-2 rounded-lg hover:bg-gray-100 group`
                       }
                     >
@@ -391,8 +384,7 @@ const Sidenav = () => {
                     <NavLink
                       to="/admin-dashboard/commission"
                       className={({ isActive }) =>
-                        `${
-                          isActive ? activeBg : "text-gray-200"
+                        `${isActive ? activeBg : "text-gray-200"
                         } flex items-center p-2 rounded-lg hover:bg-gray-100 group`
                       }
                     >
@@ -414,8 +406,7 @@ const Sidenav = () => {
                     <NavLink
                       to="/admin-dashboard/milestones"
                       className={({ isActive }) =>
-                        `${
-                          isActive ? activeBg : "text-gray-200"
+                        `${isActive ? activeBg : "text-gray-200"
                         } flex items-center p-2 rounded-lg hover:bg-gray-100 group`
                       }
                     >

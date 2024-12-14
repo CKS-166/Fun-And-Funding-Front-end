@@ -80,7 +80,7 @@ import MarketplaceProjectContent from "./pages/UpdateMarketplaceProjectForm/Mark
 import MarketplaceProjectCoupon from "./pages/UpdateMarketplaceProjectForm/MarketplaceProjectCoupon";
 import MarketplaceProjectMediaFiles from "./pages/UpdateMarketplaceProjectForm/MarketplaceProjectMedia";
 import MarketplaceProjectPreview from "./pages/UpdateMarketplaceProjectForm/MarketplaceProjectPreview";
-import GameOwnerWallet from "./pages/GameOwnerAccountWallet";
+import GameOwnerWallet from "./pages/GameOwnerAccountWallet"
 import { ToastContainer } from "react-toastify";
 
 function App() {
@@ -114,10 +114,7 @@ function App() {
                 <Route path="/home" element={<HomePage />} />
                 <Route path="/about-us" element={<AboutUs />} />
                 <Route path="/marketplace" element={<MarketplaceHomePage />} />
-                <Route
-                  path="/marketplace-detail/:id"
-                  element={<MarketplaceProjectDetail />}
-                />
+                <Route path="/marketplace-detail/:id" element={<MarketplaceProjectDetail />} />
                 <Route path="/funding" element={<GetAllProject />} />
                 <Route path="/funding-detail/:id" element={<ProjectDetail />} />
               </Route>
@@ -128,30 +125,20 @@ function App() {
                 <Route path="/profile/:id" element={<PublicProfile />} />
               </Route>
               {/* Game Owner, Backer */}
-              <Route
-                element={
-                  <ProtectedRoute allowedRoles={["GameOwner, Backer"]} />
-                }
-              >
+              <Route element={<ProtectedRoute allowedRoles={['GameOwner, Backer']} />}>
                 <Route element={<ChatLayout />}>
-                  <Route path="/chat/:receiverId?" element={<Chat />} />
+                  <Route path="/chat/:receiverId" element={<Chat />} />
                 </Route>
                 <Route element={<UserProfileLayout />}>
                   <Route path="/account/profile" element={<AccountProfile />} />
-                  <Route
-                    path="/account/projects"
-                    element={<AccountProject />}
-                  />
+                  <Route path="/account/projects" element={<AccountProject />} />
                   <Route path="/account/social" element={<AccountSocial />} />
                   <Route path="/account/wallet" element={<AccountWallet />} />
-                  <Route
-                    path="/account/wallet-game-owner"
-                    element={<GameOwnerWallet />}
-                  />
+                  <Route path="/account/wallet-game-owner" element={<GameOwnerWallet />} />
                   <Route path="/account/orders" element={<MyOrder />} />
                 </Route>
                 {/* Backer */}
-                <Route element={<ProtectedRoute allowedRoles={["Backer"]} />}>
+                <Route element={<ProtectedRoute allowedRoles={['Backer']} />}>
                   <Route path="/checkout-cart" element={<CheckoutCart />} />
                   <Route
                     path="/checkout-success/:id"
@@ -159,69 +146,25 @@ function App() {
                   />
                 </Route>
                 {/* Game Owner */}
-                <Route
-                  element={<ProtectedRoute allowedRoles={["GameOwner"]} />}
-                >
+                <Route element={<ProtectedRoute allowedRoles={['GameOwner']} />}>
                   <Route path="choose-project-plan" element={<ChoosePlan />} />
                   <Route element={<CreateFundingProjectLayout />}>
-                    <Route
-                      path="request-funding-project/basic-info"
-                      element={<BasicInfo />}
-                    />
-                    <Route
-                      path="request-funding-project/introduction"
-                      element={<Introduction />}
-                    />
-                    <Route
-                      path="request-funding-project/project-media"
-                      element={<ProjectMedia />}
-                    />
-                    <Route
-                      path="request-funding-project/setup-bank-account"
-                      element={<SetupBankAccount />}
-                    />
-                    <Route
-                      path="request-funding-project/setup-donate-package"
-                      element={<SetupDonatePackage />}
-                    />
+                    <Route path="request-funding-project/basic-info" element={<BasicInfo />} />
+                    <Route path="request-funding-project/introduction" element={<Introduction />} />
+                    <Route path="request-funding-project/project-media" element={<ProjectMedia />} />
+                    <Route path="request-funding-project/setup-bank-account" element={<SetupBankAccount />} />
+                    <Route path="request-funding-project/setup-donate-package" element={<SetupDonatePackage />} />
                   </Route>
                   <Route element={<UpdateFundingProjectLayout />}>
-                    <Route
-                      path="/account/projects/update/:id/preview"
-                      element={<ProjectPreview />}
-                    />
-                    <Route
-                      path="/account/projects/update/:id/basic-info"
-                      element={<BasicInformation />}
-                    />
-                    <Route
-                      path="/account/projects/update/:id/bank-account"
-                      element={<BankAccount />}
-                    />
-                    <Route
-                      path="/account/projects/update/:id/donation-packages"
-                      element={<DonationPackages />}
-                    />
-                    <Route
-                      path="/account/projects/update/:id/media-files"
-                      element={<Media />}
-                    />
-                    <Route
-                      path="/account/projects/update/:id/milestone1"
-                      element={<Milestone1 />}
-                    />
-                    <Route
-                      path="/account/projects/update/:id/milestone2"
-                      element={<Milestone2 />}
-                    />
-                    <Route
-                      path="/account/projects/update/:id/milestone3"
-                      element={<Milestone3 />}
-                    />
-                    <Route
-                      path="/account/projects/update/:id/milestone4"
-                      element={<Milestone4 />}
-                    />
+                    <Route path="/account/projects/update/:id/preview" element={<ProjectPreview />} />
+                    <Route path="/account/projects/update/:id/basic-info" element={<BasicInformation />} />
+                    <Route path="/account/projects/update/:id/bank-account" element={<BankAccount />} />
+                    <Route path="/account/projects/update/:id/donation-packages" element={<DonationPackages />} />
+                    <Route path="/account/projects/update/:id/media-files" element={<Media />} />
+                    <Route path="/account/projects/update/:id/milestone1" element={<Milestone1 />} />
+                    <Route path="/account/projects/update/:id/milestone2" element={<Milestone2 />} />
+                    <Route path="/account/projects/update/:id/milestone3" element={<Milestone3 />} />
+                    <Route path="/account/projects/update/:id/milestone4" element={<Milestone4 />} />
                   </Route>
                   <Route
                     element={
@@ -230,30 +173,12 @@ function App() {
                       </UpdateMarketplaceProjectProvider>
                     }
                   >
-                    <Route
-                      path="/account/marketplace-projects/update/:id/preview"
-                      element={<MarketplaceProjectPreview />}
-                    />
-                    <Route
-                      path="/account/marketplace-projects/update/:id/basic-info"
-                      element={<MarketplaceProjectBasicInformation />}
-                    />
-                    <Route
-                      path="/account/marketplace-projects/update/:id/bank-account"
-                      element={<MarketplaceProjectBankAccount />}
-                    />
-                    <Route
-                      path="/account/marketplace-projects/update/:id/game-content"
-                      element={<MarketplaceProjectContent />}
-                    />
-                    <Route
-                      path="/account/marketplace-projects/update/:id/media-files"
-                      element={<MarketplaceProjectMediaFiles />}
-                    />
-                    <Route
-                      path="/account/marketplace-projects/update/:id/coupons"
-                      element={<MarketplaceProjectCoupon />}
-                    />
+                    <Route path="/account/marketplace-projects/update/:id/preview" element={<MarketplaceProjectPreview />} />
+                    <Route path="/account/marketplace-projects/update/:id/basic-info" element={<MarketplaceProjectBasicInformation />} />
+                    <Route path="/account/marketplace-projects/update/:id/bank-account" element={<MarketplaceProjectBankAccount />} />
+                    <Route path="/account/marketplace-projects/update/:id/game-content" element={<MarketplaceProjectContent />} />
+                    <Route path="/account/marketplace-projects/update/:id/media-files" element={<MarketplaceProjectMediaFiles />} />
+                    <Route path="/account/marketplace-projects/update/:id/coupons" element={<MarketplaceProjectCoupon />} />
                   </Route>
                   <Route
                     element={
@@ -262,84 +187,31 @@ function App() {
                       </CreateMarketplaceProjectProvider>
                     }
                   >
-                    <Route
-                      path="/request-marketplace-project/:id/basic-info"
-                      element={<MarketplaceProjectBasicInfo />}
-                    />
-                    <Route
-                      path="/request-marketplace-project/:id/introduction"
-                      element={<MarketplaceProjectIntroduction />}
-                    />
-                    <Route
-                      path="request-marketplace-project/:id/project-media"
-                      element={<MarketplaceProjectMedia />}
-                    />
-                    <Route
-                      path="request-marketplace-project/:id/bank-account"
-                      element={<MarketplaceProjectSetupBankAccount />}
-                    />
-                    <Route
-                      path="request-marketplace-project/:id/game-content"
-                      element={<MarketplaceProjectGameContent />}
-                    />
+                    <Route path="/request-marketplace-project/:id/basic-info" element={<MarketplaceProjectBasicInfo />} />
+                    <Route path="/request-marketplace-project/:id/introduction" element={<MarketplaceProjectIntroduction />} />
+                    <Route path="request-marketplace-project/:id/project-media" element={<MarketplaceProjectMedia />} />
+                    <Route path="request-marketplace-project/:id/bank-account" element={<MarketplaceProjectSetupBankAccount />} />
+                    <Route path="request-marketplace-project/:id/game-content" element={<MarketplaceProjectGameContent />} />
                   </Route>
                 </Route>
               </Route>
               {/* Admin */}
-              <Route
-                element={<ProtectedRoute allowedRoles={["Administrator"]} />}
-              >
+              <Route element={<ProtectedRoute allowedRoles={['Administrator']} />}>
                 <Route element={<AdminDashboardLayout />}>
-                  <Route
-                    path="/admin-dashboard/dashboard"
-                    element={<Dashboard />}
-                  />
-                  <Route
-                    path="/admin-dashboard/users"
-                    element={<AdminUsers />}
-                  />
-                  <Route
-                    path="/admin-dashboard/funding-projects"
-                    element={<AdminFundingProject />}
-                  />
-                  <Route
-                    path="/admin-dashboard/marketplace-projects"
-                    element={<AdminMarketplaceProject />}
-                  />
-                  <Route
-                    path="/admin-dashboard/categories"
-                    element={<ManageCategory />}
-                  />
-                  <Route
-                    path="/admin-dashboard/withdraw-table"
-                    element={<AdminWithdrawRequest />}
-                  />
-                  <Route
-                    path="/admin-dashboard/milestones"
-                    element={<Milestones />}
-                  />
-                  <Route
-                    path="/admin-dashboard/milestone-request"
-                    element={<AdminMilestone />}
-                  />
-                  <Route
-                    path="/admin-dashboard/commission"
-                    element={<CommissionFee />}
-                  />
-                  <Route
-                    path="/admin-dashboard/report"
-                    element={<AdminReport />}
-                  />
+                  <Route path="/admin-dashboard/dashboard" element={<Dashboard />} />
+                  <Route path="/admin-dashboard/users" element={<AdminUsers />} />
+                  <Route path="/admin-dashboard/funding-projects" element={<AdminFundingProject />} />
+                  <Route path="/admin-dashboard/marketplace-projects" element={<AdminMarketplaceProject />} />
+                  <Route path="/admin-dashboard/categories" element={<ManageCategory />} />
+                  <Route path="/admin-dashboard/withdraw-table" element={<AdminWithdrawRequest />} />
+                  <Route path="/admin-dashboard/milestones" element={<Milestones />} />
+                  <Route path="/admin-dashboard/milestone-request" element={<AdminMilestone />} />
+                  <Route path="/admin-dashboard/commission" element={<CommissionFee />} />
+                  <Route path="/admin-dashboard/report" element={<AdminReport />} />
                 </Route>
                 <Route element={<UserLayout />}>
-                  <Route
-                    path="/marketplace-detail/:id"
-                    element={<MarketplaceProjectDetail />}
-                  />
-                  <Route
-                    path="/funding-detail/:id"
-                    element={<ProjectDetail />}
-                  />
+                  <Route path="/marketplace-detail/:id" element={<MarketplaceProjectDetail />} />
+                  <Route path="/funding-detail/:id" element={<ProjectDetail />} />
                 </Route>
               </Route>
             </Routes>

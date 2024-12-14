@@ -73,7 +73,7 @@ function MarketplaceCommentBar({ response, index }) {
                         mb: '1rem'
                     }}
                 >
-                    {userRole.replace(/([a-z])([A-Z])/g, '$1 $2')}
+                    {userRole}
                 </Typography>
                 <Typography
                     sx={{

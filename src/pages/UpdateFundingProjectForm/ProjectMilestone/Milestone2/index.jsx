@@ -53,7 +53,8 @@ function Milestone2() {
                 setTasks(data.data[0].projectMilestoneRequirements)
             }
             else {
-                if (data.status == 'submitted') {
+                if (data.status == 'submitted' || data.status == 'reSubmitted' 
+                    || data.status == 'completed') {
                     setTasks(data.data[0].projectMilestoneRequirements)
                 }
                 console.log("a")
@@ -207,7 +208,7 @@ function Milestone2() {
                         </Typography>
                     </Box>
                     <Box>
-                        <CompleteMilestoneButton  render={() => getMilestoneData(milestoneId)} status={milestoneData.status} pmId={milestoneData.status == 'edit' || milestoneData.status == 'warning' && milestoneData.data[0].id} />
+                        <CompleteMilestoneButton  render={() => getMilestoneData(milestoneId)} status={milestoneData.status} pmId={(milestoneData.status == 'edit' || milestoneData.status == 'warning') && milestoneData.data[0].id} />
                     </Box>
 
                 </Box>
@@ -228,7 +229,7 @@ function Milestone2() {
                                 <Grid container spacing={2}>
                                     <Grid size={4} className="app_main">
                                         <TaskColumn
-                                            className='task-column'
+                                            // className='task-column'
                                             title="To-do"
                                             tasks={tasks}
                                             status={0}

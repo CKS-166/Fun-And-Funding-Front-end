@@ -377,7 +377,6 @@ const ProjectDetail = () => {
                     <div className="text-gray-800 font-medium">
                       {projectData.description}
                     </div>
-
                     {/* owner info */}
                     <div className="flex items-center my-5">
                       <Avatar
@@ -444,7 +443,7 @@ const ProjectDetail = () => {
                           </span>
                         </Typography>
                         <Typography sx={{ fontSize: "1rem" }}>
-                          {daysLeft}{" "}
+                          {daysLeft > 0 ? daysLeft : 0 }{" "}
                           <span style={{ fontSize: "1rem" }}>days left</span>
                         </Typography>
                       </Box>

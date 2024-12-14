@@ -31,19 +31,6 @@ function Chat() {
     }
   };
 
-  const formatDate = (date) => {
-    if (!(date instanceof Date)) {
-      return "Invalid date";
-    }
-    return date.toLocaleString(undefined, {
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-  };
-
   useEffect(() => {
     fetchUserData();
   }, []);
@@ -132,7 +119,6 @@ function Chat() {
             senderId: response.SenderId,
             receiverId: response.ReceiverId,
             message: response.Message,
-            createdDate: Date.now(),
           });
         } catch (e) {
           console.warn("Received non-JSON message:", event.data);
@@ -150,6 +136,14 @@ function Chat() {
       };
     }
   }, [senderId, receiverId, addMessage]);
+
+  // Auto-scroll to the bottom when messages change
+  useEffect(() => {
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop =
+        chatContainerRef.current.scrollHeight;
+    }
+  }, [messages]); // Trigger scroll when messages update
 
   const sendMessage = () => {
     if (socket && message.Message !== "") {
@@ -176,11 +170,8 @@ function Chat() {
           overflowY: "auto",
           display: "flex",
           flexDirection: "column-reverse",
-          paddingTop: "1rem",
-          margin: "0 !important",
         }}
         className="scrollbar-hidden"
-        ref={chatContainerRef}
       >
         {messages.length > 0 ? (
           messages.slice().map((msg, index) => (
@@ -193,25 +184,25 @@ function Chat() {
                 mb: 1,
               }}
             >
-              <Tooltip
-                title={formatDate(new Date(msg.createdDate))}
+              {/* <Tooltip
+                title={`${new Date(msg.createdDate).toLocaleString()}`}
                 arrow
                 placement="left"
+              > */}
+              <Box
+                sx={{
+                  maxWidth: "70%",
+                  backgroundColor:
+                    msg.senderId === senderId ? "#1BAA64" : "#EAEAEA",
+                  color: msg.senderId === senderId ? "#F5F7F9" : "#2F3645",
+                  borderRadius: 2,
+                  px: 2,
+                  py: 1,
+                }}
               >
-                <Box
-                  sx={{
-                    maxWidth: "70%",
-                    backgroundColor:
-                      msg.senderId === senderId ? "#1BAA64" : "#EAEAEA",
-                    color: msg.senderId === senderId ? "#F5F7F9" : "#2F3645",
-                    borderRadius: 2,
-                    px: 2,
-                    py: 1,
-                  }}
-                >
-                  {msg.message}
-                </Box>
-              </Tooltip>
+                {msg.message}
+              </Box>
+              {/* </Tooltip> */}
             </Box>
           ))
         ) : (
@@ -234,6 +225,7 @@ function Chat() {
             </Typography>
           </Box>
         )}
+        <div ref={chatContainerRef} />
       </Box>
       <Box
         sx={{
@@ -241,7 +233,7 @@ function Chat() {
           bottom: 0,
           left: 0,
           right: 0,
-          py: 3,
+          py: 2,
           backgroundColor: "#F5F7F9",
           display: "flex",
           gap: 2,

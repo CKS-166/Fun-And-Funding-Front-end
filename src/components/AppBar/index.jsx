@@ -20,7 +20,7 @@ import {
   Tab,
   Tabs,
   Toolbar,
-  Typography,
+  Typography
 } from "@mui/material";
 import Aos from "aos";
 import "aos/dist/aos.css";
@@ -54,12 +54,12 @@ const FunFundingAppBar = () => {
 
   const profileMenu = [
     {
-      label: "Profile",
+      label: "Account",
       route: "/account/profile",
-      icon: <FaUserTie style={{ fontSize: "1.25rem" }} />,
+      icon: <FaUserTie style={{ fontSize: '1.25rem' }} />
     },
     {
-      label: "Wallet",
+      label: "My wallet",
       route: "/account/wallet",
       icon: <AccountBalanceWalletIcon />,
     },
@@ -67,23 +67,21 @@ const FunFundingAppBar = () => {
 
   const projectMenu = [
     {
-      label: "Projects",
+      label: "My Projects",
       route: "/account/projects",
-      icon: <FaFolderOpen style={{ fontSize: "1.25rem" }} />,
+      icon: <FaFolderOpen style={{ fontSize: '1.25rem' }} />,
     },
     {
-      label: "Orders",
+      label: "My Orders",
       route: "/account/wallet",
-      icon: <FaClipboardList style={{ fontSize: "1.25rem" }} />,
+      icon: <FaClipboardList style={{ fontSize: '1.25rem' }} />,
     },
   ];
 
   const navigate = useNavigate();
   const location = useLocation();
   const token = Cookies.get("_auth");
-  const [isLogined, setIsLogined] = useState(
-    Cookies.get("_auth") !== undefined
-  );
+  const [isLogined, setIsLogined] = useState(Cookies.get("_auth") !== undefined);
 
   const [name, setName] = useState("");
   const [role, setRole] = useState("");
@@ -168,15 +166,15 @@ const FunFundingAppBar = () => {
     setAnchorEl(null);
     if (route === "logout") {
       Swal.fire({
-        title: "Warning",
-        text: "Do you want to log out?",
+        title: "Warning?",
+        text: "Do You Want To Logout?",
         icon: "warning",
-        iconColor: "#FBB03B",
+        iconColor: "#1BAA64",
         showCancelButton: true,
         confirmButtonColor: "#1BAA64",
         cancelButtonColor: "D8D8D8",
-        confirmButtonText: "Yes",
-        cancelButtonText: "No",
+        confirmButtonText: "Yes!",
+        cancelButtonText: "No!",
         reverseButtons: true,
       }).then((result) => {
         if (result.isConfirmed) {
@@ -209,7 +207,7 @@ const FunFundingAppBar = () => {
     justifyContent: "center",
     display: "flex",
     px: "4rem",
-    zIndex: "100",
+    zIndex: '100'
   };
 
   const tabStyles = {
@@ -230,30 +228,28 @@ const FunFundingAppBar = () => {
 
   // for noti
 
-  const decoded = token ? jwtDecode(token) : null;
-  const userId = token
-    ? decoded[
-    "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
-    ]
-    : null;
-  const [openNoti, setOpenNoti] = useState(false);
+  const decoded = token ? jwtDecode(token) : null
+  const userId = token ? decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"] : null
+  const [openNoti, setOpenNoti] = useState(false)
 
-  const { notiData, error, fetchNotifications } = useNotificationApi(
-    `/${userId}`
-  );
+  const { notiData, error, fetchNotifications } = useNotificationApi(`/${userId}`)
 
-  const message = useSignalR();
+
+  const message = useSignalR()
   const previousMessageRef = useRef(null);
 
   useEffect(() => {
     if (message !== previousMessageRef.current) {
       previousMessageRef.current = message;
       if (message) {
-        fetchNotifications();
-        setOpenNoti(true);
+        fetchNotifications()
+        setOpenNoti(true)
       }
     }
+
   }, [message, fetchNotifications]);
+
+
 
   return (
     <div>
@@ -330,7 +326,7 @@ const FunFundingAppBar = () => {
                 sx={{ maxWidth: "100%", display: "flex", alignItems: "center" }}
               >
                 <Badge
-                  badgeContent={cartCount == 0 ? null : cartCount}
+                  badgeContent={cartCount}
                   max={9}
                   showZero
                   sx={{
@@ -347,7 +343,7 @@ const FunFundingAppBar = () => {
                       transition: "color 0.3s",
                       "&:hover": { color: "#c5c9cb" },
                       cursor: "pointer",
-                      fontSize: "1.8rem",
+                      fontSize: '1.8rem'
                     }}
                     onClick={handleCartOpen}
                   />
@@ -374,11 +370,11 @@ const FunFundingAppBar = () => {
                         transition: "color 0.3s",
                         "&:hover": { color: "#c5c9cb" },
                         color: isPage ? "#F5F7F8" : "#2F3645",
-                        fontSize: "1.8rem",
+                        fontSize: '1.8rem'
                       }}
                     />
                   </Badge>
-                  <div className={`${openNoti ? '' : 'hidden'} absolute z-[100001] right-0 top-11`}>
+                  <div className={`${openNoti ? '' : 'hidden'} absolute z-20 right-0 top-11`}>
                     <NotificationMenu notiData={notiData} />
                   </div>
                 </div>
@@ -389,11 +385,7 @@ const FunFundingAppBar = () => {
                     onMouseLeave={handleMouseLeave}
                   >
                     <IconButton href="account/profile" component="a">
-                      <Avatar
-                        alt="User"
-                        src={user?.avatar}
-                        sx={{ height: "2rem", width: "2rem" }}
-                      />
+                      <Avatar alt="User" src={user?.avatar} sx={{ height: '2rem', width: '2rem' }} />
                     </IconButton>
                   </div>
                   <Menu
@@ -401,205 +393,178 @@ const FunFundingAppBar = () => {
                     open={Boolean(anchorEl)}
                     onClose={() => setAnchorEl(null)}
                     anchorOrigin={{
-                      vertical: "bottom",
-                      horizontal: "right",
+                      vertical: 'bottom',
+                      horizontal: 'right',
                     }}
                     transformOrigin={{
-                      vertical: "top",
-                      horizontal: "right",
+                      vertical: 'top',
+                      horizontal: 'right',
                     }}
-                    onMouseEnter={() => {
-                      setIsHovering(true), setOpenNoti(false);
-                    }}
+                    onMouseEnter={() => { setIsHovering(true), setOpenNoti(false) }}
                     onMouseLeave={handleMouseLeave}
                     sx={{
-                      "& .MuiPaper-root": {
-                        width: "20rem",
-                        borderRadius: "10px",
-                        padding: "1rem",
-                        boxShadow:
-                          "0px 3px 3px -2px rgba(0, 0, 0, 0.2), 0px 3px 4px 0px rgba(0, 0, 0, 0.14), 0px 1px 8px 0px rgba(0, 0, 0, 0.12)",
-                        background: "var(--white)",
-                        color: "var(--black)",
+                      '& .MuiPaper-root': {
+                        width: '20rem',
+                        borderRadius: '10px',
+                        padding: '1rem',
+                        boxShadow: '0px 3px 3px -2px rgba(0, 0, 0, 0.2), 0px 3px 4px 0px rgba(0, 0, 0, 0.14), 0px 1px 8px 0px rgba(0, 0, 0, 0.12)',
+                        background: 'var(--white)',
+                        color: 'var(--black)',
                       },
-                      color: "var(--black)",
+                      color: 'var(--black)'
                     }}
                   >
                     <Box
                       sx={{
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        width: "100%",
-                        pointerEvents: "none",
-                        backgroundColor: "var(--white)",
-                        "&:hover": {
-                          backgroundColor: "var(--white)",
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        width: '100%',
+                        pointerEvents: 'none',
+                        backgroundColor: 'var(--white)',
+                        '&:hover': {
+                          backgroundColor: 'var(--white)',
                         },
                       }}
                     >
-                      <Avatar
-                        alt="User"
-                        src={user?.avatar}
-                        sx={{ mb: "1rem", width: "6rem", height: "6rem" }}
-                      />
-                      {userLoading ? (
-                        <CircularProgress
-                          sx={{ color: "var(--grey)", fontSize: "1rem" }}
-                        ></CircularProgress>
-                      ) : (
+                      <Avatar alt="User" src={user?.avatar} sx={{ mb: '1rem', width: '6rem', height: '6rem' }} />
+                      {userLoading ?
+                        <CircularProgress sx={{ color: 'var(--grey)', fontSize: '1rem' }}></CircularProgress>
+                        :
                         <>
                           <Typography
                             sx={{
-                              fontSize: "0.75rem",
-                              fontWeight: "600",
-                              width: "fit-content",
-                              padding: "4px 8px",
-                              whiteSpace: "nowrap",
-                              overflow: "hidden",
-                              textOverflow: "ellipsis",
-                              textAlign: "center",
-                              bgcolor: "var(--primary-green)",
-                              color: "var(--white)",
-                              borderRadius: "0.5rem",
-                              mb: "0.5rem",
+                              fontSize: '0.75rem',
+                              fontWeight: '600',
+                              width: 'fit-content',
+                              padding: '4px 8px',
+                              whiteSpace: 'nowrap',
+                              overflow: 'hidden',
+                              textOverflow: 'ellipsis',
+                              textAlign: 'center',
+                              bgcolor: 'var(--primary-green)',
+                              color: 'var(--white)',
+                              borderRadius: '0.5rem',
+                              mb: '0.5rem'
                             }}
                           >
-                            {role.replace(/([a-z])([A-Z])/g, "$1 $2")}
+                            {role.replace(/([a-z])([A-Z])/g, '$1 $2')}
                           </Typography>
                           <Typography
                             sx={{
-                              fontSize: "1.25rem",
-                              fontWeight: "600",
-                              width: "10rem",
-                              whiteSpace: "nowrap",
-                              overflow: "hidden",
-                              textOverflow: "ellipsis",
-                              textAlign: "center",
-                              mb: "0.25rem",
+                              fontSize: '1.25rem',
+                              fontWeight: '600',
+                              width: '10rem',
+                              whiteSpace: 'nowrap',
+                              overflow: 'hidden',
+                              textOverflow: 'ellipsis',
+                              textAlign: 'center',
+                              mb: '0.25rem'
                             }}
                           >
                             {name}
                           </Typography>
                           <Typography
                             sx={{
-                              fontSize: "0.875rem",
-                              fontWeight: "400",
-                              width: "15rem",
-                              whiteSpace: "nowrap",
-                              overflow: "hidden",
-                              textOverflow: "ellipsis",
-                              textAlign: "center",
+                              fontSize: '0.875rem',
+                              fontWeight: '400',
+                              width: '15rem',
+                              whiteSpace: 'nowrap',
+                              overflow: 'hidden',
+                              textOverflow: 'ellipsis',
+                              textAlign: 'center'
                             }}
                           >
                             {user?.email}
                           </Typography>
                         </>
-                      )}
+                      }
                     </Box>
 
-                    <Divider sx={{ my: "1rem !important" }} />
+                    <Divider sx={{ my: '1rem !important' }} />
 
                     {profileMenu.map((item) => (
                       <MenuItem
                         key={item.label}
                         onClick={() => handleMenuClick(item.route)}
                         sx={{
-                          display: "flex",
-                          alignItems: "center",
-                          borderRadius: "0.625rem",
-                          "&:hover": {
-                            backgroundColor: "var(--primary-green)",
-                            color: "var(--white)",
-                            "& .MuiListItemIcon-root": {
-                              color: "var(--white)",
+                          display: 'flex',
+                          alignItems: 'center',
+                          borderRadius: '0.625rem',
+                          '&:hover': {
+                            backgroundColor: 'var(--primary-green)',
+                            color: 'var(--white)',
+                            '& .MuiListItemIcon-root': {
+                              color: 'var(--white)',
                             },
                           },
-                          color: "var(--black)",
-                          py: "0.5rem",
+                          color: 'var(--black)',
+                          py: '0.5rem'
                         }}
                       >
-                        <ListItemIcon
-                          sx={{ color: "var(--black)", mr: "1rem" }}
-                        >
-                          {item.icon}
-                        </ListItemIcon>
+                        <ListItemIcon sx={{ color: 'var(--black)', mr: '1rem' }}>{item.icon}</ListItemIcon>
                         <ListItemText
-                          primaryTypographyProps={{
-                            sx: { fontWeight: "500 !important" },
-                          }}
+                          primaryTypographyProps={{ sx: { fontWeight: '500 !important' } }}
                         >
                           {item.label}
                         </ListItemText>
                       </MenuItem>
                     ))}
 
-                    <Divider sx={{ my: "1rem !important" }} />
+                    <Divider sx={{ my: '1rem !important' }} />
 
                     {projectMenu.map((item) => (
                       <MenuItem
                         key={item.label}
                         onClick={() => handleMenuClick(item.route)}
                         sx={{
-                          display: "flex",
-                          alignItems: "center",
-                          "&:hover": {
-                            backgroundColor: "var(--primary-green)",
-                            color: "var(--white)",
-                            "& .MuiListItemIcon-root": {
-                              color: "var(--white)",
+                          display: 'flex',
+                          alignItems: 'center',
+                          '&:hover': {
+                            backgroundColor: 'var(--primary-green)',
+                            color: 'var(--white)',
+                            '& .MuiListItemIcon-root': {
+                              color: 'var(--white)',
                             },
                           },
-                          color: "var(--black)",
-                          borderRadius: "0.625rem",
-                          py: "0.5rem",
+                          color: 'var(--black)',
+                          borderRadius: '0.625rem',
+                          py: '0.5rem'
                         }}
                       >
-                        <ListItemIcon
-                          sx={{ color: "var(--black)", mr: "1rem" }}
-                        >
-                          {item.icon}
-                        </ListItemIcon>
+                        <ListItemIcon sx={{ color: 'var(--black)', mr: '1rem' }}>{item.icon}</ListItemIcon>
                         <ListItemText
-                          primaryTypographyProps={{
-                            sx: { fontWeight: "500 !important" },
-                          }}
+                          primaryTypographyProps={{ sx: { fontWeight: '500 !important' } }}
                         >
                           {item.label}
                         </ListItemText>
                       </MenuItem>
                     ))}
 
-                    <Divider sx={{ my: "1rem !important" }} />
+                    <Divider sx={{ my: '1rem !important' }} />
 
                     <MenuItem
-                      onClick={() => handleMenuClick("logout")}
+                      onClick={() => handleMenuClick('logout')}
                       sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        "&:hover": {
-                          backgroundColor: "var(--red)",
-                          color: "var(--white)",
-                          "& .MuiListItemIcon-root": {
-                            color: "var(--white)",
+                        display: 'flex',
+                        alignItems: 'center',
+                        '&:hover': {
+                          backgroundColor: 'var(--red)',
+                          color: 'var(--white)',
+                          '& .MuiListItemIcon-root': {
+                            color: 'var(--white)',
                           },
                         },
-                        color: "var(--black)",
-                        borderRadius: "0.625rem",
-                        py: "0.5rem",
+                        color: 'var(--black)',
+                        borderRadius: '0.625rem',
+                        py: '0.5rem'
                       }}
                     >
-                      <ListItemIcon sx={{ color: "var(--black)", mr: "1rem" }}>
+                      <ListItemIcon sx={{ color: 'var(--black)', mr: '1rem' }}>
                         <LogoutIcon />
                       </ListItemIcon>
-                      <ListItemText
-                        primaryTypographyProps={{
-                          sx: { fontWeight: "500 !important" },
-                        }}
-                      >
-                        Log Out
-                      </ListItemText>
+                      <ListItemText primaryTypographyProps={{ sx: { fontWeight: '500 !important' } }}>Log Out</ListItemText>
                     </MenuItem>
                   </Menu>
                 </div>

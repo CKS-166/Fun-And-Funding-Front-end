@@ -19,7 +19,6 @@ import chatApiInstace from "../../utils/ApiInstance/chatApiInstance";
 import userApiInstace from "../../utils/ApiInstance/userApiInstance";
 import SearchBarChat from "../../components/Chat/SearchBarChat";
 import ContactedUser from "../../components/Chat/ContactedUser";
-import empty from "../../assets/images/image_empty.png";
 
 function ChatLayout() {
   //variables
@@ -181,72 +180,43 @@ function ChatLayout() {
           }}
           className="scrollbar-hidden"
         >
-          {receiverId ? (
-            <>
-              <Box
-                sx={{
-                  position: "sticky",
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  backgroundColor: "#F5F7F9",
-                  px: "1.5rem",
-                  py: "1rem",
-                  borderTopLeftRadius: "0.625rem",
-                  borderTopRightRadius: "0.625rem",
-                  boxShadow: "0 1px 2px rgba(0, 0, 0, 0.05)",
-                  zIndex: 1000,
-                }}
-              >
-                <Box
-                  sx={{
-                    display: "flex",
-                    flexDirection: "row",
-                    alignItems: "center",
-                    gap: "1rem",
-                    "&:hover": {
-                      cursor: "pointer",
-                    },
-                    width: "fit-content",
-                    borderRadius: "0.625rem",
-                  }}
-                >
-                  <Avatar alt={receiver?.fullName} src={receiver?.avatar} />
-                  <Typography sx={{ fontSize: "1rem", fontWeight: "600" }}>
-                    {receiver?.fullName}
-                  </Typography>
-                </Box>
-              </Box>
-              <Box sx={{ px: "1.5rem" }}>
-                <Outlet />
-              </Box>
-            </>
-          ) : (
-            <>
-              <Box
-                sx={{
-                  height: "100%",
-                  width: "100%",
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <img src={empty} className="h-[10rem] mb-[2rem]"></img>
-                <Typography
-                  sx={{
-                    fontSize: "1.25rem",
-                    fontWeight: "500",
-                    color: "#2F3645",
-                    mt: "2rem",
-                  }}
-                >
-                  No chats selected.
-                </Typography>
-              </Box>
-            </>
-          )}
+          <Box
+            sx={{
+              position: "sticky",
+              top: 0,
+              left: 0,
+              right: 0,
+              backgroundColor: "#F5F7F9",
+              px: "1.5rem",
+              py: "1rem",
+              borderTopLeftRadius: "0.625rem",
+              borderTopRightRadius: "0.625rem",
+              boxShadow: "0 1px 2px rgba(0, 0, 0, 0.05)",
+              zIndex: 1000,
+            }}
+          >
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                gap: "1rem",
+                "&:hover": {
+                  cursor: "pointer",
+                },
+                width: "fit-content",
+                borderRadius: "0.625rem",
+              }}
+            >
+              <Avatar alt={receiver?.fullName} src={receiver?.avatar} />
+              <Typography sx={{ fontSize: "1rem", fontWeight: "600" }}>
+                {receiver?.fullName}
+              </Typography>
+            </Box>
+          </Box>
+          <Box sx={{ px: "1.5rem", py: "1rem" }}>
+            <Outlet />
+          </Box>
         </Grid2>
       </Grid2>
     </Container>

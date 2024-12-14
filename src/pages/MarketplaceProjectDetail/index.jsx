@@ -12,10 +12,11 @@ import {
   Divider,
   Grid2,
   Paper,
+  Rating,
   Stack,
   Tab,
   TextareaAutosize,
-  Typography
+  Typography,
 } from "@mui/material";
 import DOMPurify from "dompurify";
 import Cookies from "js-cookie";
@@ -37,7 +38,6 @@ import commentApiInstace from "../../utils/ApiInstance/commentApiInstance";
 import likeApiInstace from "../../utils/ApiInstance/likeApiInstance";
 import marketplaceFileApiInstance from "../../utils/ApiInstance/marketplaceFileApiInstance";
 import marketplaceProjectApiInstace from "../../utils/ApiInstance/marketplaceProjectApiInstance";
-import orderDetailApiInstance from "../../utils/ApiInstance/orderDetailApiInstance";
 import "./index.css";
 
 const notify = (message, type) => {
@@ -78,8 +78,6 @@ function MarketplaceProjectDetail() {
   const [comment, setComment] = useState("");
   const [commentList, setCommentList] = useState([]);
   const [updateList, setUpdateList] = useState([]);
-  const [orderCount, setOrderCount] = useState(0);
-  const [ownerGameCount, setOwnerGameCount] = useState(0);
   const [sendLoading, setSendLoading] = useState(false);
 
   const [isAuthDialogOpen, setIsAuthDialogOpen] = useState(false);
@@ -96,40 +94,10 @@ function MarketplaceProjectDetail() {
 
   useEffect(() => {
     fetchMarketplaceProject();
-    // fetchOwnerMarketplaceGame();
     fetchUserLike();
     fetchComments();
     fetchUpdates();
-    fetchOrderCount();
   }, [id]);
-
-  const fetchOrderCount = async () => {
-    try {
-      const res = await orderDetailApiInstance.get(`/${id}/purchases`);
-      if (res.data._statusCode == 200) {
-        console.log(res.data._data)
-        setOrderCount(res.data._data.length);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  // const fetchOwnerMarketplaceGame = async () => {
-  //   try {
-  //     const res = await marketplaceProjectApiInstace.get(`/game-owner-projects`, {
-  //       params: {
-  //           pageSize: 999999,
-  //           pageIndex: 1,
-  //       }
-  //   });
-  //   if (res.data._statusCode == 200) {
-  //       setOwnerGameCount(1);
-  //   }
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
 
   const fetchMarketplaceProject = async () => {
     try {
@@ -387,7 +355,7 @@ function MarketplaceProjectDetail() {
                     sx={{
                       display: "flex",
                       alignItems: "center",
-                      justifyContent: "flex-start",
+                      justifyContent: "space-between",
                       marginBottom: "2rem",
                     }}
                   >
@@ -429,6 +397,14 @@ function MarketplaceProjectDetail() {
                           1 game selling
                         </Typography>
                       </Box>
+                    </div>
+                    <div className="flex-shrink-0 flex flex-row space-x-[0.25rem] items-center">
+                      <Rating
+                        defaultValue={2.5}
+                        precision={0.5}
+                        readOnly
+                      ></Rating>
+                      <span className="text-[1rem] opacity-[0.6]">(3.5)</span>
                     </div>
                   </Box>
                   <Box
@@ -487,7 +463,7 @@ function MarketplaceProjectDetail() {
                           color: "var(--black)",
                         }}
                       >
-                        {orderCount}
+                        3
                       </Typography>
                     </div>
                   </Box>
@@ -524,7 +500,7 @@ function MarketplaceProjectDetail() {
                                 color: "var(--red)",
                               }}
                             />
-                            Liked
+                            Followed
                           </Button>
                         ) : (
                           <Button
@@ -539,7 +515,7 @@ function MarketplaceProjectDetail() {
                                 strokeWidth: 1,
                               }}
                             />
-                            Like
+                            Follow
                           </Button>
                         )}
                       </Grid2>
@@ -571,7 +547,7 @@ function MarketplaceProjectDetail() {
             </Grid2>
           </div>
         </div>
-        <div className="w-full">
+        <div className="w-full max-w-[1600px]">
           <TabContext value={tabValue}>
             <Box className="marketplace-project-tab-context">
               <Box>

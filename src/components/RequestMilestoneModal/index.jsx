@@ -46,7 +46,7 @@ const RequestMilestoneModal = ({ render,open, handleClose, milestone, projectId,
     if (projectId) {
       fetchProject();
     }
-  }, [projectId]);
+  }, [projectId, milestone]);
 
 
   const handleSubmit = () => {

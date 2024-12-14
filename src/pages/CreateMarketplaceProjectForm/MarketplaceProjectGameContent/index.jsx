@@ -181,7 +181,7 @@ const MarketplaceProjectGameContent = () => {
 
         const marketplaceProjectId = response.data._data.id;
 
-        navigate(`account/projects`);
+        navigate(`/marketplace-detail/${marketplaceProjectId}`);
       }
     } catch (error) {
       console.log(error);

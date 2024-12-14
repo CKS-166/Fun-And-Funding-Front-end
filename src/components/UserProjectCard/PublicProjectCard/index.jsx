@@ -18,7 +18,7 @@ const projectStatus = {
 function PublicProjectCard({ project, projectType }) {
 
     return (
-        <div className="flex items-center rounded-lg gap-[2rem]">
+        <div className="flex items-center rounded-md gap-[2rem]">
             <div className="w-[10rem] h-[10rem] bg-[#EAEAEA] flex justify-center items-center rounded-lg">
                 <img src={projectType == "Funding" ? project?.fundingFiles?.find(p => p.filetype == 2 && p.isDeleted == false).url : project?.marketplaceFiles?.find(p => p.fileType == 2 && p.isDeleted == false).url} style={{ width: '10rem', height: '10rem', objectFit: 'cover', borderRadius: '0.625rem' }} />
             </div>
@@ -28,7 +28,7 @@ function PublicProjectCard({ project, projectType }) {
                         <Typography
                             sx={{
                                 color: '#2F3645',
-                                width: "25rem",
+                                width: '12rem',
                                 overflow: 'hidden',
                                 textOverflow: 'ellipsis',
                                 WebkitBoxOrient: 'vertical',

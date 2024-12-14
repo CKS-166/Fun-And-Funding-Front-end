@@ -1,4 +1,4 @@
-import EditIcon from '@mui/icons-material/Edit';
+import EditIcon from "@mui/icons-material/Edit";
 import {
   Box,
   Container,
@@ -8,7 +8,7 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
-  Typography
+  Typography,
 } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
 import Cookies from "js-cookie";
@@ -35,25 +35,24 @@ function UserProfileLayout() {
 
   //cookie
   const token = Cookies.get("_auth");
-  const [walletPath, setWalletPath] = useState("")
+  const [walletPath, setWalletPath] = useState("");
 
   useEffect(() => {
     if (token) {
-      const decoded = jwtDecode(token)
-      const userRole = decoded["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"]
-      if (userRole == "GameOwner")
-        setWalletPath("/account/wallet-game-owner")
-      else
-        setWalletPath("/account/wallet")
+      const decoded = jwtDecode(token);
+      const userRole =
+        decoded["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
+      if (userRole == "GameOwner") setWalletPath("/account/wallet-game-owner");
+      else setWalletPath("/account/wallet");
     }
-  }, [token, walletPath])
+  }, [token, walletPath]);
 
   const titleList = [
-    { text: "My Profile", path: "/account/profile" },
+    { text: "Profile", path: "/account/profile" },
     { text: "Projects", path: "/account/projects" },
     { text: "Social", path: "/account/social" },
     { text: "Orders", path: "/account/orders" },
-    { text: "My Wallet", path: "/account/wallet" },
+    { text: "Wallet", path: "/account/wallet" },
   ];
 
   const iconMapping = {
@@ -86,7 +85,7 @@ function UserProfileLayout() {
 
         setUser(userData);
         setAvatar(userData.avatar);
-        console.log(userData)
+        console.log(userData);
         userApiInstace.get(`/user-role/${userData.id}`).then((roleRes) => {
           if (roleRes.data._statusCode == 200) {
             setRole(roleRes.data._data);
@@ -148,7 +147,9 @@ function UserProfileLayout() {
     const location = useLocation();
     const currentPath = location.pathname;
 
-    const activeTitle = titleList.find(item => currentPath.startsWith(item.path));
+    const activeTitle = titleList.find((item) =>
+      currentPath.startsWith(item.path)
+    );
 
     return activeTitle ? activeTitle.text : "Unknown Section";
   };
@@ -163,18 +164,20 @@ function UserProfileLayout() {
       }}
     >
       <Grid2 container>
-        <Grid2 size={2.5}
+        <Grid2
+          size={2.5}
           sx={{
             minHeight: "100vh",
             backgroundColor: "#2F3645",
             color: "#F5F7F8",
             display: "flex",
             flexDirection: "column",
-            pt: '2.4rem',
+            pt: "2.4rem",
             justifyContent: "space-between",
             position: "relative",
             overflow: "visible",
-          }}>
+          }}
+        >
           <div className="sticky top-[2.4rem] z-10">
             <div className="flex w-full flex-row justify-center items-center px-[2rem] mb-[1.5rem]">
               <div className="rounded-full bg-[var(--white)] w-[10rem] h-[10rem] flex justify-center items-center relative">
@@ -209,11 +212,14 @@ function UserProfileLayout() {
                         color: "white",
                         transition: "all 0.3s",
                       },
-                      width: '2rem',
-                      height: '2rem'
+                      width: "2rem",
+                      height: "2rem",
                     }}
                   >
-                    <EditIcon sx={{ width: '1.2rem', height: '1.2rem' }} onClick={handleChangeAvatar} />
+                    <EditIcon
+                      sx={{ width: "1.2rem", height: "1.2rem" }}
+                      onClick={handleChangeAvatar}
+                    />
                     <input
                       type="file"
                       ref={fileInputRef}
@@ -228,29 +234,27 @@ function UserProfileLayout() {
               <div className="flex flex-col justify-center items-center overflow-hidden px-[2rem] mb-[1rem]">
                 <Typography
                   sx={{
-                    fontSize: '0.875rem',
-                    fontWeight: '700',
-                    width: 'fit-content',
-                    padding: '4px 8px',
-                    whiteSpace: 'nowrap',
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
-                    textAlign: 'center',
-                    bgcolor: 'var(--primary-green)',
-                    color: 'var(--white)',
-                    borderRadius: '0.25rem',
-                    mb: '0.25rem'
+                    fontSize: "0.875rem",
+                    fontWeight: "700",
+                    width: "fit-content",
+                    padding: "4px 8px",
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    textAlign: "center",
+                    bgcolor: "var(--primary-green)",
+                    color: "var(--white)",
+                    borderRadius: "0.25rem",
+                    mb: "0.25rem",
                   }}
                 >
-                  {role.replace(/([a-z])([A-Z])/g, '$1 $2')}
+                  {role.replace(/([a-z])([A-Z])/g, "$1 $2")}
                 </Typography>
                 <div className="w-[14rem] overflow-hidden">
                   <h1 className="!text-[1.5rem] text-[var(--white)] font-bold leading-relaxed overflow-hidden text-ellipsis mb-[0.25rem] text-center">
                     {user?.userName}
                   </h1>
-                  <h1
-                    className="!text-[1rem] text-[var(--white)] font-medium leading-relaxed overflow-hidden text-ellipsis whitespace-nowrap text-center"
-                  >
+                  <h1 className="!text-[1rem] text-[var(--white)] font-medium leading-relaxed overflow-hidden text-ellipsis whitespace-nowrap text-center">
                     {user?.email}
                   </h1>
                 </div>
@@ -264,9 +268,7 @@ function UserProfileLayout() {
                 flexDirection: "column",
               }}
             >
-              <List
-                sx={{ mx: "2rem", flexGrow: 1, mt: "0.8rem" }}
-              >
+              <List sx={{ mx: "2rem", flexGrow: 1, mt: "0.8rem" }}>
                 {titleList.map((item, index) => {
                   const isActive = location.pathname === item.path;
                   return (
@@ -278,14 +280,12 @@ function UserProfileLayout() {
                       <ListItemButton
                         sx={{
                           borderRadius: "0.4rem",
-                          backgroundColor: isActive
-                            ? "#1BAA64"
-                            : "transparent",
+                          backgroundColor: isActive ? "#1BAA64" : "transparent",
                           color: "var(--white)",
                           "&:hover": {
                             boxShadow: "inset 0 0 0 1px #1BAA64",
                             backgroundColor: "var(--primary-green)",
-                            borderColor: 'var(--primary-green) !important',
+                            borderColor: "var(--primary-green) !important",
                             color: "var(--white) !important",
                             "& .MuiListItemIcon-root": {
                               color: "var(--white)",

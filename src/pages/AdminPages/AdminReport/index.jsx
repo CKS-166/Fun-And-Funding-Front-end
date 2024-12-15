@@ -169,7 +169,7 @@ function AdminReport() {
           pageSize: pageSize,
         },
       });
-
+      console.log(response.data);
       const { items, totalItems, totalPages } = response.data._data;
       setDataLoad(items || []); // Ensure items is an array
       updatePagination({ totalItems, totalPages, currentPage: page });
@@ -207,13 +207,13 @@ function AdminReport() {
 
           return {
             Id: data.id,
-            reporter: user ? user.userName : "Unknown",
-            Violator: ViolatorParse,
-            content: data.content,
-            isHandle: data.isHandle ? "Handled" : "Not handled",
-            date: formatDate(data.date),
-            fileUrls: data.fileUrls,
-            faultCauses: data.faultCauses,
+            REPORTER: user ? user.userName : "Unknown",
+            VIOLATOR: ViolatorParse,
+            CONTENT: data.content,
+            HANDLED: data.isHandle ? "Handled" : "Not handled",
+            DATE: formatDate(data.date),
+            FILES: data.fileUrls,
+            CAUSES: data.faultCauses,
           };
         })
       );
@@ -236,10 +236,7 @@ function AdminReport() {
   };
 
   return (
-    <>
-      <h1 className="text-3xl font-bold my-6 text-center text-[#1BAA64]">
-        Admin Report
-      </h1>
+    <div className="p-12">
       <ReportTable
         data={mappedData} // Use the mapped data here
         handleRowClick={handleRowClick}
@@ -299,7 +296,7 @@ function AdminReport() {
           </div>
         </div>
       </Dialog>
-    </>
+    </div>
   );
 }
 

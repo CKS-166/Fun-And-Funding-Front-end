@@ -109,10 +109,10 @@ export default function CustomPaginationActionsTable({
           <TableRow>
             <TableCell
               sx={{
-                backgroundColor: "#1BAA64",
-                color: "#ffffff",
+                backgroundColor: "#e5e7eb",
+                color: "black",
                 fontWeight: "bold",
-                fontSize: "0.85rem",
+                fontSize: "0.75rem",
               }}
             >
               No
@@ -121,10 +121,10 @@ export default function CustomPaginationActionsTable({
               <TableCell
                 key={column}
                 sx={{
-                  backgroundColor: "#1BAA64",
-                  color: "#ffffff",
+                  backgroundColor: "#e5e7eb",
+                  color: "black",
                   fontWeight: "bold",
-                  fontSize: "0.85rem",
+                  fontSize: "0.75rem",
                 }}
               >
                 {column}
@@ -132,10 +132,10 @@ export default function CustomPaginationActionsTable({
             ))}
             <TableCell
               sx={{
-                backgroundColor: "#1BAA64",
-                color: "#ffffff",
+                backgroundColor: "#e5e7eb",
+                color: "black",
                 fontWeight: "bold",
-                fontSize: "0.85rem",
+                fontSize: "0.75rem",
               }}
             >
               ACTION
@@ -160,14 +160,14 @@ export default function CustomPaginationActionsTable({
                   scope="row"
                   sx={{
                     color:
-                      column === "Status" && row[column] === "Rejected"
+                      column === "STATUS" && row[column] === "Rejected"
                         ? "red"
-                        : column === "Status" && row[column] === "Processing"
+                        : column === "STATUS" && row[column] === "Processing"
                         ? "blue"
-                        : column === "Status" && row[column] === "Approved"
+                        : column === "STATUS" && row[column] === "Approved"
                         ? "green"
                         : "inherit",
-                    fontWeight: column === "Status" ? "bold" : "normal",
+                    fontWeight: column === "STATUS" ? "bold" : "normal",
                   }}
                 >
                   {String(row[column])}

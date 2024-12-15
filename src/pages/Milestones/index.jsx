@@ -35,11 +35,7 @@ const notify = (message, type) => {
 function Milestones() {
   const [dataLoad, setDataLoad] = useState(false);
   return (
-    <div>
-      <h1 className="text-3xl font-bold mb-6 text-center text-[#1BAA64]">
-        Milestone Management
-      </h1>
-
+    <div className="p-12">
       {/* <CreateMilestone setDataLoad={setDataLoad} notify={notify} /> */}
       <TableMilestones dataLoad={dataLoad} notify={notify} />
       <ToastContainer

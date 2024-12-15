@@ -143,12 +143,12 @@ function AdminWithdrawRequest() {
 
   const mappingData = data.map((item) => ({
     Id: item.id,
-    Amount: item.amount,
-    IsFinished: item.isFinished ? "Finish" : "Not Finish",
-    Type: mapProjectStatus(item.requestType),
-    Status: mapWithdrawRequestStatus(item.status),
-    CreatedDate: formatDate(item.createdDate),
-    ExpiredDate: formatDate(item.expiredDate),
+    AMOUNT: item.amount,
+    HANDLED: item.isFinished ? "Finish" : "Not Finish",
+    TYPE: mapProjectStatus(item.requestType),
+    STATUS: mapWithdrawRequestStatus(item.status),
+    "CREATE DATE": formatDate(item.createdDate),
+    "EXPIRED DATE": formatDate(item.expiredDate),
   }));
 
   const handleRowClick = async (id) => {
@@ -315,11 +315,7 @@ function AdminWithdrawRequest() {
   };
 
   return (
-    <>
-      <h1 className="text-3xl font-bold mb-6 text-center text-[#1BAA64]">
-        Withdraw Management
-      </h1>
-
+    <div className="p-12">
       <CustomPaginationActionsTable
         data={mappingData}
         handleRowClick={handleRowClick} // Assuming you have a handler for row clicks
@@ -400,7 +396,7 @@ function AdminWithdrawRequest() {
         draggable
         pauseOnFocusLoss
       />
-    </>
+    </div>
   );
 }
 

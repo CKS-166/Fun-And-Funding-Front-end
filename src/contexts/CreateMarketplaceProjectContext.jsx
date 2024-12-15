@@ -24,6 +24,7 @@ export const CreateMarketplaceProjectProvider = ({ children }) => {
     bankAccount: {
       bankNumber: "",
       bankCode: "",
+      ownerName: "",
     },
     categories: [{ id: "", name: "" }],
   });

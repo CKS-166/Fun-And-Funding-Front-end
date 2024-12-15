@@ -15,8 +15,13 @@ import Cookies from "js-cookie";
 import marketplaceProjectApiInstace from "../../../utils/ApiInstance/marketplaceProjectApiInstance";
 import { useLoading } from "../../../contexts/LoadingContext";
 import couponApiInstace from "../../../utils/ApiInstance/couponApiInstance";
+import FilePondPluginFileValidateSize from "filepond-plugin-file-validate-size";
 
-registerPlugin(FilePondPluginFileValidateType, FilePondPluginImagePreview);
+registerPlugin(
+  FilePondPluginFileValidateType,
+  FilePondPluginImagePreview,
+  FilePondPluginFileValidateSize
+);
 
 const MarketplaceProjectGameContent = () => {
   const { marketplaceProject, setMarketplaceProject, setFormIndex } =
@@ -181,7 +186,7 @@ const MarketplaceProjectGameContent = () => {
 
         const marketplaceProjectId = response.data._data.id;
 
-        navigate(`account/projects`);
+        navigate("/account/projects");
       }
     } catch (error) {
       console.log(error);
@@ -253,9 +258,11 @@ const MarketplaceProjectGameContent = () => {
                 onupdatefiles={setGameFile}
                 allowMultiple={false}
                 maxFiles={1}
+                maxTotalFileSize={"500MB"}
                 acceptedFileTypes={[]}
                 name="game"
                 labelIdle='Drag & drop a file here or <span class="filepond--label-action">Browse</span>'
+                labelMaxTotalFileSize={"Max file size: 500MB"}
               />
             </Grid2>
           </Grid2>

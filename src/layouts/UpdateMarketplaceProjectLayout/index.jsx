@@ -12,17 +12,15 @@ import {
   ListItemText,
   Typography,
 } from "@mui/material";
+import Cookies from "js-cookie";
 import React, { useEffect, useState } from "react";
 import { Outlet, useLocation } from "react-router";
 import { useNavigate, useParams } from "react-router-dom";
-import Swal from "sweetalert2";
-import fundingProjectApiInstace from "../../utils/ApiInstance/fundingProjectApiInstance";
 import { toast, ToastContainer } from "react-toastify";
-import Cookies from "js-cookie";
-import { editorList } from "./UpdateMarketplaceProjectLayout";
+import { useLoading } from "../../contexts/LoadingContext";
 import { useUpdateMarketplaceProject } from "../../contexts/UpdateMarketplaceProjectContext";
 import marketplaceProjectApiInstace from "../../utils/ApiInstance/marketplaceProjectApiInstance";
-import { useLoading } from "../../contexts/LoadingContext";
+import { editorList } from "./UpdateMarketplaceProjectLayout";
 
 const notify = (message, type) => {
   const options = {
@@ -196,7 +194,7 @@ function UpdateMarketplaceProjectLayout() {
               id: category.id || "",
               name: category.name || "",
             })) || [],
-          wallet : {
+          wallet: {
             id: data.wallet?.id || "",
             balance: data.wallet?.balance || 0
           }
@@ -225,9 +223,19 @@ function UpdateMarketplaceProjectLayout() {
 
   const getActiveEditor = (id) => {
     const matchedEditor = editorList.find((item) =>
-      location.pathname.includes(item.id)
+      location.pathname.includes(item.link(id))
     );
     return matchedEditor ? `Project Editor / ${matchedEditor.name}` : "";
+  };
+
+  const getActiveCoupon = () => {
+    const matchedEditor = location.pathname.includes('coupons');
+    return matchedEditor ? `Project Coupons` : "";
+  };
+
+  const getActivePreview = () => {
+    const matchedEditor = location.pathname.includes('preview');
+    return matchedEditor ? `Project Preview` : "";
   };
 
   const handleNavigation = (link) => {
@@ -238,9 +246,17 @@ function UpdateMarketplaceProjectLayout() {
     location.pathname.includes(item.link(id))
   );
 
+  const isCouponActive = location.pathname.includes('coupons');
+
+  const isPreviewActive = location.pathname.includes('preview');
+
   const getActiveSection = (id) => {
     const activeEditor = getActiveEditor(id);
+    const activeCoupon = getActiveCoupon();
+    const activePreview = getActivePreview();
     if (activeEditor) return activeEditor;
+    if (activeCoupon) return activeCoupon;
+    if (activePreview) return activePreview;
     return "Unknown Section";
   };
 
@@ -272,12 +288,11 @@ function UpdateMarketplaceProjectLayout() {
             <div className="sticky mb-[8rem] top-[1.5rem] z-10">
               <div className="flex flex-col gap-[0.5rem] px-[2rem]">
                 <span
-                  className={`bg-[#1BAA64] text-[#EAEAEA] text-[0.75rem] px-[0.5rem] py-[0.25rem] rounded w-fit font-semibold ${
-                    marketplaceProject.status >= 0 &&
+                  className={`bg-[#1BAA64] text-[#EAEAEA] text-[0.75rem] px-[0.5rem] py-[0.25rem] rounded w-fit font-semibold ${marketplaceProject.status >= 0 &&
                     marketplaceProject.status <= 8
-                      ? "bg-[#1BAA64]"
-                      : "bg-[#FABC3F]"
-                  } `}
+                    ? "bg-[#1BAA64]"
+                    : "bg-[#FABC3F]"
+                    } `}
                 >
                   Marketplace
                 </span>
@@ -302,6 +317,16 @@ function UpdateMarketplaceProjectLayout() {
                 <div className="mt-[2rem]">
                   <Typography
                     className="update-project-section"
+                    sx={{
+                      backgroundColor:
+                        isPreviewActive
+                          ? "#88D1AE"
+                          : "transparent",
+                      color:
+                        isPreviewActive
+                          ? "#F5F7F8"
+                          : "inherit",
+                    }}
                     onClick={() =>
                       navigate(
                         `/account/marketplace-projects/update/${id}/preview`
@@ -375,6 +400,16 @@ function UpdateMarketplaceProjectLayout() {
                 <div className="">
                   <Typography
                     className="update-project-section"
+                    sx={{
+                      backgroundColor:
+                        isCouponActive
+                          ? "#88D1AE"
+                          : "transparent",
+                      color:
+                        isCouponActive
+                          ? "#F5F7F8"
+                          : "inherit",
+                    }}
                     onClick={() =>
                       navigate(
                         `/account/marketplace-projects/update/${id}/coupons`
@@ -411,7 +446,7 @@ function UpdateMarketplaceProjectLayout() {
                     {getActiveSection(id)}
                   </Typography>
                 </div>
-                <div className="flex justify-between gap-[1.5rem] items-center w-fit">
+                <div className={`${isEditorActive ? 'flex' : 'hidden'} justify-between gap-[1.5rem] items-center w-fit`}>
                   <Typography
                     sx={{
                       color: "#2F3645",

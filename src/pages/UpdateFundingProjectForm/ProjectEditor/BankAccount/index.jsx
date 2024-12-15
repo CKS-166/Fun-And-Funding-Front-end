@@ -38,6 +38,7 @@ function BankAccount() {
                 const bankList = response.data.data;
                 const bankCode = project.wallet.bankAccount.bankCode;
                 const foundBank = bankList.find(record => record.code === bankCode);
+                console.log(foundBank);
                 if (foundBank) {
                     setSelectedBank(foundBank);
                     const bankAccountResponse = await axios.post(

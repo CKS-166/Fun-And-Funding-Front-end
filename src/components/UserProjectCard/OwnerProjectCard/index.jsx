@@ -1,8 +1,9 @@
-import { FormControl, MenuItem, Select, Typography } from "@mui/material";
+import { FormControl, MenuItem, Select, Typography, Modal, Box } from "@mui/material";
 import { alpha } from "@mui/material/styles";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./index.css";
-
+import axios from "axios";
+import OrderMarketDetail from "../../OrderCard/OrderMarketDetail";
 const projectStatus = {
   0: { name: "Deleted", color: "var(--red)" },
   1: { name: "Pending", color: "#FFC107" },
@@ -19,11 +20,40 @@ const projectStatus = {
 
 function OwnerProjectCard({ project, projectType }) {
   const [selectedValue, setSelectedValue] = useState("");
-
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+  const [details, setDetails] = useState([]);
   const handleChange = (event) => {
     setSelectedValue(event.target.value);
   };
   console.log(project);
+  const fetchMarketOrder = () => {
+    axios
+      .get(`https://localhost:7044/api/order-details/${project.id}/purchases`)
+      .then((res) => {
+        console.log(res);
+        setDetails(res.data._data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+  useEffect(() => {
+    projectType != "Funding" && fetchMarketOrder();
+  }, [])
+
+  const style = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 1400,
+    bgcolor: 'background.paper',
+    boxShadow: 24,
+    p: 4,
+    // border : 'none !important',
+  };
   return (
     <div className="flex items-center rounded-md gap-[2rem]">
       <div className="w-[10rem] h-[10rem] bg-[#EAEAEA] flex justify-center items-center rounded-lg">
@@ -167,6 +197,23 @@ function OwnerProjectCard({ project, projectType }) {
           <MenuItem value="remove">
             <Typography>Remove campaign</Typography>
           </MenuItem>
+          {projectType != "Funding" && (
+            <>
+              <MenuItem value="view" onClick={handleOpen}>
+                <Typography>View orders</Typography>
+              </MenuItem>
+              <Modal
+                open={open}
+                onClose={handleClose}
+                disableAutoFocus={true}
+              >
+                <Box sx={style}>
+                  <OrderMarketDetail details={details}/>
+                </Box>
+              </Modal>
+            </>
+          )}
+
           {project.status == 4 && (
             <MenuItem
               value="publish"

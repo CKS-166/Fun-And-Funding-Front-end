@@ -5,8 +5,11 @@ import Cookies from "js-cookie";
 import React, { useEffect, useState } from 'react';
 import { useLoading } from "../../contexts/LoadingContext";
 import followApiInstance from "../../utils/ApiInstance/followApiInstance";
+import likeApiInstance from "../../utils/ApiInstance/likeApiInstance";
 import AccountFollower from './AccountFollower';
 import AccountFollowing from './AccountFollowing';
+import AccountFundingFollowing from './AccountFundingFollowing';
+import AccountMarketplaceLiked from './AccountMarketplaceLiked';
 import "./index.css";
 
 function AccountSocial() {
@@ -18,12 +21,18 @@ function AccountSocial() {
     const [followingUserList, setFollowingUserList] = useState([]);
     const [followerCount, setFollowerCount] = useState(0);
     const [followerList, setFollowerList] = useState([]);
+    const [followingFundingCount, setFollowingFundingCount] = useState(0);
+    const [followingFundingList, setFollowingFundingList] = useState([]);
+    const [likedMarketplaceCount, setLikedMarketplaceCount] = useState(0);
+    const [likedMarketplaceList, setLikedMarketplaceList] = useState([]);
 
     useEffect(() => {
         try {
             setIsLoading(true);
             fetchFollowingUserList();
             fetchFollowerList();
+            fetchFollowingFundingList();
+            fetchLikedMarketplaceList();
         } catch (error) {
             console.log(error);
         } finally {
@@ -60,9 +69,41 @@ function AccountSocial() {
                 },
             });
             if (res.data._statusCode === 200) {
-                console.log(res.data._data);
                 setFollowerCount(res.data._data.totalFollow);
                 setFollowerList(res.data._data.users);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    const fetchFollowingFundingList = async () => {
+        try {
+            const res = await followApiInstance.get('number-of-funded-project-following', {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            if (res.data._statusCode === 200) {
+                setFollowingFundingCount(res.data._data.followCount);
+                setFollowingFundingList(res.data._data.fundingProjectResponses);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    const fetchLikedMarketplaceList = async () => {
+        try {
+            const res = await likeApiInstance.get('number-of-marketplace-like', {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            if (res.data._statusCode === 200) {
+                console.log(res.data._data);
+                setLikedMarketplaceCount(res.data._data.likeCount);
+                setLikedMarketplaceList(res.data._data.marketplaceProjectResponses);
             }
         } catch (error) {
             console.log(error);
@@ -90,7 +131,7 @@ function AccountSocial() {
                 </div>
                 <a href='/chat'>
                     <Badge
-                        badgeContent={3}
+                        badgeContent={null}
                         color="error"
                         anchorOrigin={{
                             vertical: "top",
@@ -152,12 +193,12 @@ function AccountSocial() {
                                 value="2"
                             />
                             <Tab
-                                label={`Following Funding Projects (0)`}
+                                label={`Following Funding Projects (${followingFundingCount})`}
                                 className="account-social-tab"
                                 value="3"
                             />
                             <Tab
-                                label={`Liked Marketplace Projects (0)`}
+                                label={`Liked Marketplace Projects (${likedMarketplaceCount})`}
                                 className="account-social-tab"
                                 value="4"
                             />
@@ -181,7 +222,7 @@ function AccountSocial() {
                                             textAlign: 'left'
                                         }}
                                     >
-                                        Total followings: <span className='mr-[1rem]'></span>{followingUserCount} accounts
+                                        Total followings: <span className='mr-[1rem]'></span>{followingUserCount} account{followingUserCount > 1 && 's'}
                                     </Typography>
                                     {followingUserList && followingUserList.length > 0 ?
                                         <Box>
@@ -228,7 +269,7 @@ function AccountSocial() {
                                             textAlign: 'left'
                                         }}
                                     >
-                                        Total followers: <span className='mr-[1rem]'></span>{followerCount} accounts
+                                        Total followers: <span className='mr-[1rem]'></span>{followerCount} account{followerCount > 1 && 's'}
                                     </Typography>
                                     {followerList && followerList.length > 0 ?
                                         <Box>
@@ -274,8 +315,30 @@ function AccountSocial() {
                                             textAlign: 'left'
                                         }}
                                     >
-                                        Total following funding projects: <span className='mr-[1rem]'></span>10 projects
+                                        Total following funding projects: <span className='mr-[1rem]'></span>{followingFundingCount} project{followingFundingCount > 1 && 's'}
                                     </Typography>
+                                    {followingFundingList && followingFundingList.length > 0 ?
+                                        <Box>
+                                            <Grid2 container rowSpacing={3}>
+                                                {followingFundingList.map((item, index) => (
+                                                    <Grid2 size={12} key={index}>
+                                                        <AccountFundingFollowing project={item} fetchFollowingFundingList={fetchFollowingFundingList} />
+                                                    </Grid2>
+                                                ))}
+                                            </Grid2>
+                                        </Box> :
+                                        <Typography
+                                            sx={{
+                                                fontSize: "1rem",
+                                                fontWeight: "600",
+                                                color: "var(--black)",
+                                                mb: "2rem",
+                                                textAlign: 'center'
+                                            }}
+                                        >
+                                            Nothing to show
+                                        </Typography>
+                                    }
                                 </Box>
                             </Box>
                         )}
@@ -298,8 +361,30 @@ function AccountSocial() {
                                             textAlign: 'left'
                                         }}
                                     >
-                                        Total liked marketplace projects: <span className='mr-[1rem]'></span>10 projects
+                                        Total liked marketplace projects: <span className='mr-[1rem]'></span>{likedMarketplaceCount} projects
                                     </Typography>
+                                    {likedMarketplaceList && likedMarketplaceList.length > 0 ?
+                                        <Box>
+                                            <Grid2 container rowSpacing={3}>
+                                                {likedMarketplaceList.map((item, index) => (
+                                                    <Grid2 size={12} key={index}>
+                                                        <AccountMarketplaceLiked project={item} fetchLikedMarketplaceList={fetchLikedMarketplaceList} />
+                                                    </Grid2>
+                                                ))}
+                                            </Grid2>
+                                        </Box> :
+                                        <Typography
+                                            sx={{
+                                                fontSize: "1rem",
+                                                fontWeight: "600",
+                                                color: "var(--black)",
+                                                mb: "2rem",
+                                                textAlign: 'center'
+                                            }}
+                                        >
+                                            Nothing to show
+                                        </Typography>
+                                    }
                                 </Box>
                             </Box>
                         )}

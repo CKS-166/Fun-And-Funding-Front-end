@@ -42,10 +42,10 @@ const CreatorContract = ({ open, handleClose }) => {
             alert('Please accept the terms and conditions before proceeding.');
             return;
         }
-    
+
         try {
             const response = await contractApiInstace.post(
-                '', 
+                '',
                 {},  // Empty request body (if not needed)
                 {
                     headers: {
@@ -54,7 +54,7 @@ const CreatorContract = ({ open, handleClose }) => {
                     }
                 }
             );
-    
+
             if (response.status === 200) {
                 handleClose();
                 navigate('/request-funding-project/basic-info');
@@ -79,16 +79,14 @@ const CreatorContract = ({ open, handleClose }) => {
                 <ul>
                     <li>You must provide accurate information about your project.</li>
                     <li>Funds will only be disbursed according to the
-                        <Link style={{ color: '#1BAA64', fontWeight: 600, cursor: 'pointer', marginLeft: '5px' }}>milestone-based process.</Link></li>
+                        <Link to="#" // Prevent navigation
+                            onClick={() => window.open('/policies', '_blank')}
+                            style={{ color: '#1BAA64', fontWeight: 600, cursor: 'pointer', marginLeft: '5px' }}>
+                                milestone-based process.
+                        </Link></li>
                     <li>All rewards promised must be delivered on time.</li>
                     <li>You are responsible for providing regular updates to backers.</li>
                     <li>Failure to complete the project may result in a refund to backers.</li>
-                    <li>
-                        <Typography variant="body1" gutterBottom>
-                            Additional context about our rules can be found
-                            <span style={{ color: '#1BAA64', fontWeight: 600, cursor: 'pointer', marginLeft: '5px' }}>here</span>
-                        </Typography>
-                    </li>
                 </ul>
                 <FormControlLabel
                     control={

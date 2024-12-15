@@ -9,7 +9,11 @@ import "./index.css";
 
 function Footer() {
     const navigate = useNavigate();
-
+    const handleOpenInNewTab = () => {
+        const url = "/policies"; // Relative path
+        const fullUrl = window.location.origin + url; // Construct full URL
+        window.open(fullUrl, "_blank", "noopener,noreferrer");
+      };
     return (
         <footer className="bg-[#2F3645] w-full bottom-0 left-0 right-0 h-[38rem] mt-[5rem] flex flex-col items-center justify-center relative"
         >
@@ -84,6 +88,7 @@ function Footer() {
                             <Typography variant="body2" sx={{
                                 marginBottom: '1.25rem'
                             }}
+                            onClick={() => handleOpenInNewTab()}
                                 className="bottom-footer-content">Term of Services</Typography>
                             <Typography variant="body2" sx={{
                                 marginBottom: '1.25rem'
@@ -105,6 +110,7 @@ function Footer() {
                             <Typography variant="body2" sx={{
                                 marginBottom: '1.25rem'
                             }}
+                            onClick={() => handleOpenInNewTab()}
                                 className="bottom-footer-content">Term of Services</Typography>
                             <Typography variant="body2" sx={{
                                 marginBottom: '1.25rem'

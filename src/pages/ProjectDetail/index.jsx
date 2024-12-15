@@ -444,7 +444,7 @@ const ProjectDetail = () => {
                           </span>
                         </Typography>
                         <Typography sx={{ fontSize: "1rem" }}>
-                          {daysLeft}{" "}
+                          {daysLeft >= 0 ? daysLeft : 0}{" "}
                           <span style={{ fontSize: "1rem" }}>days left</span>
                         </Typography>
                       </Box>

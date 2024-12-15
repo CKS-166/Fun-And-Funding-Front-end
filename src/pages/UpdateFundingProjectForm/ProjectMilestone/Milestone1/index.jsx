@@ -94,12 +94,21 @@ const MilestoneForm = () => {
   };
 
   useEffect(() => {
-    fetchFixedMilestone();
-    getMilestoneData(milestoneId);
+    const fetchData = async () => {
+      setIsLoading(true);
+      try {
+        await fetchFixedMilestone(); // Fetch fixed milestone data first
+        await getMilestoneData(milestoneId); // Then fetch milestone data
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+  
+    fetchData();
   }, [milestoneId]);
 
-  // console.log(milestoneData);
-  // Handle Quill input changes for each requirement
   const handleQuillChange = (value, index) => {
     const updatedFormData = [...formDataArray];
     updatedFormData[index].content = value;
@@ -119,7 +128,7 @@ const MilestoneForm = () => {
     formDataArray.forEach((formData, i) => {
       data.append(`request[${i}].RequirementStatus`, formData.requirementStatus);
       data.append(`request[${i}].UpdateDate`, formData.updateDate.toISOString());
-      data.append(`request[${i}].Content`, formData.content);
+      data.append(`request[${i}].Content`, formData.content || " ");
       data.append(`request[${i}].MilestoneId`, formData.milestoneId);
       data.append(`request[${i}].FundingProjectId`, formData.fundingProjectId);
       data.append(`request[${i}].RequirementId`, formData.requirementId);
@@ -148,7 +157,6 @@ const MilestoneForm = () => {
         text: "Failed to submit requirements",
         icon: "error"
       });
-      alert("Failed to submit requirements.");
     } finally {
       getMilestoneData(milestoneId);
     }

@@ -9,6 +9,7 @@ import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
 import Swal from "sweetalert2";
+import { ToastContainer, toast } from "react-toastify";
 import CompleteMilestoneButton from "../../../../components/UpdateProject/CompleteMilestoneButton";
 const UpdateMilestone = ({ milestones, render, issueLog, pmId, status }) => {
   const [milestoneData, setMilestoneData] = useState([]);
@@ -84,7 +85,7 @@ const UpdateMilestone = ({ milestones, render, issueLog, pmId, status }) => {
       data.append(`request[${i}].Id`, milestone.id);
       data.append(`request[${i}].RequirementStatus`, milestone.requirementStatus);
       data.append(`request[${i}].UpdateDate`, milestone.updateDate);
-      data.append(`request[${i}].Content`, milestone.content);
+      data.append(`request[${i}].Content`, milestone.content || "");
       milestone.requirementFiles.forEach((file, fileIndex) => {
         data.append(`request[${i}].RequirementFiles[${fileIndex}].Id`, file.id);
         data.append(`request[${i}].RequirementFiles[${fileIndex}].URL`, file.url);
@@ -104,12 +105,11 @@ const UpdateMilestone = ({ milestones, render, issueLog, pmId, status }) => {
         headers: { "Content-Type": "multipart/form-data" },
       });
       Swal.fire({
-        title: `Milestones updated successfully`,
+        title: `Milestone updated successfully`,
         icon: "success"
       });
     } catch (error) {
-      console.error("Failed to update milestones:", error);
-      alert("Error updating milestones.");
+      toast.warn("Please fill in all the required fields.");
     } finally {
       setLoading(false);
       render();
@@ -126,7 +126,7 @@ const UpdateMilestone = ({ milestones, render, issueLog, pmId, status }) => {
       data.append(`request[${i}].Id`, milestone.id);
       data.append(`request[${i}].RequirementStatus`, milestone.requirementStatus);
       data.append(`request[${i}].UpdateDate`, milestone.updateDate);
-      data.append(`request[${i}].Content`, milestone.content);
+      data.append(`request[${i}].Content`, milestone.content || " ");
       milestone.requirementFiles.forEach((file, fileIndex) => {
         data.append(`request[${i}].RequirementFiles[${fileIndex}].Id`, file.id);
         data.append(`request[${i}].RequirementFiles[${fileIndex}].URL`, file.url);
@@ -148,7 +148,7 @@ const UpdateMilestone = ({ milestones, render, issueLog, pmId, status }) => {
       });
       console.log(data);
     } catch (error) {
-      console.error("Failed to update milestones:", error);
+      // toast.warn("Please fill in all the required fields.");
     } finally {
       setLoading(false);
       render();
@@ -165,14 +165,22 @@ const UpdateMilestone = ({ milestones, render, issueLog, pmId, status }) => {
       <Backdrop sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }} open={loading}>
         <CircularProgress color="inherit" />
       </Backdrop>
-      <Box sx={{position : 'absolute', left : '300px', top : '120px'}}>
+      <Box sx={{ position: 'absolute', left: '300px', top: '120px' }}>
         <CompleteMilestoneButton submit={handleCompleteSubmit} render={() => handleCompleteSubmit()} status={status} pmId={pmId} />
       </Box>
       {!loading && milestones && milestones.length === 0 && <h2>No milestones found.</h2>}
 
       {!loading && milestones && milestones.length > 0 && (
         <form onSubmit={handleSubmit}>
-
+          <ToastContainer
+            position="top-right"
+            autoClose={3000}
+            hideProgressBar={false}
+            closeOnClick
+            pauseOnHover
+            draggable
+            pauseOnFocusLoss
+          />
           <TabContext value={value}>
             <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
               <TabList onChange={handleChange} aria-label="lab API tabs example">
@@ -200,7 +208,7 @@ const UpdateMilestone = ({ milestones, render, issueLog, pmId, status }) => {
 
                   <div className="w-[70%]">
                     <MilestoneQuill
-                      value={milestone.content}
+                      value={milestone.content || " "}
                       onChange={(value) => handleQuillChange(value, index)}
                     />
                   </div>

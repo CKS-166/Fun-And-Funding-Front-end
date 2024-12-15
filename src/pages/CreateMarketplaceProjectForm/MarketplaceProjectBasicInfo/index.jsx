@@ -220,6 +220,7 @@ const MarketplaceProjectBasicInfo = () => {
                 })}
                 error={!!errors.price}
                 helperText={errors.price?.message}
+                onWheel={(e) => e.target.blur()}
               />
             </Grid2>
           </Grid2>

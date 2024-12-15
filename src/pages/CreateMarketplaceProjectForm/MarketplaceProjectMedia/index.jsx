@@ -30,6 +30,7 @@ const MarketplaceProjectMedia = () => {
     useCreateMarketplaceProject();
   const { id } = useParams();
   const navigate = useNavigate();
+  const [next, setNext] = useState(false);
 
   // Initialize state from context for persistent files
   const [thumbnail, setThumbnail] = useState(
@@ -58,7 +59,7 @@ const MarketplaceProjectMedia = () => {
 
     if (thumbnail.length > 0) {
       marketplaceFiles.push({
-        name: thumbnail[0].file.name,
+        name: thumbnail[0].file?.name,
         url: thumbnail[0].file || thumbnail[0].source, // Use source if previously uploaded
         filetype: 2,
       });
@@ -66,7 +67,7 @@ const MarketplaceProjectMedia = () => {
 
     if (projectVideo.length > 0) {
       marketplaceFiles.push({
-        name: projectVideo[0].file.name,
+        name: projectVideo[0].file?.name,
         url: projectVideo[0].file || projectVideo[0].source,
         filetype: 1,
       });
@@ -75,7 +76,7 @@ const MarketplaceProjectMedia = () => {
     if (projectImages.length > 0) {
       projectImages.forEach((image, index) => {
         marketplaceFiles.push({
-          name: image.file.name,
+          name: image.file?.name,
           url: image.file || image.source,
           filetype: 4,
         });
@@ -86,6 +87,14 @@ const MarketplaceProjectMedia = () => {
       ...prev,
       marketplaceFiles,
     }));
+
+    if (
+      thumbnail.length > 0 &&
+      projectVideo.length > 0 &&
+      projectImages.length > 0
+    ) {
+      setNext(true);
+    }
   }, [thumbnail, projectVideo, projectImages, setMarketplaceProject]);
 
   console.log(marketplaceProject.marketplaceFiles);
@@ -185,6 +194,7 @@ const MarketplaceProjectMedia = () => {
           />
           <NavigateButton
             text="Next"
+            disabled={!next}
             onClick={() =>
               navigate(`/request-marketplace-project/${id}/bank-account`)
             }

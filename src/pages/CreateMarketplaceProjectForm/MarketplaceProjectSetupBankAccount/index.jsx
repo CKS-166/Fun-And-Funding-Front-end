@@ -45,14 +45,14 @@ const MarketplaceProjectSetupBankAccount = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const [selectedBank, setSelectedBank] = useState(
-    marketplaceProject?.bankAccount?.bankCode || null
-  );
+  const [selectedBank, setSelectedBank] = useState(null);
   const [bankList, setBankList] = useState([]);
   const [bankAccountNumber, setBankaccountNumber] = useState(
     marketplaceProject?.bankAccount?.bankNumber || ""
   );
-  const [ownerName, setOwnerName] = useState("");
+  const [ownerName, setOwnerName] = useState(
+    marketplaceProject?.bankAccount?.ownerName || ""
+  );
   useEffect(() => {}, [selectedBank, bankAccountNumber]);
 
   useEffect(() => {
@@ -61,8 +61,28 @@ const MarketplaceProjectSetupBankAccount = () => {
       .get("https://api.httzip.com/api/bank/list")
       .then((res) => {
         setBankList(res.data.data);
+        checkInitialBankAccount();
       });
   }, []);
+
+  const checkInitialBankAccount = async () => {
+    try {
+      const response = await axios.get("https://api.httzip.com/api/bank/list");
+      if (response.data.code === 200) {
+        const bankList = response.data.data;
+        const bankCode = marketplaceProject?.bankAccount?.bankCode;
+        const foundBank = bankList.find((record) => record.code === bankCode);
+        console.log(foundBank);
+        if (foundBank) {
+          setSelectedBank(foundBank);
+        }
+      } else {
+        console.error("Error fetching bank list:", response.data.message);
+      }
+    } catch (error) {
+      console.error("Error during initial bank account check:", error.message);
+    }
+  };
 
   const checkBankAccount = async () => {
     axios
@@ -91,6 +111,7 @@ const MarketplaceProjectSetupBankAccount = () => {
       bankAccount: {
         bankCode: selectedBank?.code,
         bankNumber: bankAccountNumber,
+        ownerName: ownerName,
       },
     }));
     console.log(selectedBank, bankAccountNumber, ownerName);
@@ -98,6 +119,7 @@ const MarketplaceProjectSetupBankAccount = () => {
   };
 
   console.log(marketplaceProject);
+  console.log(selectedBank);
 
   return (
     <>

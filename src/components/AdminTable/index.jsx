@@ -174,7 +174,9 @@ export default function CustomPaginationActionsTable({
                 </TableCell>
               ))}
               <TableCell>
-                <Button onClick={() => handleRowClick(row.Id)}>ACTION</Button>
+                {row.STATUS !== "Approved" && row.STATUS !== "Rejected" && (
+                  <Button onClick={() => handleRowClick(row.Id)}>ACTION</Button>
+                )}
               </TableCell>
             </TableRow>
           ))}

@@ -103,87 +103,90 @@ export default function CouponsTable({
   const filteredColumns = columns.filter((col) => col !== "Id");
 
   return (
-    <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 500 }} aria-label="custom pagination table">
-        <TableHead>
-          <TableRow>
-            <TableCell
-              sx={{
-                backgroundColor: "#1BAA64",
-                color: "#ffffff",
-                fontWeight: "bold",
-                fontSize: "0.85rem",
-              }}
-            >
-              No
-            </TableCell>
-            {filteredColumns.map((column) => (
+    <div className="p-12">
+      <TableContainer component={Paper}>
+        <Table sx={{ minWidth: 500 }} aria-label="custom pagination table">
+          <TableHead>
+            <TableRow>
               <TableCell
-                key={column}
                 sx={{
-                  backgroundColor: "#1BAA64",
-                  color: "#ffffff",
+                  backgroundColor: "#e5e7eb",
+                  color: "black",
                   fontWeight: "bold",
-                  fontSize: "0.85rem",
+                  fontSize: "0.75rem",
                 }}
               >
-                {column}
-              </TableCell>
-            ))}
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {data.map((row, rowIndex) => (
-            <TableRow
-              key={row.Id || rowIndex}
-              sx={{
-                backgroundColor: rowIndex % 2 === 1 ? "#f9f9f9" : "white",
-              }}
-            >
-              <TableCell component="th" scope="row">
-                {currentPage * pageSize + rowIndex + 1}
+                No
               </TableCell>
               {filteredColumns.map((column) => (
                 <TableCell
                   key={column}
-                  component="th"
-                  scope="row"
                   sx={{
-                    color:
-                      column === "Status" && row[column] === "Rejected"
-                        ? "red"
-                        : column === "Status" && row[column] === "InActive"
-                        ? "blue"
-                        : column === "Status" && row[column] === "Active"
-                        ? "green"
-                        : "inherit",
-                    fontWeight: column === "Status" ? "bold" : "normal",
+                    backgroundColor: "#e5e7eb",
+                    color: "black",
+                    fontWeight: "bold",
+                    fontSize: "0.75rem",
+                    textTransform: "uppercase",
                   }}
                 >
-                  {String(row[column])}
+                  {column}
                 </TableCell>
               ))}
             </TableRow>
-          ))}
-        </TableBody>
+          </TableHead>
+          <TableBody>
+            {data.map((row, rowIndex) => (
+              <TableRow
+                key={row.Id || rowIndex}
+                sx={{
+                  backgroundColor: rowIndex % 2 === 1 ? "#f9f9f9" : "white",
+                }}
+              >
+                <TableCell component="th" scope="row">
+                  {currentPage * pageSize + rowIndex + 1}
+                </TableCell>
+                {filteredColumns.map((column) => (
+                  <TableCell
+                    key={column}
+                    component="th"
+                    scope="row"
+                    sx={{
+                      color:
+                        column === "Status" && row[column] === "Disable"
+                          ? "red"
+                          : column === "Status" && row[column] === "InActive"
+                          ? "blue"
+                          : column === "Status" && row[column] === "Enabled"
+                          ? "green"
+                          : "inherit",
+                      fontWeight: column === "Status" ? "bold" : "normal",
+                    }}
+                  >
+                    {String(row[column])}
+                  </TableCell>
+                ))}
+              </TableRow>
+            ))}
+          </TableBody>
 
-        <TableFooter>
-          <TableRow>
-            <TablePagination
-              colSpan={columns.length}
-              count={totalItems}
-              rowsPerPage={pageSize}
-              page={currentPage}
-              onPageChange={(event, newPage) => onPageChange(newPage)}
-              onRowsPerPageChange={(event) =>
-                onPageSizeChange(parseInt(event.target.value, 10))
-              }
-              ActionsComponent={TablePaginationActions}
-            />
-          </TableRow>
-        </TableFooter>
-      </Table>
-    </TableContainer>
+          <TableFooter>
+            <TableRow>
+              <TablePagination
+                colSpan={columns.length}
+                count={totalItems}
+                rowsPerPage={pageSize}
+                page={currentPage}
+                onPageChange={(event, newPage) => onPageChange(newPage)}
+                onRowsPerPageChange={(event) =>
+                  onPageSizeChange(parseInt(event.target.value, 10))
+                }
+                ActionsComponent={TablePaginationActions}
+              />
+            </TableRow>
+          </TableFooter>
+        </Table>
+      </TableContainer>
+    </div>
   );
 }
 

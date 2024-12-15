@@ -12,6 +12,7 @@ import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 import FormatListNumberedIcon from "@mui/icons-material/FormatListNumbered";
 import SelectWithIcon from "../../components/SelectionCommision";
 import { useLoading } from "../../contexts/LoadingContext";
+import Cookies from "js-cookie";
 
 const notify = (message, type) => {
   const options = {
@@ -185,10 +186,16 @@ function CommissionFee() {
   const handleUpdateSubmit = async (e) => {
     e.preventDefault(); // Prevent default form submission
     try {
+      const token = Cookies.get("_auth");
       const response = await commissionApiInstance.put(
         `/${selectId}`,
         { rate }, // Send as an object
-        { headers: { "Content-Type": "application/json" } }
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
       );
       console.log(selectId, rate);
       if (response.data._isSuccess) {
@@ -206,7 +213,12 @@ function CommissionFee() {
   const handleSubmit = async () => {
     console.log("submit", commision);
     try {
-      const response = await commissionApiInstance.post("", commision);
+      const token = Cookies.get("_auth");
+      const response = await commissionApiInstance.post("", commision, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       if (response.data._isSuccess) {
         console.log(response.data._data);
         notify("Commision fee created successfully", "success");

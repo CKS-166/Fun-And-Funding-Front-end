@@ -3,10 +3,12 @@ import Cookies from "js-cookie";
 import React, { useEffect, useState } from 'react';
 import { IoChatbubbleEllipsesOutline } from "react-icons/io5";
 import { RiUserUnfollowLine } from "react-icons/ri";
+import { useOutletContext } from 'react-router';
 import followApiInstace from '../../../utils/ApiInstance/followApiInstance';
 import userApiInstance from "../../../utils/ApiInstance/userApiInstance";
 
 function AccountFollowing({ user, fetchFollowingUserList }) {
+    const { notify } = useOutletContext();
     const token = Cookies.get("_auth");
     const [role, setRole] = useState("");
 
@@ -34,9 +36,13 @@ function AccountFollowing({ user, fetchFollowingUserList }) {
             });
             if (response.data._statusCode == 200) {
                 fetchFollowingUserList();
+                notify("Removed successfully", "success");
             }
         } catch (error) {
-            console.log(error);
+            notify(
+                error.response?.data?.message || error.message || "An error occurred",
+                "error"
+            );
         }
     }
 

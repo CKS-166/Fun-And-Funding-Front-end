@@ -187,12 +187,8 @@ const FunFundingAppBar = () => {
     } else {
       navigate(route);
     }
-    handleCloseProfileMenu();
   };
 
-  const handleCloseProfileMenu = () => {
-    setAnchorElProfile(null);
-  };
   const signOut = useSignOut();
 
   const handleCartOpen = () => {
@@ -338,6 +334,7 @@ const FunFundingAppBar = () => {
                     "& .MuiBadge-badge": {
                       backgroundColor: "#1BAA64 !important",
                     },
+                    display: role === "GameOwner" ? 'none' : "block"
                   }}
                 >
                   <ShoppingCartIcon

@@ -125,7 +125,7 @@ const ProjectMilestoneModal = ({ pmData, openModal, setOpenModal }) => {
     };
 
     handleCheckQualification()
-  }, [pmData, userId])
+  }, [pmData, userId, setOpenModal])
 
 
   const milestones = [
@@ -217,11 +217,11 @@ const ProjectMilestoneModal = ({ pmData, openModal, setOpenModal }) => {
 
 
                   <div className="relative overflow-x-auto sm:rounded-lg mt-[1rem] shadow-md">
-                    <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                      <caption className="p-5 text-lg font-semibold text-left rtl:text-right text-gray-900 bg-white dark:text-white dark:bg-gray-800">
+                    <table className="w-full text-sm text-left rtl:text-right text-gray-500">
+                      <caption className="p-5 text-lg font-semibold text-left rtl:text-right text-gray-900 bg-white">
                         Milestone request
                       </caption>
-                      <thead className="text-xs text-gray-700 uppercase dark:text-gray-400">
+                      <thead className="text-xs text-gray-700 uppercase">
                         <tr>
                           <th scope="col" className="px-6 py-3 bg-gray-50">
                             Information
@@ -232,26 +232,26 @@ const ProjectMilestoneModal = ({ pmData, openModal, setOpenModal }) => {
                         </tr>
                       </thead>
                       <tbody>
-                        <tr className="border-b border-gray-200 dark:border-gray-700">
-                          <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 dark:text-white">
+                        <tr className="border-b border-gray-200">
+                          <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50">
                             (1) {pmData?.milestone.milestoneName} disbursement percentage
                           </th>
                           <td className="px-6 py-4">
                             {pmData?.milestone.disbursementPercentage * 100}%
                           </td>
                         </tr>
-                        <tr className="border-b border-gray-200 dark:border-gray-700">
-                          <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 dark:text-white">
+                        <tr className="border-b border-gray-200">
+                          <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50">
                             (2) Total fund
                           </th>
                           <td className="px-6 py-4">
                             {pmData?.fundingProject.balance.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")} đ
                           </td>
                         </tr>
-                        <tr class="border-b border-gray-200 dark:border-gray-700">
+                        <tr class="border-b border-gray-200">
                           <th
                             scope="row"
-                            class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 dark:text-white"
+                            class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50"
                           >
                             (3) Actual received amount (100% - <span className="font-semibold"><u>{commissionFee * 100}%</u></span>){' '}
                             <HtmlTooltip
@@ -270,8 +270,8 @@ const ProjectMilestoneModal = ({ pmData, openModal, setOpenModal }) => {
                             {(1 - commissionFee) * 100}%
                           </td>
                         </tr>
-                        <tr className="border-b border-gray-200 dark:border-gray-700">
-                          <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 dark:text-white flex items-center gap-2">
+                        <tr className="border-b border-gray-200">
+                          <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 flex items-center gap-2">
                             Milestone requested amount = (1) x (2) x (3) x <u>50%</u>
                             <HtmlTooltip
                               title={
@@ -359,7 +359,7 @@ const ProjectMilestoneModal = ({ pmData, openModal, setOpenModal }) => {
 
               {/* Modal Footer
               <div className="absolute bottom-0 w-[100%]">
-                <div className="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
+                <div className="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b">
                   {pmData ? renderStatusButton(pmData, handleProcess, handleApprove, handleWarn, handleFail) : ''}
                 </div>
               </div> */}
@@ -404,7 +404,7 @@ const ProjectMilestoneModal = ({ pmData, openModal, setOpenModal }) => {
                   (
                     <div>
                       {isQualified && (
-                        <ProjectMilestoneReviewForm pmId={pmData.id} />
+                        <ProjectMilestoneReviewForm pmId={pmData.id} setOpenModal={setOpenModal} />
                       )}
                       <ProjectMilestoneReviewList pmId={pmData.id} />
                     </div>

@@ -5,7 +5,8 @@ import { useProjectMilestoneApi } from "../../../utils/Hooks/ProjectMilestone";
 import ProjectMilestoneModal from "./ProjectMilestoneModal";
 
 const AdminMilestone = () => {
-  const { data, error } = useProjectMilestoneApi();
+  const [triggerReload, setTriggerReload] = useState(false)
+  const { data, error } = useProjectMilestoneApi("", "GET", null, triggerReload);
 
   const [openModal, setOpenModal] = useState(false);
   const [selectedMilestone, setSelectedMilestone] = useState(null);
@@ -43,7 +44,6 @@ const AdminMilestone = () => {
               <div className="flex items-center space-x-3 w-full md:w-auto">
                 <button
                   id="filterDropdownButton"
-                  data-dropdown-toggle="filterDropdown"
                   className="w-full md:w-auto flex items-center justify-center py-2 px-4 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200"
                   type="button"
                 >
@@ -260,6 +260,8 @@ const AdminMilestone = () => {
         openModal={openModal}
         setOpenModal={setOpenModal}
         pmData={selectedMilestone}
+        setTriggerReload={setTriggerReload}
+        triggerReload={triggerReload}
       />
     </>
   );

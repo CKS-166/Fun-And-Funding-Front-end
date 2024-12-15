@@ -100,7 +100,7 @@ function App() {
       >
         <CircularProgress color="inherit" />
       </Backdrop>
-      <ToastContainer />
+      {/* <ToastContainer /> */}
       <CartProvider>
         <ChatProvider>
           {!hideAppBar && <FunFundingAppBar />}

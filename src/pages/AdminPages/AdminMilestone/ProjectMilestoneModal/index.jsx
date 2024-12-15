@@ -26,7 +26,28 @@ import commissionApiInstance from "../../../../utils/ApiInstance/commisionApiIns
 import milestoneApiInstace from "../../../../utils/ApiInstance/milestoneApiInstance";
 
 
-const ProjectMilestoneModal = ({ pmData, openModal, setOpenModal }) => {
+const notify = (message, type) => {
+  const options = {
+    position: "top-right",
+    autoClose: 3000,
+    closeOnClick: true,
+    style: {
+      backgroundColor: "#ffffff",
+      color: "#2F3645",
+      fontWeight: "600",
+    },
+  };
+
+  if (type === "warn") {
+    toast.warn(message, options);
+  } else if (type === "success") {
+    toast.success(message, options);
+  } else if (type === "error") {
+    toast.error(message, options);
+  }
+};
+
+const ProjectMilestoneModal = ({ pmData, openModal, setOpenModal, setTriggerReload, triggerReload }) => {
   const handleClose = () => {
     setOpenModal(false);
   };
@@ -112,7 +133,8 @@ const ProjectMilestoneModal = ({ pmData, openModal, setOpenModal }) => {
         ProjectMilestoneId: pmData?.id,
         Status: 2,
       });
-      toast.success("Milestone approved!");
+      if (response.data._isSuccess)
+        toast.success("Milestone approved!");
     } catch (error) {
       console.error("Error approving milestone:", error);
     } finally {
@@ -142,10 +164,13 @@ const ProjectMilestoneModal = ({ pmData, openModal, setOpenModal }) => {
         ProjectMilestoneId: pmData?.id,
         Status: 1,
       });
-      toast.success("Milestone is now available for processing!");
+      if (response.status == 200)
+        notify(response.data._data, "success");
     } catch (error) {
+      toast.warn(error.response.data.message);
       console.error("Error processing milestone:", error);
     } finally {
+      setTriggerReload(!triggerReload)
       handleClose();
     }
   };
@@ -331,7 +356,7 @@ const ProjectMilestoneModal = ({ pmData, openModal, setOpenModal }) => {
                 </button>
               </div>
 
-              <div class="p-4 md:p-5 h-[35rem] overflow-y-auto">
+              <div class="p-4 md:p-5 h-[35rem] overflow-y-auto scrollbar-hidden">
                 <Stepper
                   activeStep={pmData?.latestMilestone.milestoneOrder - 1}
                   alternativeLabel
@@ -343,12 +368,15 @@ const ProjectMilestoneModal = ({ pmData, openModal, setOpenModal }) => {
                           "& .MuiStepIcon-root.Mui-active": {
                             color: 'var(--primary-green) !important',
                           },
+                          "& .MuiStepLabel-label.Mui-active": {
+                            color: 'var(--primary-green) !important',
+                          },
                           '& .MuiStepIcon-root.Mui-completed': {
                             color: "var(--primary-green) !important",
                           },
                         }}
                       >
-                        <span className={`${(milestone.milestoneOrder == pmData?.milestone.milestoneOrder) ? 'bg-primary-green/80 text-white py-0.5 px-1 rounded' : ''}`}>
+                        <span className={`${(milestone.milestoneOrder == pmData?.milestone.milestoneOrder) ? 'bg-primary-green text-white py-0.5 px-1 rounded' : ''}`}>
                           {milestone.milestoneName}
 
                         </span>
@@ -407,11 +435,11 @@ const ProjectMilestoneModal = ({ pmData, openModal, setOpenModal }) => {
                         </div>
 
                         <div class="relative overflow-x-auto sm:rounded-md mt-[1rem] shadow">
-                          <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                            <caption class="p-5 text-lg font-semibold text-left rtl:text-right text-gray-900 bg-white dark:text-white dark:bg-gray-800">
+                          <table class="w-full text-sm text-left rtl:text-right text-gray-500">
+                            <caption class="p-5 text-lg font-semibold text-left rtl:text-right text-gray-900 bg-white">
                               Milestone request
                             </caption>
-                            <thead class="text-xs text-gray-700 uppercase dark:text-gray-400">
+                            <thead class="text-xs text-gray-700 uppercase">
                               <tr>
                                 <th scope="col" class="px-6 py-3 bg-gray-50">
                                   Information
@@ -422,10 +450,10 @@ const ProjectMilestoneModal = ({ pmData, openModal, setOpenModal }) => {
                               </tr>
                             </thead>
                             <tbody>
-                              <tr class="border-b border-gray-200 dark:border-gray-700">
+                              <tr class="border-b border-gray-200">
                                 <th
                                   scope="row"
-                                  class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 dark:text-white"
+                                  class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50"
                                 >
                                   (1) {pmData?.milestone.milestoneName} disbursement percentage
                                 </th>
@@ -433,10 +461,10 @@ const ProjectMilestoneModal = ({ pmData, openModal, setOpenModal }) => {
                                   {pmData?.milestone.disbursementPercentage * 100}%
                                 </td>
                               </tr>
-                              <tr class="border-b border-gray-200 dark:border-gray-700">
+                              <tr class="border-b border-gray-200">
                                 <th
                                   scope="row"
-                                  class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 dark:text-white"
+                                  class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50"
                                 >
                                   (2) Total fund
                                 </th>
@@ -447,10 +475,10 @@ const ProjectMilestoneModal = ({ pmData, openModal, setOpenModal }) => {
                                   đ
                                 </td>
                               </tr>
-                              <tr class="border-b border-gray-200 dark:border-gray-700">
+                              <tr class="border-b border-gray-200">
                                 <th
                                   scope="row"
-                                  class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 dark:text-white"
+                                  class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50"
                                 >
                                   (3) Actual received amount (100% - <span className="font-semibold"><u>{commissionFee * 100}%</u></span>){' '}
                                   <HtmlTooltip
@@ -469,7 +497,7 @@ const ProjectMilestoneModal = ({ pmData, openModal, setOpenModal }) => {
                                   {(1 - commissionFee) * 100}%
                                 </td>
                               </tr>
-                              <tr class="border-b border-gray-200 dark:border-gray-700">
+                              <tr class="border-b border-gray-200">
                                 <th
                                   scope="row"
                                   class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 flex items-center gap-2"
@@ -544,9 +572,9 @@ const ProjectMilestoneModal = ({ pmData, openModal, setOpenModal }) => {
                         </div> */}
                           <div div class="relative overflow-x-auto rounded overflow-hidden">
                             <table class="w-full text-sm text-left rtl:text-right text-gray-500">
-                              <caption class="px-5 py-3 text-lg font-semibold text-left rtl:text-right text-gray-900 bg-white dark:text-white">
+                              <caption class="px-5 py-3 text-lg font-semibold text-left rtl:text-right text-gray-900 bg-white">
                                 {/* Project milestone requirement */}
-                                <p class="mt-1 text-sm font-normal text-gray-500 dark:text-gray-400">
+                                <p class="mt-1 text-sm font-normal text-gray-500">
                                   At each milestone, game owners must fulfill the
                                   corresponding requirements before they can withdraw
                                   the funds raised.
@@ -625,7 +653,7 @@ const ProjectMilestoneModal = ({ pmData, openModal, setOpenModal }) => {
                 }
               </div>
               <div className="w-[100%] bg-gray-200 rounded-b">
-                <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600 font-semibold">
+                <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b font-semibold">
                   {pmData
                     ? renderStatusButton(
                       pmData,

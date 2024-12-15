@@ -49,14 +49,14 @@ function MarketplaceProjectMediaFiles() {
       let videoData =
         videoFile.length > 0
           ? videoFile.map((file) => ({
-              id: file.id,
-              url: file.url,
-              name: file.name,
-              isDeleted: file.isDeleted,
-              fileType: file.fileType,
-              version: file.version || "",
-              description: file.description || "",
-            }))
+            id: file.id,
+            url: file.url,
+            name: file.name,
+            isDeleted: file.isDeleted,
+            fileType: file.fileType,
+            version: file.version || "",
+            description: file.description || "",
+          }))
           : [];
       setProjectVideo(videoData);
 
@@ -65,14 +65,14 @@ function MarketplaceProjectMediaFiles() {
       let thumbnailData =
         thumbnailFile.length > 0
           ? thumbnailFile.map((file) => ({
-              id: file.id,
-              url: file.url,
-              name: file.name,
-              isDeleted: file.isDeleted,
-              fileType: file.fileType,
-              version: file.version || "",
-              description: file.description || "",
-            }))
+            id: file.id,
+            url: file.url,
+            name: file.name,
+            isDeleted: file.isDeleted,
+            fileType: file.fileType,
+            version: file.version || "",
+            description: file.description || "",
+          }))
           : [];
       setThumbnail(thumbnailData);
 
@@ -80,14 +80,14 @@ function MarketplaceProjectMediaFiles() {
       let imageData =
         imageFiles.length > 0
           ? imageFiles.map((file) => ({
-              id: file.id,
-              url: file.url,
-              name: file.name,
-              isDeleted: file.isDeleted,
-              fileType: file.fileType,
-              version: file.version || "",
-              description: file.description || "",
-            }))
+            id: file.id,
+            url: file.url,
+            name: file.name,
+            isDeleted: file.isDeleted,
+            fileType: file.fileType,
+            version: file.version || "",
+            description: file.description || "",
+          }))
           : [];
       setProjectImages(imageData);
     }
@@ -339,8 +339,8 @@ function MarketplaceProjectMediaFiles() {
           Provide a sharp, dynamic image for your project thumbnail.
         </Typography>
         {thumbnail &&
-        thumbnail.length > 0 &&
-        thumbnail.some((item) => !item.isDeleted) ? (
+          thumbnail.length > 0 &&
+          thumbnail.some((item) => !item.isDeleted) ? (
           thumbnail
             .filter((item) => !item.isDeleted)
             .map((item) => (
@@ -371,7 +371,7 @@ function MarketplaceProjectMediaFiles() {
               </div>
             ))
         ) : (
-          <label className="flex flex-col items-center justify-center w-[70%] h-[18rem] border-2 border-[#2F3645] border-dashed rounded-lg cursor-pointer bg-[#EAEAEA] dark:hover:border-[#92979F] dark:hover:bg-[#F0F1F2]">
+          <label className="flex flex-col items-center justify-center w-[70%] h-[18rem] border-2 border-[#2F3645] border-dashed rounded-lg cursor-pointer bg-[#EAEAEA]">
             <div className="flex flex-col items-center justify-center pt-5 pb-6">
               <svg
                 className="w-[5rem] h-[5rem] mb-4 text-gray-500"
@@ -440,8 +440,8 @@ function MarketplaceProjectMediaFiles() {
           Provide a 1-3 minute video introducing your project.
         </Typography>
         {projectVideo &&
-        projectVideo.length > 0 &&
-        projectVideo.some((item) => !item.isDeleted) ? (
+          projectVideo.length > 0 &&
+          projectVideo.some((item) => !item.isDeleted) ? (
           projectVideo
             .filter((video) => !video.isDeleted)
             .map((video, index) => (
@@ -463,7 +463,7 @@ function MarketplaceProjectMediaFiles() {
               </div>
             ))
         ) : (
-          <label className="flex flex-col items-center justify-center w-[70%] h-[18rem] border-2 border-[#2F3645] border-dashed rounded-lg cursor-pointer bg-[#EAEAEA] dark:hover:border-[#92979F] dark:hover:bg-[#F0F1F2]">
+          <label className="flex flex-col items-center justify-center w-[70%] h-[18rem] border-2 border-[#2F3645] border-dashed rounded-lg cursor-pointer bg-[#EAEAEA]">
             <div className="flex flex-col items-center justify-center pt-5 pb-6">
               <svg
                 className="w-[5rem] h-[5rem] mb-4 text-gray-500"
@@ -532,8 +532,8 @@ function MarketplaceProjectMediaFiles() {
           Provide images that showcase different aspects of your project.
         </Typography>
         {projectImages &&
-        projectImages.length > 0 &&
-        projectImages.some((item) => !item.isDeleted) ? (
+          projectImages.length > 0 &&
+          projectImages.some((item) => !item.isDeleted) ? (
           <ImageList
             sx={{
               width: "70%",
@@ -570,7 +570,7 @@ function MarketplaceProjectMediaFiles() {
               ))}
           </ImageList>
         ) : (
-          <label className="flex flex-col items-center justify-center w-[70%] h-[18rem] border-2 border-[#2F3645] border-dashed rounded-lg cursor-pointer bg-[#EAEAEA] dark:hover:border-[#92979F] dark:hover:bg-[#F0F1F2]">
+          <label className="flex flex-col items-center justify-center w-[70%] h-[18rem] border-2 border-[#2F3645] border-dashed rounded-lg cursor-pointer bg-[#EAEAEA]">
             <div className="flex flex-col items-center justify-center pt-5 pb-6">
               <svg
                 className="w-[5rem] h-[5rem] mb-4 text-gray-500"
@@ -609,16 +609,16 @@ function MarketplaceProjectMediaFiles() {
               typeof projectImages.filter((item) => !item.isDeleted)[photoIndex]
                 .url === "string"
                 ? projectImages.filter((item) => !item.isDeleted)[photoIndex]
-                    .url
+                  .url
                 : URL.createObjectURL(
-                    projectImages.filter((item) => !item.isDeleted)[photoIndex]
-                      .url
-                  )
+                  projectImages.filter((item) => !item.isDeleted)[photoIndex]
+                    .url
+                )
             }
             nextSrc={
               projectImages.filter((item) => !item.isDeleted)[
                 (photoIndex + 1) %
-                  projectImages.filter((item) => !item.isDeleted).length
+                projectImages.filter((item) => !item.isDeleted).length
               ].url
             }
             prevSrc={
@@ -626,7 +626,7 @@ function MarketplaceProjectMediaFiles() {
                 (photoIndex +
                   projectImages.filter((item) => !item.isDeleted).length -
                   1) %
-                  projectImages.filter((item) => !item.isDeleted).length
+                projectImages.filter((item) => !item.isDeleted).length
               ].url
             }
             onCloseRequest={() => setIsImageOpen(false)}
@@ -635,13 +635,13 @@ function MarketplaceProjectMediaFiles() {
                 (photoIndex +
                   projectImages.filter((item) => !item.isDeleted).length -
                   1) %
-                  projectImages.filter((item) => !item.isDeleted).length
+                projectImages.filter((item) => !item.isDeleted).length
               )
             }
             onMoveNextRequest={() =>
               setPhotoIndex(
                 (photoIndex + 1) %
-                  projectImages.filter((item) => !item.isDeleted).length
+                projectImages.filter((item) => !item.isDeleted).length
               )
             }
             toolbarButtons={[

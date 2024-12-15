@@ -1,7 +1,9 @@
 import { Modal } from "@mui/material"
-import { useState,useEffect } from "react"
+import { useState, useEffect } from "react"
 import { jwtDecode } from "jwt-decode";
 import Cookies from "js-cookie";
+import withdrawRequestApiInstance from "../../../utils/ApiInstance/withdrawRequestApiInstance";
+import { toast, ToastContainer } from "react-toastify";
 
 const WalletModal = ({ openModal, modalAddMoney, handleCloseModal, walletId }) => {
 
@@ -21,12 +23,26 @@ const WalletModal = ({ openModal, modalAddMoney, handleCloseModal, walletId }) =
     window.location.href = `https://localhost:7044/api/payos/create-payment-link?${queryString}`
   }
 
-  const hanldleRequestWithdrawMoney = () => {
-    alert("withdraw")
+  const hanldleRequestWithdrawMoney = async () => {
+    try {
+      const response = await withdrawRequestApiInstance.post(`/wallet-request?amount=${amount}`);
+      console.log(response)
+      if (response.data._statusCode == 200)
+        toast.success(response.data._message[0])
+      else
+        toast.warn(response.data._message[0])
+
+      handleCloseModal()
+    }
+    catch (error) {
+      console.log(error)
+      toast.warn(error.message)
+    }
   }
 
   return (
     <>
+      <ToastContainer />
       <Modal
         open={openModal}
         onClose={handleCloseModal}

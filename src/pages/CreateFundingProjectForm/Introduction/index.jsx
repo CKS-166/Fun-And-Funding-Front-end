@@ -10,12 +10,12 @@ const Introduction = () => {
   const { setFormIndex, setProjectData, projectData } = useOutletContext()
   const navigate = useNavigate()
 
-  const [introductionData, setIntroductionData] = useState(projectData.description || '')
+  const [introductionData, setIntroductionData] = useState(projectData.introduction || '')
 
   useEffect(() => {
     setProjectData((prev) => ({
       ...prev,
-      'description': introductionData
+      'introduction': introductionData
     }))
 
     const handleBeforeUnload = (event) => {

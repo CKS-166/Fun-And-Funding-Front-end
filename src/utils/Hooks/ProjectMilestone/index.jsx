@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import projectMilestoneApiInstace from "../../ApiInstance/projectMilestoneApiInstance";
 import { useLoading } from "../../../contexts/LoadingContext";
 
-export const useProjectMilestoneApi = (endpoint, method = "GET", body = null) => {
+export const useProjectMilestoneApi = (endpoint, method = "GET", body = null, triggerReload) => {
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
 
@@ -27,7 +27,7 @@ export const useProjectMilestoneApi = (endpoint, method = "GET", body = null) =>
     };
 
     fetchData();
-  }, [endpoint, method, body]);
+  }, [endpoint, method, body, triggerReload]);
 
   return { data, error };
 };

@@ -61,6 +61,16 @@ const UpdatesSection = () => {
 
     return (
         <>
+            {pmData && pmData.items.length == 0
+                ? (
+                    <div className='text-gray-500/90 text-2xl font-bold w-[100%] bg-gray-50 rounded-md p-5 h-[30rem] flex justify-center items-center'>
+                        <span className='text-center'>
+                            This funding project does not have any milestone withdrawals
+                        </span>
+                    </div>
+                )
+                : ('')
+            }
             <Timeline
                 sx={{
                     [`& .${timelineOppositeContentClasses.root}`]: {
@@ -101,14 +111,14 @@ const UpdatesSection = () => {
                                                     <Avatar sx={{ width: '10', height: '10' }}></Avatar>
                                                 )
                                         }
-                                        <div class="font-medium dark:text-white">
+                                        <div class="font-medium">
                                             <div className='flex gap-3 items-center'>
                                                 {userData?.userName}
                                                 <div className='text-white bg-primary-green text-sm px-3 rounded'>
                                                     Game owner
                                                 </div>
                                             </div>
-                                            <div class="text-sm text-gray-500 dark:text-gray-400">Joined in {new Date(userData?.createdDate).toDateString()}</div>
+                                            <div class="text-sm text-gray-500">Joined in {new Date(userData?.createdDate).toDateString()}</div>
                                         </div>
                                     </div>
                                     <Divider sx={{ my: '1rem' }} />

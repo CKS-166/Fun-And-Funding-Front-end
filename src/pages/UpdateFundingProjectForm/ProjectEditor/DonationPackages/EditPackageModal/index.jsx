@@ -277,7 +277,7 @@ function EditPackageModal({ open, pkg, handleClose, handleUpdatePackage, isNewPa
                                     </div>
                                 ) : (
                                     <label
-                                        className="flex flex-col items-center justify-center w-full h-[18rem] border-2 border-[#2F3645] border-dashed rounded-lg cursor-pointer bg-[#EAEAEA] dark:hover:border-[#92979F] dark:hover:bg-[#F0F1F2]"
+                                        className="flex flex-col items-center justify-center w-full h-[18rem] border-2 border-[#2F3645] border-dashed rounded-lg cursor-pointer bg-[#EAEAEA]"
                                         onClick={() => document.getElementById('fileInput').click()}
                                     >
                                         <div className="flex flex-col items-center justify-center pt-5 pb-6">

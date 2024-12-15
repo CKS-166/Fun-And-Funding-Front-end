@@ -48,14 +48,14 @@ function MarketplaceProjectContent() {
       let gameData =
         game.length > 0
           ? game.map((file) => ({
-              id: file.id,
-              name: file.name,
-              url: file.url,
-              isDeleted: file.isDeleted,
-              fileType: file.fileType,
-              version: file.version,
-              description: file.description,
-            }))
+            id: file.id,
+            name: file.name,
+            url: file.url,
+            isDeleted: file.isDeleted,
+            fileType: file.fileType,
+            version: file.version,
+            description: file.description,
+          }))
           : [];
       setGameFile(gameData);
       setVersion(gameData[0]?.version);
@@ -209,8 +209,8 @@ function MarketplaceProjectContent() {
           Provide a sharp, dynamic image for your project thumbnail.
         </Typography>
         {gameFile &&
-        gameFile.length > 0 &&
-        gameFile.some((item) => !item.isDeleted) ? (
+          gameFile.length > 0 &&
+          gameFile.some((item) => !item.isDeleted) ? (
           gameFile
             .filter((item) => !item.isDeleted)
             .map((item, index) => (
@@ -247,7 +247,7 @@ function MarketplaceProjectContent() {
               </div>
             ))
         ) : (
-          <label className="flex flex-col items-center justify-center w-[70%] h-[18rem] border-2 border-[#2F3645] border-dashed rounded-lg cursor-pointer bg-[#EAEAEA] dark:hover:border-[#92979F] dark:hover:bg-[#F0F1F2]">
+          <label className="flex flex-col items-center justify-center w-[70%] h-[18rem] border-2 border-[#2F3645] border-dashed rounded-lg cursor-pointer bg-[#EAEAEA]">
             <div className="flex flex-col items-center justify-center pt-5 pb-6">
               <svg
                 className="w-[5rem] h-[5rem] mb-4 text-gray-500"

@@ -4,12 +4,38 @@ import Cookies from "js-cookie"
 import { useProjectMilestoneBackerApi } from "../../../utils/Hooks/ProjectMilestoneBacker"
 import userApiInstace from "../../../utils/ApiInstance/userApiInstance"
 import projectMilestoneBackerApiInstance from "../../../utils/ApiInstance/projectMilestoneBackerApiInstance"
+import { toast, ToastContainer } from "react-toastify"
+import { useLoading } from "../../../contexts/LoadingContext"
 
-const ProjectMilestoneReviewForm = ({ pmId }) => {
+const notify = (message, type) => {
+  const options = {
+    position: "top-right",
+    autoClose: 3000,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    style: {
+      backgroundColor: "#ffffff",
+      color: "#2F3645",
+      fontWeight: "600",
+    },
+  };
+
+  if (type === "warn") {
+    toast.warn(message, options);
+  } else if (type === "success") {
+    toast.success(message, options);
+  } else if (type === "error") {
+    toast.error(message, options);
+  }
+};
+
+const ProjectMilestoneReviewForm = ({ pmId, setOpenModal }) => {
 
   const [star, setStar] = useState(3.5)
   const [comment, setComment] = useState('')
   const [userData, setUserData] = useState()
+  const { isLoading, setIsLoading } = useLoading()
 
   const token = Cookies.get("_auth")
   const fetchUserData = () => {
@@ -39,7 +65,7 @@ const ProjectMilestoneReviewForm = ({ pmId }) => {
     //   backerId: userData?.id,
     //   projectMilestoneId: pmId
     // });
-
+    setIsLoading(true)
     try {
       const response = await projectMilestoneBackerApiInstance.request({
         url: '/',
@@ -53,10 +79,14 @@ const ProjectMilestoneReviewForm = ({ pmId }) => {
 
         },
       });
+      if (response.status == 200) {
+        notify(response.data._message[0], "success")
+        setOpenModal(false)
+      }
     } catch (err) {
       console.log(err);
     } finally {
-      // setIsLoading(false);
+      setIsLoading(false);
     }
   }
 

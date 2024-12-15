@@ -40,6 +40,23 @@ const CategoryModal = ({ selectedCate, openModal, setOpenModal, modalAdd, setSel
     }
   };
 
+  const handleDeleteCate = async () => {
+    try {
+      const response = await categoryApiInstace.delete(`/${selectedCate.id}`);
+      toast.success("Delete successfully!");
+
+      setTimeout(() => {
+        handleCloseModal();
+        setReload(!reload)
+      }, 2000);
+      return response;
+    } catch (error) {
+      console.error('Error deleting category:', error.response ? error.response.data : error.message);
+      toast.error("Failed to delete category. Please try again.");
+
+    }
+  }
+
   const [updated, setUpdated] = useState(false)
 
   return (
@@ -97,11 +114,22 @@ const CategoryModal = ({ selectedCate, openModal, setOpenModal, modalAdd, setSel
                     className={`${updated ? 'bg-primary-green' : 'bg-gray-400'} rounded text-white py-1 px-2 font-semibold`}>
                     {modalAdd ? 'Add' : 'Update'}
                   </button>
+                  {
+                    !modalAdd &&
+                    (
+                      <button
+                        onClick={handleDeleteCate}
+                        className={`bg-red-600 rounded text-white py-1 px-2 font-semibold`}>
+                        Delete
+                      </button>
+                    )
+                  }
                   <button
                     onClick={handleCloseModal}
                     className="bg-red-600 rounded text-white py-1 px-2 font-semibold">
                     Cancel
                   </button>
+
                 </div>
               </div>
             </div>

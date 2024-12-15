@@ -34,7 +34,7 @@ const PackageModal = ({ openModal, setOpenModal, selectedPackage, addPackage, ed
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    // console.log(name, value)
+    console.log(name, value)
     setPackageData((prev) => ({
       ...prev,
       [name]: value
@@ -198,12 +198,12 @@ const PackageModal = ({ openModal, setOpenModal, selectedPackage, addPackage, ed
 
           </DialogContentText>
         </DialogContent>
-        <DialogActions>
-          <div className='w-[100%] flex items-center justify-start gap-1 px-5'>
-            <button className='text-white bg-primary-green font-normal py-1 px-2 mb-4 rounded' onClick={handleSubmit}>
+        <DialogActions className='!bg-gray-200'>
+          <div className='w-[100%] flex items-center justify-start gap-1 px-5 py-2'>
+            <button className='text-white bg-primary-green font-normal py-1 px-2 rounded' onClick={handleSubmit}>
               {selectedPackage ? 'Save changes' : 'Add package'}
             </button>
-            <button className='text-white bg-[var(--red)] font-normal py-1 px-2 mb-4 rounded' onClick={() => setOpenModal(false)}>Cancel</button>
+            <button className='text-white bg-red-800 font-normal py-1 px-2 rounded' onClick={() => setOpenModal(false)}>Cancel</button>
           </div>
         </DialogActions>
       </Dialog >

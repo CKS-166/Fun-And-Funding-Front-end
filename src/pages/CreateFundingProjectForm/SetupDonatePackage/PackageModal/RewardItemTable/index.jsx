@@ -1,7 +1,8 @@
+import { Add } from '@mui/icons-material';
 import { useState } from 'react';
 
 const RewardItemTable = ({ packageData, setPackageData }) => {
-  console.log('packageData: ' + JSON.stringify(packageData.rewardItems))
+  // console.log('packageData: ' + JSON.stringify(packageData.rewardItems))
   const [isAdding, setIsAdding] = useState(false);
   const [newRewardItem, setNewRewardItem] = useState({
     name: '',
@@ -82,14 +83,14 @@ const RewardItemTable = ({ packageData, setPackageData }) => {
         setEditRewardItem((prev) => ({
           ...prev,
           imageFile: file,
-          imageUrl : imageUrl
+          imageUrl: imageUrl
         }));
       } else if (index === -1) {
         // Update the new reward item being added
         setNewRewardItem((prev) => ({
           ...prev,
           imageFile: file,
-          imageUrl : imageUrl
+          imageUrl: imageUrl
         }));
       }
     }
@@ -185,25 +186,28 @@ const RewardItemTable = ({ packageData, setPackageData }) => {
                       className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg p-1 w-full"
                     />
                   </td>
-                  <td className="px-2 py-4 text-center">
-                    <button
-                      onClick={handleSaveEdit}
-                      className="mr-2 font-medium text-green-600 hover:underline"
-                    >
-                      Save
-                    </button>
-                    <button
-                      onClick={() => handleDeleteItem(index)}
-                      className="mr-2 font-medium text-red-600 hover:underline"
-                    >
-                      Delete
-                    </button>
-                    <button
-                      onClick={handleCancelEdit}
-                      className="font-medium text-gray-600 hover:underline"
-                    >
-                      Cancel
-                    </button>
+                  <td className="">
+                    <div className='flex items-center'>
+                      <button
+                        onClick={handleSaveEdit}
+                        className="mr-1 font-medium text-gray-100 bg-blue-800 px-2 py-1 rounded"
+                      >
+                        Save
+                      </button>
+                      <button
+                        onClick={() => handleDeleteItem(index)}
+                        className="mr-1 font-medium text-gray-100 bg-red-800 px-2 py-1 rounded"
+                      >
+                        Delete
+                      </button>
+                      <button
+                        onClick={handleCancelEdit}
+                        className="font-medium text-gray-600 hover:underline"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+
                   </td>
                 </tr>
               ) : (
@@ -243,7 +247,7 @@ const RewardItemTable = ({ packageData, setPackageData }) => {
                   <td className="px-2 py-4 text-center">
                     <button
                       onClick={() => handleEditItemClick(index)}
-                      className="font-medium text-blue-600 hover:underline"
+                      className="font-medium text-gray-100 bg-blue-800 px-3 py-1 rounded"
                     >
                       Edit
                     </button>
@@ -329,7 +333,7 @@ const RewardItemTable = ({ packageData, setPackageData }) => {
                 <td className="px-2 py-4 text-center">
                   <button
                     onClick={handleConfirmAdd}
-                    className="mr-2 font-medium text-green-600 hover:underline"
+                    className="mr-2 font-medium text-gray-100 bg-primary-green px-2 py-1 rounded"
                   >
                     Add
                   </button>
@@ -342,13 +346,15 @@ const RewardItemTable = ({ packageData, setPackageData }) => {
                 </td>
               </tr>
             ) : (
-              <tr className="bg-white border-b hover:bg-gray-50 ">
-                <td colSpan={5} className="py-4 text-center">
+              <tr className="bg-white hover:bg-gray-50 ">
+                <td colSpan={5} className="py-2 text-center">
                   <button
                     onClick={handleAddItemClick}
-                    className="px-4 py-2 font-medium text-blue-600 hover:underline"
+                    className="px-2 py-1 font-medium text-gray-100 bg-primary-green rounded"
                   >
-                    Add item
+                    <div className='flex items-center'>
+                      New Reward Item <Add />
+                    </div>
                   </button>
                 </td>
               </tr>

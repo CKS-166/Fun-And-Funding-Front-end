@@ -1,8 +1,35 @@
 import { Grid2 } from '@mui/material'
 import ProjectPlanCard from '../../../components/CreateProject/ProjectPlanCard'
 import './index.css'
+import { useEffect, useState } from 'react';
+import { useLoading } from '../../../contexts/LoadingContext';
+import commissionApiInstance from '../../../utils/ApiInstance/commisionApiInstance';
 
 const ChoosePlan = () => {
+  const [commissionFee, setCommissionFee] = useState()
+  const { isLoading, setIsLoading } = useLoading()
+
+  useEffect(() => {
+    const fetchCommissionFee = async () => {
+      setIsLoading(true);
+      try {
+        const type = 0; // funding fee
+        const response = await commissionApiInstance.get("/latest-commission-fee", {
+          params: { type },
+        });
+        setCommissionFee(response.data._data.rate);
+      } catch (err) {
+        console.error("Error fetching latest commission fee:", err);
+      }
+    };
+
+    const fetchData = async () => {
+      await fetchCommissionFee();
+      setIsLoading(false);
+    };
+
+    fetchData();
+  }, [setIsLoading]);
 
   return (
     <div className='bg-dark-green pb-[5rem] mt-[-6.4rem]'>
@@ -20,10 +47,10 @@ const ChoosePlan = () => {
               brief='Launch your campaign, secure funding, and build community'
               bullets={['Flexible funding options', 'Robust campaign customization tools', 'Dedicated campaign strategiests', 'Tailored promo packages',]}
               buttonText='Start your campaign'
-              commission='5% of funds raised'
+              commission={`${commissionFee * 100}% of funds raised`}
             />
           </Grid2>
-          <Grid2 size={4}>
+          {/* <Grid2 size={4}>
             <ProjectPlanCard
               option='2. Sell on Fun&Funding'
               title='Marketplace'
@@ -32,7 +59,7 @@ const ChoosePlan = () => {
               buttonText='Start selling'
               commission='10% of product sales'
             />
-          </Grid2>
+          </Grid2> */}
         </Grid2>
       </div>
 

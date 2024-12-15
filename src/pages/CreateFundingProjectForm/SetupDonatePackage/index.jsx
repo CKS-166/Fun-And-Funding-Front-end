@@ -40,7 +40,7 @@ const SetupDonatePackage = () => {
 
   const editPackage = (updatedPackage) => {
     const updatedPackages = projectPackages.map((pkg) =>
-      pkg.requiredAmount === updatedPackage.requiredAmount ? updatedPackage : pkg
+      pkg === selectedPackage ? updatedPackage : pkg
     );
     setProjectPackages(updatedPackages);
     setOpenModal(false);
@@ -116,7 +116,13 @@ const SetupDonatePackage = () => {
           'Authorization': `Bearer ${token}`
         },
       });
-      console.log(response.data);
+      Swal.fire({
+        title: `Your funding project request has been sent!`,
+        text: "The waiting process can take 2-5 days. Thank you for your patience.Please check your email for more details.",
+        icon: "success"
+      });
+      navigate("/account/projects")
+
     } catch (error) {
       Swal.fire({
         title: "Error",
@@ -125,15 +131,9 @@ const SetupDonatePackage = () => {
       });
       console.error('Error creating project:', error);
     } finally {
-      Swal.fire({
-        title: `Your funding project request has been sent!`,
-        text: "The waiting process can take 2-5 days. Thank you for your patience.Please check your email for more details.",
-        icon: "success"
-      });
+
       setIsLoading(false);
-      navigate("/account/projects")
     }
-    console.log(projectData);
   }
 
   return (
@@ -163,8 +163,8 @@ const SetupDonatePackage = () => {
             projectPackages.length > 0
               ? (
                 <div class="relative overflow-x-auto table-fixed mb-10">
-                  <table class="w-full text-sm text-left rtl:text-right text-gray-600 dark:text-gray-600">
-                    <thead class="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
+                  <table class="w-full text-sm text-left rtl:text-right text-gray-600">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-100">
                       <tr>
                         <th scope="col" class="px-6 py-3">
                           Image
@@ -198,7 +198,7 @@ const SetupDonatePackage = () => {
                             <td className="px-6 py-4">{pkg.requiredAmount} đ</td>
                             <td className="px-6 py-4">{pkg.rewardItems.length} item{pkg.rewardItems.length > 1 ? 's' : ''}</td>
                             <td className="px-1 py-4 text-center">
-                              <a href="#" className="font-medium text-blue-600 hover:underline"
+                              <a href="#" className="font-medium text-gray-100 bg-blue-800 px-3 py-1 rounded"
                                 onClick={() => handleOpenEditPackage(pkg)}
                               >
                                 Edit

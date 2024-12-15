@@ -73,7 +73,7 @@ const FunFundingAppBar = () => {
     },
     {
       label: "Orders",
-      route: "/account/wallet",
+      route: "/account/orders",
       icon: <FaClipboardList style={{ fontSize: "1.25rem" }} />,
     },
   ];

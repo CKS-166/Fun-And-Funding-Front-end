@@ -358,7 +358,7 @@ const ProjectMilestoneModal = ({ pmData, openModal, setOpenModal, setTriggerRelo
 
               <div class="p-4 md:p-5 h-[35rem] overflow-y-auto scrollbar-hidden">
                 <Stepper
-                  activeStep={pmData?.latestMilestone.milestoneOrder - 1}
+                  activeStep={pmData?.latestMilestone?.milestoneOrder - 1}
                   alternativeLabel
                 >
                   {latestMilestone?.map((milestone) => (
@@ -368,7 +368,7 @@ const ProjectMilestoneModal = ({ pmData, openModal, setOpenModal, setTriggerRelo
                           "& .MuiStepIcon-root.Mui-active": {
                             color: 'var(--primary-green) !important',
                           },
-                          "& .MuiStepLabel-label.Mui-active": {
+                          "& .MuiStepLabel-label.Mui-active, & .MuiStepLabel-label.Mui-completed": {
                             color: 'var(--primary-green) !important',
                           },
                           '& .MuiStepIcon-root.Mui-completed': {

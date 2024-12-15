@@ -2,21 +2,67 @@ import { Autocomplete, Avatar, AvatarGroup, Box, Divider, Grid2, Modal, TextFiel
 import { useEffect, useState } from "react"
 import axios from "axios"
 import bankAccountApiInstance from "../../../utils/ApiInstance/bankAccountApiInstance"
+import { useLoading } from "../../../contexts/LoadingContext"
 
 
-const BankAccountSettingModal = ({ openModal, setOpenModal, walletId }) => {
-
+const BankAccountSettingModal = ({ openModal, setOpenModal, walletId, bankAccData }) => {
   const [selectedBank, setSelectedBank] = useState(null)
   const [bankList, setBankList] = useState([])
   const [bankAccountNumber, setBankaccountNumber] = useState('')
   const [ownerName, setOwnerName] = useState('')
 
+  const { isLoading, setIsLoading } = useLoading()
+
+  const checkInitialBankAccount = async () => {
+    try {
+      setIsLoading(true);
+      const response = await axios.get("https://api.httzip.com/api/bank/list");
+      if (response.data.code === 200) {
+        const bankList = response.data.data;
+        setBankList(response.data.data)
+        setBankaccountNumber(bankAccData.bankNumber)
+        const bankCode = bankAccData?.bankCode;
+        const foundBank = bankList.find(record => record.code === bankCode);
+        // alert(foundBank)
+        if (foundBank) {
+          setSelectedBank(foundBank);
+          const bankAccountResponse = await axios.post(
+            "https://api.httzip.com/api/bank/id-lookup-prod",
+            {
+              "bank": foundBank.code,
+              "account": bankAccData.bankNumber
+            },
+            {
+              headers: {
+                'x-api-key': '11f028b5-b964-4efa-ab9c-db4e199dccb4key',
+                'x-api-secret': '691b9c60-353e-4e68-946f-ce68292884d0secret'
+              }
+            }
+          );
+
+          if (bankAccountResponse.data.code === 200) {
+            setOwnerName(bankAccountResponse.data.data.ownerName);
+          } else {
+            console.error('Error checking bank account:', bankAccountResponse.data.message);
+          }
+        }
+      } else {
+        console.error('Error fetching bank list:', response.data.message);
+      }
+    } catch (error) {
+      console.error('Error during initial bank account check:', error.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchBank = axios.get("https://api.httzip.com/api/bank/list").then(res => {
-      setBankList(res.data.data);
-    })
-  }, [])
+    const fetchData = async () => {
+      await checkInitialBankAccount()
+    }
+    fetchData()
+  }, [bankAccData])
+
 
   const handleOnCloseModal = () => {
     setOpenModal(false)

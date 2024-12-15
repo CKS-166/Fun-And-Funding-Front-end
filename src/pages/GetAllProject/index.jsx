@@ -77,7 +77,15 @@ const GetAllProject = () => {
   return (
     <div>
       <div className='crowBanner flex flex-col justify-center items-center h-[240px]' >
-        <Typography variant='h1' className="!text-[20px] text-[#FFFF] !my-[14rem] !text-[6rem]">Funding Collection</Typography>
+        <div className='py-[5rem]'>
+          <div className='text-white flex justify-center items-center text-center leading-[6.5rem]'>
+            <span className='font1 text-gray-200 text-[4rem]'>Funding Collection</span>
+          </div>
+          <div className='text-center font1 text-lg text-gray-300'>
+            Explore projects, find your cause, and be a part of something extraordinary today! <br />
+            without the wait!
+          </div>
+        </div>
       </div>
       <Box sx={{ marginTop: '5rem', padding: '30px' }}>
         <Grid container spacing={2}>

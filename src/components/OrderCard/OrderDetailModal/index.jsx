@@ -242,14 +242,6 @@ const OrderDetailModal = ({ details }) => {
                                         >
                                             Expired
                                         </th>
-                                        <th
-                                            style={{
-                                                padding: "12px",
-                                                textAlign: "left",
-                                            }}
-                                        >
-                                            Download
-                                        </th>
                                     </tr>
                                 </thead>
                                 <tbody>

@@ -104,7 +104,7 @@ export default function ReportTable({
 
   const renderCellContent = (column, value) => {
     if (Array.isArray(value)) {
-      if (column === "fileUrls") {
+      if (column === "FILES") {
         return (
           <Box>
             {value.map((url, index) => (
@@ -131,7 +131,7 @@ export default function ReportTable({
           </Box>
         );
       }
-      if (column === "faultCauses") {
+      if (column === "CAUSES") {
         return (
           <ul>
             {value.map((cause, index) => (
@@ -159,10 +159,10 @@ export default function ReportTable({
           <TableRow>
             <TableCell
               sx={{
-                backgroundColor: "#1BAA64",
-                color: "#ffffff",
+                backgroundColor: "#e5e7eb",
+                color: "black",
                 fontWeight: "bold",
-                fontSize: "0.85rem",
+                fontSize: "0.75rem",
               }}
             >
               No
@@ -171,10 +171,10 @@ export default function ReportTable({
               <TableCell
                 key={column}
                 sx={{
-                  backgroundColor: "#1BAA64",
-                  color: "#ffffff",
+                  backgroundColor: "#e5e7eb",
+                  color: "black",
                   fontWeight: "bold",
-                  fontSize: "0.85rem",
+                  fontSize: "0.75rem",
                 }}
               >
                 {column}
@@ -182,8 +182,8 @@ export default function ReportTable({
             ))}
             <TableCell
               sx={{
-                backgroundColor: "#1BAA64",
-                color: "#ffffff",
+                backgroundColor: "#e5e7eb",
+                color: "black",
                 fontWeight: "bold",
                 fontSize: "0.85rem",
               }}
@@ -208,12 +208,12 @@ export default function ReportTable({
                   scope="row"
                   sx={{
                     color:
-                      column === "isHandle" && row[column] === "Not handled"
+                      column === "HANDLED" && row[column] === "Not handled"
                         ? "red"
-                        : column === "isHandle" && row[column] === "Handled"
+                        : column === "HANDLED" && row[column] === "Handled"
                         ? "green"
                         : "inherit",
-                    fontWeight: column === "isHandle" ? "bold" : "normal",
+                    fontWeight: column === "HANDLED" ? "bold" : "normal",
                   }}
                 >
                   {renderCellContent(column, row[column])}
@@ -221,11 +221,11 @@ export default function ReportTable({
               ))}
 
               {/* Conditionally render the "Handle" button */}
-              {row.isHandle !== "Handled" && (
-                <TableCell>
+              <TableCell>
+                {row.HANDLED !== "Handled" && (
                   <Button onClick={() => handleRowClick(row.Id)}>Handle</Button>
-                </TableCell>
-              )}
+                )}
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>

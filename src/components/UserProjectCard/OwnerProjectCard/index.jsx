@@ -1,11 +1,13 @@
-import { FormControl, MenuItem, Select, Typography } from "@mui/material";
+import { FormControl, MenuItem, Select, Typography, Modal, Box } from "@mui/material";
 import { alpha } from "@mui/material/styles";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./index.css";
 import marketplaceProjectApiInstace from "../../../utils/ApiInstance/marketplaceProjectApiInstance";
 import fundingProjectApiInstace from "../../../utils/ApiInstance/fundingProjectApiInstance";
 import Cookies from "js-cookie";
 import Swal from "sweetalert2";
+import axios from "axios";
+import OrderMarketDetail from "../../OrderCard/OrderMarketDetail";
 
 const projectStatus = {
   0: { name: "Deleted", color: "var(--red)" },
@@ -24,7 +26,10 @@ const projectStatus = {
 function OwnerProjectCard({ project, projectType, fetchProjectData }) {
   const token = Cookies.get("_auth");
   const [selectedValue, setSelectedValue] = useState("");
-
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+  const [details, setDetails] = useState([]);
   const handleChange = (event) => {
     setSelectedValue(event.target.value);
   };
@@ -72,6 +77,33 @@ function OwnerProjectCard({ project, projectType, fetchProjectData }) {
     }
   };
 
+  const fetchMarketOrder = () => {
+    axios
+      .get(`https://localhost:7044/api/order-details/${project.id}/purchases`)
+      .then((res) => {
+        console.log(res);
+        setDetails(res.data._data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+  useEffect(() => {
+    projectType != "Funding" && fetchMarketOrder();
+  }, [])
+
+  const style = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 1400,
+    bgcolor: 'background.paper',
+    boxShadow: 24,
+    p: 4,
+    // border : 'none !important',
+  };
+
   return (
     <div className="flex items-center rounded-md gap-[2rem]">
       <div className="w-[10rem] h-[10rem] bg-[#EAEAEA] flex justify-center items-center rounded-lg">
@@ -79,11 +111,11 @@ function OwnerProjectCard({ project, projectType, fetchProjectData }) {
           src={
             projectType == "Funding"
               ? project?.fundingFiles?.find(
-                  (p) => p.filetype == 2 && p.isDeleted == false
-                ).url
+                (p) => p.filetype == 2 && p.isDeleted == false
+              ).url
               : project?.marketplaceFiles?.find(
-                  (p) => p.fileType == 2 && p.isDeleted == false
-                ).url
+                (p) => p.fileType == 2 && p.isDeleted == false
+              ).url
           }
           style={{
             width: "10rem",
@@ -158,9 +190,9 @@ function OwnerProjectCard({ project, projectType, fetchProjectData }) {
             border: "0 !important",
           },
           "&.MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline":
-            {
-              border: "0 !important",
-            },
+          {
+            border: "0 !important",
+          },
         }}
       >
         <Select
@@ -204,8 +236,7 @@ function OwnerProjectCard({ project, projectType, fetchProjectData }) {
             value="edit"
             onClick={() =>
               window.open(
-                `/account/${
-                  projectType == "Funding" ? "projects" : "marketplace-projects"
+                `/account/${projectType == "Funding" ? "projects" : "marketplace-projects"
                 }/update/${project.id}/basic-info`,
                 "_blank"
               )
@@ -222,7 +253,28 @@ function OwnerProjectCard({ project, projectType, fetchProjectData }) {
               <Typography>Delete Project</Typography>
             </MenuItem>
           )}
-
+          {projectType != "Funding" && (
+            <>
+              <MenuItem value="view" onClick={handleOpen}>
+                <Typography>View orders</Typography>
+              </MenuItem>
+              <Modal
+                open={open}
+                onClose={handleClose}
+                disableAutoFocus={true}
+              >
+                <Box sx={style}>
+                  <OrderMarketDetail details={details} />
+                </Box>
+              </Modal>
+            </>
+          )}
+          {(project.status === 1 ||
+            (project.status === 6) && projectType != "Funding") && (
+              <MenuItem value="remove">
+                <Typography>Delete Project</Typography>
+              </MenuItem>
+            )}
           {project.status == 4 && (
             <MenuItem
               value="publish"

@@ -3,7 +3,7 @@ import { Avatar, Divider, Grid2 } from "@mui/material"
 import { jwtDecode } from "jwt-decode";
 import Cookies from "js-cookie";
 
-const NotificationCard = ({ notiData }) => {
+const NotificationCard = ({ notiData, listAll }) => {
 
   const token = Cookies.get("_auth")
   const decoded = jwtDecode(token)
@@ -14,17 +14,19 @@ const NotificationCard = ({ notiData }) => {
     switch (type) {
       case 0:
         return `/funding-detail/${id}`;
-        // case 'MarketplacePurchase':
-        //   return `/marketplace/purchase/${id}`;
-        // case 'FundingProjectStatus':
-        //   return `/funding-project/status/${id}`;
-        // case 'MarketplaceProjectStatus':
-        //   return `/marketplace/project-status/${id}`;
-        // case 'WithdrawRequestStatus':
-        //   return `/withdraw-request/status/${id}`;
-        // case 'ProjectMilestoneStatus':
-        //   return `/project-milestone/status/${id}`;
-        // default:
+      case 1:
+        return `/marketplace-detail/${id}`;
+      case 2:
+        return `/funding-detail/${id}`;
+      case 3:
+        return `/marketplace-detail/${id}`;
+      case 4:
+        return `/account/wallet/${id}`;
+      case 5:
+        return `/funding-detail/${id}`;
+      case 6:
+        return `/marketplace-detail/${id}`;
+      default:
         return '#';
     }
   };
@@ -36,13 +38,13 @@ const NotificationCard = ({ notiData }) => {
         notiData
         &&
         (
-          notiData.slice(0, 5).map((noti, index) => {
+          (listAll ? notiData : notiData.slice(0, 5)).map((noti, index) => {
             const userReadStatus = noti.userReadStatus[userId];
             const isUnread = userReadStatus === false;
             const notificationLink = getNotificationLink(noti.notificationType, noti.objectId);
 
             return (
-              <div className={`${isUnread ? 'bg-gray-100' : 'bg-white'} relative z-[100]`}>
+              <div className={`${isUnread ? 'bg-gray-100' : 'bg-white'} relative z-[10]`}>
                 <div key={index} className={` py-2 px-4 w-[100%] flex gap-3 items-start`}>
                   {/* {
                     isUnread

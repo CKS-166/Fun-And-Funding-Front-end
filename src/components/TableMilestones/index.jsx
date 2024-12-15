@@ -215,7 +215,11 @@ function MilestoneTable({ dataLoad, notify }) {
         <Table stickyHeader aria-label="milestone table">
           <TableHead>
             <TableRow>
-              <TableCell style={{ backgroundColor: "#1BAA64" }} />
+              <TableCell
+                style={{
+                  backgroundColor: "#e5e7eb",
+                }}
+              />
               {columns.map((column) => (
                 <TableCell
                   key={column.id}
@@ -223,10 +227,9 @@ function MilestoneTable({ dataLoad, notify }) {
                   className="milestoneTable-header"
                   style={{ minWidth: column.minWidth }}
                   sx={{
-                    backgroundColor: "#1BAA64",
-                    color: "#ffffff",
+                    backgroundColor: "#e5e7eb",
+                    color: "black",
                     fontWeight: "bold",
-                    fontSize: "0.85rem",
                   }}
                 >
                   {column.label}
@@ -249,6 +252,7 @@ function MilestoneTable({ dataLoad, notify }) {
                       overflow: "hidden",
                       backgroundColor: "#f8f9fa",
                       borderRadius: "8px",
+                      textTransform: "capitalize",
                     }}
                   >
                     <TableCell className="milestoneTable-cell">

@@ -111,10 +111,10 @@ export default function CommisionTable({
           <TableRow>
             <TableCell
               sx={{
-                backgroundColor: "#1BAA64",
-                color: "#ffffff",
+                backgroundColor: "#e5e7eb",
+                color: "black",
                 fontWeight: "bold",
-                fontSize: "0.85rem",
+                fontSize: "0.75rem",
               }}
             >
               No
@@ -123,10 +123,10 @@ export default function CommisionTable({
               <TableCell
                 key={column}
                 sx={{
-                  backgroundColor: "#1BAA64",
-                  color: "#ffffff",
+                  backgroundColor: "#e5e7eb",
+                  color: "black",
                   fontWeight: "bold",
-                  fontSize: "0.85rem",
+                  fontSize: "0.75rem",
                 }}
               >
                 {column}
@@ -134,10 +134,10 @@ export default function CommisionTable({
             ))}
             <TableCell
               sx={{
-                backgroundColor: "#1BAA64",
-                color: "#ffffff",
+                backgroundColor: "#e5e7eb",
+                color: "black",
                 fontWeight: "bold",
-                fontSize: "0.85rem",
+                fontSize: "0.75rem",
               }}
             >
               ACTION
@@ -157,7 +157,7 @@ export default function CommisionTable({
               </TableCell>
               {filteredColumns.map((column) => (
                 <TableCell key={column} component="th" scope="row">
-                  {column === "Status" ? (
+                  {column === "STATUS" ? (
                     <Chip
                       label={row[column]}
                       color={row[column] === "Applied" ? "success" : "error"}
@@ -175,7 +175,7 @@ export default function CommisionTable({
                 </TableCell>
               ))}
               <TableCell>
-                {row.Status === "Applied" ? (
+                {row.STATUS === "Applied" ? (
                   <Button onClick={() => handleRowClick(row.Id)}>Update</Button>
                 ) : null}
               </TableCell>

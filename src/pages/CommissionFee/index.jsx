@@ -13,6 +13,8 @@ import FormatListNumberedIcon from "@mui/icons-material/FormatListNumbered";
 import SelectWithIcon from "../../components/SelectionCommision";
 import { useLoading } from "../../contexts/LoadingContext";
 import Cookies from "js-cookie";
+import { FaPlus } from "react-icons/fa";
+import { VERSION } from "@microsoft/signalr";
 
 const notify = (message, type) => {
   const options = {
@@ -162,11 +164,11 @@ function CommissionFee() {
 
     return {
       Id: data.id,
-      Rate: data.rate,
-      Version: data.version,
-      Type: data.commissionType === 0 ? "Funding" : "Marketplace",
-      "Last Updated": formatDate(data.updateDate),
-      Status: isLatest ? "Applied" : "Outdated", // Set "Latest" if it matches, otherwise "Outdated"
+      RATE: data.rate,
+      VERSION: data.version,
+      TYPE: data.commissionType === 0 ? "Funding" : "Marketplace",
+      "LAST UPDATED": formatDate(data.updateDate),
+      STATUS: isLatest ? "Applied" : "Outdated", // Set "Latest" if it matches, otherwise "Outdated"
     };
   });
 
@@ -233,30 +235,32 @@ function CommissionFee() {
   };
 
   return (
-    <>
-      <h1 className="text-3xl font-bold my-6 text-center text-[#1BAA64]">
-        Commission Fee Management
-      </h1>
-      <div className="flex justify-center flex-col gap-4">
+    <div className="p-12">
+      <div className="flex justify-center items-end flex-col gap-4">
         <button
           type="button"
-          className=" font-medium bg-[#1BAA64] text-white py-3 my-4 rounded-lg mt-6 hover:bg-white hover:text-[#1BAA64] border border-[#1BAA64] transition-all duration-200"
+          className=" font-medium bg-[#1BAA64] w-1/5 text-white py-3 my-4 rounded-lg mt-6 hover:bg-white hover:text-[#1BAA64] border border-[#1BAA64] transition-all duration-200"
           onClick={handleOpenDialog}
         >
-          Create New Commision
+          <div className="flex gap-4 flex-row justify-center items-center">
+            <FaPlus />
+            <p>Create Commision</p>
+          </div>
         </button>
       </div>
+      <div>
+        <CommisionTable
+          data={mappingData}
+          handleRowClick={handleRowClick} // Assuming you have a handler for row clicks
+          totalItems={pagination.totalItems}
+          totalPages={pagination.totalPages}
+          currentPage={pagination.currentPage}
+          pageSize={pagination.pageSize}
+          onPageChange={handlePageChange} // Pass the page change handler
+          onPageSizeChange={handlePageSizeChange} // Pass the page size change handler
+        />
+      </div>
 
-      <CommisionTable
-        data={mappingData}
-        handleRowClick={handleRowClick} // Assuming you have a handler for row clicks
-        totalItems={pagination.totalItems}
-        totalPages={pagination.totalPages}
-        currentPage={pagination.currentPage}
-        pageSize={pagination.pageSize}
-        onPageChange={handlePageChange} // Pass the page change handler
-        onPageSizeChange={handlePageSizeChange} // Pass the page size change handler
-      />
       <Dialog open={openDialog} onClose={handleCloseDialog}>
         <div className="fixed inset-0 flex justify-center items-center bg-gray-800 bg-opacity-75 z-50">
           <div className="py-10 px-10 bg-white rounded-3xl relative shadow-lg w-[45rem]">
@@ -378,7 +382,7 @@ function CommissionFee() {
         draggable
         pauseOnFocusLoss
       />
-    </>
+    </div>
   );
 }
 

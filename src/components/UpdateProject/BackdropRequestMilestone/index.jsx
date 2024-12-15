@@ -46,7 +46,7 @@ const BackdropRequestMilestone = ({ render, isHidden, milestone, projectId, onCl
             {/* When milestone is not requested */}
             {status === 'not requested' && (
                 <Backdrop
-                    sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1, position: 'absolute' }}
+                    sx={{ color: '#fff', zIndex: 10, position: 'absolute' }}
                     open={isHidden}
                 >
                     <Button

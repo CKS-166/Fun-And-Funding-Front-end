@@ -80,8 +80,6 @@ import MarketplaceProjectContent from "./pages/UpdateMarketplaceProjectForm/Mark
 import MarketplaceProjectCoupon from "./pages/UpdateMarketplaceProjectForm/MarketplaceProjectCoupon";
 import MarketplaceProjectMediaFiles from "./pages/UpdateMarketplaceProjectForm/MarketplaceProjectMedia";
 import MarketplaceProjectPreview from "./pages/UpdateMarketplaceProjectForm/MarketplaceProjectPreview";
-import GameOwnerWallet from "./pages/GameOwnerAccountWallet";
-import { ToastContainer } from "react-toastify";
 
 function App() {
   const location = useLocation();
@@ -143,12 +141,6 @@ function App() {
                     element={<AccountProject />}
                   />
                   <Route path="/account/social" element={<AccountSocial />} />
-                  <Route path="/account/wallet" element={<AccountWallet />} />
-                  <Route
-                    path="/account/wallet-game-owner"
-                    element={<GameOwnerWallet />}
-                  />
-                  <Route path="/account/orders" element={<MyOrder />} />
                 </Route>
                 {/* Backer */}
                 <Route element={<ProtectedRoute allowedRoles={["Backer"]} />}>
@@ -157,6 +149,10 @@ function App() {
                     path="/checkout-success/:id"
                     element={<CheckoutSuccess />}
                   />
+                  <Route element={<UserProfileLayout />}>
+                    <Route path="/account/wallet" element={<AccountWallet />} />
+                    <Route path="/account/orders" element={<MyOrder />} />
+                  </Route>
                 </Route>
                 {/* Game Owner */}
                 <Route

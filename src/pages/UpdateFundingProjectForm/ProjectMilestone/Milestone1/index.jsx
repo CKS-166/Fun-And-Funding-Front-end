@@ -105,7 +105,6 @@ const MilestoneForm = () => {
         setIsLoading(false);
       }
     };
-  
     fetchData();
   }, [milestoneId]);
 
@@ -204,11 +203,18 @@ const MilestoneForm = () => {
     setValue(newValue);
   };
 
-  if (!milestone || !milestoneData) return <p>Loading milestone...</p>;
 
   return (
-    <div >
-      {milestoneData && milestone && !isLoading
+    <div>
+      {(isLoading && !milestone || !milestoneData) ? (
+      <Backdrop
+        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={true} // Force the Backdrop to open
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
+    ) : <>
+        {milestoneData && milestone && !isLoading
         && <BackdropRequestMilestone
           isHidden={isBackdropHidden}
           projectId={projectId}
@@ -216,29 +222,26 @@ const MilestoneForm = () => {
           status={milestoneData.status}
           onCloseBackdrop={handleBackdropClose}
           render={() => getMilestoneData(milestoneId)} />}
-      {/* Backdrop with loading spinner */}
-      <Backdrop sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }} open={false}>
-        <CircularProgress color="inherit" />
-      </Backdrop>
+     
       <div className='basic-info-section'>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingRight: '5rem' }}>
           <Box>
             <Typography
               className='basic-info-title'
+              
             >
-              {milestone.milestoneName}<span className='text-[#1BAA64]'>*</span>
+              <h3 style={{ fontWeight: '600' }}>{milestone.milestoneName} <span className='text-[#1BAA64]'>*</span></h3>
             </Typography>
             <Typography
               className='basic-info-subtitle'
               sx={{ width: '100%' }}
             >
-              {milestone.description}
+              <h3 style={{ fontWeight: '600' }}>{milestone.description}</h3>
             </Typography>
           </Box>
           <Box>
             <Timer days={daysLeft}/>
           </Box>
-
         </Box>
 
         {!isLoading && milestoneData && milestoneData.status == 'create' ? (
@@ -316,6 +319,8 @@ const MilestoneForm = () => {
           issueLog={milestoneData?.data[0]?.issueLog} pmId={milestoneData?.data[0]?.id}
           status={milestoneData?.status} />}
       </div>
+    </>}
+
     </div>
   );
 };

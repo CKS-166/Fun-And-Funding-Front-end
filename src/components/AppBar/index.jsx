@@ -45,6 +45,7 @@ import NotificationModal from "./NotificationModal";
 
 const FunFundingAppBar = () => {
   const { cartItems, cartCount, setCartItems, setCartCount } = useCart();
+  const [role, setRole] = useState("GameOwner");
 
   const pages = [
     { label: "Home", route: "/home", index: 0 },
@@ -66,6 +67,10 @@ const FunFundingAppBar = () => {
     },
   ];
 
+  const filteredProfileMenu = profileMenu.filter(
+    (item) => !(role === "GameOwner" && (item.label === "Wallet"))
+  );
+
   const projectMenu = [
     {
       label: "Projects",
@@ -79,6 +84,10 @@ const FunFundingAppBar = () => {
     },
   ];
 
+  const filteredProjectMenu = projectMenu.filter(
+    (item) => !(role === "GameOwner" && (item.label === "Orders"))
+  );
+
   const navigate = useNavigate();
   const location = useLocation();
   const token = Cookies.get("_auth");
@@ -87,7 +96,6 @@ const FunFundingAppBar = () => {
   );
 
   const [name, setName] = useState("");
-  const [role, setRole] = useState("");
 
   const [anchorEl, setAnchorEl] = useState(null);
   const [user, setUser] = useState(null);
@@ -515,7 +523,7 @@ const FunFundingAppBar = () => {
 
                     <Divider sx={{ my: "1rem !important" }} />
 
-                    {profileMenu.map((item) => (
+                    {filteredProfileMenu.map((item) => (
                       <MenuItem
                         key={item.label}
                         onClick={() => handleMenuClick(item.route)}
@@ -551,7 +559,7 @@ const FunFundingAppBar = () => {
 
                     <Divider sx={{ my: "1rem !important" }} />
 
-                    {projectMenu.map((item) => (
+                    {filteredProjectMenu.map((item) => (
                       <MenuItem
                         key={item.label}
                         onClick={() => handleMenuClick(item.route)}

@@ -12,7 +12,6 @@ import {
 } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
 import Cookies from "js-cookie";
-import { jwtDecode } from "jwt-decode";
 import React, { useEffect, useRef, useState } from "react";
 import { FaClipboardList } from "react-icons/fa";
 import { FaFolderOpen, FaUserTie } from "react-icons/fa6";
@@ -60,17 +59,17 @@ function UserProfileLayout() {
 
   //cookie
   const token = Cookies.get("_auth");
-  const [walletPath, setWalletPath] = useState("");
+  // const [walletPath, setWalletPath] = useState("");
 
-  useEffect(() => {
-    if (token) {
-      const decoded = jwtDecode(token);
-      const userRole =
-        decoded["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
-      if (userRole == "GameOwner") setWalletPath("/account/wallet-game-owner");
-      else setWalletPath("/account/wallet");
-    }
-  }, [token, walletPath]);
+  // useEffect(() => {
+  //   if (token) {
+  //     const decoded = jwtDecode(token);
+  //     const userRole =
+  //       decoded["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
+  //     if (userRole == "GameOwner") setWalletPath("/account/wallet-game-owner");
+  //     else setWalletPath("/account/wallet");
+  //   }
+  // }, [token, walletPath]);
 
   const titleList = [
     { text: "Profile", path: "/account/profile" },
@@ -80,6 +79,10 @@ function UserProfileLayout() {
     { text: "Wallet", path: "/account/wallet" },
   ];
 
+  const filteredTitleList = titleList.filter(
+    (item) => !(role === "GameOwner" && (item.text === "Orders" || item.text === "Wallet"))
+  );
+
   const iconMapping = {
     0: <FaUserTie style={{ fontSize: "1.6rem" }} />,
     1: <FaFolderOpen style={{ fontSize: "1.6rem" }} />,
@@ -87,6 +90,7 @@ function UserProfileLayout() {
     3: <FaClipboardList style={{ fontSize: "1.6rem" }} />,
     4: <IoMdWallet style={{ fontSize: "1.6rem" }} />,
   };
+
   const onClickMapping = {
     0: () => navigate("/account/profile"),
     1: () => navigate("/account/projects"),
@@ -295,7 +299,7 @@ function UserProfileLayout() {
                 }}
               >
                 <List sx={{ mx: "2rem", flexGrow: 1, mt: "0.8rem" }}>
-                  {titleList.map((item, index) => {
+                  {filteredTitleList.map((item, index) => {
                     const isActive = location.pathname === item.path;
                     return (
                       <ListItem

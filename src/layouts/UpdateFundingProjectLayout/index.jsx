@@ -248,18 +248,23 @@ function UpdateFundingProjectLayout() {
 
     const getActiveEditor = (id) => {
         const matchedEditor = editorList.find((item) =>
-            location.pathname.includes(item.id)
+            location.pathname.includes(item.link(id))
         );
         return matchedEditor ? `Project Editor / ${matchedEditor.name}` : "";
     };
 
     const getActiveMilestone = (id) => {
-        const matchedMilestone = milestoneList.find(() =>
-            location.pathname.includes(id)
+        const matchedMilestone = milestoneList.find((item) =>
+            location.pathname.includes(item.milestoneName.replace(/\s+/g, '').toLowerCase())
         );
         return matchedMilestone
             ? `Project Milestone / ${matchedMilestone.milestoneName}`
             : "";
+    };
+
+    const getActivePreview = () => {
+        const matchedEditor = location.pathname.includes('preview');
+        return matchedEditor ? `Project Preview` : "";
     };
 
     const handleMilestoneNavigation = (milestoneId, index) => {
@@ -283,14 +288,18 @@ function UpdateFundingProjectLayout() {
         location.pathname.includes(item.link(id))
     );
     const isMilestoneActive = milestoneList.some((item) =>
-        location.pathname.includes(item.id)
+        location.pathname.includes(item.milestoneName.replace(/\s+/g, '').toLowerCase())
     );
+
+    const isPreviewActive = location.pathname.includes('preview');
 
     const getActiveSection = (id) => {
         const activeEditor = getActiveEditor(id);
         const activeMilestone = getActiveMilestone(id);
+        const activePreview = getActivePreview(id);
         if (activeEditor) return activeEditor;
         if (activeMilestone) return activeMilestone;
+        if (activePreview) return activePreview;
         return "Unknown Section";
     };
 
@@ -367,6 +376,16 @@ function UpdateFundingProjectLayout() {
                                     <Typography
                                         className="update-project-section"
                                         onClick={() => handleNavigatePreview(id)}
+                                        sx={{
+                                            backgroundColor:
+                                                isPreviewActive
+                                                    ? "#88D1AE"
+                                                    : "transparent",
+                                            color:
+                                                isPreviewActive
+                                                    ? "#F5F7F8"
+                                                    : "inherit",
+                                        }}
                                     >
                                         Project Preview
                                     </Typography>
@@ -415,7 +434,9 @@ function UpdateFundingProjectLayout() {
                                                     <ListItemText
                                                         primary={item.name}
                                                         sx={{
-                                                            color: location.pathname.includes(item.link(id))
+                                                            color: location.pathname.includes(
+                                                                item.link(id)
+                                                            )
                                                                 ? "#F5F7F8"
                                                                 : "#F5F7F8",
                                                             fontSize: "1rem",
@@ -470,7 +491,7 @@ function UpdateFundingProjectLayout() {
                                                         handleMilestoneNavigation(item.id, index)
                                                     }
                                                     sx={{
-                                                        backgroundColor: location.pathname.includes(item.id)
+                                                        backgroundColor: location.pathname.includes(item.milestoneName.replace(/\s+/g, '').toLowerCase())
                                                             ? "#88D1AE"
                                                             : "transparent",
                                                         "&:hover": {
@@ -484,7 +505,7 @@ function UpdateFundingProjectLayout() {
                                                     <ListItemText
                                                         primary={item.milestoneName}
                                                         sx={{
-                                                            color: location.pathname.includes(item.id)
+                                                            color: location.pathname.includes(item.milestoneName.replace(/\s+/g, '').toLowerCase())
                                                                 ? "#F5F7F8"
                                                                 : "#F5F7F8",
                                                             fontSize: "1rem",
@@ -528,7 +549,7 @@ function UpdateFundingProjectLayout() {
                                         {getActiveSection(id)}
                                     </Typography>
                                 </div>
-                                <div className="flex justify-between gap-[1.5rem] items-center w-fit">
+                                <div className={`${isEditorActive ? 'flex' : 'hidden'} justify-between gap-[1.5rem] items-center w-fit`}>
                                     <Typography
                                         sx={{
                                             color: "#2F3645",

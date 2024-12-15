@@ -136,11 +136,12 @@ function App() {
                 </Route>
                 <Route element={<UserProfileLayout />}>
                   <Route path="/account/profile" element={<AccountProfile />} />
-                  <Route
-                    path="/account/projects"
-                    element={<AccountProject />}
-                  />
+                  <Route path="/account/projects" element={<AccountProject />} />
                   <Route path="/account/social" element={<AccountSocial />} />
+                  <Route element={<ProtectedRoute allowedRoles={["Backer"]} />}>
+                    <Route path="/account/wallet" element={<AccountWallet />} />
+                    <Route path="/account/orders" element={<MyOrder />} />
+                  </Route>
                 </Route>
                 {/* Backer */}
                 <Route element={<ProtectedRoute allowedRoles={["Backer"]} />}>
@@ -150,8 +151,6 @@ function App() {
                     element={<CheckoutSuccess />}
                   />
                   <Route element={<UserProfileLayout />}>
-                    <Route path="/account/wallet" element={<AccountWallet />} />
-                    <Route path="/account/orders" element={<MyOrder />} />
                   </Route>
                 </Route>
                 {/* Game Owner */}

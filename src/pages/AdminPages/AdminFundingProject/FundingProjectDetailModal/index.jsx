@@ -130,7 +130,7 @@ const FundingProjectDetailModal = ({ selectedFundingProjectId, openModal, setOpe
                             fetchFundingProjectList();
                             Swal.fire({
                                 title: `${actionText}ed!`,
-                                text: `${actionText} the user successfully.`,
+                                text: `${actionText} the project successfully.`,
                                 icon: "success",
                                 confirmButtonColor: "var(--primary-green)",
                                 confirmButtonText: "I understand",

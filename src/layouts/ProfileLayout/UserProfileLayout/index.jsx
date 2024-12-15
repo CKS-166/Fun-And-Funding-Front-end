@@ -17,7 +17,7 @@ import { FaClipboardList } from "react-icons/fa";
 import { FaFolderOpen, FaUserTie } from "react-icons/fa6";
 import { HiMiniUserGroup } from "react-icons/hi2";
 import { IoMdWallet } from "react-icons/io";
-import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import { NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import Swal from "sweetalert2";
 import userApiInstace from "../../../utils/ApiInstance/userApiInstance";
@@ -308,6 +308,7 @@ function UserProfileLayout() {
                         sx={{ p: 0, mb: "0.8rem", borderRadius: "0.4rem" }}
                       >
                         <ListItemButton
+                          component={NavLink}
                           sx={{
                             borderRadius: "0.4rem",
                             backgroundColor: isActive ? "#1BAA64" : "transparent",

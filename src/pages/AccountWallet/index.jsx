@@ -1,11 +1,12 @@
 import { AccountBalance } from "@mui/icons-material"
-import { useState,useEffect } from "react"
+import { useState, useEffect } from "react"
 import { useWalletApi } from "../../utils/Hooks/AccountWallet"
 import BankAccountSettingModal from "./BankAccountSettingModal"
 import WalletModal from "./WalletModal"
 import { jwtDecode } from "jwt-decode";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router"
+import axios from "axios"
 
 
 const AccountWallet = () => {
@@ -25,7 +26,6 @@ const AccountWallet = () => {
     if (token) {
       const decoded = jwtDecode(token)
       setUserRole(decoded["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"])
-      console.log('user role', userRole)
       if (userRole == "GameOwner")
         navigate("/account/wallet-game-owner")
     }
@@ -170,7 +170,7 @@ const AccountWallet = () => {
 
       <WalletModal openModal={openModal} modalAddMoney={modalAddMoney} handleCloseModal={handleCloseModal} walletId={data?._data.id} />
 
-      <BankAccountSettingModal openModal={openBankSetting} setOpenModal={setOpenBankSetting} walletId={data?._data.id} />
+      <BankAccountSettingModal openModal={openBankSetting} setOpenModal={setOpenBankSetting} walletId={data?._data.id} bankAccData={bankAccData?._data} />
 
       {/* <TestNotification />
 

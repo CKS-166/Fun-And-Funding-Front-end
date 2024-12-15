@@ -13,6 +13,8 @@ import logo from "../../assets/OnlyLogo.png";
 import InputField from "../../components/InputField";
 import authApiInstance from "../../utils/ApiInstance/authApiInstance";
 import "./index.css"; // Import toast styles
+import { useLoading } from "../../contexts/LoadingContext";
+import { set } from "react-hook-form";
 
 function setCookie(name, value, expiresIn) {
   var now = new Date();
@@ -23,7 +25,12 @@ function setCookie(name, value, expiresIn) {
   document.cookie = cookieString;
 }
 
-function LoginForm({ onClose, onOpenRoleSelection, onOpenForgotPassword }) {
+function LoginForm({
+  onClose,
+  onOpenRoleSelection,
+  onOpenForgotPassword,
+  onOpenOTPForm,
+}) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -38,8 +45,14 @@ function LoginForm({ onClose, onOpenRoleSelection, onOpenForgotPassword }) {
   const handlePasswordChange = (e) => {
     setPassword(e.target.value);
   };
+  const handleOTPClick = () => {
+    onOpenOTPForm(); // Switch to the LoginForm without closing the dialog
+  };
+
+  const { isLoading, setIsLoading } = useLoading();
 
   const handleSubmit = (e) => {
+    setIsLoading(true);
     e.preventDefault();
     const jsonData = {
       email: email,
@@ -63,6 +76,7 @@ function LoginForm({ onClose, onOpenRoleSelection, onOpenForgotPassword }) {
     authApiInstance
       .post("/login", jsonData)
       .then((res) => {
+        console.log(res.data);
         if (!res.data._isSuccess) {
           notify(`${res.data._message[0] || "Login failed"}`);
           console.log("Login failed:", res.data._message);
@@ -70,9 +84,8 @@ function LoginForm({ onClose, onOpenRoleSelection, onOpenForgotPassword }) {
           const decodedToken = jwtDecode(res.data._data);
           const userRole =
             decodedToken[
-            "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
+              "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
             ];
-          console.log(userRole);
 
           signIn({
             auth: {
@@ -110,7 +123,7 @@ function LoginForm({ onClose, onOpenRoleSelection, onOpenForgotPassword }) {
             const decodedToken = jwtDecode(token);
             const userRole =
               decodedToken[
-              "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
+                "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
               ];
             console.log(userRole);
             if (userRole === "Backer") {
@@ -127,18 +140,17 @@ function LoginForm({ onClose, onOpenRoleSelection, onOpenForgotPassword }) {
         }
       })
       .catch((error) => {
-        if (error.response) {
-          const errorMessage =
-            error.response.data.message || "Invalid login details.";
-          notify(`${errorMessage}`);
-          console.log("Error response:", error.response);
-        } else if (error.request) {
-          notify("No response from server. Please try again.");
-          console.log("Request error:", error.request);
+        if (error.status === 403) {
+          notify(
+            "Your account must be verfify by OTP, please check email to verify"
+          );
+          handleOTPClick();
         } else {
-          notify("An error occurred. Please try again.");
-          console.log("Error:", error.message);
+          notify("Invalid Credentials, Please try again.");
         }
+      })
+      .finally(() => {
+        setIsLoading(false); // Stop loading indicator
       });
   };
 
@@ -147,8 +159,9 @@ function LoginForm({ onClose, onOpenRoleSelection, onOpenForgotPassword }) {
   };
 
   const signInGoogle = () => {
-    window.location.href = "https://localhost:7044/api/authentication/signin-google"
-  }
+    window.location.href =
+      "https://localhost:7044/api/authentication/signin-google";
+  };
 
   return (
     <div className="fixed inset-0 flex justify-center items-center bg-gray-800 bg-opacity-75 z-50">

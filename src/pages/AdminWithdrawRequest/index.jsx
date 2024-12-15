@@ -34,7 +34,7 @@ const mapProjectStatus = (status) => {
     case 1:
       return "Pending";
     case 2:
-      return "Processing";
+      return "Wallet";
     case 3:
       return "Funded Successful";
     case 4:
@@ -46,7 +46,7 @@ const mapProjectStatus = (status) => {
     case 7:
       return "Approved";
     case 8:
-      return "Withdrawed";
+      return "Marketplace";
     case 9:
       return "Refunded";
     default:
@@ -145,7 +145,7 @@ function AdminWithdrawRequest() {
     Id: item.id,
     Amount: item.amount,
     IsFinished: item.isFinished ? "Finish" : "Not Finish",
-    RequestType: mapProjectStatus(item.requestType),
+    Type: mapProjectStatus(item.requestType),
     Status: mapWithdrawRequestStatus(item.status),
     CreatedDate: formatDate(item.createdDate),
     ExpiredDate: formatDate(item.expiredDate),

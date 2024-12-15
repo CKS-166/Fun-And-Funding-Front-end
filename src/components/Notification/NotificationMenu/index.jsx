@@ -1,7 +1,11 @@
+import { useState } from "react"
+import NotificationModal from "../../AppBar/NotificationModal"
 import NotificationCard from "../NotificationCard"
 import { Box, Divider } from "@mui/material"
 
 const NotificationMenu = ({ notiData }) => {
+
+  const [openNotiModal, setOpenNotiModal] = useState(false)
 
   return (
     <>
@@ -13,15 +17,17 @@ const NotificationMenu = ({ notiData }) => {
         </div>
         {/* <Divider /> */}
         <div>
-          <NotificationCard notiData={notiData} />
+          <NotificationCard notiData={notiData} listAll={false} />
         </div>
         <div className="flex items-center justify-center gap-1 px-2 py-3 hover:cursor-pointer bg-[var(--white)] text-center">
-          <span className="text-white px-3 py-2 font-semibold w-[100%] text-sm rounded bg-primary-green">
-            View all notifications
+          <span
+            onClick={() => setOpenNotiModal(true)}
+            className="text-white px-3 py-2 font-semibold w-[100%] text-sm rounded bg-primary-green">
+            View all notifications ({notiData?.length})
           </span>
         </div>
       </Box>
-
+      <NotificationModal openNotiModal={openNotiModal} setOpenNotiModal={setOpenNotiModal} notiData={notiData} />
     </>
   )
 }

@@ -41,6 +41,7 @@ import useSignalR from "../../utils/Hooks/SignalR";
 import CartDrawer from "../CartDrawer";
 import NotificationMenu from "../Notification/NotificationMenu";
 import AuthDialog from "../Popup";
+import NotificationModal from "./NotificationModal";
 
 const FunFundingAppBar = () => {
   const { cartItems, cartCount, setCartItems, setCartCount } = useCart();
@@ -73,7 +74,7 @@ const FunFundingAppBar = () => {
     },
     {
       label: "Orders",
-      route: "/account/wallet",
+      route: "/account/orders",
       icon: <FaClipboardList style={{ fontSize: "1.25rem" }} />,
     },
   ];
@@ -187,12 +188,8 @@ const FunFundingAppBar = () => {
     } else {
       navigate(route);
     }
-    handleCloseProfileMenu();
   };
 
-  const handleCloseProfileMenu = () => {
-    setAnchorElProfile(null);
-  };
   const signOut = useSignOut();
 
   const handleCartOpen = () => {
@@ -254,6 +251,22 @@ const FunFundingAppBar = () => {
       }
     }
   }, [message, fetchNotifications]);
+
+  const notiRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (notiRef.current && !notiRef.current.contains(event.target)) {
+        setOpenNoti(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   return (
     <div>
@@ -338,6 +351,7 @@ const FunFundingAppBar = () => {
                     "& .MuiBadge-badge": {
                       backgroundColor: "#1BAA64 !important",
                     },
+                    display: role === "GameOwner" ? 'none' : "block"
                   }}
                 >
                   <ShoppingCartIcon
@@ -352,7 +366,7 @@ const FunFundingAppBar = () => {
                     onClick={handleCartOpen}
                   />
                 </Badge>
-                <div className="relative">
+                <div className="relative" ref={notiRef}>
                   <Badge
                     badgeContent={notiData?.length}
                     max={99}
@@ -378,7 +392,7 @@ const FunFundingAppBar = () => {
                       }}
                     />
                   </Badge>
-                  <div className={`${openNoti ? '' : 'hidden'} absolute z-[100001] right-0 top-11`}>
+                  <div className={`${openNoti ? '' : 'hidden'} absolute !z-[100001] right-0 top-11`}>
                     <NotificationMenu notiData={notiData} />
                   </div>
                 </div>

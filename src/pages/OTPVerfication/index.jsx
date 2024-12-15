@@ -11,6 +11,7 @@ import { ToastContainer, toast } from "react-toastify";
 import authApiInstance from "../../utils/ApiInstance/authApiInstance";
 import logo from "../../assets/OnlyLogo.png";
 import "./index.css";
+import Swal from "sweetalert2";
 
 function OTPVerification({ onClose, onOpenLogin }) {
   const [name, setName] = useState("");
@@ -28,8 +29,7 @@ function OTPVerification({ onClose, onOpenLogin }) {
     if (userName) {
       setName(userName);
     } else {
-      // If username is not found in the cookies, close the modal
-      onClose();
+      //onClose();
     }
   }, [onClose]);
 
@@ -87,17 +87,24 @@ function OTPVerification({ onClose, onOpenLogin }) {
         }, 1000);
       }
     } catch (error) {
-      notify(
-        "An error occurred during verification. Please try again.",
-        "warn"
-      );
+      notify("Invalid OTP. Please try again.", "warn");
       console.log(error);
       setFailedAttempts((prev) => prev + 1);
 
       if (failedAttempts + 1 >= maxAttempts) {
-        notify("You have reached the maximum number of attempts.", "error");
+        //onClose();
+
         Cookies.remove("_username");
         onClose();
+        Swal.fire({
+          icon: "error",
+          title: "Verification Failed",
+          text: "You have reached the maximum number of attempts.",
+          customClass: {
+            confirmButton: "custom-confirm-button", // Add a custom class
+          },
+          buttonsStyling: false, // Disable default styles if you want full control
+        });
       }
     }
 

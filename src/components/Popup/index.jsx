@@ -48,6 +48,7 @@ const AuthDialog = ({ isOpen, onClose }) => {
         <LoginForm
           onClose={closeDialog}
           onOpenRoleSelection={goBackRole}
+          onOpenOTPForm={openOTPForm}
           onOpenForgotPassword={openForgotPasswordForm}
         />
       )}

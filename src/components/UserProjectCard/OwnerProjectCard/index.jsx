@@ -31,11 +31,11 @@ function OwnerProjectCard({ project, projectType }) {
           src={
             projectType == "Funding"
               ? project?.fundingFiles?.find(
-                (p) => p.filetype == 2 && p.isDeleted == false
-              ).url
+                  (p) => p.filetype == 2 && p.isDeleted == false
+                ).url
               : project?.marketplaceFiles?.find(
-                (p) => p.fileType == 2 && p.isDeleted == false
-              ).url
+                  (p) => p.fileType == 2 && p.isDeleted == false
+                ).url
           }
           style={{
             width: "10rem",
@@ -110,9 +110,9 @@ function OwnerProjectCard({ project, projectType }) {
             border: "0 !important",
           },
           "&.MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline":
-          {
-            border: "0 !important",
-          },
+            {
+              border: "0 !important",
+            },
         }}
       >
         <Select
@@ -156,17 +156,22 @@ function OwnerProjectCard({ project, projectType }) {
             value="edit"
             onClick={() =>
               window.open(
-                `/account/${projectType == "Funding" ? "projects" : "marketplace-projects"
+                `/account/${
+                  projectType == "Funding" ? "projects" : "marketplace-projects"
                 }/update/${project.id}/basic-info`,
                 "_blank"
               )
             }
           >
-            <Typography>Edit campaign</Typography>
+            <Typography>View Details</Typography>
           </MenuItem>
-          <MenuItem value="remove">
-            <Typography>Remove campaign</Typography>
-          </MenuItem>
+          {(project.status === 1 ||
+            (project.status === 6 && projectType !== "Funding")) && (
+            <MenuItem value="remove">
+              <Typography>Delete Project</Typography>
+            </MenuItem>
+          )}
+
           {project.status == 4 && (
             <MenuItem
               value="publish"
@@ -177,7 +182,7 @@ function OwnerProjectCard({ project, projectType }) {
                 )
               }
             >
-              <Typography>Publish to marketplace</Typography>
+              <Typography>Publish To Marketplace</Typography>
             </MenuItem>
           )}
         </Select>

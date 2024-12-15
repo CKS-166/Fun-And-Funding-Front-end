@@ -2,6 +2,10 @@ import { FormControl, MenuItem, Select, Typography } from "@mui/material";
 import { alpha } from "@mui/material/styles";
 import React, { useState } from "react";
 import "./index.css";
+import marketplaceProjectApiInstace from "../../../utils/ApiInstance/marketplaceProjectApiInstance";
+import fundingProjectApiInstace from "../../../utils/ApiInstance/fundingProjectApiInstance";
+import Cookies from "js-cookie";
+import Swal from "sweetalert2";
 
 const projectStatus = {
   0: { name: "Deleted", color: "var(--red)" },
@@ -17,13 +21,57 @@ const projectStatus = {
   10: { name: "Reported", color: "#E91E63" },
 };
 
-function OwnerProjectCard({ project, projectType }) {
+function OwnerProjectCard({ project, projectType, fetchProjectData }) {
+  const token = Cookies.get("_auth");
   const [selectedValue, setSelectedValue] = useState("");
 
   const handleChange = (event) => {
     setSelectedValue(event.target.value);
   };
   console.log(project);
+
+  const handleDelete = (id, type, status) => {
+    try {
+      Swal.fire({
+        title: "Do you want to delete the project?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Yes",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          let response;
+          if (type === "Funding") {
+            response = fundingProjectApiInstace.delete(`/${id}`, {
+              headers: { Authorization: `Bearer ${token}` },
+            });
+          } else {
+            response = marketplaceProjectApiInstace.delete(`/${id}`, {
+              headers: { Authorization: `Bearer ${token}` },
+            });
+          }
+
+          response.then((response) => {
+            if (response.status === 204) {
+              Swal.fire("Delete successfully!", "", "success");
+              fetchProjectData();
+            }
+          });
+        }
+      });
+    } catch (error) {
+      console.log(error);
+      Swal.fire({
+        title: "Error",
+        text: "Delete failed!",
+        icon: "error",
+        showConfirmButton: false,
+        timer: 1500,
+      }).then(() => {
+        setTimeout();
+      });
+    }
+  };
+
   return (
     <div className="flex items-center rounded-md gap-[2rem]">
       <div className="w-[10rem] h-[10rem] bg-[#EAEAEA] flex justify-center items-center rounded-lg">
@@ -167,7 +215,10 @@ function OwnerProjectCard({ project, projectType }) {
           </MenuItem>
           {(project.status === 1 ||
             (project.status === 6 && projectType !== "Funding")) && (
-            <MenuItem value="remove">
+            <MenuItem
+              value="remove"
+              onClick={() => handleDelete(project.id, projectType, 0)}
+            >
               <Typography>Delete Project</Typography>
             </MenuItem>
           )}

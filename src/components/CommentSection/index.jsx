@@ -45,7 +45,7 @@ const CommentSection = ({ isBacker, projectId }) => {
         "projectId": projectId
       }
     
-    commentApiInstace.post("", commentBody,{
+    commentApiInstace.post("/funding", commentBody,{
       headers: {
         Authorization: `Bearer ${token}`
       }

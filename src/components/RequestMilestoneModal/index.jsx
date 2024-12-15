@@ -37,7 +37,10 @@ const RequestMilestoneModal = ({ render,open, handleClose, milestone, projectId,
       try {
         const response = await fundingProjectApiInstace.get(`/${projectId}`);
         setProject(response.data._data);
-        setTotalAmount(project.balance * milestone.disbursementPercentage)
+        if(project && milestone){
+          setTotalAmount(project.balance * milestone.disbursementPercentage)
+        }
+        
       } catch (err) {
         console.log(err.message || "Something went wrong");
       }
@@ -46,7 +49,7 @@ const RequestMilestoneModal = ({ render,open, handleClose, milestone, projectId,
     if (projectId) {
       fetchProject();
     }
-  }, [projectId]);
+  }, [projectId,milestone]);
 
 
   const handleSubmit = () => {
@@ -139,22 +142,6 @@ const RequestMilestoneModal = ({ render,open, handleClose, milestone, projectId,
             <li key={index}>{req.description}</li>
           </ul>
         ))}
-        {/* <strong>Mandatory:</strong>
-          <ul>
-            <li> 
-              <strong></strong> A List of Educational Gameplay Features, including:
-              <ul>
-                <li>Describe key gameplay elements (e.g., platformer levels, puzzle mechanics).</li>
-                <li>Outline educational components integrated within gameplay (e.g., quizzes, spelling challenges).</li>
-                <li>Indicate target learning objectives (e.g., math skills, problem-solving, creativity).</li>
-              </ul>
-            </li>
-          </ul>
-          <strong>Optional:</strong>
-          <ul>
-            <li>Progress updates with screenshots,videos or documents shared with backers.</li>
-          </ul>
-   */}
         <Typography variant="h6" gutterBottom>
           Validation Criteria:
         </Typography>
@@ -162,17 +149,6 @@ const RequestMilestoneModal = ({ render,open, handleClose, milestone, projectId,
           Additional context about our criteria can be found
           <span style={{ color: '#1BAA64', fontWeight: 600, cursor: 'pointer', marginLeft: '5px' }}>here</span>
         </Typography>
-        {/* <ul>
-            <li>Graded by backers on gameplay quality, educational value, and engagement.</li>
-            <li>Admin reviews feedback from backers.</li>
-            <li>
-              <strong>Extension:</strong> 
-              <ul>
-                <li>If grade is less than 3.5/5, developers get an extension to fix issues.</li>
-                <li>Failure after extension leads to project cancellation and backer refunds.</li>
-              </ul>
-            </li>
-          </ul> */}
         <div className='flex gap-3 w-[100%] justify-between'>
           <div className='w-[50%]'>
             <div className='font-semibold text-xl'>Title</div>

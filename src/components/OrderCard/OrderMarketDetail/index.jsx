@@ -42,13 +42,13 @@ const OrderMarketDetail = ({ details }) => {
     };
     return (
         <div>
-            <Box sx={{display : 'flex', justifyContent : 'space-between', alignItems : 'center'}}>
-            <Typography sx={{ color: 'var(--black)', fontWeight: '600', fontSize: '1.5rem', mb: '1rem' }}>Order details</Typography>
-            <Typography sx={{ color: 'var(--black)', fontWeight: '600', fontSize: '1.5rem', mb: '1rem' }}>
-              Total Amount:  {formatPrice(totalUnitPrice)}
-            </Typography>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <Typography sx={{ color: 'var(--black)', fontWeight: '600', fontSize: '1.5rem', mb: '1rem' }}>Order details</Typography>
+                <Typography sx={{ color: 'var(--black)', fontWeight: '600', fontSize: '1.5rem', mb: '1rem' }}>
+                    Total Amount:  {formatPrice(totalUnitPrice)}
+                </Typography>
             </Box>
-            
+
             <Paper
                 sx={{
                     display: 'flex',
@@ -100,7 +100,6 @@ const OrderMarketDetail = ({ details }) => {
                             }}
                         >
                             <div className="flex flex-row justify-start items-center w-[45%]">
-
                                 <div className="flex flex-col justify-between max-h-[5rem]">
                                     <Typography
                                         sx={{
@@ -137,9 +136,9 @@ const OrderMarketDetail = ({ details }) => {
                         </AccordionSummary>
                         <AccordionDetails sx={{ px: "2rem", py: "1rem" }}>
                             <Typography variant="body1" sx={{ mb: 2, fontSize: "1rem" }}>
-                                Discount and Digital Key Details
+                                Digital key Details
                             </Typography>
-                            {/* Example table */}
+                            {/* Digital table */}
                             <table
                                 style={{
                                     width: "100%",
@@ -182,7 +181,7 @@ const OrderMarketDetail = ({ details }) => {
                                         >
                                             Status
                                         </th>
-                                        
+
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -215,6 +214,90 @@ const OrderMarketDetail = ({ details }) => {
                                     </tr>
                                 </tbody>
                             </table>
+                            {item.couponName != "" && (
+                                <>
+                                    <Typography variant="body1" sx={{ mt: 2, mb: 2, fontSize: "1rem" }}>
+                                        Coupon Details
+                                    </Typography>
+                                    {/* Discount table */}
+                                    <table
+                                        style={{
+                                            width: "100%",
+                                            borderCollapse: "separate", // Use "separate" for borderRadius to work
+                                            borderSpacing: 0, // Removes gaps when using "separate"
+                                            borderRadius: "5px", // Apply borderRadius
+
+                                            overflow: "hidden", // Ensure borderRadius works
+                                            boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.2)", // Add shadow
+                                        }}
+                                    >
+                                        <thead
+                                            style={{
+                                                backgroundColor: "#1BAA64", // Header background color
+                                                color: "#ffffff", // Header text color
+                                            }}
+                                        >
+                                            <tr>
+                                                <th
+                                                    style={{
+                                                        padding: "12px", // Increased padding for better spacing
+                                                        textAlign: "left",
+                                                    }}
+                                                >
+                                                    Coupon Name
+                                                </th>
+                                                <th
+                                                    style={{
+                                                        padding: "12px",
+                                                        textAlign: "left",
+                                                    }}
+                                                >
+                                                    Coupon Key
+                                                </th>
+                                                <th
+                                                    style={{
+                                                        padding: "12px",
+                                                        textAlign: "left",
+                                                    }}
+                                                >
+                                                    Discount Rate
+                                                </th>
+
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td
+
+                                                    style={{
+                                                        padding: "12px",
+                                                        cursor: "pointer",
+                                                        textDecoration: "underline",
+                                                        color: "#1BAA64",
+                                                    }}
+                                                >
+                                                    {item.couponName}
+                                                </td>
+                                                <td
+                                                    style={{
+                                                        padding: "12px",
+                                                    }}
+                                                >
+                                                    {item.couponKey}
+                                                </td>
+                                                <td
+                                                    style={{
+                                                        padding: "12px",
+                                                    }}
+                                                >
+                                                    {item.discountRate}
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </>
+                            )}
+
                         </AccordionDetails>
                     </Accordion>
                 ))}

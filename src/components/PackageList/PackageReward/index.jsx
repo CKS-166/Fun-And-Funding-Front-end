@@ -15,7 +15,6 @@ const PackageReward = ({ packageList, reloadDetail, isButtonActive }) => {
   const [isLoading, setIsLoading] = useState(false);
   const handleDonateFree = async (item) => {
     let donateBody = {
-      userId: "8C94B07C-209B-4E11-A1B6-BC59E0B29976",
       packageId: item.id,
       donateAmount: donatedMoney,
     };

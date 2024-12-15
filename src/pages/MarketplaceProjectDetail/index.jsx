@@ -15,7 +15,7 @@ import {
   Stack,
   Tab,
   TextareaAutosize,
-  Typography
+  Typography,
 } from "@mui/material";
 import DOMPurify from "dompurify";
 import Cookies from "js-cookie";
@@ -38,6 +38,7 @@ import likeApiInstace from "../../utils/ApiInstance/likeApiInstance";
 import marketplaceFileApiInstance from "../../utils/ApiInstance/marketplaceFileApiInstance";
 import marketplaceProjectApiInstace from "../../utils/ApiInstance/marketplaceProjectApiInstance";
 import orderDetailApiInstance from "../../utils/ApiInstance/orderDetailApiInstance";
+
 import "./index.css";
 
 const notify = (message, type) => {
@@ -107,7 +108,7 @@ function MarketplaceProjectDetail() {
     try {
       const res = await orderDetailApiInstance.get(`/${id}/purchases`);
       if (res.data._statusCode == 200) {
-        console.log(res.data._data)
+        console.log(res.data._data);
         setOrderCount(res.data._data.length);
       }
     } catch (error) {
@@ -505,8 +506,14 @@ function MarketplaceProjectDetail() {
                       onClick={() => addGametoCart()}
                       disabled={marketplaceProject.status == 10}
                     >
-                      {marketplaceProject.status == 10 ? 'Project Reported' : <><AddShoppingCartIcon sx={{ mr: "1rem" }} />
-                        Add to cart</>}
+                      {marketplaceProject.status == 10 ? (
+                        "Project Reported"
+                      ) : (
+                        <>
+                          <AddShoppingCartIcon sx={{ mr: "1rem" }} />
+                          Add to cart
+                        </>
+                      )}
                     </Button>
                     <Grid2 container spacing={2} sx={{ marginTop: "20px" }}>
                       <Grid2 size={6}>
@@ -591,8 +598,9 @@ function MarketplaceProjectDetail() {
                     value="1"
                   />
                   <Tab
-                    label={`Comments (${commentList != null ? commentList.length : 0
-                      })`}
+                    label={`Comments (${
+                      commentList != null ? commentList.length : 0
+                    })`}
                     className="marketplace-project-tab"
                     value="2"
                   />
@@ -718,7 +726,9 @@ function MarketplaceProjectDetail() {
                                       fontSize: "0.75rem",
                                     }}
                                     onClick={() => handleCommentProject()}
-                                    disabled={sendLoading || comment.trim() === ""}
+                                    disabled={
+                                      sendLoading || comment.trim() === ""
+                                    }
                                   >
                                     {sendLoading ? (
                                       <CircularProgress

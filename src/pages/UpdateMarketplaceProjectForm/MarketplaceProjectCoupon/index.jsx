@@ -166,10 +166,10 @@ const MarketplaceProjectCoupon = () => {
             </Button>
           </Box>
         </Box>
-        <h1 className="text-3xl font-bold mb-6 text-center text-[#1BAA64]">
-          Coupons
-        </h1>
-        <CouponsTable data={mappingData} />
+
+        {mappingData && mappingData.length > 0 && (
+          <CouponsTable data={mappingData} />
+        )}
       </div>
     </>
   );

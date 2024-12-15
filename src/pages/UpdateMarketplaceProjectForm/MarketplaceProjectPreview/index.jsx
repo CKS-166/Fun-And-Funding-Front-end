@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import fundingProjectApiInstance from "../../../utils/ApiInstance/fundingProjectApiInstance.jsx";
 import { useParams } from "react-router";
-import { Backdrop, CircularProgress,Box } from "@mui/material";
+import { Backdrop, CircularProgress, Box } from "@mui/material";
 import ProgressChart from "../../../components/Chart/ProgressChart/index.jsx";
 import MarketLineChart from "../../../components/Chart/MarketLineChart/index.jsx";
 import packageBackerApiInstance from "../../../utils/ApiInstance/packageBackerApiInstance.jsx";
@@ -16,30 +16,32 @@ import couponApiInstace from "../../../utils/ApiInstance/couponApiInstance.jsx";
 import { RiCoupon5Fill } from "react-icons/ri";
 import MarketBarChart from "../../../components/Chart/MarketBarChart/index.jsx";
 import { RiBillLine } from "react-icons/ri";
+import MarketplaceWithdrawButton from "../../../components/MarketplaceWithdrawButton/index.jsx";
 function MarketplaceProjectPreview() {
   const { id } = useParams();
   const { marketplaceProject, setMarketplaceProject, edited, setEdited } =
-  useUpdateMarketplaceProject();
+    useUpdateMarketplaceProject();
   const [loading, setLoading] = useState(false);
   const [lineData, setLineData] = useState([]);
   const [barData, setBarData] = useState([]);
   const [couponCount, setCouponCount] = useState(0);
   const [ordersCount, setOrdersCount] = useState(0);
-  const [activeCoupons,setActiveCoupons] = useState(0);
+  const [activeCoupons, setActiveCoupons] = useState(0);
   //fetch line chart data
   const fetchLineChart = async (projectId) => {
     try {
-      const res = await orderApiInstace.get(`group-orders?id=${projectId}`)
-      .then(res => {
-        console.log(res);
-        setLineData(res.data._data)
-        setOrdersCount(res.data._data.length)
-      });
+      const res = await orderApiInstace
+        .get(`group-orders?id=${projectId}`)
+        .then((res) => {
+          console.log(res);
+          setLineData(res.data._data);
+          setOrdersCount(res.data._data.length);
+        });
     } catch (error) {
       console.error("Error fetching line chart data:", error);
     }
   };
-  console.log(marketplaceProject)
+  console.log(marketplaceProject);
   //fetch bar data
   const fetchBarData = async (projectId) => {
     try {
@@ -57,17 +59,19 @@ function MarketplaceProjectPreview() {
     try {
       const res = await couponApiInstace.get(`all/${projectId}`);
       setCouponCount(res.data._data.length);
-      const activeCoupons = res.data._data.length > 0 ?
-      coupons.filter(coupon => coupon.status === 1) : [];
+      const activeCoupons =
+        res.data._data.length > 0
+          ? coupons.filter((coupon) => coupon.status === 1)
+          : [];
     } catch (error) {
       console.error("Error fetching bar chart data:", error);
     }
-  }
-  const couponsXAxis = ['Active', 'Total'];
+  };
+  const couponsXAxis = ["Active", "Total"];
   useEffect(() => {
-     fetchLineChart(id);
-     fetchCoupon(id);
-  },[marketplaceProject])
+    fetchLineChart(id);
+    fetchCoupon(id);
+  }, [marketplaceProject]);
   return (
     <>
       <Backdrop
@@ -89,6 +93,7 @@ function MarketplaceProjectPreview() {
                 increase="+21%"
                 icon={<FaWallet size={26} />}
               />
+              <MarketplaceWithdrawButton id={id} />
             </Grid>
             <Grid item xs={12} sm={6} md={3}>
               <StatBox
@@ -104,16 +109,18 @@ function MarketplaceProjectPreview() {
                 icon={<RiBillLine size={26} />}
               />
             </Grid>
-            
           </Grid>
           <Grid container spacing={2} justifyContent={"center"} m="2rem">
             <Grid sx={8}>
-              <Box sx={{height: '10rem' }}>
+              <Box sx={{ height: "10rem" }}>
                 <MarketLineChart apiData={lineData} />
               </Box>
             </Grid>
             <Grid sx={4}>
-              <MarketBarChart x={couponsXAxis} y={[activeCoupons,couponCount]}  />
+              <MarketBarChart
+                x={couponsXAxis}
+                y={[activeCoupons, couponCount]}
+              />
             </Grid>
           </Grid>
         </>

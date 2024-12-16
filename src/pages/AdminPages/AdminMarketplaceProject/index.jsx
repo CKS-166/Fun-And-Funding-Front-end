@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useLoading } from "../../../contexts/LoadingContext";
 import marketplaceProjectApiInstace from "../../../utils/ApiInstance/marketplaceProjectApiInstance";
 import MarketplaceProjectDetailModal from "./MarketplaceProjectDetailModal";
+import { TablePagination } from "@mui/material";
 
 const projectStatus = {
   0: { name: "Deleted", color: "var(--red)" },
@@ -20,8 +21,9 @@ const projectStatus = {
 function AdminMarketplaceProject() {
   const { isLoading, setIsLoading } = useLoading();
   const [marketplaceProjectList, setMarketplaceProjectList] = useState([]);
-  const [pageIndex, setPageIndex] = useState(1);
-  const [totalPage, setTotalPage] = useState(1);
+  const [pageIndex, setPageIndex] = useState(0);
+  const [pageSize, setPageSize] = useState(10);
+  const [totalItems, setTotalItems] = useState(1);
   const [openModal, setOpenModal] = useState(false);
   const [selectedMarketplaceProjectId, setSelectedMarketplaceProjectId] =
     useState("");
@@ -36,15 +38,16 @@ function AdminMarketplaceProject() {
       setIsLoading(true);
       const res = await marketplaceProjectApiInstace.get(``, {
         params: {
-          pageSize: 10,
-          pageIndex: pageIndex,
+          pageSize: pageSize,
+          pageIndex: pageIndex + 1,
           searchValue: searchValue,
         },
       });
       if (res.data._statusCode == 200) {
         setMarketplaceProjectList(res.data._data);
-        setPageIndex(res.data._data.pageIndex);
-        setTotalPage(res.data._data.totalPages);
+        setPageIndex(res.data._data.pageIndex - 1);
+        setPageSize(res.data._data.pageSize);
+        setTotalItems(res.data._data.totalItems);
       }
     } catch (error) {
       console.log(error);
@@ -53,6 +56,8 @@ function AdminMarketplaceProject() {
     }
   };
 
+  console.log(pageSize + ", " + pageIndex + ", " + totalItems);
+
   const formatPrice = (price) => {
     return new Intl.NumberFormat("de-DE").format(price);
   };
@@ -60,6 +65,15 @@ function AdminMarketplaceProject() {
   const handleOpenModal = (userId) => {
     setSelectedMarketplaceProjectId(userId);
     setOpenModal(true);
+  };
+
+  const handleChangePage = (event, newPage) => {
+    setPageIndex(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setPageSize(parseInt(event.target.value, 10));
+    setPageIndex(0);
   };
 
   return (
@@ -223,97 +237,14 @@ function AdminMarketplaceProject() {
               </tbody>
             </table>
           </div>
-          <nav
-            className="flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0 p-4"
-            aria-label="Table navigation"
-          >
-            <div></div>
-            <ul className="inline-flex items-stretch -space-x-px list-none">
-              <li>
-                <a
-                  href="#"
-                  className="flex items-center justify-center h-full py-1.5 px-3 ml-0 text-gray-500 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700"
-                >
-                  <span className="sr-only">Previous</span>
-                  <svg
-                    className="w-5 h-5"
-                    aria-hidden="true"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700"
-                >
-                  1
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700"
-                >
-                  2
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  aria-current="page"
-                  className="flex items-center justify-center text-sm z-10 py-2 px-3 leading-tight text-primary-600 bg-primary-50 border border-primary-300 hover:bg-primary-100 hover:text-primary-700"
-                >
-                  3
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700"
-                >
-                  ...
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700"
-                >
-                  100
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="flex items-center justify-center h-full py-1.5 px-3 leading-tight text-gray-500 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700"
-                >
-                  <span className="sr-only">Next</span>
-                  <svg
-                    className="w-5 h-5"
-                    aria-hidden="true"
-                    fill="currentColor"
-                    viewbox="0 0 20 20"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      fill-rule="evenodd"
-                      d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                      clip-rule="evenodd"
-                    />
-                  </svg>
-                </a>
-              </li>
-            </ul>
-          </nav>
+          <TablePagination
+            component="div"
+            count={totalItems}
+            page={pageIndex}
+            onPageChange={handleChangePage}
+            rowsPerPage={pageSize}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />
         </div>
       </div>
       <MarketplaceProjectDetailModal

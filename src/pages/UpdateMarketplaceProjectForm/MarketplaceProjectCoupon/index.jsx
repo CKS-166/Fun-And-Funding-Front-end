@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { Box, Button } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import CouponsTable from "../../../components/CouponsTable";
 import { useParams } from "react-router";
@@ -8,6 +8,7 @@ import couponApiInstace from "../../../utils/ApiInstance/couponApiInstance";
 import Swal from "sweetalert2";
 import Cookies from "js-cookie";
 import { useLoading } from "../../../contexts/LoadingContext";
+import empty from "../../../assets/images/image_empty.png";
 
 const MarketplaceProjectCoupon = () => {
   const [data, setData] = useState([]);
@@ -167,8 +168,33 @@ const MarketplaceProjectCoupon = () => {
           </Box>
         </Box>
 
-        {mappingData && mappingData.length > 0 && (
+        {mappingData && mappingData.length > 0 ? (
           <CouponsTable data={mappingData} />
+        ) : (
+          <>
+            <Box
+              sx={{
+                height: "100%",
+                width: "100%",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <img src={empty} className="h-[10rem] mb-[2rem]"></img>
+              <Typography
+                sx={{
+                  fontSize: "1.25rem",
+                  fontWeight: "500",
+                  color: "#2F3645",
+                  mt: "2rem",
+                }}
+              >
+                No coupons.
+              </Typography>
+            </Box>
+          </>
         )}
       </div>
     </>

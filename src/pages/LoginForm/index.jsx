@@ -84,7 +84,7 @@ function LoginForm({
           const decodedToken = jwtDecode(res.data._data);
           const userRole =
             decodedToken[
-              "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
+            "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
             ];
 
           signIn({
@@ -123,13 +123,14 @@ function LoginForm({
             const decodedToken = jwtDecode(token);
             const userRole =
               decodedToken[
-                "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
+              "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
               ];
             console.log(userRole);
             if (userRole === "Backer") {
               navigate("/home");
             } else if (userRole === "Administrator") {
-              navigate("/admin-dashboard/dashboard");
+              // navigate("/admin-dashboard/dashboard");
+              navigate("/admin-dashboard/funding-projects")
             } else {
               navigate("/home");
             }

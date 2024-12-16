@@ -174,7 +174,7 @@ const ProjectDetail = () => {
   //fetch project data
   const fetchProject = async () => {
     try {
-      const  data  = await fundingProjectApiInstance
+      const data = await fundingProjectApiInstance
         .get(`/${id}`)
         .then((response) => {
           setProjectData(response.data._data);
@@ -494,8 +494,9 @@ const ProjectDetail = () => {
                         ) : (
                           <Typography
                             sx={{ fontWeight: "600" }}
-                            onClick={() => {
+                            onClick={() =>
                               handleTabValue(null, "2")
+                            }
                           >
                             Back this project
                           </Typography>

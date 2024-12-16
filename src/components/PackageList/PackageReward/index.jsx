@@ -179,7 +179,7 @@ const PackageReward = ({ packageList, reloadDetail, isButtonActive }) => {
                 </div>
               </Grid>
             ) : (
-              <Grid key={index} size={6} sx={{ overflowY: "auto" }} className="border-2 border-gray-300" spacing={5}>
+              <Grid key={index} size={6} sx={{ overflowY: "auto" }} className="border-2 rounded border-gray-300" spacing={5}>
                 <div className=" p-4 rounded min-h-[25rem]">
                   <div className="flex">
                     <div className="package-image rounded overflow-hidden">

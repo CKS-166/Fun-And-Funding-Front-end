@@ -1,6 +1,6 @@
 import Grid from '@mui/material/Grid2';
 import React, { useState } from 'react';
-import { Modal, Box, Typography, Button } from '@mui/material';
+import { Modal, Box, Typography, Button, Divider } from '@mui/material';
 import kuru from '../../../assets/images/ktm.jpg';
 import PackageItem from '../PackageReward/PackageItem';
 const style = {
@@ -11,16 +11,17 @@ const style = {
     width: 1000,
     bgcolor: 'background.paper',
     boxShadow: 24,
-    p: 4,
+    // p: 4,
     overflow: 'auto'
 };
 
 const PackageModal = ({ open, handleClose, item, onDonate, isButtonActive }) => {
     return (
         <Modal open={open} onClose={handleClose}>
-            <Box className="package-reward" sx={style}>
-                <Box sx={{ display: 'flex', padding: '34px' }} >
-                    <Box className='package-image' sx={{ width: '50%', objectFit: 'contain' }}>
+            <Box className="package-reward !min-h-[70vh]" sx={style}>
+                <div className='bg-primary-green px-5 py-3 font-semibold text-gray-100 uppercase'>Package detail</div>
+                <Box sx={{ display: 'flex', padding: '2rem' }} >
+                    <Box className='package-image' sx={{ width: '50%', objectFit: 'contain', background: 'rgba(0, 0, 0, 0.1)', borderRadius: '.3rem' }}>
                         <img src={item.url} className='object-contain' />
                     </Box>
                     <Box sx={{ width: '50%' }}>
@@ -46,7 +47,12 @@ const PackageModal = ({ open, handleClose, item, onDonate, isButtonActive }) => 
                         </Button>
                     </Box>
                 </Box>
-                <Box className='package-item' sx={{ padding: '34px' }}>
+                <Divider>
+                    <span className='text-gray-600 text-lg font-semibold'>
+                        This package consists of
+                    </span>
+                </Divider>
+                <Box className='package-item' sx={{ paddingX: '34px', paddingY: '24px' }}>
                     <Grid container spacing={2}>
                         {item.rewardItems.map((rItem, index) => (
                             <Grid size={6}>

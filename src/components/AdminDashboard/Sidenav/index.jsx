@@ -3,6 +3,8 @@ import { Divider } from "@mui/material";
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
 import logo from "../../../assets/images/logo-white.png";
+import Swal from "sweetalert2";
+import useSignOut from "react-auth-kit/hooks/useSignOut";
 
 const Sidenav = () => {
   const [isOpenRequest, setIsOpenRequest] = useState(true);
@@ -22,6 +24,30 @@ const Sidenav = () => {
   const toggleDropdownConfig = () => {
     setIsOpenConfig(!isOpenConfig);
   };
+
+  const signOut = useSignOut()
+
+  const handleSignOut = () => {
+    // alert("clicked")
+    // console.log("clicked")
+    Swal.fire({
+      title: "Warning",
+      text: "Do you want to log out?",
+      icon: "warning",
+      iconColor: "#FBB03B",
+      showCancelButton: true,
+      confirmButtonColor: "#1BAA64",
+      cancelButtonColor: "D8D8D8",
+      confirmButtonText: "Yes",
+      cancelButtonText: "No",
+      reverseButtons: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        signOut();
+        window.location.href = "/home";
+      }
+    });
+  }
 
   return (
     <>
@@ -429,7 +455,8 @@ const Sidenav = () => {
             </li>
             <li>
               <NavLink
-                to=""
+                // to=""
+                onClick={() => handleSignOut()}
                 className="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 group"
               >
                 <svg
@@ -447,7 +474,8 @@ const Sidenav = () => {
                     d="M1 8h11m0 0L8 4m4 4-4 4m4-11h3a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-3"
                   />
                 </svg>
-                <span className="flex-1 ms-3 whitespace-nowrap text-gray-200 group-hover:text-gray-900">
+                <span
+                  className="flex-1 ms-3 whitespace-nowrap text-gray-200 group-hover:text-gray-900">
                   Sign Out
                 </span>
               </NavLink>

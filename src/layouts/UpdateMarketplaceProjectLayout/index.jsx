@@ -17,6 +17,7 @@ import React, { useEffect, useState } from "react";
 import { Outlet, useLocation } from "react-router";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
+import MarketplaceWithdrawButton from "../../components/MarketplaceWithdrawButton";
 import { useLoading } from "../../contexts/LoadingContext";
 import { useUpdateMarketplaceProject } from "../../contexts/UpdateMarketplaceProjectContext";
 import marketplaceProjectApiInstace from "../../utils/ApiInstance/marketplaceProjectApiInstance";
@@ -479,6 +480,22 @@ function UpdateMarketplaceProjectLayout() {
                     >
                       Save All Changes
                     </Button>
+                  </div>
+                </div>
+                <div className={`${isPreviewActive ? 'flex' : 'hidden'} justify-between gap-[1.5rem] items-center w-fit`}>
+                  <Typography
+                    sx={{
+                      color: "#2F3645",
+                      fontSize: "1rem",
+                      fontWeight: "400",
+                      userSelect: "none",
+                      width: "fit-content",
+                    }}
+                  >
+                    Want to withdraw your money?
+                  </Typography>
+                  <div className="flex gap-[1rem]">
+                    <MarketplaceWithdrawButton id={id} />
                   </div>
                 </div>
               </div>

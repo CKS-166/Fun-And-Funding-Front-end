@@ -145,12 +145,12 @@ function App() {
                 </Route>
                 {/* Backer */}
                 <Route element={<ProtectedRoute allowedRoles={["Backer"]} />}>
-                  <Route path="/checkout-cart" element={<CheckoutCart />} />
-                  <Route
-                    path="/checkout-success/:id"
-                    element={<CheckoutSuccess />}
-                  />
-                  <Route element={<UserProfileLayout />}>
+                  <Route element={<UserLayout />}>
+                    <Route path="/checkout-cart" element={<CheckoutCart />} />
+                    <Route
+                      path="/checkout-success/:id"
+                      element={<CheckoutSuccess />}
+                    />
                   </Route>
                 </Route>
                 {/* Game Owner */}

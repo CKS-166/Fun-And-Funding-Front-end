@@ -60,6 +60,7 @@ function UpdateFundingProjectLayout() {
     const [isLoading, setIsLoading] = useState(true);
     const [loadingStatus, setLoadingStatus] = useState(0);
     const [milestoneList, setMilestoneList] = useState([]);
+    const [selectedMilestone, setSelectedMilestone] = useState("");
     //fetch milestones
     const fetchMilestones = async () => {
         setIsLoading(true);
@@ -253,15 +254,6 @@ function UpdateFundingProjectLayout() {
         return matchedEditor ? `Project Editor / ${matchedEditor.name}` : "";
     };
 
-    const getActiveMilestone = (id) => {
-        const matchedMilestone = milestoneList.find((item) =>
-            location.pathname.includes(item.milestoneName.replace(/\s+/g, '').toLowerCase())
-        );
-        return matchedMilestone
-            ? `Project Milestone / ${matchedMilestone.milestoneName}`
-            : "";
-    };
-
     const getActivePreview = () => {
         const matchedEditor = location.pathname.includes('preview');
         return matchedEditor ? `Project Preview` : "";
@@ -269,6 +261,7 @@ function UpdateFundingProjectLayout() {
 
     const handleMilestoneNavigation = (milestoneId, index) => {
         console.log(milestoneId);
+        setSelectedMilestone(`Milestone ${index + 1}`)
         // console.log(id)
         navigate(`/account/projects/update/${id}/milestone1`, {
             state: { milestoneId },
@@ -293,13 +286,16 @@ function UpdateFundingProjectLayout() {
 
     const isPreviewActive = location.pathname.includes('preview');
 
-    const getActiveSection = (id) => {
+    const getActiveSection = (id, selectedMilestone) => {
         const activeEditor = getActiveEditor(id);
-        const activeMilestone = getActiveMilestone(id);
         const activePreview = getActivePreview(id);
-        if (activeEditor) return activeEditor;
-        if (activeMilestone) return activeMilestone;
-        if (activePreview) return activePreview;
+        if (activeEditor) {
+            return activeEditor
+        };
+        if (activePreview) {
+            return activePreview
+        };
+        if (isMilestoneActive) return 'Project Milestone / ' + selectedMilestone;
         return "Unknown Section";
     };
 
@@ -491,7 +487,7 @@ function UpdateFundingProjectLayout() {
                                                         handleMilestoneNavigation(item.id, index)
                                                     }
                                                     sx={{
-                                                        backgroundColor: location.pathname.includes(item.milestoneName.replace(/\s+/g, '').toLowerCase())
+                                                        backgroundColor: selectedMilestone == `Milestone ${index + 1}` && isMilestoneActive
                                                             ? "#88D1AE"
                                                             : "transparent",
                                                         "&:hover": {
@@ -505,7 +501,7 @@ function UpdateFundingProjectLayout() {
                                                     <ListItemText
                                                         primary={item.milestoneName}
                                                         sx={{
-                                                            color: location.pathname.includes(item.milestoneName.replace(/\s+/g, '').toLowerCase())
+                                                            color: selectedMilestone == `Milestone ${index + 1}` && isMilestoneActive
                                                                 ? "#F5F7F8"
                                                                 : "#F5F7F8",
                                                             fontSize: "1rem",
@@ -546,7 +542,7 @@ function UpdateFundingProjectLayout() {
                                             width: "100%",
                                         }}
                                     >
-                                        {getActiveSection(id)}
+                                        {getActiveSection(id, selectedMilestone)}
                                     </Typography>
                                 </div>
                                 <div className={`${isEditorActive ? 'flex' : 'hidden'} justify-between gap-[1.5rem] items-center w-fit`}>

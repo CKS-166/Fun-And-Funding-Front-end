@@ -41,8 +41,6 @@ import useSignalR from "../../utils/Hooks/SignalR";
 import CartDrawer from "../CartDrawer";
 import NotificationMenu from "../Notification/NotificationMenu";
 import AuthDialog from "../Popup";
-import NotificationModal from "./NotificationModal";
-import { ToastContainer } from "react-toastify";
 
 const FunFundingAppBar = () => {
   const { cartItems, cartCount, setCartItems, setCartCount } = useCart();
@@ -141,6 +139,7 @@ const FunFundingAppBar = () => {
         if (roleRes.data._statusCode == 200) {
           if (roleRes.data._data == "Administrator") {
             setIsLogined(false);
+            setRole(roleRes.data._data);
           } else {
             setIsLogined(true);
             setRole(roleRes.data._data);
@@ -637,6 +636,7 @@ const FunFundingAppBar = () => {
                   px: "3rem",
                   height: "2.5rem",
                   fontSize: "1rem",
+                  visibility: role == "Administrator" ? 'hidden' : 'visible'
                 }}
                 onClick={openAuthDialog}
               >

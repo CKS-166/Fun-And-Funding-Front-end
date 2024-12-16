@@ -1,26 +1,26 @@
-import React, { useEffect, useState, useRef, useCallback } from "react";
-import axios from "axios";
-import { useParams, useLocation } from 'react-router-dom';
-import ReactQuill from "react-quill";
-import "react-quill/dist/quill.snow.css";
-import {
-  Backdrop, CircularProgress, Box, Button, Divider, FormControl,
-  MenuItem, Select, TextField, Typography, Tab
-} from '@mui/material';
+import ChangeCircleIcon from '@mui/icons-material/ChangeCircle';
 import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
-import { checkAvailableMilestone } from "../../../../utils/Hooks/checkAvailableMilestone";
-import projectMilestoneApiInstace from "../../../../utils/ApiInstance/projectMilestoneApiInstance";
-import UpdateMilestone from "../UpdateMilestone";
+import {
+  Backdrop,
+  Box, Button,
+  CircularProgress,
+  Tab,
+  Typography
+} from '@mui/material';
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import "react-quill/dist/quill.snow.css";
+import { useLocation, useParams } from 'react-router-dom';
+import Swal from "sweetalert2";
+import Timer from "../../../../components/Timer";
+import BackdropRequestMilestone from "../../../../components/UpdateProject/BackdropRequestMilestone";
 import MilestoneQuill from "../../../../components/UpdateProject/MilestoneQuill";
 import FileUploadDropdown from "../../../../components/UpdateProject/UploadFiles/FileUploadDropdown";
-import ChangeCircleIcon from '@mui/icons-material/ChangeCircle';
 import milestoneApiInstace from "../../../../utils/ApiInstance/milestoneApiInstance";
-import BackdropRequestMilestone from "../../../../components/UpdateProject/BackdropRequestMilestone";
-import Swal from "sweetalert2";
-import CompleteMilestoneButton from "../../../../components/UpdateProject/CompleteMilestoneButton";
-import Timer from "../../../../components/Timer";
+import { checkAvailableMilestone } from "../../../../utils/Hooks/checkAvailableMilestone";
+import UpdateMilestone from "../UpdateMilestone";
 
 const MilestoneForm = () => {
   const { id } = useParams(); // Get the project ID from the URL
@@ -207,119 +207,119 @@ const MilestoneForm = () => {
   return (
     <div>
       {(isLoading && !milestone || !milestoneData) ? (
-      <Backdrop
-        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-        open={true} // Force the Backdrop to open
-      >
-        <CircularProgress color="inherit" />
-      </Backdrop>
-    ) : <>
+        <Backdrop
+          sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+          open={true} // Force the Backdrop to open
+        >
+          <CircularProgress color="inherit" />
+        </Backdrop>
+      ) : <>
         {milestoneData && milestone && !isLoading
-        && <BackdropRequestMilestone
-          isHidden={isBackdropHidden}
-          projectId={projectId}
-          milestone={milestone}
-          status={milestoneData.status}
-          onCloseBackdrop={handleBackdropClose}
-          render={() => getMilestoneData(milestoneId)} />}
-     
-      <div className='basic-info-section'>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingRight: '5rem' }}>
-          <Box>
-            <Typography
-              className='basic-info-title'
-              
-            >
-              <h3 style={{ fontWeight: '600' }}>{milestone.milestoneName} <span className='text-[#1BAA64]'>*</span></h3>
-            </Typography>
-            <Typography
-              className='basic-info-subtitle'
-              sx={{ width: '100%' }}
-            >
-              <h3 style={{ fontWeight: '600' }}>{milestone.description}</h3>
-            </Typography>
+          && <BackdropRequestMilestone
+            isHidden={isBackdropHidden}
+            projectId={projectId}
+            milestone={milestone}
+            status={milestoneData.status}
+            onCloseBackdrop={handleBackdropClose}
+            render={() => getMilestoneData(milestoneId)} />}
+
+        <div className='basic-info-section'>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingRight: '5rem' }}>
+            <Box>
+              <Typography
+                className='basic-info-title'
+
+              >
+                <h3 style={{ fontWeight: '700' }}>{milestone.milestoneName} <span className='text-[#1BAA64]'>*</span></h3>
+              </Typography>
+              <Typography
+                className='basic-info-subtitle'
+                sx={{ width: '100%' }}
+              >
+                <h3 style={{ fontWeight: '600' }}>{milestone.description}</h3>
+              </Typography>
+            </Box>
+            <Box>
+              <Timer days={daysLeft} />
+            </Box>
           </Box>
-          <Box>
-            <Timer days={daysLeft}/>
-          </Box>
-        </Box>
 
-        {!isLoading && milestoneData && milestoneData.status == 'create' ? (
+          {!isLoading && milestoneData && milestoneData.status == 'create' ? (
 
-          <form onSubmit={handleSubmit}>
-            <TabContext value={value}>
-              <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                <TabList onChange={handleChange} aria-label="lab API tabs example">
-                  <Tab label="Requirements" value="1" />
-                  <Tab label="Issue Logs" value="2" />
-                </TabList>
-              </Box>
-              <TabPanel value="1">
-                {milestone.requirements.map((req, index) => (
-                  <div key={req.id} style={{ marginBottom: "20px" }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '70%', marginBottom: '20px' }}>
-                      <h3 style={{ fontWeight: '600' }}>{req.title}</h3>
-                      <Button variant="contained" component="label" onClick={(e) => openDropdown(e, index)}
-                        sx={{ backgroundColor: '#1BAA64', textTransform: 'none', fontWeight: '600' }} startIcon={<ChangeCircleIcon />}>
-                        Upload Files
-                        <input
-                          type="file"
-                          multiple
-                          hidden
-                          onChange={(e) => handleFilesSelected(Array.from(e.target.files), index)}
-                        />
-                      </Button>
-                    </Box>
-
-                    <p>{req.description}</p>
-                    <div className="w-[80%]">
-                      <>
-                        <div className="w-[70%]">
-                          <MilestoneQuill
-                            value={formDataArray[index]?.content || " "}
-                            onChange={(value) => handleQuillChange(value, index)}
+            <form onSubmit={handleSubmit}>
+              <TabContext value={value}>
+                <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                  <TabList onChange={handleChange} aria-label="lab API tabs example">
+                    <Tab label="Requirements" value="1" />
+                    <Tab label="Issue Logs" value="2" />
+                  </TabList>
+                </Box>
+                <TabPanel value="1">
+                  {milestone.requirements.map((req, index) => (
+                    <div key={req.id} style={{ marginBottom: "20px" }}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '70%', marginBottom: '20px' }}>
+                        <h3 style={{ fontWeight: '600' }}>{req.title}</h3>
+                        <Button variant="contained" component="label" onClick={(e) => openDropdown(e, index)}
+                          sx={{ backgroundColor: '#1BAA64', textTransform: 'none', fontWeight: '600' }} startIcon={<ChangeCircleIcon />}>
+                          Upload Files
+                          <input
+                            type="file"
+                            multiple
+                            hidden
+                            onChange={(e) => handleFilesSelected(Array.from(e.target.files), index)}
                           />
-                        </div>
-                        {formDataArray[index] && formDataArray[index].requirementFiles && (
-                          <FileUploadDropdown
-                            uploadedFiles={formDataArray[index].requirementFiles}
-                            anchorEl={anchorEls[index]}
-                            onClose={() => closeDropdown(index)}
-                            onRemoveFile={(fileIndex) =>
-                              handleRemoveFile(fileIndex, index)
-                            }
-                            requirementFiles={[]}
-                          />
-                        )}
+                        </Button>
+                      </Box>
 
-                      </>
+                      <p>{req.description}</p>
+                      <div className="w-[80%]">
+                        <>
+                          <div className="w-[70%]">
+                            <MilestoneQuill
+                              value={formDataArray[index]?.content || " "}
+                              onChange={(value) => handleQuillChange(value, index)}
+                            />
+                          </div>
+                          {formDataArray[index] && formDataArray[index].requirementFiles && (
+                            <FileUploadDropdown
+                              uploadedFiles={formDataArray[index].requirementFiles}
+                              anchorEl={anchorEls[index]}
+                              onClose={() => closeDropdown(index)}
+                              onRemoveFile={(fileIndex) =>
+                                handleRemoveFile(fileIndex, index)
+                              }
+                              requirementFiles={[]}
+                            />
+                          )}
+
+                        </>
+                      </div>
+
                     </div>
-
-                  </div>
-                ))}
-              </TabPanel>
-              <TabPanel value="2">
-                <MilestoneQuill
-                  value={issueLog || ""}
-                  onChange={(value) => setIssueLog(value)}
-                />
-              </TabPanel>
-            </TabContext>
+                  ))}
+                </TabPanel>
+                <TabPanel value="2">
+                  <MilestoneQuill
+                    value={issueLog || ""}
+                    onChange={(value) => setIssueLog(value)}
+                  />
+                </TabPanel>
+              </TabContext>
 
 
-            <Button ype="submit" variant="contained" color="primary" sx={{
-              backgroundColor: '#1BAA64'
-              , textTransform: 'none', fontWeight: '600', width: '100px'
-            }} type="submit">
-              Save
-            </Button >
-          </form>
-        ) : <UpdateMilestone render={() => getMilestoneData(milestoneId)}
-          milestones={milestoneData?.data[0]?.projectMilestoneRequirements}
-          issueLog={milestoneData?.data[0]?.issueLog} pmId={milestoneData?.data[0]?.id}
-          status={milestoneData?.status} />}
-      </div>
-    </>}
+              <Button ype="submit" variant="contained" color="primary" sx={{
+                backgroundColor: '#1BAA64'
+                , textTransform: 'none', fontWeight: '600', width: '100px'
+              }} type="submit">
+                Save
+              </Button >
+            </form>
+          ) : <UpdateMilestone render={() => getMilestoneData(milestoneId)}
+            milestones={milestoneData?.data[0]?.projectMilestoneRequirements}
+            issueLog={milestoneData?.data[0]?.issueLog} pmId={milestoneData?.data[0]?.id}
+            status={milestoneData?.status} />}
+        </div>
+      </>}
 
     </div>
   );

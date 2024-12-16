@@ -155,6 +155,7 @@ const PackageReward = ({ packageList, reloadDetail, isButtonActive }) => {
                           id="input-with-icon-adornment"
                           value={donatedMoney}
                           onChange={(e) => setDonatedMoney(e.target.value)}
+                          onWheel={(e) => { e.target.blur() }}
                           slotProps={{
                             input: {
                               startAdornment: (

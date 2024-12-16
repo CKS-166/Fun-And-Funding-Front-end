@@ -140,11 +140,17 @@ function LoginForm({
         }
       })
       .catch((error) => {
+        console.log(error);
+        console.log(error.response.data._message[0]);
         if (error.status === 403) {
           notify(
             "Your account must be verfify by OTP, please check email to verify"
           );
           handleOTPClick();
+        } else if (
+          error.response.data._message[0] === "You have been blocked"
+        ) {
+          notify("Your account has been blocked");
         } else {
           notify("Invalid Credentials, Please try again.");
         }

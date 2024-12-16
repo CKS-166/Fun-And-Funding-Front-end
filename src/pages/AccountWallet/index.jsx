@@ -9,7 +9,8 @@ import { useNavigate } from "react-router";
 import axios from "axios";
 
 const AccountWallet = () => {
-  const { data, loading, error, bankAccData } = useWalletApi("/user");
+  const [triggerReload, setTriggerReload] = useState(false)
+  const { data, loading, error, bankAccData } = useWalletApi("/user", "GET", null, triggerReload);
 
   const [openModal, setOpenModal] = useState(false);
   const [modalAddMoney, setModalAddMoney] = useState(false);
@@ -181,6 +182,8 @@ const AccountWallet = () => {
         modalAddMoney={modalAddMoney}
         handleCloseModal={handleCloseModal}
         walletId={data?._data.id}
+        triggerReload={triggerReload}
+        setTriggerReload={setTriggerReload}
       />
 
       <BankAccountSettingModal
@@ -188,6 +191,8 @@ const AccountWallet = () => {
         setOpenModal={setOpenBankSetting}
         walletId={data?._data.id}
         bankAccData={bankAccData?._data}
+        triggerReload={triggerReload}
+        setTriggerReload={setTriggerReload}
       />
 
       {/* <TestNotification />

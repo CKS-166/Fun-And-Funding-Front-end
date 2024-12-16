@@ -5,7 +5,7 @@ import Cookies from "js-cookie";
 import withdrawRequestApiInstance from "../../../utils/ApiInstance/withdrawRequestApiInstance";
 import { toast, ToastContainer } from "react-toastify";
 
-const WalletModal = ({ openModal, modalAddMoney, handleCloseModal, walletId }) => {
+const WalletModal = ({ openModal, modalAddMoney, handleCloseModal, walletId, triggerReload, setTriggerReload }) => {
 
   const [amount, setAmount] = useState(0)
 
@@ -33,6 +33,7 @@ const WalletModal = ({ openModal, modalAddMoney, handleCloseModal, walletId }) =
         toast.warn(response.data._message[0])
 
       handleCloseModal()
+      setTriggerReload(!triggerReload)
     }
     catch (error) {
       console.log(error)
@@ -42,7 +43,6 @@ const WalletModal = ({ openModal, modalAddMoney, handleCloseModal, walletId }) =
 
   return (
     <>
-      <ToastContainer />
       <Modal
         open={openModal}
         onClose={handleCloseModal}

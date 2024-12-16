@@ -31,6 +31,24 @@ import marketplaceProjectApiInstance from "../../utils/ApiInstance/marketplacePr
 import systemWalletApiInstace from "../../utils/ApiInstance/systemWalletApiInstance";
 import userApiInstance from '../../utils/ApiInstance/userApiInstance';
 import "./index.css";
+import { toast, ToastContainer } from "react-toastify";
+import Cookies from "js-cookie";
+import { useNavigate } from "react-router";
+import useSignIn from "react-auth-kit/hooks/useSignIn";
+
+const notify = (message) => {
+  toast.warn(message, {
+    position: "top-right", // Positioning the toast
+    autoClose: 3000, // Auto close after 3 seconds
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    style: {
+      backgroundColor: "#ffffff", // Custom background color for warning
+      color: "#000000", // Custom text color for warning
+    },
+  });
+};
 
 function HomePage() {
   const { isLoading, setIsLoading } = useLoading();
@@ -95,9 +113,40 @@ function HomePage() {
     }
   }
 
+  const navigate = useNavigate()
+
+  const signIn = useSignIn()
+
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const errorMessage = urlParams.get("error");
+    const token = urlParams.get("token");
+
+
+    if (errorMessage) {
+      notify(errorMessage);
+      window.history.replaceState({}, document.title, "/home");
+    }
+
+    if (token) {
+      signIn({
+        auth: {
+          token: token,
+          type: "Bearer",
+        },
+        expiresIn: 3600,
+        tokenType: "Bearer",
+        userState: { role: "Backer" },
+      });
+      // Cookies.set("_auth", token, { expires: 7, secure: true });
+      // Cookies.set("_auth_state", JSON.stringify(authState));
+    }
+  }, []);
+
   return (
     <div className="mt-[-6.4rem]">
       <BannerCarousel />
+      <ToastContainer />
       <div className="flex flex-col justify-center px-[6rem] pt-[7.5rem] pb-[3.75rem]">
         <div className="flex justify-between gap-[4rem] mb-[2.5rem]">
           <img

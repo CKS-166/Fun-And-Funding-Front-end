@@ -18,6 +18,10 @@ import Swal from "sweetalert2";
 import { useLoading } from "../../../../contexts/LoadingContext";
 import marketplaceProjectApiInstace from "../../../../utils/ApiInstance/marketplaceProjectApiInstance";
 import MarketplaceProjectOverview from "./MarketplaceProjectOverview";
+import Purchases from "../../../../components/AdminMarketplaceProject/Purchases";
+import orderApiInstance from "../../../../utils/ApiInstance/orderApiInstance";
+import orderDetailApiInstance from "../../../../utils/ApiInstance/orderDetailApiInstance";
+import MarketplaceProjectGameFile from "./MarketplaceProjectGameFile";
 
 const notify = (message, type) => {
   const options = {
@@ -67,6 +71,7 @@ const MarketplaceProjectDetailModal = ({
   const [selectedMarketplaceProject, setSelectedMarketplaceProject] =
     useState(null);
   const [activeTab, setActiveTab] = useState(0);
+  const [orders, setOrders] = useState([]);
 
   const style = {
     position: "absolute",
@@ -91,6 +96,7 @@ const MarketplaceProjectDetailModal = ({
   useEffect(() => {
     if (openModal && selectedMarketplaceProjectId) {
       fetchMarketplaceProject();
+      fecthOrders();
     }
   }, [selectedMarketplaceProjectId, openModal]);
 
@@ -102,6 +108,25 @@ const MarketplaceProjectDetailModal = ({
       );
       if (res.status == 200) {
         setSelectedMarketplaceProject(res.data._data);
+      }
+    } catch (error) {
+      notify(
+        error.response?.data?.message || error.message || "An error occurred",
+        "error"
+      );
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const fecthOrders = async () => {
+    try {
+      setIsLoading(true);
+      const res = await orderDetailApiInstance.get(
+        `/${selectedMarketplaceProjectId}/purchases`
+      );
+      if (res.status == 200) {
+        setOrders(res.data._data);
       }
     } catch (error) {
       notify(
@@ -354,7 +379,7 @@ const MarketplaceProjectDetailModal = ({
                         />
                         <Tab
                           value={1}
-                          label="Coupons"
+                          label="Game Content"
                           sx={{
                             textTransform: "none",
                             color:
@@ -384,16 +409,12 @@ const MarketplaceProjectDetailModal = ({
                       <MarketplaceProjectOverview
                         marketplaceProject={selectedMarketplaceProject}
                       />
-                    ) : activeTab == 1 ? (
-                      //   <FundingProjectPackages
-                      //     packages={selectedMarketplaceProject.packages}
-                      //   />
-                      <></>
+                    ) : activeTab == 2 ? (
+                      <Purchases orders={orders} />
                     ) : (
-                      //   <FundingProjectDonation
-                      //     fundingProjectId={selectedMarketplaceProjectId}
-                      //   />
-                      <></>
+                      <MarketplaceProjectGameFile
+                        marketplaceProject={selectedMarketplaceProject}
+                      />
                     )}
                   </Box>
                   <div

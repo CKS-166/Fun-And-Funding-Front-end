@@ -14,10 +14,13 @@ import {
 } from "@mui/material";
 import Swal from "sweetalert2";
 import Cookies from "js-cookie";
+import commissionApiInstance from "../../utils/ApiInstance/commisionApiInstance";
+import { useLoading } from "../../contexts/LoadingContext";
 
 const MarketplaceContract = ({ open, handleClose, id }) => {
   const token = Cookies.get("_auth");
-  console.log(token);
+  const [commissionFee, setCommissionFee] = useState(0);
+  const { isLoading, setIsLoading } = useLoading();
   const navigate = useNavigate();
   const modalStyle = {
     position: "absolute",
@@ -56,6 +59,31 @@ const MarketplaceContract = ({ open, handleClose, id }) => {
     window.open(`/request-marketplace-project/${id}/basic-info`, "_blank");
     handleClose();
   };
+
+  useEffect(() => {
+    const fetchCommissionFee = async () => {
+      setIsLoading(true);
+      try {
+        const type = 0; // funding fee
+        const response = await commissionApiInstance.get(
+          "/latest-commission-fee",
+          {
+            params: { type },
+          }
+        );
+        setCommissionFee(response.data._data.rate);
+      } catch (err) {
+        console.error("Error fetching latest commission fee:", err);
+      }
+    };
+
+    const fetchData = async () => {
+      await fetchCommissionFee();
+      setIsLoading(false);
+    };
+
+    fetchData();
+  }, [setIsLoading]);
 
   return (
     <Modal open={open} onClose={handleClose}>
@@ -97,7 +125,7 @@ const MarketplaceContract = ({ open, handleClose, id }) => {
               Revenue from sales will be charged with the system commission fee:{" "}
               {""}
               <span className="text-[var(--primary-green)] font-semibold">
-                5% (hardcode)
+                {commissionFee * 100}%
               </span>
               .
             </li>

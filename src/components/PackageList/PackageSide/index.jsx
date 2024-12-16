@@ -84,7 +84,12 @@ const PackageSide = ({ packageList, reloadDetail, isButtonActive }) => {
                     // , height: '399px',
                     cursor: 'pointer',
                 }}
-                    onClick={() => handleOpen(item)}
+                    onClick={() => {
+                        if (!isButtonActive) {
+                            handleOpen(item)
+                        }
+                    }}
+
                     key={index}>
                     <CardMedia
                         component="img"
@@ -126,7 +131,12 @@ const PackageSide = ({ packageList, reloadDetail, isButtonActive }) => {
                         }}
                             disabled={isButtonActive}
                             // onClick = {() => handlePackageDonate(item)}
-                            onClick={() => handleOpen(item)}>
+                            onClick={() => {
+                                if (isButtonActive) {
+                                    handleOpen(item);
+                                }
+                            }}
+                        >
                             Pledge {item.requiredAmount.toLocaleString('de-DE')} VND
                         </Button>
                     </CardActions>

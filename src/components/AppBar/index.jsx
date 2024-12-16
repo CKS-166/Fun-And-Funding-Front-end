@@ -42,6 +42,7 @@ import CartDrawer from "../CartDrawer";
 import NotificationMenu from "../Notification/NotificationMenu";
 import AuthDialog from "../Popup";
 import NotificationModal from "./NotificationModal";
+import { ToastContainer } from "react-toastify";
 
 const FunFundingAppBar = () => {
   const { cartItems, cartCount, setCartItems, setCartCount } = useCart();

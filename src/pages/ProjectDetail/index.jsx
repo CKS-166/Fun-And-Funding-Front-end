@@ -173,7 +173,7 @@ const ProjectDetail = () => {
   //fetch project data
   const fetchProject = async () => {
     try {
-      const { data } = await fundingProjectApiInstance
+      const  data  = await fundingProjectApiInstance
         .get(`/${id}`)
         .then((response) => {
           setProjectData(response.data._data);
@@ -204,7 +204,7 @@ const ProjectDetail = () => {
   useEffect(() => {
     fetchProject();
     fetchMilestones();
-  }, [id]);
+  }, [id, firstMilestone]);
 
   console.log(projectData);
 
@@ -480,7 +480,9 @@ const ProjectDetail = () => {
                         ) : (
                           <Typography
                             sx={{ fontWeight: "600" }}
-                            onClick={handleSendNotification}
+                            onClick={() => {
+                              handleTabValue(null, "2")
+                            }}
                           >
                             Back this project
                           </Typography>
@@ -488,7 +490,7 @@ const ProjectDetail = () => {
                       </Button>
                       {firstMilestone && (
                         <RequestMilestoneModal
-                          milestone={firstMilestone}
+                          milestone={firstMilestone && firstMilestone}
                           open={isModalOpen}
                           handleClose={() => handleClose()}
                           projectId={projectData.id}

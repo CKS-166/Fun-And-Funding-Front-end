@@ -272,7 +272,7 @@ const MarketplaceProjectGameContent = () => {
             <Grid2 size={3}>
               <h4 className="font-semibold text-sm mb-1">Evidence file*</h4>
               <p className="text-gray-500 text-xs">
-                Provide evidences to prove you have included the key validator
+                Provide images to prove you have included the key validator
                 package.
               </p>
             </Grid2>
@@ -282,7 +282,7 @@ const MarketplaceProjectGameContent = () => {
                 onupdatefiles={setEvidenceFiles}
                 allowMultiple={true}
                 maxFiles={5}
-                acceptedFileTypes={[]}
+                acceptedFileTypes={["image/*"]}
                 name="evidences"
                 labelIdle='Drag & drop files here or <span class="filepond--label-action">Browse</span>'
               />

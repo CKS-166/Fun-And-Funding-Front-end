@@ -17,6 +17,8 @@ import { RiCoupon5Fill } from "react-icons/ri";
 import MarketBarChart from "../../../components/Chart/MarketBarChart/index.jsx";
 import { RiBillLine } from "react-icons/ri";
 import MarketplaceWithdrawButton from "../../../components/MarketplaceWithdrawButton/index.jsx";
+import transactionApiInstace from "../../../utils/ApiInstance/transactionApiInstance.jsx";
+import MarketTransactionTable from "../../../components/TransactionTable/MarketTransactionTable/index.jsx";
 function MarketplaceProjectPreview() {
   const { id } = useParams();
   const { marketplaceProject, setMarketplaceProject, edited, setEdited } =
@@ -27,6 +29,7 @@ function MarketplaceProjectPreview() {
   const [couponCount, setCouponCount] = useState(0);
   const [ordersCount, setOrdersCount] = useState(0);
   const [activeCoupons, setActiveCoupons] = useState(0);
+  const [transactions, setTransactions] = useState([]);
   //fetch line chart data
   const fetchLineChart = async (projectId) => {
     try {
@@ -43,17 +46,6 @@ function MarketplaceProjectPreview() {
   };
   console.log(marketplaceProject);
   //fetch bar data
-  const fetchBarData = async (projectId) => {
-    try {
-      const res = await packageBackerApiInstance.get(
-        `/package-backer-count?projectId=${projectId}`
-      );
-      console.log(res);
-      setBarData(res.data.result._data);
-    } catch (error) {
-      console.error("Error fetching bar chart data:", error);
-    }
-  };
 
   const fetchCoupon = async (projectId) => {
     try {
@@ -67,10 +59,20 @@ function MarketplaceProjectPreview() {
       console.error("Error fetching bar chart data:", error);
     }
   };
+  const fetchTransaction = async (projectId) => {
+    try {
+      const res = await transactionApiInstace.get(`marketplace-transaction?marketId=${projectId}`)
+      console.log(res)
+      setTransactions(res.data.result._data)
+    } catch (error) { 
+
+     }
+  }
   const couponsXAxis = ["Active", "Total"];
   useEffect(() => {
     fetchLineChart(id);
     fetchCoupon(id);
+    fetchTransaction(id)
   }, [marketplaceProject]);
   return (
     <>
@@ -112,9 +114,9 @@ function MarketplaceProjectPreview() {
           </Grid>
           <Grid container spacing={2} justifyContent={"center"} m="2rem">
             <Grid sx={8}>
-              <Box sx={{ height: "10rem" }}>
                 <MarketLineChart apiData={lineData} />
-              </Box>
+
+              <MarketTransactionTable transactions={transactions}/>
             </Grid>
             <Grid sx={4}>
               <MarketBarChart

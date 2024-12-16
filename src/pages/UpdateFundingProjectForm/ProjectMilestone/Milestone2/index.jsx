@@ -53,7 +53,7 @@ function Milestone2() {
                 setTasks(data.data[0].projectMilestoneRequirements)
             }
             else {
-                if (data.status == 'submitted') {
+                if (data.status == 'submitted' || data.status == 'completed') {
                     setTasks(data.data[0].projectMilestoneRequirements)
                 }
                 console.log("a")
@@ -207,7 +207,7 @@ function Milestone2() {
                         </Typography>
                     </Box>
                     <Box>
-                        <CompleteMilestoneButton  render={() => getMilestoneData(milestoneId)} status={milestoneData.status} pmId={milestoneData.status == 'edit' || milestoneData.status == 'warning' && milestoneData.data[0].id} />
+                        <CompleteMilestoneButton  render={() => getMilestoneData(milestoneId)} status={milestoneData.status} pmId={(milestoneData.status == 'edit' || milestoneData.status == 'warning') && milestoneData.data[0].id} />
                     </Box>
 
                 </Box>
@@ -216,14 +216,6 @@ function Milestone2() {
                     {milestone && milestone.requirements.map((req) => (
                         <>
                             <Typography sx={{ fontWeight: 600 }}>{req.description}  <span className='text-[#1BAA64]'>*</span></Typography>
-                            <TabContext value={value}>
-                                <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                                    <TabList onChange={handleChange} aria-label="lab API tabs example">
-                                        <Tab label="Requirements" value="1" />
-                                        <Tab label="Issue Logs" value="2" />
-                                    </TabList>
-                                </Box>
-                            </TabContext>
                                 <TaskForm onAddTask={handleAddTask} projectId={projectId} milestoneId={milestoneId} requirementId={req.id} />
                                 <Grid container spacing={2}>
                                     <Grid size={4} className="app_main">

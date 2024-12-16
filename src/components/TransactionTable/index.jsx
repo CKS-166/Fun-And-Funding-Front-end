@@ -16,7 +16,7 @@ const transactionTypes = [
   "Wallet transfer",
   "Withdraw Wallet Money",
   "Funding Withdraw",
-  "CommissionFee",
+  "Charge Commission Fee",
   "Funding Refund",
   "Funding Purchase",
   "Order Purchase",

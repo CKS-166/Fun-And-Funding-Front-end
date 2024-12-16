@@ -62,7 +62,7 @@ const OrderDetailModal = ({ details }) => {
         document.body.appendChild(link); // Append the link to the DOM
         link.click(); // Programmatically click the link to trigger the download
         document.body.removeChild(link); // Remove the link from the DOM
-      };
+    };
     return (
         <div>
             <Typography sx={{ color: 'var(--black)', fontWeight: '600', fontSize: '1.5rem', mb: '1rem' }}>Order details</Typography>
@@ -157,26 +157,32 @@ const OrderDetailModal = ({ details }) => {
                                 </div>
                             </div>
                             {item.projectCoupon ? (
-                                <Typography
-                                    sx={{
-                                        fontWeight: "500",
-                                        fontSize: "1rem",
-                                        width: "25%",
-                                    }}
-                                >
-                                    <span style={{ textDecoration: "line-through" }}>
-                                        {formatPrice(item.price)} VND
-                                    </span>
-                                    <br />
-                                    <span
-                                        style={{
-                                            color: "var(--primary-green)",
-                                            fontWeight: 600,
+                                <>
+                                    <Typography
+                                        sx={{
+                                            fontWeight: "500",
+                                            fontSize: "1rem",
+                                            width: "25%",
                                         }}
                                     >
-                                        {formatPrice(item.discountedPrice)} VND
-                                    </span>
-                                </Typography>
+                                        <span style={{ textDecoration: "line-through" }}>
+                                            {formatPrice(item.digitalKey.marketingProject.price)} VND
+                                        </span>
+                                        <br />
+                                        <span
+                                            style={{
+                                                color: "var(--primary-green)",
+                                                fontWeight: 600,
+                                            }}
+                                        >
+                                            {formatPrice(item.unitPrice)} VND
+                                        </span>
+                                    </Typography>
+                                    <Typography sx={{ fontWeight: '600', width: '15%', textAlign: 'center', fontSize: '1.5rem' }}>
+                                        {item.projectCoupon.discountRate * 100}%
+                                    </Typography>
+                                </>
+
                             ) : (
                                 <>
                                     <Typography
@@ -242,6 +248,14 @@ const OrderDetailModal = ({ details }) => {
                                         >
                                             Expired
                                         </th>
+                                        <th
+                                            style={{
+                                                padding: "12px",
+                                                textAlign: "left",
+                                            }}
+                                        >
+                                            Action
+                                        </th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -283,7 +297,7 @@ const OrderDetailModal = ({ details }) => {
                                                     onClick={() => {
                                                         const fileUrl = item.digitalKey.marketingProject.marketplaceFiles.find(file => file.fileType === 3)?.url;
                                                         if (fileUrl) handleDownload(fileUrl);
-                                                      }}
+                                                    }}
                                                 >
                                                     <DownloadIcon
                                                         sx={{

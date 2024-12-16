@@ -115,7 +115,8 @@ const ProjectDetail = () => {
       case processing:
         return handleUpdateProject();
       case fundedSuccessful:
-        return handleRequestMilestone();
+        // return handleRequestMilestone();
+        return navigate(`/account/projects/update/${projectData.id}/basic-info`)
       default:
         return;
     }
@@ -205,7 +206,7 @@ const ProjectDetail = () => {
   useEffect(() => {
     fetchProject();
     fetchMilestones();
-  }, [id, firstMilestone]);
+  }, [id]);
 
   console.log(projectData);
 
@@ -301,7 +302,7 @@ const ProjectDetail = () => {
     'Deleted',
     'Pending',
     'Processing',
-    'FundedSuccessful',
+    'Funded Successfully',
     'Successful',
     'Failed',
     'Rejected',

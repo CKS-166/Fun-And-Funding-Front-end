@@ -49,8 +49,8 @@ const FunFundingAppBar = () => {
   const pages = [
     { label: "Home", route: "/home", index: 0 },
     { label: "Crowdfunding", route: "/funding", index: 1 },
-    { label: "About Us", route: "/about-us", index: 2 },
-    { label: "Marketplace", route: "/marketplace", index: 3 },
+    // { label: "About Us", route: "/about-us", index: 2 },
+    { label: "Marketplace", route: "/marketplace", index: 2 },
   ];
 
   const profileMenu = [

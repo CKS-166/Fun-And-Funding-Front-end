@@ -175,7 +175,7 @@ function CheckoutSuccess() {
                                                             <img
                                                                 className="w-[8rem] h-[8rem] object-cover rounded-[0.25rem] flex-shrink-0"
                                                                 src={item.imageUrl}
-                                                                alt={item.name}
+                                                                alt={item?.name}
                                                             />
                                                         </div>
                                                         <div className="flex-shrink-0 flex justify-between">
@@ -194,7 +194,7 @@ function CheckoutSuccess() {
                                                                         maxWidth: '15rem',
                                                                     }}
                                                                 >
-                                                                    {item.name}
+                                                                    {item?.name}
                                                                 </Typography>
                                                                 <Typography
                                                                     sx={{

@@ -2,8 +2,8 @@ import React from 'react'
 import { Typography, Avatar, Box } from '@mui/material';
 import Grid from '@mui/material/Grid2';
 import './index.css'
-function CommentBar({comment}) {
-    const date = new Date(comment.createDate); 
+function CommentBar({ comment }) {
+    const date = new Date(comment.createDate);
     const formattedDate = date.toLocaleDateString();
     return (
         <Box sx={{
@@ -33,7 +33,7 @@ function CommentBar({comment}) {
 
             </Box>
             <Box>
-                <Typography sx={{ fontSize: '12px', fontWeight: '400',margin : '10px 0' }}>
+                <Typography sx={{ fontSize: '12px', fontWeight: '400', margin: '10px 0' }}>
                     {comment.content}
                 </Typography>
             </Box>

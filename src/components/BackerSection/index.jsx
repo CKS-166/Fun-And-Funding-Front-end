@@ -18,7 +18,7 @@ const BackerSection = ({ backers }) => {
               <th scope="col" class="px-6 py-3 rounded-s-lg">
                 Backer
               </th>
-              <th scope="col" class="px-6 py-3">
+              <th scope="col" class="px-6 py-3 rounded-e-lg">
                 Total Donation Amount
               </th>
               {/* <th scope="col" class="px-6 py-3 rounded-e-lg">

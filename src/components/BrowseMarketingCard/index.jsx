@@ -38,15 +38,15 @@ function BrowseMarketingCard({ item }) {
                             onClick={() => navigate(`/marketplace-detail/${item.id}`)}
                             className="text-3xl font-semibold leading-tight hover:cursor-pointer text-gray-900 hover:underline"
                         >
-                            {item.name}
+                            {item?.name}
                         </a>
-                        <div className='max-w-[90%] font-light italic text-sm overflow-hidden text-ellipsis whitespace-nowrap'>{item.description}</div>
+                        <div className='max-w-[90%] font-light italic text-sm overflow-hidden text-ellipsis whitespace-nowrap'>{item?.description}</div>
                     </div>
 
 
                     <div className="flex items-center justify-between gap-4">
                         <p className="text-xl font-semibold leading-tight text-gray-800">
-                            {item.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")} <span className='text-sm'>VND</span>
+                            {item?.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")} <span className='text-sm'>VND</span>
                         </p>
                     </div>
                 </div>

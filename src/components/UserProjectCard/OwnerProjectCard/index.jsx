@@ -285,12 +285,12 @@ function OwnerProjectCard({ project, projectType, fetchProjectData }) {
                 </Modal>
               </>
             )}
-            {(project.status === 1 ||
+            {/* {(project.status === 1 ||
               (project.status === 6 && projectType != "Funding")) && (
               <MenuItem value="remove">
                 <Typography>Delete Project</Typography>
               </MenuItem>
-            )}
+            )} */}
             {project.status == 4 && (
               <MenuItem
                 value="publish"

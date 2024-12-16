@@ -100,7 +100,7 @@ const MarketplaceProjectCoupon = () => {
   return (
     <>
       <div className="m-2 p-4">
-        <p className="text-gray-500 text-l mb-2">
+        <p className="text-gray-500 text-l mb-2 px-[3rem]">
           Download template{" "}
           <span>
             <a
@@ -117,6 +117,7 @@ const MarketplaceProjectCoupon = () => {
             justifyContent: "space-between",
             flexDirection: "row",
             alignItems: "center",
+            paddingX: "3rem",
           }}
         >
           <Box

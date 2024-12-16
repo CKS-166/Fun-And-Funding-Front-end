@@ -18,6 +18,9 @@ import Swal from "sweetalert2";
 import { useLoading } from "../../../../contexts/LoadingContext";
 import marketplaceProjectApiInstace from "../../../../utils/ApiInstance/marketplaceProjectApiInstance";
 import MarketplaceProjectOverview from "./MarketplaceProjectOverview";
+import Purchases from "../../../../components/AdminMarketplaceProject/Purchases";
+import orderApiInstance from "../../../../utils/ApiInstance/orderApiInstance";
+import orderDetailApiInstance from "../../../../utils/ApiInstance/orderDetailApiInstance";
 
 const notify = (message, type) => {
   const options = {
@@ -67,6 +70,7 @@ const MarketplaceProjectDetailModal = ({
   const [selectedMarketplaceProject, setSelectedMarketplaceProject] =
     useState(null);
   const [activeTab, setActiveTab] = useState(0);
+  const [orders, setOrders] = useState([]);
 
   const style = {
     position: "absolute",
@@ -91,6 +95,7 @@ const MarketplaceProjectDetailModal = ({
   useEffect(() => {
     if (openModal && selectedMarketplaceProjectId) {
       fetchMarketplaceProject();
+      fecthOrders();
     }
   }, [selectedMarketplaceProjectId, openModal]);
 
@@ -102,6 +107,25 @@ const MarketplaceProjectDetailModal = ({
       );
       if (res.status == 200) {
         setSelectedMarketplaceProject(res.data._data);
+      }
+    } catch (error) {
+      notify(
+        error.response?.data?.message || error.message || "An error occurred",
+        "error"
+      );
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const fecthOrders = async () => {
+    try {
+      setIsLoading(true);
+      const res = await orderDetailApiInstance.get(
+        `/${selectedMarketplaceProjectId}/purchases`
+      );
+      if (res.status == 200) {
+        setOrders(res.data._data);
       }
     } catch (error) {
       notify(
@@ -352,7 +376,7 @@ const MarketplaceProjectDetailModal = ({
                             fontWeight: activeTab === 0 ? 600 : 500,
                           }}
                         />
-                        <Tab
+                        {/* <Tab
                           value={1}
                           label="Coupons"
                           sx={{
@@ -364,14 +388,14 @@ const MarketplaceProjectDetailModal = ({
                             fontSize: activeTab === 1 ? "1rem" : "inherit",
                             fontWeight: activeTab === 1 ? 600 : 500,
                           }}
-                        />
+                        /> */}
                         <Tab
-                          value={2}
+                          value={1}
                           label="Purchases"
                           sx={{
                             textTransform: "none",
                             color:
-                              activeTab === 2
+                              activeTab === 1
                                 ? "var(--primary-green) !important"
                                 : "var(--grey)",
                             fontSize: activeTab === 2 ? "1rem" : "inherit",
@@ -385,10 +409,7 @@ const MarketplaceProjectDetailModal = ({
                         marketplaceProject={selectedMarketplaceProject}
                       />
                     ) : activeTab == 1 ? (
-                      //   <FundingProjectPackages
-                      //     packages={selectedMarketplaceProject.packages}
-                      //   />
-                      <></>
+                      <Purchases orders={orders} />
                     ) : (
                       //   <FundingProjectDonation
                       //     fundingProjectId={selectedMarketplaceProjectId}

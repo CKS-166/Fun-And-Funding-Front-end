@@ -133,7 +133,7 @@ function MarketplaceProjectOverview({ marketplaceProject }) {
           </Grid2>
         </div> */}
 
-        <div className="w-full">
+        {/* <div className="w-full">
           <Grid2
             container
             columnSpacing={2}
@@ -193,7 +193,7 @@ function MarketplaceProjectOverview({ marketplaceProject }) {
               </Typography>
             </Grid2>
           </Grid2>
-        </div>
+        </div> */}
       </div>
       <Typography sx={{ fontSize: "1rem", fontWeight: "600", mb: "1rem" }}>
         Wallet information

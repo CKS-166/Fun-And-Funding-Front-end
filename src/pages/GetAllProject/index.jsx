@@ -1,18 +1,30 @@
-import React, { useState, useEffect } from 'react';
 import {
-  Box, Typography, TextField, InputAdornment,
-  RadioGroup, FormControlLabel, Radio, Pagination
+  Box,
+  Checkbox,
+  FormControlLabel,
+  FormGroup,
+  InputAdornment,
+  Pagination,
+  Radio,
+  RadioGroup,
+  TextField,
+  Typography
 } from '@mui/material';
 import Grid from '@mui/material/Grid2';
+import qs from 'qs';
+import React, { useEffect, useState } from 'react';
 import { FaSearch } from "react-icons/fa";
+import BrowseFundingCard from '../../components/BrowseFundingCard';
 import categoryApiInstance from '../../utils/ApiInstance/categoryApiInstance';
 import fundingProjectApiInstance from '../../utils/ApiInstance/fundingProjectApiInstance';
-import HomeFundingProjectCard from '../../components/HomeFundingProjectCard';
 import './index.css';
 const GetAllProject = () => {
   const [categories, setCategories] = useState([]);
+  const [selectedCategories, setSelectedCategories] = useState([]);
+  const [statusList, setStatusList] = useState([2, 3, 4, 5]);
   const [searchValue, setSearchValue] = useState('');
-  const [fromTarget, setFromTarget] = useState(null);
+  const [selectAll, setSelectAll] = useState(true);
+  const [fromTarget, setFromTarget] = useState(0.0);
   const [projects, setProjects] = useState({
     items: [],
     totalPages: 1,
@@ -30,14 +42,29 @@ const GetAllProject = () => {
   };
 
   // Fetch all projects
-  const fetchAllProjects = async () => {
+  const fetchAllProjects = async (searchValue, fromTarget, pageIndex, selectedCategories) => {
     try {
-      const response = await fundingProjectApiInstance.get('/');
-      setProjects({
-        items: response.data._data.items,
-        totalPages: response.data._data.totalPages,
-        pageIndex: response.data._data.pageIndex
+      const response = await fundingProjectApiInstance.get('/', {
+        params: {
+          searchValue,
+          fromTarget,
+          pageSize: 9,
+          categoryIds: selectedCategories,
+          pageIndex,
+          statusList: statusList
+        },
+        paramsSerializer: (params) => {
+          return qs.stringify(params, { arrayFormat: 'repeat' });
+        }
       });
+      if (response.data._statusCode) {
+        setProjects({
+          items: response.data._data.items,
+          totalPages: response.data._data.totalPages,
+          pageIndex: response.data._data.pageIndex
+        });
+      }
+
     } catch (error) {
       console.error('Error fetching projects:', error);
     }
@@ -45,38 +72,40 @@ const GetAllProject = () => {
 
   useEffect(() => {
     fetchCates();
-    fetchAllProjects();
+    fetchAllProjects(searchValue, fromTarget, 1, selectedCategories);
   }, []);
 
-  // Handle search
-  const handleSearch = async () => {
-    try {
-      const response = await fundingProjectApiInstance.get('/', {
-        params: {
-          searchValue,
-          fromTarget,
-          pageSize: 3
-        }
-      });
-      setProjects({
-        items: response.data._data.items,
-        totalPages: response.data._data.totalPages,
-        pageIndex: response.data._data.pageIndex
-      });
-    } catch (error) {
-      console.error('Error fetching projects:', error);
+  const handleRadioChange = (event) => {
+    setFromTarget(event.target.value);
+    fetchAllProjects(searchValue, event.target.value, 1, selectedCategories);
+  };
+
+  const handleCategoryChange = (event, categoryId) => {
+    const { checked } = event.target;
+
+    if (categoryId === "all") {
+      setSelectAll(checked);
+      setSelectedCategories([]);
+      fetchAllProjects(searchValue, fromTarget, 1, []);
+    } else {
+      setSelectAll(false);
+      const updatedCategories = checked
+        ? [...selectedCategories, categoryId]
+        : selectedCategories.filter((id) => id !== categoryId);
+
+      setSelectedCategories(updatedCategories);
+      fetchAllProjects(searchValue, fromTarget, 1, updatedCategories);
     }
   };
 
-  // Handle radio change for target amount filter
-  const handleRadioChange = (event) => {
-    setFromTarget(event.target.value);
-    handleSearch();
+  const handleSearchChange = (event) => {
+    setSearchValue(event.target.value);
+    fetchAllProjects(event.target.value, fromTarget, 1, selectedCategories);
   };
 
   return (
     <div>
-      <div className='crowBanner flex flex-col justify-center items-center h-[240px]' >
+      <div className='crowBanner flex flex-col justify-center items-center h-[20rem]' >
         <div className='py-[5rem]'>
           <div className='text-white flex justify-center items-center text-center leading-[6.5rem]'>
             <span className='font1 text-gray-200 text-[4rem]'>Funding Collection</span>
@@ -87,42 +116,92 @@ const GetAllProject = () => {
           </div>
         </div>
       </div>
-      <Box sx={{ marginTop: '5rem', padding: '30px' }}>
+      <Box sx={{ marginTop: '5rem', mx: 'var(--side-margin)' }}>
         <Grid container spacing={2}>
           {/* Sidebar Filters */}
           <Grid item size={3}>
             <Box sx={{ textAlign: 'left' }}>
-              <Typography variant='h1' className="!text-[20px] !mb-[2rem] !font-[500]">
+              <Typography className="!text-[1.5rem] !mb-[2rem] !font-[600]">
                 Filter
               </Typography>
 
               {/* Category Filter */}
               <Box>
-                <Typography variant='h1' className="!text-[20px] !font-[500] !mb-[16px]">
-                  CATEGORY
+                <Typography variant='h1' className="!text-[1rem] !font-[600] !mb-[16px]">
+                  Category
                 </Typography>
                 <Box>
-                  <Typography className="!mb-[16px] font-[400]">
-                    All
-                  </Typography>
-                  {categories.map((item, index) => (
-                    <Typography key={index} className="!mb-[16px] font-[400]">
-                      {item.name}
-                    </Typography>
-                  ))}
+                  <FormGroup>
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          checked={selectAll}
+                          onChange={(e) => handleCategoryChange(e, "all")}
+                          sx={{
+                            '&.Mui-checked': {
+                              color: 'var(--primary-green)',
+                            },
+                          }}
+                        />
+                      }
+                      label="All"
+                    />
+                    {categories.map((item) => (
+                      <FormControlLabel
+                        key={item.id}
+                        control={
+                          <Checkbox
+                            checked={selectedCategories.includes(item.id)}
+                            onChange={(e) => handleCategoryChange(e, item.id)}
+                            sx={{
+                              '&.Mui-checked': {
+                                color: 'var(--primary-green)',
+                              },
+                            }}
+                          />
+                        }
+                        label={item.name}
+                      />
+                    ))}
+                  </FormGroup>
                 </Box>
               </Box>
               <div className='seperator'></div>
 
               {/* Target Amount Filter */}
               <Box mt={3}>
-                <Typography variant="h1" className="!text-[20px] !font-[500] !mb-[16px]">
-                  TARGET AMOUNT
+                <Typography className="!text-[1rem] !font-[600] !mb-[16px]">
+                  Target Amount
                 </Typography>
                 <RadioGroup value={fromTarget} onChange={handleRadioChange}>
-                  <FormControlLabel value="5000" control={<Radio />} label="> 5,000" />
-                  <FormControlLabel value="50000" control={<Radio />} label="> 50,000" />
-                  <FormControlLabel value="500000" control={<Radio />} label="> 500,000" />
+                  <FormControlLabel value="0" control={<Radio
+                    sx={{
+                      '&.Mui-checked': {
+                        color: 'var(--primary-green)',
+                      },
+                    }}
+                  />} label="All" />
+                  <FormControlLabel value="5000" control={<Radio
+                    sx={{
+                      '&.Mui-checked': {
+                        color: 'var(--primary-green)',
+                      },
+                    }}
+                  />} label="More than 5,000 VND" />
+                  <FormControlLabel value="500000" control={<Radio
+                    sx={{
+                      '&.Mui-checked': {
+                        color: 'var(--primary-green)',
+                      },
+                    }}
+                  />} label="More than 500,000 VND" />
+                  <FormControlLabel value="50000000" control={<Radio
+                    sx={{
+                      '&.Mui-checked': {
+                        color: 'var(--primary-green)',
+                      },
+                    }}
+                  />} label="More than 50,000,000 VND" />
                 </RadioGroup>
               </Box>
             </Box>
@@ -137,10 +216,10 @@ const GetAllProject = () => {
                 id="fullWidth"
                 placeholder='Search for projects'
                 value={searchValue}
-                onChange={(e) => setSearchValue(e.target.value)}
+                onChange={(e) => handleSearchChange(e)}
                 InputProps={{
                   startAdornment: (
-                    <InputAdornment position="start" onClick={handleSearch}>
+                    <InputAdornment position="start">
                       <FaSearch />
                     </InputAdornment>
                   ),
@@ -149,12 +228,12 @@ const GetAllProject = () => {
             </Box>
 
             {/* Project List */}
-            <Box sx={{ marginTop: '6rem' }}>
-              <Grid container spacing={2}>
+            <Box sx={{ marginTop: '4rem' }}>
+              <Grid container rowSpacing={3} columnSpacing={4}>
                 {projects.items && projects.items.length > 0 ? (
                   projects.items.map((item, index) => (
                     <Grid item size={4} key={index}>
-                      <HomeFundingProjectCard fundingProject={item} />
+                      <BrowseFundingCard fundingProject={item} />
                     </Grid>
                   ))
                 ) : (
@@ -172,7 +251,7 @@ const GetAllProject = () => {
               page={projects.pageIndex}
               onChange={(e, page) => {
                 setProjects(prevState => ({ ...prevState, pageIndex: page }));
-                handleSearch();
+                fetchAllProjects(searchValue, fromTarget, page);
               }}
             />
           </Grid>

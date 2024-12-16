@@ -18,6 +18,7 @@ import { useCart } from '../../contexts/CartContext';
 import { useLoading } from "../../contexts/LoadingContext";
 import cartApiInstance from "../../utils/ApiInstance/cartApiInstance";
 import couponApiInstance from "../../utils/ApiInstance/couponApiInstance";
+import marketplaceProjectApiInstance from "../../utils/ApiInstance/marketplaceProjectApiInstance";
 import orderApiInstance from "../../utils/ApiInstance/orderApiInstance";
 import userApiInstance from "../../utils/ApiInstance/userApiInstance";
 import './index.css';
@@ -47,6 +48,7 @@ const notify = (message, type) => {
 
 function CheckoutCart() {
     const { cartItems, cartCount, order, setCartItems, setCartCount, setOrder } = useCart();
+    const [marketplaceProjectList, setMarketplaceProjectList] = useState(null);
     const { isLoading, setIsLoading } = useLoading();
     const token = Cookies.get("_auth");
     const isLogined = Cookies.get("_auth") !== undefined;
@@ -63,6 +65,7 @@ function CheckoutCart() {
         if (isLogined) {
             fetchCartItems();
             handleGetWalletBalance();
+            fetchTopMarketplaceProjects();
         }
     }, [token]);
 
@@ -152,6 +155,19 @@ function CheckoutCart() {
             console.log("Error applying cart to order:", err);
         }
     };
+
+    const fetchTopMarketplaceProjects = async () => {
+        try {
+            const res = await marketplaceProjectApiInstance.get('/top3');
+            if (res.status == 200) {
+                setMarketplaceProjectList(res.data._data);
+            } else {
+                setMarketplaceProjectList(null);
+            }
+        } catch (err) {
+            console.log(err);
+        }
+    }
 
     const getPriceTotal = (order) => {
         const total = order[0]?.cartItems?.reduce((sum, item) => sum + item.price, 0);
@@ -458,7 +474,7 @@ function CheckoutCart() {
                                         }}
                                     >
                                         By clicking this, I agree to Fun&Funding <a
-                                            href="/terms-and-conditions"
+                                            href="/policies"
                                             target="_blank"
                                             rel="noopener noreferrer"
                                             style={{ color: '#1BAA64', textDecoration: 'none', fontWeight: '600' }}
@@ -484,10 +500,15 @@ function CheckoutCart() {
                         </Typography>
                         <div className="flex flex-col items-center">
                             <div className="flex flex-row justify-between items-center w-full">
-                                <BrowseMarketingCard />
-                                <BrowseMarketingCard />
-                                <BrowseMarketingCard />
-                                <BrowseMarketingCard />
+                                {marketplaceProjectList != null && marketplaceProjectList.length > 0 ? (
+                                    marketplaceProjectList.map((item, index) => (
+                                        <BrowseMarketingCard key={index} item={item} />
+                                    ))
+                                ) : (
+                                    <>
+                                        <Typography>Nothing to show</Typography>
+                                    </>
+                                )}
                             </div>
                             <div>
                                 <a href="/marketplace">

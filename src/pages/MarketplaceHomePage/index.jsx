@@ -48,7 +48,11 @@ const MarketplaceHomePage = () => {
             </div>
             <section class="bg-[var(--white)] py-8 antialiased md:py-12">
                 <div class="mx-auto w-[90vw] px-4 2xl:px-0">
-                    <Divider />
+                    <Divider>
+                        <span className='text-2xl text-gray-600 font-semibold font1'>
+                            Game Collections
+                        </span>
+                    </Divider>
                     <div className='mb-10'></div>
                     <Grid2 container spacing={4}>
                         {markets.map((item, index) => {

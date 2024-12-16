@@ -189,6 +189,7 @@ const BasicInfo = () => {
                   endAdornment: <InputAdornment position="end">VND</InputAdornment>,
                   inputProps: { min: '0' },
                 }}
+                onWheel={(e) => e.target.blur()}
                 variant="outlined"
                 {...register("target", {
                   required: "Goal amount is required",

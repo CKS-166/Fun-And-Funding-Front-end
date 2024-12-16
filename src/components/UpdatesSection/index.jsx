@@ -16,6 +16,7 @@ import TimelineOppositeContent, {
 import userApiInstace from '../../utils/ApiInstance/userApiInstance'
 import { ArrowRight, ChatBubble } from '@mui/icons-material'
 import ProjectMilestoneModal2 from '../../pages/ProjectDetail/ProjectMilestoneModal2'
+import { useLoading } from '../../contexts/LoadingContext'
 const UpdatesSection = () => {
     const [pmData, setPmData] = useState(null)
     const { id } = useParams()
@@ -25,6 +26,7 @@ const UpdatesSection = () => {
     const [openModal, setOpenModal] = useState(false)
 
     const token = Cookies.get("_auth")
+    const { isLoading, setIsLoading } = useLoading()
 
     useEffect(() => {
         const fetchProjectMilestone = async () => {
@@ -54,10 +56,14 @@ const UpdatesSection = () => {
                 });
         };
 
+        setIsLoading(true)
+
         fetchUserData()
 
         fetchProjectMilestone();
-    }, [id]);
+        setIsLoading(false)
+
+    }, [id, openModal]);
 
     return (
         <>
@@ -103,7 +109,7 @@ const UpdatesSection = () => {
                                     <div className='text-sm italic font-semibold text-gray-500'>Milestone #{pm.milestone.milestoneOrder}</div>
                                     <div class="flex items-center gap-4 my-3">
                                         {
-                                            userData?.avatar
+                                            pm.fundingProject?.user?.avatar
                                                 ? (<div>
                                                     <img class="w-10 h-10 rounded-full" src={userData.avatar} alt="" />
                                                 </div>)
@@ -113,12 +119,12 @@ const UpdatesSection = () => {
                                         }
                                         <div class="font-medium">
                                             <div className='flex gap-3 items-center'>
-                                                {userData?.userName}
+                                                {pm.fundingProject?.user?.userName}
                                                 <div className='text-white bg-primary-green text-sm px-3 rounded'>
                                                     Game owner
                                                 </div>
                                             </div>
-                                            <div class="text-sm text-gray-500">Joined in {new Date(userData?.createdDate).toDateString()}</div>
+                                            <div class="text-xs text-gray-500 italic">{pm.fundingProject?.user?.email}</div>
                                         </div>
                                     </div>
                                     <Divider sx={{ my: '1rem' }} />
@@ -133,7 +139,7 @@ const UpdatesSection = () => {
 
                                 <div className='px-8 py-5 border-t-2 flex justify-between'>
                                     <div className='text-gray-500 text-sm'>
-                                        <ChatBubble /> N/A
+                                        {/* <ChatBubble /> N/A */}
                                     </div>
                                     <div onClick={() => { setSelectedPm(pm); setOpenModal(true) }} className='text-gray-500 hover:underline hover:cursor-pointer'>
                                         Read more

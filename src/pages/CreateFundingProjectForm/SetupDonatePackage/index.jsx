@@ -126,7 +126,7 @@ const SetupDonatePackage = () => {
     } catch (error) {
       Swal.fire({
         title: "Error",
-        text: error.message,
+        text: error.response.data.message,
         icon: "error"
       });
       console.error('Error creating project:', error);

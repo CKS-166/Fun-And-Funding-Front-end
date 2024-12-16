@@ -34,6 +34,7 @@ import "./index.css";
 import { toast, ToastContainer } from "react-toastify";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router";
+import useSignIn from "react-auth-kit/hooks/useSignIn";
 
 const notify = (message) => {
   toast.warn(message, {
@@ -114,10 +115,13 @@ function HomePage() {
 
   const navigate = useNavigate()
 
+  const signIn = useSignIn()
+
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const errorMessage = urlParams.get("error");
     const token = urlParams.get("token");
+
 
     if (errorMessage) {
       notify(errorMessage);
@@ -125,8 +129,17 @@ function HomePage() {
     }
 
     if (token) {
-      Cookies.set("_auth", token, { expires: 7, secure: true });
-      navigate("/home");
+      signIn({
+        auth: {
+          token: token,
+          type: "Bearer",
+        },
+        expiresIn: 3600,
+        tokenType: "Bearer",
+        userState: { role: "Backer" },
+      });
+      // Cookies.set("_auth", token, { expires: 7, secure: true });
+      // Cookies.set("_auth_state", JSON.stringify(authState));
     }
   }, []);
 

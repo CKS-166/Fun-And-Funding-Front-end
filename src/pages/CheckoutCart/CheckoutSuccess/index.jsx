@@ -11,6 +11,7 @@ import { useParams } from "react-router";
 import { useNavigate } from "react-router-dom";
 import Confetti from "../../../assets/images/confetti-background.png";
 import BrowseMarketingCard from "../../../components/BrowseMarketingCard";
+import marketplaceProjectApiInstance from "../../../utils/ApiInstance/marketplaceProjectApiInstance";
 import orderApiInstance from "../../../utils/ApiInstance/orderApiInstance";
 import './index.css';
 
@@ -53,12 +54,14 @@ function CheckoutSuccess() {
     const [detailList, setDetailList] = useState([]);
     const [open, setOpen] = useState(false);
     const [selectedKey, setSelectedKey] = useState("");
+    const [marketplaceProjectList, setMarketplaceProjectList] = useState(null);
     const [clipboardCopied, setClipboardCopied] = useState(false);
 
     useEffect(() => {
         if (isLogined) {
             fetchOrder();
         }
+        fetchTopMarketplaceProjects();
     }, [isLogined, id]);
 
     const handleDownload = (url) => {
@@ -69,6 +72,19 @@ function CheckoutSuccess() {
         link.click();
         document.body.removeChild(link);
     };
+
+    const fetchTopMarketplaceProjects = async () => {
+        try {
+            const res = await marketplaceProjectApiInstance.get('/top3');
+            if (res.status == 200) {
+                setMarketplaceProjectList(res.data._data);
+            } else {
+                setMarketplaceProjectList(null);
+            }
+        } catch (err) {
+            console.log(err);
+        }
+    }
 
     const fetchOrder = async () => {
         try {
@@ -296,33 +312,41 @@ function CheckoutSuccess() {
                     </div>
                 </div>
             </div >
-
-            <div className='recommended-section'>
-                <Typography className='checkout-cart-title !pb-[1rem]'>
+            <div className="mx-[var(--side-margin)] mt-[4rem]">
+                <Typography className='checkout-cart-title'>
                     Recommended games
                 </Typography>
                 <div className="flex flex-col items-center">
-                    <div className="flex flex-row justify-between items-center w-full mb-[1rem]">
-                        <BrowseMarketingCard />
-                        <BrowseMarketingCard />
-                        <BrowseMarketingCard />
-                        <BrowseMarketingCard />
+                    <div className="flex flex-row justify-between items-center w-full">
+                        {marketplaceProjectList != null && marketplaceProjectList.length > 0 ? (
+                            marketplaceProjectList.map((item, index) => (
+                                <BrowseMarketingCard key={index} item={item} />
+                            ))
+                        ) : (
+                            <>
+                                <Typography>Nothing to show</Typography>
+                            </>
+                        )}
                     </div>
-                    <Button
-                        variant="contained"
-                        className='checkout-cart-more-button'
-                        endIcon={
-                            <ArrowForwardOutlinedIcon
-                                sx={{
-                                    fontSize: "1.5rem !important",
-                                    strokeWidth: "1",
-                                    stroke: "#F5F7F8",
-                                }}
-                            />
-                        }
-                    >
-                        See more games
-                    </Button>
+                    <div>
+                        <a href="/marketplace">
+                            <Button
+                                variant="contained"
+                                className='checkout-cart-more-button !w-[15rem]'
+                                endIcon={
+                                    <ArrowForwardOutlinedIcon
+                                        sx={{
+                                            fontSize: "1.5rem !important",
+                                            strokeWidth: "1",
+                                            stroke: "#F5F7F8",
+                                        }}
+                                    />
+                                }
+                            >
+                                See more games
+                            </Button>
+                        </a>
+                    </div>
                 </div>
             </div>
             <Modal

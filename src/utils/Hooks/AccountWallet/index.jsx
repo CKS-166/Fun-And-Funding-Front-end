@@ -4,7 +4,7 @@ import withdrawRequestApiInstance from "../../ApiInstance/withdrawRequestApiInst
 import { useLoading } from "../../../contexts/LoadingContext";
 import bankAccountApiInstance from "../../ApiInstance/bankAccountApiInstance";
 
-export const useWalletApi = (endpoint, method = "GET", body = null) => {
+export const useWalletApi = (endpoint, method = "GET", body = null, triggerReload) => {
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
   const [bankAccData, setBankAccData] = useState(null);
@@ -38,7 +38,7 @@ export const useWalletApi = (endpoint, method = "GET", body = null) => {
     };
 
     fetchData();
-  }, [endpoint, method, body]);
+  }, [endpoint, method, body, triggerReload]);
 
   return { data, error, bankAccData };
 };

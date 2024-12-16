@@ -13,7 +13,7 @@ import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import utc from "dayjs/plugin/utc";
 import fundingProjectApiInstace from '../../utils/ApiInstance/fundingProjectApiInstance';
-const RequestMilestoneModal = ({ render,open, handleClose, milestone, projectId, handleCloseBackdrop }) => {
+const RequestMilestoneModal = ({ render, open, handleClose, milestone, projectId, handleCloseBackdrop }) => {
   const modalStyle = {
     position: "absolute",
     top: "50%",
@@ -37,10 +37,10 @@ const RequestMilestoneModal = ({ render,open, handleClose, milestone, projectId,
       try {
         const response = await fundingProjectApiInstace.get(`/${projectId}`);
         setProject(response.data._data);
-        if(project && milestone){
+        if (project && milestone) {
           setTotalAmount(project.balance * milestone.disbursementPercentage)
         }
-        
+
       } catch (err) {
         console.log(err.message || "Something went wrong");
       }
@@ -49,7 +49,7 @@ const RequestMilestoneModal = ({ render,open, handleClose, milestone, projectId,
     if (projectId) {
       fetchProject();
     }
-  }, [projectId,milestone]);
+  }, [projectId, milestone]);
 
 
   const handleSubmit = () => {
@@ -77,7 +77,7 @@ const RequestMilestoneModal = ({ render,open, handleClose, milestone, projectId,
               }
             });
             handleClose();
-            
+
           } else {
             toast.warn(res.data._message[0])
           }
@@ -98,7 +98,7 @@ const RequestMilestoneModal = ({ render,open, handleClose, milestone, projectId,
         text: error.message,
         icon: "error"
       });
-    }finally{
+    } finally {
     }
   };
 
@@ -137,7 +137,7 @@ const RequestMilestoneModal = ({ render,open, handleClose, milestone, projectId,
         <Typography variant="h6" gutterBottom>
           Requirements:
         </Typography>
-        {milestone.requirements.map((req, index) => (
+        {milestone.requirements?.map((req, index) => (
           <ul>
             <li key={index}>{req.description}</li>
           </ul>

@@ -5,7 +5,7 @@ import bankAccountApiInstance from "../../../utils/ApiInstance/bankAccountApiIns
 import { useLoading } from "../../../contexts/LoadingContext"
 
 
-const BankAccountSettingModal = ({ openModal, setOpenModal, walletId, bankAccData }) => {
+const BankAccountSettingModal = ({ openModal, setOpenModal, walletId, bankAccData, triggerReload, setTriggerReload }) => {
   const [selectedBank, setSelectedBank] = useState(null)
   const [bankList, setBankList] = useState([])
   const [bankAccountNumber, setBankaccountNumber] = useState('')
@@ -83,6 +83,7 @@ const BankAccountSettingModal = ({ openModal, setOpenModal, walletId, bankAccDat
   }
 
   const handleLinkBankAccount = async () => {
+    setIsLoading(true)
     try {
       const linkBankBody = {
         'bankCode': selectedBank?.code,
@@ -92,12 +93,15 @@ const BankAccountSettingModal = ({ openModal, setOpenModal, walletId, bankAccDat
       bankAccountApiInstance
         .post("/", linkBankBody)
         .then(res => {
+          setTriggerReload(!triggerReload)
           console.log('response', res)
         })
 
     } catch (error) {
       console.error('Error linking bank account:', error);
     }
+    handleOnCloseModal()
+    setIsLoading(false)
   }
 
   return (

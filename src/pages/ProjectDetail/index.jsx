@@ -21,7 +21,7 @@ import {
 import Grid from "@mui/material/Grid2";
 import DOMPurify from "dompurify";
 import Cookies from "js-cookie";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { CiBookmark, CiHeart } from "react-icons/ci";
 import { useParams } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
@@ -105,6 +105,7 @@ const ProjectDetail = () => {
     console.log(firstMilestone);
   };
   const handleUpdateProject = () => {
+    navigate("/account/projects")
   };
 
   const handleProcess = () => {
@@ -309,6 +310,16 @@ const ProjectDetail = () => {
     'Refunded',
     'Reported'
   ]
+
+  const targetRef = useRef(null)
+
+  const handleScroll = () => {
+    if (targetRef.current) {
+      setTabValue("2")
+      targetRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   return (
     <Box>
       {isLoading && (
@@ -470,6 +481,9 @@ const ProjectDetail = () => {
                           if (isOwner) {
                             handleProcess();
                           }
+                          else {
+                            handleScroll()
+                          }
                         }}
                         className="like-btn"
                       >
@@ -480,7 +494,6 @@ const ProjectDetail = () => {
                         ) : (
                           <Typography
                             sx={{ fontWeight: "600" }}
-                            onClick={handleSendNotification}
                           >
                             Back this project
                           </Typography>
@@ -645,6 +658,7 @@ const ProjectDetail = () => {
                   />
                   <Tab
                     label="Updates"
+                    ref={targetRef}
                     sx={{
                       fontStyle: "normal",
                       fontWeight: "bold",

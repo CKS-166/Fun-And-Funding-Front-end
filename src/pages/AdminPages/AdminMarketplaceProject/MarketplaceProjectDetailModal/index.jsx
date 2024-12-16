@@ -21,6 +21,7 @@ import MarketplaceProjectOverview from "./MarketplaceProjectOverview";
 import Purchases from "../../../../components/AdminMarketplaceProject/Purchases";
 import orderApiInstance from "../../../../utils/ApiInstance/orderApiInstance";
 import orderDetailApiInstance from "../../../../utils/ApiInstance/orderDetailApiInstance";
+import MarketplaceProjectGameFile from "./MarketplaceProjectGameFile";
 
 const notify = (message, type) => {
   const options = {
@@ -376,9 +377,9 @@ const MarketplaceProjectDetailModal = ({
                             fontWeight: activeTab === 0 ? 600 : 500,
                           }}
                         />
-                        {/* <Tab
+                        <Tab
                           value={1}
-                          label="Coupons"
+                          label="Game Content"
                           sx={{
                             textTransform: "none",
                             color:
@@ -388,14 +389,14 @@ const MarketplaceProjectDetailModal = ({
                             fontSize: activeTab === 1 ? "1rem" : "inherit",
                             fontWeight: activeTab === 1 ? 600 : 500,
                           }}
-                        /> */}
+                        />
                         <Tab
-                          value={1}
+                          value={2}
                           label="Purchases"
                           sx={{
                             textTransform: "none",
                             color:
-                              activeTab === 1
+                              activeTab === 2
                                 ? "var(--primary-green) !important"
                                 : "var(--grey)",
                             fontSize: activeTab === 2 ? "1rem" : "inherit",
@@ -408,13 +409,12 @@ const MarketplaceProjectDetailModal = ({
                       <MarketplaceProjectOverview
                         marketplaceProject={selectedMarketplaceProject}
                       />
-                    ) : activeTab == 1 ? (
+                    ) : activeTab == 2 ? (
                       <Purchases orders={orders} />
                     ) : (
-                      //   <FundingProjectDonation
-                      //     fundingProjectId={selectedMarketplaceProjectId}
-                      //   />
-                      <></>
+                      <MarketplaceProjectGameFile
+                        marketplaceProject={selectedMarketplaceProject}
+                      />
                     )}
                   </Box>
                   <div

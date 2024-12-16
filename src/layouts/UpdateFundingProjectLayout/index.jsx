@@ -520,14 +520,14 @@ function UpdateFundingProjectLayout() {
                                 </div>
                             </div>
                         </div>
-                        <div>
+                        {/* <div>
                             <Typography className="update-project-section">
                                 Learn More About Crowdfunding Policy
                             </Typography>
                             <Typography className="update-project-section">
                                 Get Help & Support
                             </Typography>
-                        </div>
+                        </div> */}
                     </Grid2>
                     <Grid2 size={9.5} style={{ position: "relative" }}>
                         <div>

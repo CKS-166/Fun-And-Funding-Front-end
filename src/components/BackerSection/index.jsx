@@ -7,7 +7,9 @@ import {
   TableRow,
   Avatar,
 } from "@mui/material";
+import { useNavigate } from "react-router";
 const BackerSection = ({ backers }) => {
+  const navigate = useNavigate()
   console.log(backers);
   return (
     <div>
@@ -29,7 +31,9 @@ const BackerSection = ({ backers }) => {
           <tbody>
             {backers.map((backer) => (
               <tr class="bg-white dark:bg-gray-800">
-                <th scope="row" class="px-2 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white flex items-center gap-2">
+                <th
+                  onClick={() => navigate(`/profile/${backer.id}`)}
+                  scope="row" className="hover:cursor-pointer px-2 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white flex items-center gap-2">
                   <Avatar src={backer.url} sx={{ height: '2rem', width: '2rem' }} />
                   <span>
                     {backer.name}

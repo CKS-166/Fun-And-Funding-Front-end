@@ -427,7 +427,7 @@ function MarketplaceProjectDetail() {
                             color: "var(--black)",
                           }}
                         >
-                          1 game selling
+                          {marketplaceProject.user?.email ?? "N/A"}
                         </Typography>
                       </Box>
                     </div>
@@ -598,9 +598,8 @@ function MarketplaceProjectDetail() {
                     value="1"
                   />
                   <Tab
-                    label={`Comments (${
-                      commentList != null ? commentList.length : 0
-                    })`}
+                    label={`Comments (${commentList != null ? commentList.length : 0
+                      })`}
                     className="marketplace-project-tab"
                     value="2"
                   />

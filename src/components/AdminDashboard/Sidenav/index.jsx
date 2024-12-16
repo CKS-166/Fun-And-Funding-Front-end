@@ -96,7 +96,7 @@ const Sidenav = () => {
           </div>
 
           <ul className="space-y-2 font-medium list-none">
-            <li>
+            {/* <li>
               <NavLink
                 to="/admin-dashboard/dashboard"
                 className={({ isActive }) =>
@@ -118,7 +118,7 @@ const Sidenav = () => {
                   Dashboard
                 </span>
               </NavLink>
-            </li>
+            </li> */}
             <li>
               <button
                 type="button"

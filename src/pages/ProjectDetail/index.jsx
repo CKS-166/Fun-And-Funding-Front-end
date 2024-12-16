@@ -404,7 +404,8 @@ const ProjectDetail = () => {
                           {projectData.user.fullName}
                         </div>
                         <Typography sx={{ fontSize: "12px", opacity: "0.6" }}>
-                          1 campaign | Rollinsofrd, United States
+                          {/* 1 campaign | Rollinsofrd, United States */}
+                          {projectData.user.email}
                         </Typography>
                       </Box>
                     </div>

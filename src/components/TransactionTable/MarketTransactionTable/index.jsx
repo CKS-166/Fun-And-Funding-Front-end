@@ -26,6 +26,8 @@ const MarketTransactionTable = ({ transactions }) => {
         return "Charge Commission Fee";
       case 8:
         return "Marketplace Withdrawal";
+      case 12:
+        return "Withdraw Cancel";
       default:
     }
   }

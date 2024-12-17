@@ -52,9 +52,7 @@ const OrderCard = ({ order }) => {
                         display: "flex", justifyContent: "space-between",
                         alignItems: "center", marginBottom: 2
                     }}>
-                        <Typography variant="h6" fontWeight="500">
-                            CTH-89765
-                        </Typography>
+                        
                         <Typography
                             variant="body2"
                             sx={{

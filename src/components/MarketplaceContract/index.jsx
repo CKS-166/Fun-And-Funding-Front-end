@@ -113,7 +113,7 @@ const MarketplaceContract = ({ open, handleClose, id }) => {
               <br />
               Here is our guidance:{" "}
               <a
-                href="https://funfundingmediafiles.blob.core.windows.net/fundingprojectfiles/FunAndFundingDRMPackage_ImportGuide_ffa232c3-1283-44c9-983f-5affd0b14621.pdf"
+                href="https://funfundingmediafiles.blob.core.windows.net/fundingprojectfiles/FunAndFundingDRMPackage_ImportGuide_b5a707d8-d7ba-47c2-b394-ea548cc90ea4.pdf"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-[var(--primary-green)] font-semibold"

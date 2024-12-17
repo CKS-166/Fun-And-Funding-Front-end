@@ -246,14 +246,6 @@ const OrderDetailModal = ({ details }) => {
                                                 textAlign: "left",
                                             }}
                                         >
-                                            Expired
-                                        </th>
-                                        <th
-                                            style={{
-                                                padding: "12px",
-                                                textAlign: "left",
-                                            }}
-                                        >
                                             Action
                                         </th>
                                     </tr>
@@ -278,13 +270,7 @@ const OrderDetailModal = ({ details }) => {
                                         >
                                             {formatTableDate(item.digitalKey.createdDate)}
                                         </td>
-                                        <td
-                                            style={{
-                                                padding: "12px",
-                                            }}
-                                        >
-                                            {formatTableDate(item.digitalKey.expiredDate)}
-                                        </td>
+                                        
                                         <td
                                             style={{
                                                 padding: "12px",

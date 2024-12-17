@@ -133,11 +133,14 @@ const ProjectMilestoneModal = ({ pmData, openModal, setOpenModal, setTriggerRelo
         ProjectMilestoneId: pmData?.id,
         Status: 2,
       });
-      if (response.data._isSuccess)
+      if (response.data._isSuccess) {
         toast.success("Milestone approved!");
+      }
+
     } catch (error) {
       console.error("Error approving milestone:", error);
     } finally {
+      setTriggerReload(!triggerReload)
       handleClose();
     }
   };
@@ -153,6 +156,7 @@ const ProjectMilestoneModal = ({ pmData, openModal, setOpenModal, setTriggerRelo
     } catch (error) {
       console.error("Error warning milestone:", error);
     } finally {
+      setTriggerReload(!triggerReload)
       handleClose();
     }
   };
@@ -183,8 +187,9 @@ const ProjectMilestoneModal = ({ pmData, openModal, setOpenModal, setTriggerRelo
       });
       toast.success("Milestone rejected!");
     } catch (error) {
-      console.error("Error rejecting milestone:", error);
+      toast.error(error.response.data.message);
     } finally {
+      setTriggerReload(!triggerReload)
       handleClose();
     }
   };
@@ -221,7 +226,7 @@ const ProjectMilestoneModal = ({ pmData, openModal, setOpenModal, setTriggerRelo
               className="text-white bg-gradient-to-r from-primary-green/70 via-primary-green/80 to-primary-green hover:bg-gradient-to-br font-medium rounded-md text-sm px-5 py-2 text-center me-2 mb-2">
               Process
             </button> */}
-            Game owner is working on evidence
+            Game owner is working on milestone evidence
           </div>
         )
       case 2:
@@ -233,7 +238,7 @@ const ProjectMilestoneModal = ({ pmData, openModal, setOpenModal, setTriggerRelo
       case 4: // failed
         return (
           <div>
-            This milestone has failed
+            This milestone is failed
           </div>
         )
       case 5: // Submitted
@@ -276,7 +281,7 @@ const ProjectMilestoneModal = ({ pmData, openModal, setOpenModal, setTriggerRelo
       case 3: // Warning
         return (
           <div>
-            <button
+            {/* <button
               onClick={handleApprove}
               className="text-white bg-gradient-to-r from-primary-green/70 via-primary-green/80 to-primary-green hover:bg-gradient-to-br font-medium rounded-md text-sm px-5 py-2 text-center me-2 mb-2"
             >
@@ -287,7 +292,8 @@ const ProjectMilestoneModal = ({ pmData, openModal, setOpenModal, setTriggerRelo
               className="text-white bg-red-500 hover:bg-gradient-to-br font-medium rounded-md text-sm px-5 py-2 text-center me-2 mb-2"
             >
               Fail project milestone
-            </button>
+            </button> */}
+            Game owner is working on milestone evidence
           </div>
         );
 

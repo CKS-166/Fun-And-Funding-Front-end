@@ -31,10 +31,14 @@ const UpdatesSection = () => {
     useEffect(() => {
         const fetchProjectMilestone = async () => {
             try {
+                setIsLoading(true)
                 const response = await projectMilestoneApiInstace.get("/", { params: { projectId: id } });
                 setPmData(response.data?._data);
             } catch (error) {
                 console.error("Error fetching milestone data:", error);
+            }
+            finally {
+                setIsLoading(false)
             }
         };
 
@@ -56,12 +60,10 @@ const UpdatesSection = () => {
                 });
         };
 
-        setIsLoading(true)
 
         fetchUserData()
 
         fetchProjectMilestone();
-        setIsLoading(false)
 
     }, [id, openModal]);
 

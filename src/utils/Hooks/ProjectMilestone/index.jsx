@@ -10,9 +10,9 @@ export const useProjectMilestoneApi = (endpoint, method = "GET", body = null, tr
 
   useEffect(() => {
     const fetchData = async () => {
-      setIsLoading(true);
       setError(null);
       try {
+        setIsLoading(true);
         const response = await projectMilestoneApiInstace.request({
           url: endpoint,
           method,

@@ -1,15 +1,51 @@
 /* eslint-disable react/no-unknown-property */
 /* eslint-disable no-unused-vars */
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useProjectMilestoneApi } from "../../../utils/Hooks/ProjectMilestone";
 import ProjectMilestoneModal from "./ProjectMilestoneModal";
+import { TablePagination } from "@mui/material";
+import { useLoading } from "../../../contexts/LoadingContext";
+import projectMilestoneApiInstace from "../../../utils/ApiInstance/projectMilestoneApiInstance";
 
 const AdminMilestone = () => {
   const [triggerReload, setTriggerReload] = useState(false)
-  const { data, error } = useProjectMilestoneApi("", "GET", null, triggerReload);
+  // const { data, error } = useProjectMilestoneApi("", "GET", null, triggerReload);
+  const { isLoading, setIsLoading } = useLoading()
 
   const [openModal, setOpenModal] = useState(false);
   const [selectedMilestone, setSelectedMilestone] = useState(null);
+
+  const [totalItems, setTotalItems] = useState(1);
+  const [pageIndex, setPageIndex] = useState(0);
+  const [pageSize, setPageSize] = useState(10);
+
+  const [data, setData] = useState()
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setIsLoading(true);
+        const response = await projectMilestoneApiInstace.get(``, {
+          params: {
+            pageSize: pageSize,
+            pageIndex: pageIndex + 1,
+            // searchValue: searchValue,
+          },
+        });
+        setData(response.data);
+        setPageIndex(response.data._data.pageIndex - 1);
+        setPageSize(response.data._data.pageSize);
+        setTotalItems(response.data._data.totalItems);
+      } catch (err) {
+        console.log(err)
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [totalItems, pageIndex, triggerReload]);
+
 
   const pmStatus = [
     "Pending",
@@ -26,23 +62,33 @@ const AdminMilestone = () => {
     setOpenModal(true);
   };
 
+  const handleChangePage = (event, newPage) => {
+    setPageIndex(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setPageSize(parseInt(event.target.value, 10));
+    setPageIndex(0);
+  };
+
   return (
     <>
-      <div className="mx-auto max-w-screen-xl px-4 lg:px-12">
+      <div className="mx-auto max-w-screen-xl px-4 lg:px-12 mt-[2rem]">
         <div className="bg-white relative shadow-md sm:rounded-lg overflow-hidden">
           <div className="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
             <div className="w-full md:w-1/2">
               <span className="text-sm font-normal text-gray-500">
-                Showing{" "}
+                {/* Showing{" "}
                 <span className="font-semibold text-gray-900">
                   {data?._data.totalItems}{" "}
-                </span>
+                </span> */}
                 Milestone disbursement requests
               </span>
             </div>
             <div className="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
-              <div className="flex items-center space-x-3 w-full md:w-auto">
-                <button
+              <div cl
+                assName="flex items-center space-x-3 w-full md:w-auto">
+                {/* <button
                   id="filterDropdownButton"
                   className="w-full md:w-auto flex items-center justify-center py-2 px-4 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200"
                   type="button"
@@ -74,7 +120,7 @@ const AdminMilestone = () => {
                       d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
                     />
                   </svg>
-                </button>
+                </button> */}
               </div>
             </div>
           </div>
@@ -162,98 +208,16 @@ const AdminMilestone = () => {
               </tbody>
             </table>
           </div>
-          <nav
-            className="flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0 p-4"
-            aria-label="Table navigation"
-          >
-            <div></div>
-            <ul className="inline-flex items-stretch -space-x-px list-none">
-              <li>
-                <a
-                  href="#"
-                  className="flex items-center justify-center h-full py-1.5 px-3 ml-0 text-gray-500 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700"
-                >
-                  <span className="sr-only">Previous</span>
-                  <svg
-                    className="w-5 h-5"
-                    aria-hidden="true"
-                    fill="currentColor"
-                    viewbox="0 0 20 20"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      fill-rule="evenodd"
-                      d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
-                      clip-rule="evenodd"
-                    />
-                  </svg>
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700"
-                >
-                  1
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700"
-                >
-                  2
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  aria-current="page"
-                  className="flex items-center justify-center text-sm z-10 py-2 px-3 leading-tight text-primary-600 bg-primary-50 border border-primary-300 hover:bg-primary-100 hover:text-primary-700"
-                >
-                  3
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700"
-                >
-                  ...
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700"
-                >
-                  100
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="flex items-center justify-center h-full py-1.5 px-3 leading-tight text-gray-500 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700"
-                >
-                  <span className="sr-only">Next</span>
-                  <svg
-                    className="w-5 h-5"
-                    aria-hidden="true"
-                    fill="currentColor"
-                    viewbox="0 0 20 20"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      fill-rule="evenodd"
-                      d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                      clip-rule="evenodd"
-                    />
-                  </svg>
-                </a>
-              </li>
-            </ul>
-          </nav>
+          <TablePagination
+            component="div"
+            count={totalItems}
+            page={pageIndex}
+            onPageChange={handleChangePage}
+            rowsPerPage={pageSize}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />
         </div>
+
       </div>
 
       <ProjectMilestoneModal

@@ -11,18 +11,18 @@ import { useNavigate } from "react-router";
 const BackerSection = ({ backers }) => {
   const navigate = useNavigate()
   console.log(backers);
-      const formatDateTime = (dateString) => {
-        const date = new Date(dateString);
-        const options = {
-            month: "short",
-            day: "numeric",
-            year: "numeric",
-            hour: "numeric",
-            minute: "numeric",
-            hour12: true,
-        };
-        return new Intl.DateTimeFormat("en-US", options).format(date);
+  const formatDateTime = (dateString) => {
+    const date = new Date(dateString);
+    const options = {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+      hour: "numeric",
+      minute: "numeric",
+      hour12: true,
     };
+    return new Intl.DateTimeFormat("en-US", options).format(date);
+  };
   return (
     <div>
       <div class="relative overflow-x-auto">
@@ -32,10 +32,10 @@ const BackerSection = ({ backers }) => {
               <th scope="col" class="px-6 py-3 rounded-s-lg">
                 Backer
               </th>
-              <th scope="col" class="px-6 py-3 rounded-e-lg">
+              <th scope="col" class="px-6 py-3">
                 Total Donation Amount
               </th>
-              <th scope="col" class="px-6 py-3 rounded-e-lg">
+              <th scope="col" class="px-6 py-3">
                 Package Name
               </th>
               <th scope="col" class="px-6 py-3 rounded-e-lg">
@@ -61,10 +61,10 @@ const BackerSection = ({ backers }) => {
                   {backer.donateAmount.toLocaleString("de-DE")} VND
                 </td>
                 <td class="px-6 py-4">
-                  {backer.name} 
+                  {backer.name}
                 </td>
                 <td class="px-6 py-4">
-                  {formatDateTime(backer.createdDate)} 
+                  {formatDateTime(backer.createdDate)}
                 </td>
                 {/* <td class="px-6 py-4">
                   $2999

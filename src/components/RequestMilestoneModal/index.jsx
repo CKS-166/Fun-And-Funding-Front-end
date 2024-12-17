@@ -108,50 +108,52 @@ const RequestMilestoneModal = ({ render, open, handleClose, milestone, projectId
         <ToastContainer />
         <Typography variant="h5" gutterBottom
           sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <span>{milestone.milestoneName}</span>
+          <span className='font-semibold text-2xl'>{milestone.milestoneName}</span>
           <IoMdClose onClick={handleClose} style={{ cursor: 'pointer' }} />
         </Typography>
+        <div className='p-3 border border-gray-300 rounded bg-gray-100'>
+          <span className='font-semibold text-md'>
+            Milestone Goal:
+          </span>
+          <ul>
+            <li>{milestone.description}</li>
+          </ul>
+          <div className='mt-3'></div>
+          <span className='font-semibold text-md'>
+            Milestone Duration:
+          </span>
+          <ul>
+            <li>{milestone.duration} days</li>
+          </ul>
 
-        <Typography variant="body1" gutterBottom>
-          <strong>Goal:</strong>
-        </Typography>
-        <ul>
-          <li>{milestone.description}</li>
-        </ul>
-
-        <Typography variant="body2" gutterBottom>
-          <strong>Duration:</strong>
-        </Typography>
-        <ul>
-          <li>{milestone.duration} days</li>
-        </ul>
-
-        {/* <Typography variant="body2" gutterBottom>
+          {/* <Typography variant="body2" gutterBottom>
             <strong>Partial Disbursement:</strong>
           </Typography>
           <ul>
             <li>5% of the milestone amount is transferred upfront.</li>
             <li>Another 5% upon successful completion.</li>
           </ul> */}
+          <div className='mt-3'></div>
+          <span className='font-semibold text-md'>
+            Requirements:
+          </span>
+          {milestone.requirements?.map((req, index) => (
+            <ul>
+              <li key={index}>{req.description}</li>
+            </ul>
+          ))}
+        </div>
 
-        <Typography variant="h6" gutterBottom>
-          Requirements:
-        </Typography>
-        {milestone.requirements?.map((req, index) => (
-          <ul>
-            <li key={index}>{req.description}</li>
-          </ul>
-        ))}
-        <Typography variant="h6" gutterBottom>
+        {/* <Typography variant="h6" gutterBottom>
           Validation Criteria:
         </Typography>
         <Typography variant="body1" gutterBottom>
           Additional context about our criteria can be found
           <span style={{ color: '#1BAA64', fontWeight: 600, cursor: 'pointer', marginLeft: '5px' }}>here</span>
-        </Typography>
-        <div className='flex gap-3 w-[100%] justify-between'>
-          <div className='w-[50%]'>
-            <div className='font-semibold text-xl'>Title</div>
+        </Typography> */}
+        <div className='gap-3 w-[100%]'>
+          <div className='w-[100%]'>
+            <div className='font-semibold text-xl mt-5'>Milestone Title</div>
             <TextField
               placeholder='Project milestone title...'
               fullWidth
@@ -161,8 +163,8 @@ const RequestMilestoneModal = ({ render, open, handleClose, milestone, projectId
               onChange={(e) => setPmTitle(e.target.value)}
             />
           </div>
-          <div className='w-[50%]'>
-            <div className='font-semibold text-xl'>Description</div>
+          <div className='w-[100%]'>
+            <div className='font-semibold text-xl mt-5'>Milestone Description</div>
             <TextField
               placeholder='Project milestone description...'
               fullWidth

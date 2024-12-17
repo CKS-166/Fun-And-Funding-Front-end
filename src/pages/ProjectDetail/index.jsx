@@ -744,10 +744,15 @@ const ProjectDetail = () => {
                   <Grid2 container spacing={4}>
                     <Grid2 size={8} className="flex justify-center">
                       <div className="w-[80%]">
-                        <CommentSection
-                          isBacker={isBacker || isOwner}
-                          projectId={projectData.id}
-                        />
+                        {
+                          isBacker && (
+                            <CommentSection
+                              isBacker={isBacker || isOwner}
+                              projectId={projectData.id}
+                            />
+                          )
+                        }
+
                       </div>
                     </Grid2>
                     <Grid2 size={4}>

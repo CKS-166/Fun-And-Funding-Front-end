@@ -58,6 +58,7 @@ const AccountWallet = () => {
     "Milestone First Half", // MilestoneFirstHalf
     "Milestone Second Half", // MilestoneSecondHalf
     "Withdraw Refund", // WithdrawRefund
+    "Withdraw Canceled"
   ];
 
   return (
@@ -159,7 +160,7 @@ const AccountWallet = () => {
                     </th>
                     <td class="px-3 py-4">{value.description}</td>
                     <td class="px-3 py-4">
-                      {value.totalAmount
+                      {value.transactionType == 0 ? '-' : ''}{value.totalAmount
                         .toString()
                         .replace(/\B(?=(\d{3})+(?!\d))/g, ".")}{" "}
                       đ

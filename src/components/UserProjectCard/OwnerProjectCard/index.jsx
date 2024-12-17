@@ -1,21 +1,21 @@
 import {
+  Box,
   FormControl,
   MenuItem,
+  Modal,
   Select,
   Typography,
-  Modal,
-  Box,
 } from "@mui/material";
 import { alpha } from "@mui/material/styles";
-import React, { useState, useEffect } from "react";
-import "./index.css";
-import marketplaceProjectApiInstace from "../../../utils/ApiInstance/marketplaceProjectApiInstance";
-import fundingProjectApiInstace from "../../../utils/ApiInstance/fundingProjectApiInstance";
-import Cookies from "js-cookie";
-import Swal from "sweetalert2";
 import axios from "axios";
-import OrderMarketDetail from "../../OrderCard/OrderMarketDetail";
+import Cookies from "js-cookie";
+import React, { useEffect, useState } from "react";
+import Swal from "sweetalert2";
+import fundingProjectApiInstace from "../../../utils/ApiInstance/fundingProjectApiInstance";
+import marketplaceProjectApiInstace from "../../../utils/ApiInstance/marketplaceProjectApiInstance";
 import MarketplaceContract from "../../MarketplaceContract";
+import OrderMarketDetail from "../../OrderCard/OrderMarketDetail";
+import "./index.css";
 
 const projectStatus = {
   0: { name: "Deleted", color: "var(--red)" },
@@ -124,11 +124,11 @@ function OwnerProjectCard({ project, projectType, fetchProjectData }) {
             src={
               projectType == "Funding"
                 ? project?.fundingFiles?.find(
-                    (p) => p.filetype == 2 && p.isDeleted == false
-                  ).url
+                  (p) => p.filetype == 2 && p.isDeleted == false
+                ).url
                 : project?.marketplaceFiles?.find(
-                    (p) => p.fileType == 2 && p.isDeleted == false
-                  ).url
+                  (p) => p.fileType == 2 && p.isDeleted == false
+                ).url
             }
             style={{
               width: "10rem",
@@ -150,7 +150,7 @@ function OwnerProjectCard({ project, projectType, fetchProjectData }) {
               <Typography
                 sx={{
                   color: "#2F3645",
-                  width: "25rem",
+                  maxWidth: "25rem",
                   overflow: "hidden",
                   textOverflow: "ellipsis",
                   WebkitBoxOrient: "vertical",
@@ -203,9 +203,9 @@ function OwnerProjectCard({ project, projectType, fetchProjectData }) {
               border: "0 !important",
             },
             "&.MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline":
-              {
-                border: "0 !important",
-              },
+            {
+              border: "0 !important",
+            },
           }}
         >
           <Select
@@ -249,10 +249,9 @@ function OwnerProjectCard({ project, projectType, fetchProjectData }) {
               value="edit"
               onClick={() =>
                 window.open(
-                  `/account/${
-                    projectType == "Funding"
-                      ? "projects"
-                      : "marketplace-projects"
+                  `/account/${projectType == "Funding"
+                    ? "projects"
+                    : "marketplace-projects"
                   }/update/${project.id}/basic-info`,
                   "_blank"
                 )
@@ -262,13 +261,13 @@ function OwnerProjectCard({ project, projectType, fetchProjectData }) {
             </MenuItem>
             {(project.status === 1 ||
               (project.status === 6 && projectType !== "Funding")) && (
-              <MenuItem
-                value="remove"
-                onClick={() => handleDelete(project.id, projectType, 0)}
-              >
-                <Typography>Delete Project</Typography>
-              </MenuItem>
-            )}
+                <MenuItem
+                  value="remove"
+                  onClick={() => handleDelete(project.id, projectType, 0)}
+                >
+                  <Typography>Delete Project</Typography>
+                </MenuItem>
+              )}
             {projectType != "Funding" && (
               <>
                 <MenuItem value="view" onClick={handleOpen}>
@@ -295,12 +294,12 @@ function OwnerProjectCard({ project, projectType, fetchProjectData }) {
               <MenuItem
                 value="publish"
                 onClick={handleContractOpen}
-                // onClick={() =>
-                //   window.open(
-                //     `/request-marketplace-project/${project.id}/basic-info`,
-                //     "_blank"
-                //   )
-                // }
+              // onClick={() =>
+              //   window.open(
+              //     `/request-marketplace-project/${project.id}/basic-info`,
+              //     "_blank"
+              //   )
+              // }
               >
                 <Typography>Publish To Marketplace</Typography>
               </MenuItem>

@@ -29,35 +29,23 @@ function AccountProject() {
   const [selectedSortOptions, setSelectedSortOptions] = useState([]);
 
   useEffect(() => {
-    setIsLoading(true);
     fetchUser();
-    fetchGameOwnerFundingProject();
-    fetchBackerDonationProject();
-    setIsLoading(false);
   }, [token]);
 
   useEffect(() => {
-    setIsLoading(true);
     fetchGameOwnerFundingProject(searchOwnerFundingProject);
-    setIsLoading(false);
   }, [searchOwnerFundingProject]);
 
   useEffect(() => {
-    setIsLoading(true);
     fetchBackerDonationProject(searchDonationProject);
-    setIsLoading(false);
   }, [searchDonationProject]);
 
   useEffect(() => {
-    setIsLoading(true);
     fetchGameOwnerMarketplaceProject(searchOwnerMarketplaceProject);
-    setIsLoading(false);
   }, [searchOwnerMarketplaceProject]);
 
   useEffect(() => {
-    setIsLoading(true);
     fetchBackerPurchaseProject(searchPurchaseProject);
-    setIsLoading(false);
   }, [searchPurchaseProject]);
 
   const handleOwnerProjectSearchChange = (value) => {
@@ -209,7 +197,7 @@ function AccountProject() {
               />
             </div>
             {gameOwnerFundingProject != null &&
-            gameOwnerFundingProject.length > 0 ? (
+              gameOwnerFundingProject.length > 0 ? (
               gameOwnerFundingProject.map((project, index) => (
                 <div key={index}>
                   <OwnerProjectCard
@@ -259,7 +247,7 @@ function AccountProject() {
               />
             </div>
             {gameOwnerMarketplaceProject != null &&
-            gameOwnerMarketplaceProject.length > 0 ? (
+              gameOwnerMarketplaceProject.length > 0 ? (
               gameOwnerMarketplaceProject.map((project, index) => (
                 <div key={index}>
                   <OwnerProjectCard
@@ -305,7 +293,7 @@ function AccountProject() {
               />
             </div>
             {backerDonationProject != null &&
-            backerDonationProject.length > 0 ? (
+              backerDonationProject.length > 0 ? (
               backerDonationProject.map((project, index) => (
                 <div key={index}>
                   <PublicProjectCard

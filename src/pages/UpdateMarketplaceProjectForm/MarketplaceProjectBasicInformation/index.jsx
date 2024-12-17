@@ -131,10 +131,10 @@ function MarketplaceProjectBasicInformation() {
             width: "70%",
           }}
         >
-          Create a strong first impression by introducing your campaign's goals
-          and sparking interest. This essential information will appear on your
-          campaign page, campaign card, and in search results, helping people
-          easily discover and learn more about your campaign.
+          Create a strong first impression by introducing your game with
+          interesting features. This essential information will appear on the
+          platform, and in search results, helping people easily discover and
+          learn more about your game project.
         </Typography>
       </div>
       <div className="basic-info-section">
@@ -142,7 +142,7 @@ function MarketplaceProjectBasicInformation() {
           Project Name<span className="text-[#1BAA64]">*</span>
         </Typography>
         <Typography className="basic-info-subtitle" sx={{ width: "70%" }}>
-          What is the title of your project?
+          What is the name of your project?
         </Typography>
         <TextField
           placeholder="Project name..."
@@ -151,6 +151,7 @@ function MarketplaceProjectBasicInformation() {
           required={true}
           value={name}
           onChange={handleChangeName}
+          disabled={true}
         />
       </div>
       <div className="basic-info-section">
@@ -158,7 +159,7 @@ function MarketplaceProjectBasicInformation() {
           Project Description<span className="text-[#1BAA64]">*</span>
         </Typography>
         <Typography className="basic-info-subtitle" sx={{ width: "70%" }}>
-          Provide a short description that best describes your campaign to your
+          Provide a short description that best describes your project to your
           audience.
         </Typography>
         <TextField

@@ -136,7 +136,7 @@ const PackageReward = ({ packageList, reloadDetail, isButtonActive }) => {
           <>
             {item.packageTypes == 0 ? (
               <Grid size={6} sx={{ overflowY: "auto" }}>
-                <div className="border-2 border-gray-300 p-4 rounded h-[25rem]">
+                <div className="border-2 border-gray-300 p-4 rounded h-[28rem]">
                   <div className="flex items-center">
                     <div className="package-image rounded overflow-hidden flex justify-center items-center bg-gray-200">
                       <img src="https://i.ibb.co/z6VfqjK/heart.png" className=' !w-[8rem] !h-[8rem]' />

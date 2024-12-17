@@ -108,7 +108,7 @@ function FundingProjectPackages({ packages }) {
                                 </div>
                                 <div className='my-auto w-[6rem]'>
                                     <Typography sx={{ fontSize: '1rem', fontWeight: '500', mb: '0.25rem', overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis', width: '6rem', textAlign: 'right' }}>
-                                        Count: {item.quantity}
+                                        Qty: {item.quantity}
                                     </Typography>
                                 </div>
                             </div>

@@ -1,8 +1,6 @@
 import { Box, Divider, Typography } from "@mui/material";
 import Cookies from "js-cookie";
 import React, { useEffect, useState } from "react";
-import SearchBar from "../../components/SearchBar";
-import SortDropdown from "../../components/SortDropdown";
 import OwnerProjectCard from "../../components/UserProjectCard/OwnerProjectCard";
 import PublicProjectCard from "../../components/UserProjectCard/PublicProjectCard";
 import { useLoading } from "../../contexts/LoadingContext";
@@ -189,13 +187,6 @@ function AccountProject() {
                 and engage with supporters to bring your ideas to life.
               </Typography>
             </div>
-            <div className="flex flex-row justify-between gap-[1rem] mb-[2rem]">
-              <SearchBar onSearchChange={handleOwnerProjectSearchChange} />
-              <SortDropdown
-                options={sortOptions}
-                onValueChange={handleSortChange}
-              />
-            </div>
             {gameOwnerFundingProject != null &&
               gameOwnerFundingProject.length > 0 ? (
               gameOwnerFundingProject.map((project, index) => (
@@ -239,13 +230,6 @@ function AccountProject() {
                 projects, ensuring they are ready for the audience.
               </Typography>
             </div>
-            <div className="flex flex-row justify-between gap-[1rem] mb-[2rem]">
-              <SearchBar onSearchChange={handleOwnerProjectSearchChange} />
-              <SortDropdown
-                options={sortOptions}
-                onValueChange={handleSortChange}
-              />
-            </div>
             {gameOwnerMarketplaceProject != null &&
               gameOwnerMarketplaceProject.length > 0 ? (
               gameOwnerMarketplaceProject.map((project, index) => (
@@ -284,13 +268,6 @@ function AccountProject() {
                 View and track all the funding projects you’ve supported,
                 including their updates and achievements.
               </Typography>
-            </div>
-            <div className="flex flex-row justify-between gap-[1rem] mb-[2rem]">
-              <SearchBar onSearchChange={handleDonationProjectSearchChange} />
-              <SortDropdown
-                options={sortOptions}
-                onValueChange={handleSortChange}
-              />
             </div>
             {backerDonationProject != null &&
               backerDonationProject.length > 0 ? (

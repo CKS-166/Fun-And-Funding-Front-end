@@ -16,7 +16,10 @@ import {
   Typography
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
+import useSignIn from "react-auth-kit/hooks/useSignIn";
 import { AiFillProject } from "react-icons/ai";
+import { useNavigate } from "react-router";
+import { toast, ToastContainer } from "react-toastify";
 import Background from "../../assets/images/background-pattern.png";
 import Confetti from "../../assets/images/confetti-background.png";
 import Devices from "../../assets/images/devices.png";
@@ -31,10 +34,6 @@ import marketplaceProjectApiInstance from "../../utils/ApiInstance/marketplacePr
 import systemWalletApiInstace from "../../utils/ApiInstance/systemWalletApiInstance";
 import userApiInstance from '../../utils/ApiInstance/userApiInstance';
 import "./index.css";
-import { toast, ToastContainer } from "react-toastify";
-import Cookies from "js-cookie";
-import { useNavigate } from "react-router";
-import useSignIn from "react-auth-kit/hooks/useSignIn";
 
 const notify = (message) => {
   toast.warn(message, {
@@ -165,7 +164,7 @@ function HomePage() {
             >
               <span style={{ color: "#1BAA64" }}>Available</span> for purchasing
               and crowdfunding on <span style={{ color: "#1BAA64" }}>BOTH</span>{" "}
-              PC <span style={{ color: "#1BAA64" }}>AND</span> mobile!
+              PC <span style={{ color: "#1BAA64" }}>AND</span> mobile <span className="font-semibold text-[1.5rem]">(comming soon)</span>!
             </Typography>
             <Typography
               sx={{ fontWeight: "400", fontSize: "1.5rem", color: "#2F3645" }}

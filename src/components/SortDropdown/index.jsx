@@ -15,12 +15,10 @@ const SortDropdown = ({ options, onValueChange }) => {
         <FormControl sx={{
             minWidth: '12rem', height: '2.5rem',
             '.MuiOutlinedInput-notchedOutline': { border: '0 !important' },
-            "&.MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline":
-            {
+            "&.MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline": {
                 border: '0 !important',
             },
-            "&.MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline":
-            {
+            "&.MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
                 border: '0 !important',
             },
         }}>
@@ -33,9 +31,33 @@ const SortDropdown = ({ options, onValueChange }) => {
                     if (selected.length === 0) {
                         return <Typography>Sort by</Typography>;
                     } else if (selected.length === 1) {
-                        return <Typography sx={{ color: '#1BAA64', fontWeight: '600' }}>{selected[0]}</Typography>;
+                        return (
+                            <Typography
+                                sx={{
+                                    color: '#1BAA64',
+                                    fontWeight: '600',
+                                    textOverflow: 'ellipsis',
+                                    overflow: 'hidden',
+                                    whiteSpace: 'nowrap',
+                                }}
+                            >
+                                {selected[0]}
+                            </Typography>
+                        );
                     } else {
-                        return <Typography sx={{ color: '#1BAA64', fontWeight: '600' }}>Multiple</Typography>;
+                        return (
+                            <Typography
+                                sx={{
+                                    color: '#1BAA64',
+                                    fontWeight: '600',
+                                    textOverflow: 'ellipsis',
+                                    overflow: 'hidden',
+                                    whiteSpace: 'nowrap',
+                                }}
+                            >
+                                Multiple
+                            </Typography>
+                        );
                     }
                 }}
                 sx={{
@@ -48,6 +70,9 @@ const SortDropdown = ({ options, onValueChange }) => {
                         display: 'flex',
                         alignItems: 'center',
                         height: '2.5rem',
+                        textOverflow: 'ellipsis',
+                        overflow: 'hidden',
+                        whiteSpace: 'nowrap',
                     },
                     "&:hover": {
                         backgroundColor: alpha("#EAEAEA", 0.85),
@@ -67,11 +92,29 @@ const SortDropdown = ({ options, onValueChange }) => {
                 {options.map((option) => (
                     <MenuItem key={option} value={option}>
                         {option === selectedOptions ? (
-                            <Box sx={{ backgroundColor: '#1BAA64', color: '#F5F7F8', padding: '0.5rem', width: '100%' }}>
+                            <Box
+                                sx={{
+                                    backgroundColor: '#1BAA64',
+                                    color: '#F5F7F8',
+                                    padding: '0.5rem',
+                                    width: '100%',
+                                    textOverflow: 'ellipsis',
+                                    overflow: 'hidden',
+                                    whiteSpace: 'nowrap',
+                                }}
+                            >
                                 {option}
                             </Box>
                         ) : (
-                            <Typography>{option}</Typography>
+                            <Typography
+                                sx={{
+                                    textOverflow: 'ellipsis',
+                                    overflow: 'hidden',
+                                    whiteSpace: 'nowrap',
+                                }}
+                            >
+                                {option}
+                            </Typography>
                         )}
                     </MenuItem>
                 ))}

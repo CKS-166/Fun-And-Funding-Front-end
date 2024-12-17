@@ -1,15 +1,19 @@
-import React, { useState, useEffect } from 'react'
-import { Box, Divider, Grid2, Typography } from '@mui/material'
-import Grid from '@mui/material/Grid2';
-import ktm from '../../assets/images/ktm.jpg';
-import MarketPlaceCard from '../../components/MarketplaceProject/MarketplaceCard';
-import './index.css'
-import marketplaceProjectApiInstace from '../../utils/ApiInstance/marketplaceProjectApiInstance';
+import { Divider, Grid2 } from '@mui/material';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
+import SearchBar from "../../components/SearchBar";
+import SortDropdown from "../../components/SortDropdown";
 import { useLoading } from '../../contexts/LoadingContext';
+import marketplaceProjectApiInstace from '../../utils/ApiInstance/marketplaceProjectApiInstance';
+import './index.css';
+
+const sortOptions = ["More than 50.000 VND", "More than 100.000 VND", "More than 200.000 VND"];
 const MarketplaceHomePage = () => {
     const navigate = useNavigate();
     const [markets, setMarkets] = useState([]);
+    const [selectedSortOptions, setSelectedSortOptions] = useState([]);
+    const [searchValue, setSearchValue] = useState("");
+
     const { isLoading, setIsLoading } = useLoading()
     const fetchAllMarketProjects = async () => {
         try {
@@ -25,10 +29,19 @@ const MarketplaceHomePage = () => {
             setIsLoading(false)
         }
     }
+
     useEffect(() => {
         fetchAllMarketProjects();
     }, [])
-    const sampleArray = [1, 1, 1, 1, 1, 1];
+
+    const handleSortChange = (values) => {
+        setSelectedSortOptions(values);
+    };
+
+    const handleSearchChange = (value) => {
+        setSearchValue(value);
+    };
+
     return (
         <div>
             <div className='crowBanner1 flex flex-col justify-center items-center h-[20rem]' >
@@ -53,7 +66,15 @@ const MarketplaceHomePage = () => {
                             Game Collections
                         </span>
                     </Divider>
-                    <div className='mb-10'></div>
+                    <div className='my-10'>
+                        <div className="flex flex-row justify-between gap-[1rem] mb-[2rem]">
+                            <SearchBar onSearchChange={handleSearchChange} />
+                            <SortDropdown
+                                options={sortOptions}
+                                onValueChange={handleSortChange}
+                            />
+                        </div>
+                    </div>
                     <Grid2 container spacing={4}>
                         {markets.map((item, index) => {
                             const fileWithType2 = item.marketplaceFiles.find(file => file.fileType === 2);

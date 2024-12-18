@@ -50,10 +50,13 @@ const WarnModal = ({ openWarn, setOpenWarn, pmData, newEndDate, setNewEndDate, h
                     label='Choose new end date'
                     type="datetime-local"
                     InputLabelProps={{ shrink: true }}
-                    inputProps={{ min: pmData.endDate }}
+                    inputProps={{
+                      // Add 1 day (24 hours) to the pmData.endDate and format it correctly
+                      min: new Date(new Date(pmData.endDate).getTime() + 86400000).toISOString().slice(0, 16), // Add 1 day (86400000 ms)
+                    }}
                     onChange={(e) => setNewEndDate(e.target.value)}
                   />
-                  <div className="text-sm mt-1">Current deadline: {new Date(pmData.endDate).toLocaleString()}</div>
+                  <div className="text-sm mt-1">Current deadline: {new Date(pmData.endDate).toLocaleString() + 1}</div>
 
                 </div>
               </div>

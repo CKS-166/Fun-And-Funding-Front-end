@@ -209,9 +209,7 @@ function Milestone2() {
                     <Box>
                         <CompleteMilestoneButton  render={() => getMilestoneData(milestoneId)} status={milestoneData.status} pmId={(milestoneData.status == 'edit' || milestoneData.status == 'warning') && milestoneData.data[0].id} />
                     </Box>
-
                 </Box>
-
                 <Box>
                     {milestone && milestone.requirements.map((req) => (
                         <>

@@ -21,7 +21,8 @@ import FileUploadDropdown from "../../../../components/UpdateProject/UploadFiles
 import milestoneApiInstace from "../../../../utils/ApiInstance/milestoneApiInstance";
 import { checkAvailableMilestone } from "../../../../utils/Hooks/checkAvailableMilestone";
 import UpdateMilestone from "../UpdateMilestone";
-
+import packageBackerApiInstance from '../../../../utils/ApiInstance/packageBackerApiInstance';
+import PackageEvidence from '../../../../components/PackageEvidence';
 const MilestoneForm = () => {
   const { id } = useParams(); // Get the project ID from the URL
   console.log(id);
@@ -40,6 +41,7 @@ const MilestoneForm = () => {
   const [buttonActive, setButtonActive] = useState(false)
   const [issueLog, setIssueLog] = useState("");
   const [daysLeft, setDaysLeft] = useState(0);
+  const [packageBackers, setPackBackers] = useState([]);
   //check available project milestone
   const getMilestoneData = async (id) => {
     setIsLoading(true); // Start loading when data fetch begins
@@ -89,6 +91,16 @@ const MilestoneForm = () => {
     }
   };
 
+  const fetchPackageBackers = async (id) =>{
+    setIsLoading(true);
+    await packageBackerApiInstance.get(`/project-backers-detail?projectId=${id}`).then((res) => {
+      if (res.data._isSuccess) {
+        setPackBackers(res.data._data);
+        setIsLoading(false);
+      }
+    })
+  }
+
   const handleBackdropClose = () => {
     setIsBackdropHidden(false);
   };
@@ -99,6 +111,7 @@ const MilestoneForm = () => {
       try {
         await fetchFixedMilestone(); // Fetch fixed milestone data first
         await getMilestoneData(milestoneId); // Then fetch milestone data
+        await fetchPackageBackers(projectId);
       } catch (error) {
         console.error("Error fetching data:", error);
       } finally {
@@ -139,6 +152,7 @@ const MilestoneForm = () => {
       });
     });
     data.append("issueLog", issueLog);
+    data.append("type", milestone.milestoneType)
     try {
       await axios.post(
         "https://localhost:7044/api/project-milestone-requirements",
@@ -214,7 +228,7 @@ const MilestoneForm = () => {
           <CircularProgress color="inherit" />
         </Backdrop>
       ) : <>
-        {milestoneData && milestone && !isLoading
+        {milestoneData && milestone && !isLoading && milestone.milestoneType == 1
           && <BackdropRequestMilestone
             isHidden={isBackdropHidden}
             projectId={projectId}
@@ -244,7 +258,8 @@ const MilestoneForm = () => {
             </Box>
           </Box>
 
-          {!isLoading && milestoneData && milestoneData.status == 'create' ? (
+          {!isLoading && (milestoneData && milestoneData.status == 'create') 
+           ? (
 
             <form onSubmit={handleSubmit}>
               <TabContext value={value}>
@@ -252,6 +267,7 @@ const MilestoneForm = () => {
                   <TabList onChange={handleChange} aria-label="lab API tabs example">
                     <Tab label="Requirements" value="1" />
                     <Tab label="Issue Logs" value="2" />
+                    {milestone.milestoneOrder == 4 && <Tab label="Reward Tracking" value="3" />}
                   </TabList>
                 </Box>
                 <TabPanel value="1">
@@ -304,6 +320,9 @@ const MilestoneForm = () => {
                     onChange={(value) => setIssueLog(value)}
                   />
                 </TabPanel>
+                <TabPanel value="3">
+                  <PackageEvidence backers={packageBackers}/>
+                </TabPanel>
               </TabContext>
 
 
@@ -315,9 +334,11 @@ const MilestoneForm = () => {
               </Button >
             </form>
           ) : <UpdateMilestone render={() => getMilestoneData(milestoneId)}
+              backers ={packageBackers}
+              type={milestone.milestoneType}
             milestones={milestoneData?.data[0]?.projectMilestoneRequirements}
             issueLog={milestoneData?.data[0]?.issueLog} pmId={milestoneData?.data[0]?.id}
-            status={milestoneData?.status} />}
+            status={milestoneData?.status} order={milestone.milestoneOrder} />}
         </div>
       </>}
 

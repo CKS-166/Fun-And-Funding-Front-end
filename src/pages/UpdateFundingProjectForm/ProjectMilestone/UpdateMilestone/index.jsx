@@ -11,13 +11,12 @@ import TabPanel from '@mui/lab/TabPanel';
 import Swal from "sweetalert2";
 import { ToastContainer, toast } from "react-toastify";
 import CompleteMilestoneButton from "../../../../components/UpdateProject/CompleteMilestoneButton";
-const UpdateMilestone = ({ milestones, render, issueLog, pmId, status }) => {
+import PackageEvidence from "../../../../components/PackageEvidence";
+const UpdateMilestone = ({ milestones, render, issueLog, pmId, status, order, type, backers }) => {
   const [milestoneData, setMilestoneData] = useState([]);
   const [anchorEls, setAnchorEls] = useState({});
   const [loading, setLoading] = useState(false);
   const [issueLogData, setIssueLogData] = useState(issueLog || "");
-  console.log(milestones)
-  console.log(pmId)
   useEffect(() => {
     if (milestones && milestones.length > 0) {
       // Initialize milestone data if milestones are available
@@ -98,6 +97,7 @@ const UpdateMilestone = ({ milestones, render, issueLog, pmId, status }) => {
       });
     });
     data.append("issueLog", issueLogData);
+    data.append("type", type);
     console.log(milestoneData);
 
     try {
@@ -186,6 +186,7 @@ const UpdateMilestone = ({ milestones, render, issueLog, pmId, status }) => {
               <TabList onChange={handleChange} aria-label="lab API tabs example">
                 <Tab label="Requirements" value="1" />
                 <Tab label="Issue Logs" value="2" />
+                {order == 4 && <Tab label="Reward Tracking" value="3"/>}
               </TabList>
             </Box>
             {/* milestone evidence */}
@@ -193,7 +194,7 @@ const UpdateMilestone = ({ milestones, render, issueLog, pmId, status }) => {
               {milestoneData.map((milestone, index) => (
                 <div key={milestone.id} style={{ marginBottom: "20px" }}>
                   <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '70%', marginBottom: '20px' }}>
-                    <h3 style={{ fontWeight: '600' }}>{milestones[index].reqDescription}</h3>
+                    <h3 style={{ fontWeight: '600' }}>{milestones[index] && milestones[index].reqDescription || ""}</h3>
                     <Button variant="contained" component="label" onClick={(e) => openDropdown(e, index)}
                       sx={{ backgroundColor: '#1BAA64', textTransform: 'none', fontWeight: '600' }} startIcon={<ChangeCircleIcon />}>
                       Additional Files
@@ -230,9 +231,11 @@ const UpdateMilestone = ({ milestones, render, issueLog, pmId, status }) => {
                 onChange={(value) => setIssueLogData(value)}
               />
             </TabPanel>
+            <TabPanel value="3">
+              <>hello</>
+              <PackageEvidence backers={backers}/>
+            </TabPanel>
           </TabContext>
-
-
           <Button type="submit" variant="contained" color="primary" sx={{ backgroundColor: '#1BAA64', textTransform: 'none', fontWeight: '600' }}>
             Update Milestones
           </Button>

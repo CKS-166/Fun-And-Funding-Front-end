@@ -61,15 +61,24 @@ function UpdateFundingProjectLayout() {
     const [loadingStatus, setLoadingStatus] = useState(0);
     const [milestoneList, setMilestoneList] = useState([]);
     const [selectedMilestone, setSelectedMilestone] = useState("");
+    const disbursement = 2;
+    const funding = 1;
+    const processing = 2;
+    const fundedSuccess = 3;
     //fetch milestones
-    const fetchMilestones = async () => {
+    const fetchMilestones = async (status) => {
         setIsLoading(true);
-        await milestoneApiInstace
-            .get(`/group-latest-milestone`)
+        if(status == 2 || status == 3){
+            await milestoneApiInstace
+            .get(`/group-latest-milestone?filter=${status == 2 ? 1 : status == 3 ? 2 : 0}`)
             .then((response) => {
                 setMilestoneList(response.data._data);
                 setIsLoading(false);
             });
+        }else{
+            setMilestoneList([]);
+        }
+        
     };
     const handleSaveAll = async (event) => {
         event.preventDefault();
@@ -171,7 +180,7 @@ function UpdateFundingProjectLayout() {
 
     useEffect(() => {
         fetchProject();
-        fetchMilestones();
+        // fetchMilestones();
     }, [id]);
 
     const handleNavigatePreview = (id) => {
@@ -213,6 +222,7 @@ function UpdateFundingProjectLayout() {
                     fundingFiles: null,
                     existedFile: existedFile,
                 });
+                fetchMilestones(project.status);
             } else {
                 console.error("No project data found");
             }
@@ -260,17 +270,24 @@ function UpdateFundingProjectLayout() {
     };
 
     const handleMilestoneNavigation = (milestoneId, index) => {
-        console.log(milestoneId);
-        setSelectedMilestone(`Milestone ${index + 1}`)
-        // console.log(id)
-        navigate(`/account/projects/update/${id}/milestone1`, {
-            state: { milestoneId },
-        });
-        if (index == 1) {
-            navigate(`/account/projects/update/${id}/milestone2`, {
+        if (index === -1) {
+            // Milestone Overview
+            setSelectedMilestone("Milestone Overview");
+            navigate(`/account/projects/update/${id}/milestone-overview`);
+        }else{
+            console.log(milestoneId);
+            setSelectedMilestone(`Milestone ${index}`)
+            // console.log(id)
+            navigate(`/account/projects/update/${id}/milestone1`, {
                 state: { milestoneId },
             });
+            if (index == 3) {
+                navigate(`/account/projects/update/${id}/milestone2`, {
+                    state: { milestoneId },
+                });
+            }
         }
+        
     };
 
     const handleNavigation = (link) => {
@@ -479,12 +496,43 @@ function UpdateFundingProjectLayout() {
                                         unmountOnExit
                                     >
                                         <List component="nav">
+                                            <ListItem
+                                                button
+                                                onClick={() => handleMilestoneNavigation(null, -1)} // Navigate to overview (no specific milestone)
+                                                sx={{
+                                                    backgroundColor: selectedMilestone === "Milestone Overview" && isMilestoneActive
+                                                        ? "#88D1AE"
+                                                        : "transparent",
+                                                    "&:hover": {
+                                                        backgroundColor: "#88D1AE",
+                                                        "& .MuiListItemText-root": {
+                                                            color: "#F5F7F8",
+                                                        },
+                                                    },
+                                                }}
+                                            >
+                                                <ListItemText
+                                                    primary="Milestone Overview"
+                                                    sx={{
+                                                        color: selectedMilestone === "Milestone Overview" && isMilestoneActive
+                                                            ? "#F5F7F8"
+                                                            : "#F5F7F8",
+                                                        fontSize: "1rem",
+                                                        fontWeight: "600",
+                                                        height: "2rem",
+                                                        px: "2rem",
+                                                        display: "flex",
+                                                        alignItems: "center",
+                                                        cursor: "pointer",
+                                                    }}
+                                                />
+                                            </ListItem>
                                             {milestoneList.map((item, index) => (
                                                 <ListItem
                                                     button
                                                     key={item.name}
                                                     onClick={() =>
-                                                        handleMilestoneNavigation(item.id, index)
+                                                        handleMilestoneNavigation(item.id, item.milestoneOrder)
                                                     }
                                                     sx={{
                                                         backgroundColor: selectedMilestone == `Milestone ${index + 1}` && isMilestoneActive

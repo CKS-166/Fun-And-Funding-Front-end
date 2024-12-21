@@ -84,8 +84,8 @@ const ProjectDetail = () => {
         .get(`/project-backers-detail?projectId=${id}`)
         .then((res) => {
           console.log(res.data);
-          if (res.data.result._isSuccess) {
-            setPackBackers(res.data.result._data);
+          if (res.data._isSuccess) {
+            setPackBackers(res.data._data);
           }
         });
     } catch (error) {

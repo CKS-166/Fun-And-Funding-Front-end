@@ -80,6 +80,7 @@ import MarketplaceProjectContent from "./pages/UpdateMarketplaceProjectForm/Mark
 import MarketplaceProjectCoupon from "./pages/UpdateMarketplaceProjectForm/MarketplaceProjectCoupon";
 import MarketplaceProjectMediaFiles from "./pages/UpdateMarketplaceProjectForm/MarketplaceProjectMedia";
 import MarketplaceProjectPreview from "./pages/UpdateMarketplaceProjectForm/MarketplaceProjectPreview";
+import MilestoneOverview from "./pages/UpdateFundingProjectForm/ProjectMilestone/MilestoneOverview";
 
 function App() {
   const location = useLocation();
@@ -200,6 +201,10 @@ function App() {
                     <Route
                       path="/account/projects/update/:id/media-files"
                       element={<Media />}
+                    />
+                    <Route
+                      path="/account/projects/update/:id/milestone-overview"
+                      element={<MilestoneOverview />}
                     />
                     <Route
                       path="/account/projects/update/:id/milestone1"

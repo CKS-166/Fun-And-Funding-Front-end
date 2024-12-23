@@ -1,10 +1,9 @@
 /* eslint-disable react/no-unknown-property */
-import { Divider } from "@mui/material";
 import { useState } from "react";
-import { NavLink } from "react-router-dom";
-import logo from "../../../assets/images/logo-white.png";
-import Swal from "sweetalert2";
 import useSignOut from "react-auth-kit/hooks/useSignOut";
+import { NavLink } from "react-router-dom";
+import Swal from "sweetalert2";
+import logo from "../../../assets/images/logo.png";
 
 const Sidenav = () => {
   const [isOpenRequest, setIsOpenRequest] = useState(true);
@@ -79,24 +78,24 @@ const Sidenav = () => {
         className="fixed top-0 left-0 z-40 w-72 h-screen transition-transform -translate-x-full sm:translate-x-0 bg-[var(--black)]"
         aria-label="Sidebar"
       >
-        <div className="h-full px-3 py-4 overflow-y-scroll scrollbar-hidden black">
-          <NavLink to="#" className="flex items-center ps-2.5 mb-5">
+        <div className="h-full px-5 py-4 overflow-y-scroll scrollbar-hidden black">
+          <div className="bg-gray-300 rounded-lg px-[1rem] py-[0.75rem] flex flex-row gap-[0.5rem] items-center mb-[1.5rem]">
             <img
               src={logo}
-              className="h-6 me-3 sm:h-7"
+              className="!h-[2.4rem] me-3"
               alt="Fun&Funding Logo"
             />
-            <span className="self-center text-xl font-semibold whitespace-nowrap text-gray-200">
-              Fun&Funding
-            </span>
-          </NavLink>
-
-          <div className="my-3">
-            <Divider />
+            <div className="flex flex-col justify-start items-start">
+              <span className="text-[0.75rem] font-normal whitespace-nowrap text-[var(--black)]">
+                Welcome back
+              </span>
+              <span className="self-center text-[1rem] font-bold whitespace-nowrap text-[var(--black)]">
+                Administrator
+              </span>
+            </div>
           </div>
-
-          <ul className="space-y-2 font-medium list-none">
-            {/* <li>
+          <ul className="space-y-2 font-medium list-none ml-0">
+            <li>
               <NavLink
                 to="/admin-dashboard/dashboard"
                 className={({ isActive }) =>
@@ -118,7 +117,9 @@ const Sidenav = () => {
                   Dashboard
                 </span>
               </NavLink>
-            </li> */}
+            </li>
+          </ul>
+          <ul className="pt-4 mt-4 space-y-2 font-medium border-t border-gray-200 list-none text-sm ml-0">
             <li>
               <button
                 type="button"
@@ -261,11 +262,18 @@ const Sidenav = () => {
                         aria-hidden="true"
                         xmlns="http://www.w3.org/2000/svg"
                         fill="currentColor"
-                        viewBox="0 0 20 18"
+                        viewBox="0 0 24 24"
                       >
-                        <path d="M18 0H6a2 2 0 0 0-2 2h14v12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2Z" />
-                        <path d="M14 4H2a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2ZM2 16v-6h12v6H2Z" />
+                        <g id="SVGRepo_iconCarrier">
+                          <line x1="0.5" y1="1.48" x2="23.5" y2="1.48" stroke="currentColor" stroke-miterlimit="10" stroke-width="1.92" fill="none"></line>
+                          <line x1="0.5" y1="16.81" x2="23.5" y2="16.81" stroke="currentColor" stroke-miterlimit="10" stroke-width="1.92" fill="none"></line>
+                          <rect x="2.42" y="1.48" width="19.17" height="15.33" stroke="currentColor" stroke-miterlimit="10" stroke-width="1.92" fill="none"></rect>
+                          <line x1="12" y1="16.81" x2="12" y2="23.52" stroke="currentColor" stroke-miterlimit="10" stroke-width="1.92" fill="none"></line>
+                          <polyline points="8.17 23.52 8.17 22.56 12 19.69" stroke="currentColor" stroke-miterlimit="10" stroke-width="1.92" fill="none"></polyline>
+                          <polyline points="15.83 23.52 15.83 22.56 12 19.69" stroke="currentColor" stroke-miterlimit="10" stroke-width="1.92" fill="none"></polyline>
+                        </g>
                       </svg>
+
                       <span className="flex-1 ms-3 whitespace-nowrap group-hover:text-gray-900">
                         Funding Projects
                       </span>
@@ -293,7 +301,7 @@ const Sidenav = () => {
                         <path d="M14 4H2a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2ZM2 16v-6h12v6H2Z" />
                       </svg>
                       <span className="flex-1 ms-3 whitespace-nowrap">
-                        Funding Withdrawals
+                        Milestone Withdrawals
                       </span>
                       {/* <span className="inline-flex items-center justify-center w-3 h-3 p-3 ms-3 text-sm font-medium text-dark-green bg-primary-green/20 rounded-full">
                         3
@@ -369,7 +377,7 @@ const Sidenav = () => {
               )}
             </li>
           </ul>
-          <ul className="pt-4 mt-4 space-y-2 font-medium border-t border-gray-200 list-none text-sm">
+          <ul className="pt-4 mt-4 space-y-2 font-medium border-t border-gray-200 list-none text-sm ml-0">
             <li>
               <button
                 type="button"
@@ -441,18 +449,26 @@ const Sidenav = () => {
                         aria-hidden="true"
                         xmlns="http://www.w3.org/2000/svg"
                         fill="currentColor"
-                        viewBox="0 0 16 20"
+                        stroke="currentColor"
+                        stroke-width="0.336"
+                        viewBox="0 0 16 16"
                       >
-                        <path d="M16 14V2a2 2 0 0 0-2-2H2a2 2 0 0 0-2 2v15a3 3 0 0 0 3 3h12a1 1 0 0 0 0-2h-1v-2a2 2 0 0 0 2-2ZM4 2h2v12H4V2Zm8 16H3a1 1 0 0 1 0-2h9v2Z" />
+                        <path
+                          fill-rule="evenodd"
+                          clip-rule="evenodd"
+                          d="M8 1H7v2H1.5l-.5.5v4l.5.5H7v7h1V8h4.49l.34-.13 2.18-2v-.74l-2.18-2L12.5 3H8V1zm4.29 6H2V4h10.29l1.63 1.5L12.29 7zM5 5h5v1H5V5z"
+                        ></path>
                       </svg>
                       <span className="flex-1 ms-3 whitespace-nowrap group-hover:text-gray-900">
-                        Disbursement Milestones
+                        Milestones
                       </span>
                     </NavLink>
                   </li>
                 </ul>
               )}
             </li>
+          </ul>
+          <ul className="pt-4 mt-4 space-y-2 font-medium border-t border-gray-200 list-none ml-0">
             <li>
               <NavLink
                 // to=""

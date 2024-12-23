@@ -1,9 +1,9 @@
+import { TablePagination } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useLoading } from "../../../contexts/LoadingContext";
 import userApiInstance from "../../../utils/ApiInstance/userApiInstance";
 import CreateUserModal from "./CreateUserModal";
 import UserDetailModal from "./UserDetailModal";
-import { TablePagination } from "@mui/material";
 
 const userStatus = ["Inactive", "Active"];
 
@@ -69,7 +69,7 @@ function AdminUsers() {
 
   return (
     <>
-      <div className="mx-auto max-w-screen-xl px-4 lg:px-12 my-8">
+      <div className="mx-auto max-w-screen-xl px-[2rem] my-8">
         <div className="bg-white relative shadow-md sm:rounded-lg overflow-hidden">
           <div className="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
             <div className="w-full md:w-1/2">
@@ -221,11 +221,10 @@ function AdminUsers() {
                       </td>
                       <td className="px-4 py-3">
                         <span
-                          className={`text-xs font-medium me-2 px-2.5 py-0.5 rounded ${
-                            user.userStatus === 1
-                              ? "bg-[var(--primary-green)] text-[var(--white)]"
-                              : "bg-[var(--red)] text-[var(--white)]"
-                          }`}
+                          className={`text-xs font-medium me-2 px-2.5 py-0.5 rounded ${user.userStatus === 1
+                            ? "bg-[var(--primary-green)] text-[var(--white)]"
+                            : "bg-[var(--red)] text-[var(--white)]"
+                            }`}
                         >
                           {userStatus[user.userStatus]}
                         </span>

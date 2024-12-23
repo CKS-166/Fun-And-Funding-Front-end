@@ -1,4 +1,4 @@
-import { Box, FormControl, MenuItem, Select, Typography } from '@mui/material';
+import { FormControl, MenuItem, Select, Typography } from '@mui/material';
 import { alpha } from "@mui/material/styles";
 import React, { useState } from 'react';
 
@@ -90,25 +90,26 @@ const SortDropdown = ({ options, onValueChange }) => {
                 }}
             >
                 {options.map((option) => (
-                    <MenuItem key={option} value={option}>
-                        {option === selectedOptions ? (
-                            <Box
+                    <MenuItem key={option} value={option} sx={{
+                        backgroundColor: selectedOptions.includes(option) ? '#1BAA64 !important' : 'initial'
+                    }}>
+                        {selectedOptions.includes(option) ? (
+                            <Typography
                                 sx={{
-                                    backgroundColor: '#1BAA64',
-                                    color: '#F5F7F8',
-                                    padding: '0.5rem',
-                                    width: '100%',
+                                    color: '#F5F7F8 !important',
+                                    fontWeight: '500',
                                     textOverflow: 'ellipsis',
                                     overflow: 'hidden',
                                     whiteSpace: 'nowrap',
                                 }}
                             >
                                 {option}
-                            </Box>
+                            </Typography>
                         ) : (
                             <Typography
                                 sx={{
                                     textOverflow: 'ellipsis',
+                                    fontWeight: '400',
                                     overflow: 'hidden',
                                     whiteSpace: 'nowrap',
                                 }}

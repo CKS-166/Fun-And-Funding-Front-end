@@ -143,7 +143,7 @@ function TransactionTable({ data }) {
                                 All transactions made in the platform will be showed here.
                             </Typography>
                         </div>
-                        <div className='flex flex-row justify-between gap-[0.5rem]'>
+                        <div className='flex flex-row justify-between gap-[1rem]'>
                             <SearchBar onSearchChange={(value) => setSearchValue(value)} />
                             <SortDropdown options={options} onValueChange={(array) => setSelectedStatus(array)} />
                         </div>

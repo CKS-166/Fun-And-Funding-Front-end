@@ -104,7 +104,7 @@ const SearchBar = ({ onSearchChange }) => {
                             onChange: handleSearchChange,
                             value: searchValue,
                         }}
-                        placeholder={"Search projects..."}
+                        placeholder={"Search..."}
                         onKeyUp={handleKeyUp}
                     />
                     {searchValue ? (

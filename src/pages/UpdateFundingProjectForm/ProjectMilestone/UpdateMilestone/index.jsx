@@ -17,6 +17,7 @@ const UpdateMilestone = ({ milestones, render, issueLog, pmId, status, order, ty
   const [anchorEls, setAnchorEls] = useState({});
   const [loading, setLoading] = useState(false);
   const [issueLogData, setIssueLogData] = useState(issueLog || "");
+  console.log(type)
   useEffect(() => {
     if (milestones && milestones.length > 0) {
       // Initialize milestone data if milestones are available
@@ -165,9 +166,12 @@ const UpdateMilestone = ({ milestones, render, issueLog, pmId, status, order, ty
       <Backdrop sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }} open={loading}>
         <CircularProgress color="inherit" />
       </Backdrop>
-      <Box sx={{ position: 'absolute', left: '300px', top: '120px' }}>
-        <CompleteMilestoneButton submit={handleCompleteSubmit} render={() => handleCompleteSubmit()} status={status} pmId={pmId} />
-      </Box>
+      {type == 1 && (
+        <Box sx={{ position: 'absolute', left: '300px', top: '120px' }}>
+          <CompleteMilestoneButton submit={handleCompleteSubmit} render={() => handleCompleteSubmit()} status={status} pmId={pmId} />
+        </Box>
+      )}
+
       {!loading && milestones && milestones.length === 0 && <h2>No milestones found.</h2>}
 
       {!loading && milestones && milestones.length > 0 && (
@@ -186,7 +190,7 @@ const UpdateMilestone = ({ milestones, render, issueLog, pmId, status, order, ty
               <TabList onChange={handleChange} aria-label="lab API tabs example">
                 <Tab label="Requirements" value="1" />
                 <Tab label="Issue Logs" value="2" />
-                {order == 4 && <Tab label="Reward Tracking" value="3"/>}
+                {order == 4 && <Tab label="Reward Tracking" value="3" />}
               </TabList>
             </Box>
             {/* milestone evidence */}
@@ -194,7 +198,7 @@ const UpdateMilestone = ({ milestones, render, issueLog, pmId, status, order, ty
               {milestoneData.map((milestone, index) => (
                 <div key={milestone.id} style={{ marginBottom: "20px" }}>
                   <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '70%', marginBottom: '20px' }}>
-                    <h3 style={{ fontWeight: '600' }}>{milestones[index] && milestones[index].reqDescription || ""}</h3>
+                    <h3 style={{ fontWeight: '600', width:'600px' }}>{milestones[index] && milestones[index].reqDescription || ""}</h3>
                     <Button variant="contained" component="label" onClick={(e) => openDropdown(e, index)}
                       sx={{ backgroundColor: '#1BAA64', textTransform: 'none', fontWeight: '600' }} startIcon={<ChangeCircleIcon />}>
                       Additional Files
@@ -233,7 +237,7 @@ const UpdateMilestone = ({ milestones, render, issueLog, pmId, status, order, ty
             </TabPanel>
             <TabPanel value="3">
               <>hello</>
-              <PackageEvidence backers={backers}/>
+              <PackageEvidence backers={backers} />
             </TabPanel>
           </TabContext>
           <Button type="submit" variant="contained" color="primary" sx={{ backgroundColor: '#1BAA64', textTransform: 'none', fontWeight: '600' }}>

@@ -260,7 +260,6 @@ const MilestoneForm = () => {
 
           {!isLoading && (milestoneData && milestoneData.status == 'create') 
            ? (
-
             <form onSubmit={handleSubmit}>
               <TabContext value={value}>
                 <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>

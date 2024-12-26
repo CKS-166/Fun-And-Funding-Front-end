@@ -262,18 +262,15 @@ const Sidenav = () => {
                         aria-hidden="true"
                         xmlns="http://www.w3.org/2000/svg"
                         fill="currentColor"
-                        viewBox="0 0 24 24"
+                        viewBox="0 0 100 100"
                       >
                         <g id="SVGRepo_iconCarrier">
-                          <line x1="0.5" y1="1.48" x2="23.5" y2="1.48" stroke="currentColor" stroke-miterlimit="10" stroke-width="1.92" fill="none"></line>
-                          <line x1="0.5" y1="16.81" x2="23.5" y2="16.81" stroke="currentColor" stroke-miterlimit="10" stroke-width="1.92" fill="none"></line>
-                          <rect x="2.42" y="1.48" width="19.17" height="15.33" stroke="currentColor" stroke-miterlimit="10" stroke-width="1.92" fill="none"></rect>
-                          <line x1="12" y1="16.81" x2="12" y2="23.52" stroke="currentColor" stroke-miterlimit="10" stroke-width="1.92" fill="none"></line>
-                          <polyline points="8.17 23.52 8.17 22.56 12 19.69" stroke="currentColor" stroke-miterlimit="10" stroke-width="1.92" fill="none"></polyline>
-                          <polyline points="15.83 23.52 15.83 22.56 12 19.69" stroke="currentColor" stroke-miterlimit="10" stroke-width="1.92" fill="none"></polyline>
+                          <g>
+                            <path d="M88.158,16.509L88.158,16.509c0-0.986-0.798-1.785-1.785-1.786H13.628c0,0,0,0,0,0c-0.987,0-1.786,0.799-1.786,1.785 l0,0.001v6.385l0,0c0,0.986,0.799,1.785,1.786,1.785c0,0,0,0,0.001,0h72.745c0.987,0,1.785-0.799,1.785-1.785h0L88.158,16.509 L88.158,16.509z"></path>
+                            <path d="M82.026,29.659H17.974c-0.986,0.001-1.785,0.8-1.785,1.786c0,0.003,0.001,0.006,0.001,0.006l-0.001,0.003v37.154 c0,2.201,1.857,3.982,4.152,3.982h27.17v5.373c-0.966,0.748-1.599,1.906-1.599,3.222c0,2.259,1.831,4.09,4.089,4.09 s4.089-1.831,4.089-4.09c0-1.317-0.634-2.476-1.601-3.223v-5.372h27.17c2.294,0,4.152-1.781,4.152-3.982V31.412h-0.003 C83.789,30.442,83,29.66,82.026,29.659z"></path>
+                          </g>
                         </g>
                       </svg>
-
                       <span className="flex-1 ms-3 whitespace-nowrap group-hover:text-gray-900">
                         Funding Projects
                       </span>
@@ -446,18 +443,17 @@ const Sidenav = () => {
                     >
                       <svg
                         className="flex-shrink-0 w-4 h-4 transition duration-75 group-hover:text-gray-900"
-                        aria-hidden="true"
                         xmlns="http://www.w3.org/2000/svg"
                         fill="currentColor"
-                        stroke="currentColor"
-                        stroke-width="0.336"
-                        viewBox="0 0 16 16"
+                        viewBox="0 0 32 32"
                       >
-                        <path
-                          fill-rule="evenodd"
-                          clip-rule="evenodd"
-                          d="M8 1H7v2H1.5l-.5.5v4l.5.5H7v7h1V8h4.49l.34-.13 2.18-2v-.74l-2.18-2L12.5 3H8V1zm4.29 6H2V4h10.29l1.63 1.5L12.29 7zM5 5h5v1H5V5z"
-                        ></path>
+                        <g id="SVGRepo_iconCarrier">
+                          <rect x="4" y="4" width="1.5" height="24" fill="currentColor"></rect>
+                          <path
+                            d="M5.5 5.5c1 0 2.5 0.5 4 1 2 0.75 4 1.5 6 1.5 2 0 4-1 6-2v12c-2 1-4 2-6 2s-4-0.75-6-1.5c-1.5-0.5-3-1-4-1v-12z"
+                            fill="currentColor"
+                          ></path>
+                        </g>
                       </svg>
                       <span className="flex-1 ms-3 whitespace-nowrap group-hover:text-gray-900">
                         Milestones

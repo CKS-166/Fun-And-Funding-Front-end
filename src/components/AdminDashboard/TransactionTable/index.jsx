@@ -254,7 +254,7 @@ function TransactionTable({ data }) {
                                             </Typography>
                                         </div>
                                     </div>
-                                    {index < data.length - 1 && (
+                                    {index < searchedTransaction.length - 1 && (
                                         <Divider sx={{ border: '1px solid #EAEAEA', borderRadius: '0.625rem', mb: '1.5rem' }} />
                                     )}
                                 </React.Fragment>

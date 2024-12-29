@@ -4,7 +4,7 @@ import { IconButton, Paper, Tooltip, Typography } from "@mui/material";
 import React from 'react';
 import { FaFolderOpen, FaUserTie } from "react-icons/fa6";
 
-function PlatformRevenue({ data }) {
+function PlatformRevenue({ platformRevenue, platformStatistic }) {
     return (
         <Paper elevation={3}
             sx={{
@@ -42,24 +42,33 @@ function PlatformRevenue({ data }) {
                 </Typography>
             </div>
             <div className='mt-[0.75rem]'>
-                <Typography sx={{ fontSize: '1.75rem', fontWeight: 700, color: 'var(--primary-green)', mb: '0.5rem' }}>200.000.000<span className='ml-[0.5rem] text-[1rem]'>VND</span>
+                <Typography sx={{ fontSize: '1.75rem', fontWeight: 700, color: 'var(--primary-green)', mb: '0.5rem' }}>{new Intl.NumberFormat("de-DE").format(platformRevenue)}<span className='ml-[0.5rem] text-[1rem]'>VND</span>
                 </Typography>
-                <Typography sx={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--black)', mt: '1rem' }}>With a total increase of:
+                <Typography sx={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--black)', mt: '1rem' }}>With a total increase in this month of:
                 </Typography>
                 <div className='mt-[1rem] flex flex-row justify-between'>
-                    <div className='flex flex-col items-center justify-center gap-[0.5rem]'>
+                    <div className='flex flex-col items-center justify-center gap-[0.75rem] w-[6rem]'>
                         <FaUserTie style={{ fontSize: "1.2rem" }} />
-                        <Typography sx={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--black)' }}>4.000 Users
+                        <Typography sx={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--black)', textAlign: 'center' }}>
+                            {Object.keys(platformStatistic).length === 0
+                                ? "N/A"
+                                : `${new Intl.NumberFormat("de-DE").format(platformStatistic.numberOfUsers)} Users`}
                         </Typography>
                     </div>
-                    <div className='flex flex-col items-center justify-center gap-[0.5rem]'>
+                    <div className='flex flex-col items-center justify-center gap-[0.75rem]'>
                         <FaFolderOpen style={{ fontSize: "1.2rem" }} />
-                        <Typography sx={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--black)' }}>4.000 Funding Projects
+                        <Typography sx={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--black)', textAlign: 'center' }}>
+                            {Object.keys(platformStatistic).length === 0
+                                ? "N/A"
+                                : `${new Intl.NumberFormat("de-DE").format(platformStatistic.numberOfFundingProjects)} Projects`}
                         </Typography>
                     </div>
-                    <div className='flex flex-col items-center justify-center gap-[0.5rem]'>
+                    <div className='flex flex-col items-center justify-center gap-[0.75rem] w-[6rem]'>
                         <SportsEsportsIcon style={{ fontSize: "1.2rem" }} />
-                        <Typography sx={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--black)' }}>4.000 Games
+                        <Typography sx={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--black)', textAlign: 'center' }}>
+                            {Object.keys(platformStatistic).length === 0
+                                ? "N/A"
+                                : `${new Intl.NumberFormat("de-DE").format(platformStatistic.numberOfMarketplaceProjects)} Games`}
                         </Typography>
                     </div>
                 </div>

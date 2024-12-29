@@ -11,10 +11,9 @@ import "react-toastify/dist/ReactToastify.css";
 import Swal from "sweetalert2";
 import logo from "../../assets/OnlyLogo.png";
 import InputField from "../../components/InputField";
+import { useLoading } from "../../contexts/LoadingContext";
 import authApiInstance from "../../utils/ApiInstance/authApiInstance";
 import "./index.css"; // Import toast styles
-import { useLoading } from "../../contexts/LoadingContext";
-import { set } from "react-hook-form";
 
 function setCookie(name, value, expiresIn) {
   var now = new Date();
@@ -129,8 +128,7 @@ function LoginForm({
             if (userRole === "Backer") {
               navigate("/home");
             } else if (userRole === "Administrator") {
-              // navigate("/admin-dashboard/dashboard");
-              navigate("/admin-dashboard/funding-projects")
+              navigate("/admin-dashboard/dashboard");
             } else {
               navigate("/home");
             }

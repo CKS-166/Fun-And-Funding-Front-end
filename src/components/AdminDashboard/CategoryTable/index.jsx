@@ -23,11 +23,6 @@ function CategoryTable({ data }) {
         setOpen(false);
     }
 
-    const categories = Array.from({ length: 5 }, (_, index) => ({
-        name: "Coding and Technology",
-        rate: 0.15,
-    }));
-
     return (
         <>
             <Paper
@@ -60,11 +55,11 @@ function CategoryTable({ data }) {
                     </Tooltip>
                 </div>
                 <div className='mb-[1rem]'>
-                    {categories.map((category, index) => (
+                    {data && data.slice(0, 5).map((category, index) => (
                         <div
                             key={index}
                             className="flex flex-col"
-                            style={{ marginBottom: index < categories.length - 1 ? '1rem' : '0' }}
+                            style={{ marginBottom: index < data.length - 1 ? '1rem' : '0' }}
                         >
                             <div className="flex justify-between items-center mb-[0.5rem]">
                                 <Typography
@@ -77,20 +72,20 @@ function CategoryTable({ data }) {
                                         overflow: 'hidden',
                                     }}
                                 >
-                                    {category.name}
+                                    {category.categoryName}
                                 </Typography>
                                 <Typography
                                     sx={{
                                         fontSize: '0.75rem',
                                         fontWeight: 700,
-                                        color: category.rate * 100 >= 50
+                                        color: category.percentageUsed >= 50
                                             ? 'var(--primary-green)'
-                                            : category.rate * 100 > 25
+                                            : category.percentageUsed > 25
                                                 ? 'var(--yellow)'
                                                 : 'var(--red)',
                                     }}
                                 >
-                                    {category.rate * 100}%
+                                    {(Math.ceil(category.percentageUsed * 100) / 100).toFixed(2)}%
                                 </Typography>
                             </div>
                             <LinearProgress
@@ -101,15 +96,15 @@ function CategoryTable({ data }) {
                                     borderRadius: '0.25rem',
                                     backgroundColor: '#EAEAEA',
                                     '& .MuiLinearProgress-bar': {
-                                        backgroundColor: category.rate * 100 >= 50
+                                        backgroundColor: category.percentageUsed >= 50
                                             ? 'var(--primary-green)'
-                                            : category.rate * 100 > 25
+                                            : category.percentageUsed > 25
                                                 ? 'var(--yellow)'
                                                 : 'var(--red)',
                                     }
                                 }
                                 }
-                                value={category.rate * 100 <= 100 ? category.rate * 100 : 100}
+                                value={category.percentageUsed <= 100 ? category.percentageUsed : 100}
                             />
                         </div>
                     ))}
@@ -136,6 +131,7 @@ function CategoryTable({ data }) {
                         <Box
                             sx={{
                                 height: '23rem',
+                                mb: '0.5rem',
                                 overflowY: 'auto',
                                 overflowX: 'visible',
                                 px: '0.5rem',
@@ -145,11 +141,11 @@ function CategoryTable({ data }) {
                                 },
                             }}
                         >
-                            {categories.map((category, index) => (
+                            {data.map((category, index) => (
                                 <div
                                     key={index}
                                     className="flex flex-col"
-                                    style={{ marginBottom: index < categories.length - 1 ? '1.5rem' : '0' }}
+                                    style={{ marginBottom: index < data.length - 1 ? '1rem' : '0' }}
                                 >
                                     <div className="flex justify-between items-center mb-[0.25rem]">
                                         <Typography
@@ -162,7 +158,7 @@ function CategoryTable({ data }) {
                                                 overflow: 'hidden',
                                             }}
                                         >
-                                            {category.name}
+                                            {category.categoryName}
                                         </Typography>
                                         <Typography
                                             sx={{
@@ -172,12 +168,12 @@ function CategoryTable({ data }) {
                                             }}
                                         >
                                             Number of use: <span style={{
-                                                color: category.rate * 100 >= 50
+                                                color: category.percentageUsed >= 50
                                                     ? 'var(--primary-green)'
-                                                    : category.rate * 100 > 25
+                                                    : category.percentageUsed > 25
                                                         ? 'var(--yellow)'
                                                         : 'var(--red)',
-                                            }}>30</span>
+                                            }}>{category.projectCount}</span>
                                         </Typography>
                                     </div>
                                     <div className="flex justify-between items-center gap-[1rem]">
@@ -189,28 +185,28 @@ function CategoryTable({ data }) {
                                                 borderRadius: '0.25rem',
                                                 backgroundColor: '#EAEAEA',
                                                 '& .MuiLinearProgress-bar': {
-                                                    backgroundColor: category.rate * 100 >= 50
+                                                    backgroundColor: category.percentageUsed >= 50
                                                         ? 'var(--primary-green)'
-                                                        : category.rate * 100 > 25
+                                                        : category.percentageUsed > 25
                                                             ? 'var(--yellow)'
                                                             : 'var(--red)',
                                                 }
                                             }
                                             }
-                                            value={category.rate * 100 <= 100 ? category.rate * 100 : 100}
+                                            value={category.percentageUsed <= 100 ? category.percentageUsed : 100}
                                         />
                                         <Typography
                                             sx={{
                                                 fontSize: '1rem',
                                                 fontWeight: 700,
-                                                color: category.rate * 100 >= 50
+                                                color: category.percentageUsed >= 50
                                                     ? 'var(--primary-green)'
-                                                    : category.rate * 100 > 25
+                                                    : category.percentageUsed > 25
                                                         ? 'var(--yellow)'
                                                         : 'var(--red)',
                                             }}
                                         >
-                                            {category.rate * 100}%
+                                            {(Math.ceil(category.percentageUsed * 100) / 100).toFixed(2)}%
                                         </Typography>
                                     </div>
                                 </div>

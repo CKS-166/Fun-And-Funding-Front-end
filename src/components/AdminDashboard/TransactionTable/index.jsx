@@ -1,6 +1,10 @@
 import ArrowOutwardIcon from '@mui/icons-material/ArrowOutward';
 import { Backdrop, Box, Divider, Fade, IconButton, Modal, Paper, Tooltip, Typography } from '@mui/material';
-import React, { useState } from 'react';
+import Cookies from "js-cookie";
+import qs from 'qs';
+import React, { useEffect, useState } from 'react';
+import empty from "../../../assets/images/image_empty.png";
+import dashboardApiInstance from "../../../utils/ApiInstance/dashboardApiInstance";
 import SearchBar from '../../SearchBar';
 import SortDropdown from '../../SortDropdown';
 
@@ -35,23 +39,79 @@ function TransactionTable({ data }) {
         borderRadius: 1
     };
 
+    const token = Cookies.get("_auth");
+
     const [open, setOpen] = useState(false);
+    const [searchedTransaction, setSearchedTransaction] = useState([]);
     const [searchValue, setSearchValue] = useState("");
     const [selectedStatus, setSelectedStatus] = useState([]);
 
-    console.log(selectedStatus);
+    useEffect(() => {
+        if (data && token) {
+            fetchTransactionData(searchValue, selectedStatus);
+        }
+    }, [data, token])
+
+    const handleSearchValue = (value) => {
+        setSearchValue(value);
+        console.log(value);
+        fetchTransactionData(value, selectedStatus);
+    }
+
+    const handleSeletedStatus = (array) => {
+        const indices = array.map((item) => options.indexOf(item));
+        setSelectedStatus(indices);
+        fetchTransactionData(searchValue, indices);
+    }
+
+    const fetchTransactionData = async (searchValue, selectedStatus) => {
+        try {
+            const response = await dashboardApiInstance.get('/transactions', {
+                params: {
+                    pageSize: 9999,
+                    pageIndex: 1,
+                    searchValue: searchValue,
+                    types: selectedStatus
+                },
+                paramsSerializer: (params) => {
+                    return qs.stringify(params, { arrayFormat: 'repeat' });
+                },
+                headers: { Authorization: `Bearer ${token}` },
+            });
+            if (response.data._statusCode === 200) {
+                setSearchedTransaction(response.data._data.items);
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
     const handleClose = () => {
         setOpen(false);
     }
 
-    const transactions = Array.from({ length: 5 }, (_, index) => ({
-        date: "Sat, 21 Dec",
-        time: "22:15",
-        type: "Commission",
-        description: "Receive commission money from game COTBA",
-        amount: "+80.000 VND",
-    }));
+    const formatDateTime = (createdDate, type) => {
+        const dateObj = new Date(createdDate);
+
+        if (type === "date") {
+            return dateObj.toLocaleDateString(undefined, {
+                weekday: "short",
+                day: "2-digit",
+                month: "short",
+            });
+        }
+
+        if (type === "time") {
+            return dateObj.toLocaleTimeString(undefined, {
+                hour: "2-digit",
+                minute: "2-digit",
+                hour12: true,
+            });
+        }
+
+        console.error("Invalid type provided. Use 'date' or 'time'.");
+        return null;
+    };
 
     return (
         <>
@@ -84,14 +144,14 @@ function TransactionTable({ data }) {
                         </IconButton>
                     </Tooltip>
                 </div>
-                {transactions.map((transaction, index) => (
+                {data && data.slice(0, 5).map((transaction, index) => (
                     <React.Fragment key={index}>
                         <div className="flex flex-row justify-between mb-[1rem]">
                             <div className="flex flex-col gap-[0.125rem]">
                                 <Typography sx={{ fontSize: '0.75rem', fontWeight: 400 }}>
-                                    {transaction.date} <span className="font-semibold">{transaction.time}</span>
+                                    {formatDateTime(transaction.createdDate, "date")} <span className="font-semibold ml-[0.25rem]">{formatDateTime(transaction.createdDate, "time")}</span>
                                 </Typography>
-                                <Typography sx={{ fontSize: '0.75rem', fontWeight: 600 }}>{transaction.type}</Typography>
+                                <Typography sx={{ fontSize: '0.75rem', fontWeight: 600 }}>{options[transaction.transactionType]}</Typography>
                             </div>
                             <div className="flex flex-col gap-[0.125rem]">
                                 <Typography
@@ -112,14 +172,14 @@ function TransactionTable({ data }) {
                                         fontSize: '0.75rem',
                                         fontWeight: 700,
                                         textAlign: 'right',
-                                        color: 'var(--primary-green)',
+                                        color: transaction.totalAmount >= 0 ? 'var(--primary-green)' : 'var(--red)',
                                     }}
                                 >
-                                    {transaction.amount}
+                                    {new Intl.NumberFormat("de-DE").format(transaction.totalAmount)} VND
                                 </Typography>
                             </div>
                         </div>
-                        {index < transactions.length - 1 && (
+                        {index < data.slice(0, 5).length - 1 && (
                             <Divider sx={{ border: '1px solid #EAEAEA', borderRadius: '0.625rem', mb: '1rem' }} />
                         )}
                     </React.Fragment>
@@ -144,8 +204,8 @@ function TransactionTable({ data }) {
                             </Typography>
                         </div>
                         <div className='flex flex-row justify-between gap-[1rem]'>
-                            <SearchBar onSearchChange={(value) => setSearchValue(value)} />
-                            <SortDropdown options={options} onValueChange={(array) => setSelectedStatus(array)} />
+                            <SearchBar onSearchChange={(value) => handleSearchValue(value)} />
+                            <SortDropdown options={options} onValueChange={(array) => handleSeletedStatus(array)} />
                         </div>
                         <Box
                             sx={{
@@ -153,21 +213,20 @@ function TransactionTable({ data }) {
                                 overflowY: 'auto',
                                 mt: '1.5rem',
                                 overflowX: 'visible',
-                                px: '0.5rem',
                                 scrollbarWidth: 'none',
                                 '&::-webkit-scrollbar': {
                                     display: 'none'
                                 },
                             }}
                         >
-                            {transactions.map((transaction, index) => (
+                            {searchedTransaction ? searchedTransaction.map((transaction, index) => (
                                 <React.Fragment key={index}>
-                                    <div className="flex flex-row justify-between mb-[1.5rem]">
+                                    <div className="flex flex-row justify-between mb-[1.5rem] mx-[0.5rem]">
                                         <div className="flex flex-col gap-[0.25rem]">
                                             <Typography sx={{ fontSize: '1rem', fontWeight: 400 }}>
-                                                {transaction.date} <span className="font-semibold">{transaction.time}</span>
+                                                {formatDateTime(transaction.createdDate, "date")} <span className="font-semibold ml-[0.25rem]">{formatDateTime(transaction.createdDate, "time")}</span>
                                             </Typography>
-                                            <Typography sx={{ fontSize: '1rem', fontWeight: 600 }}>{transaction.type}</Typography>
+                                            <Typography sx={{ fontSize: '1rem', fontWeight: 600 }}>{options[transaction.transactionType]}</Typography>
                                         </div>
                                         <div className="flex flex-col gap-[0.25rem]">
                                             <Typography
@@ -175,7 +234,7 @@ function TransactionTable({ data }) {
                                                     fontSize: '1rem',
                                                     fontWeight: 400,
                                                     textAlign: 'right',
-                                                    width: '30rem',
+                                                    width: '25rem',
                                                     whiteSpace: 'nowrap',
                                                     textOverflow: 'ellipsis',
                                                     overflow: 'hidden',
@@ -188,18 +247,28 @@ function TransactionTable({ data }) {
                                                     fontSize: '1rem',
                                                     fontWeight: 700,
                                                     textAlign: 'right',
-                                                    color: 'var(--primary-green)',
+                                                    color: transaction.totalAmount >= 0 ? 'var(--primary-green)' : 'var(--red)',
                                                 }}
                                             >
-                                                {transaction.amount}
+                                                {new Intl.NumberFormat("de-DE").format(transaction.totalAmount)} VND
                                             </Typography>
                                         </div>
                                     </div>
-                                    {index < transactions.length - 1 && (
+                                    {index < data.length - 1 && (
                                         <Divider sx={{ border: '1px solid #EAEAEA', borderRadius: '0.625rem', mb: '1.5rem' }} />
                                     )}
                                 </React.Fragment>
-                            ))}
+                            )) : <div className='flex flex-col justify-center items-center rounded-[0.625rem] bg-[var(--light-grey)] h-full'>
+                                <img src={empty} className='h-[10rem] mb-[2rem]'></img>
+                                <Typography
+                                    sx={{
+                                        fontWeight: "500",
+                                        fontSize: "1rem",
+                                        color: "var(--black)",
+                                        textAlign: "left",
+                                    }}
+                                >No transactions found.</Typography>
+                            </div>}
                         </Box>
                     </Box>
                 </Fade>

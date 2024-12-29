@@ -24,18 +24,12 @@ function StatisticCard({ content, description, data }) {
     const handleClose = () => {
         setOpen(false);
     }
-    const userData = [
-        { role: "Game Owner", count: 120 },
-        { role: "Backer", count: 300 },
-        { role: "Administrator", count: 80 },
-    ];
 
-    const totalUsers = userData.reduce((acc, item) => acc + item.count, 0);
+    const totalUsers = data.reduce((acc, item) => acc + item.count, 0);
 
-    const platforms = userData.map(item => ({
-        label: item.role,
+    const platforms = data.map(item => ({
+        label: content === "Accounts" ? item.role : content === "Crowdfunding" ? item.status.replace(/([a-z])([A-Z])/g, "$1 $2") : content === "Milestones" ? `Milestone ${item.milestoneOrder}` : content === "Marketplace" ? item.status : "N/A",
         value: item.count,
-        color: item.role === "Game Owner" ? "var(--primary-green)" : item.role === "Backer" ? "var(--black)" : "var(--grey)",
     }));
 
     const series = [
@@ -82,7 +76,7 @@ function StatisticCard({ content, description, data }) {
                     }}
                 >
                     {content}
-                    <Tooltip title="Description" arrow>
+                    <Tooltip title={description} arrow>
                         <IconButton
                             sx={{
                                 color: 'var(--grey)',
@@ -132,7 +126,7 @@ function StatisticCard({ content, description, data }) {
                             color: 'var(--black)',
                         }}
                     >
-                        {totalUsers}
+                        {new Intl.NumberFormat("de-DE").format(totalUsers)}
                     </Typography>
                 </Box>
                 <Divider sx={{ mt: '1.5rem', color: 'var(--light-grey)' }} />
@@ -193,7 +187,7 @@ function StatisticCard({ content, description, data }) {
                                 {content} usages
                             </Typography>
                             <Typography sx={{ mt: '0.5rem', fontSize: '1rem', fontWeight: 400 }}>
-                                All category usages will be stated here.
+                                All {content} statistics will be stated here.
                             </Typography>
                         </div>
                         <Box
@@ -236,7 +230,7 @@ function StatisticCard({ content, description, data }) {
                                 }}
                             >
                                 Total{"\n"}
-                                <span className='text-[1.5rem] font-bold'>{totalUsers}</span>
+                                <span className='text-[1.5rem] font-bold'>{new Intl.NumberFormat("de-DE").format(totalUsers)}</span>
                             </Typography>
                         </Box>
                     </Box>

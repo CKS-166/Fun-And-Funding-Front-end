@@ -26,6 +26,7 @@ const Dashboard = () => {
 
   const [transactionStatistic, setTransactionStatistic] = useState([]);
   const [categoryStatistic, setCategoryStatistic] = useState([]);
+  const [incomeStatistic, setIncomeStatistic] = useState([]);
 
   useEffect(() => {
     fetchData();
@@ -56,8 +57,11 @@ const Dashboard = () => {
       const response8 = await dashboardApiInstance.get('/transactions', {
         headers: { Authorization: `Bearer ${token}` },
       });
+      const response9 = await dashboardApiInstance.get('/income', {
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
-      const [data1, data2, data3, data4, data5, data6, data7, data8] = await Promise.all([response1, response2, response3, response4, response5, response6, response7, response8]);
+      const [data1, data2, data3, data4, data5, data6, data7, data8, data9] = await Promise.all([response1, response2, response3, response4, response5, response6, response7, response8, response9]);
 
       if (data1.data._statusCode === 200) {
         setPlatformRevenue(data1.data._data);
@@ -82,6 +86,9 @@ const Dashboard = () => {
       }
       if (data8.data._statusCode === 200) {
         setTransactionStatistic(data8.data._data.items);
+      }
+      if (data9.data._statusCode === 200) {
+        setIncomeStatistic(data9.data._data);
       }
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -127,7 +134,7 @@ const Dashboard = () => {
                 <StatisticCard content={"Marketplace"} data={gameStatistic} description={"Show numbers of games published in the system "} />
               </Grid2>
               <Grid2 size={12}>
-                <RevenueLineChart />
+                <RevenueLineChart data={incomeStatistic} />
               </Grid2>
             </Grid2>
           </>

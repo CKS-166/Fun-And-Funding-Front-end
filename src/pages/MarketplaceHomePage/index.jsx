@@ -8,6 +8,7 @@ import categoryApiInstance from "../../utils/ApiInstance/categoryApiInstance";
 import marketplaceProjectApiInstace from "../../utils/ApiInstance/marketplaceProjectApiInstance";
 import qs from "qs";
 import "./index.css";
+import CategoryFilter from "../../components/CategoryFilter";
 
 const sortOptions = [
   "More than 50.000 VND",
@@ -35,7 +36,11 @@ const MarketplaceHomePage = () => {
   const fetchCates = async () => {
     try {
       const res = await categoryApiInstance.get("/all");
-      setCategories(res.data._data);
+      const filteredCategories = res.data._data.map((category) => ({
+        id: category.id,
+        name: category.name,
+      }));
+      setCategories(filteredCategories);
     } catch (error) {
       console.error("Error fetching categories:", error);
     }
@@ -62,7 +67,7 @@ const MarketplaceHomePage = () => {
           return qs.stringify(params, { arrayFormat: "repeat" });
         },
       });
-      console.log(response);
+
       if (response.data._statusCode) {
         setMarkets({
           items: response.data._data.items,
@@ -84,11 +89,12 @@ const MarketplaceHomePage = () => {
 
   const handleSortChange = (values) => {
     setSelectedSortOptions(values);
+    fetchAllMarketProjects(searchValue, fromPrice, 1, values);
   };
 
   const handleSearchChange = (value) => {
     setSearchValue(value);
-    fetchAllMarketProjects(searchValue, fromPrice, 1, selectedCategories);
+    fetchAllMarketProjects(value, fromPrice, 1, selectedCategories);
   };
 
   return (
@@ -127,8 +133,8 @@ const MarketplaceHomePage = () => {
           <div className="my-10">
             <div className="flex flex-row justify-between gap-[1rem] mb-[2rem]">
               <SearchBar onSearchChange={handleSearchChange} />
-              <SortDropdown
-                options={sortOptions}
+              <CategoryFilter
+                options={categories}
                 onValueChange={handleSortChange}
               />
             </div>

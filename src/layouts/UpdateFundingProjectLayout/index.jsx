@@ -65,12 +65,13 @@ function UpdateFundingProjectLayout() {
     const funding = 1;
     const processing = 2;
     const fundedSuccess = 3;
+    const approved = 7;
     //fetch milestones
     const fetchMilestones = async (status) => {
         setIsLoading(true);
-        if(status == 2 || status == 3){
+        if(status == 7 || status == 2 || status == 3){
             await milestoneApiInstace
-            .get(`/group-latest-milestone?filter=${status == 2 ? 1 : status == 3 ? 2 : 0}`)
+            .get(`/group-latest-milestone?filter=${status == 2 || status == 7 ? 1 : status == 3 ? 2 : 0}`)
             .then((response) => {
                 setMilestoneList(response.data._data);
                 setIsLoading(false);
@@ -402,6 +403,7 @@ function UpdateFundingProjectLayout() {
                                     >
                                         Project Preview
                                     </Typography>
+                                   
                                 </div>
                                 <div>
                                     <Typography

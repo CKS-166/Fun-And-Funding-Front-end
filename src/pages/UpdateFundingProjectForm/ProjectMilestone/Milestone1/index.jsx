@@ -273,7 +273,7 @@ const MilestoneForm = () => {
                   {milestone.requirements.map((req, index) => (
                     <div key={req.id} style={{ marginBottom: "20px" }}>
                       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '70%', marginBottom: '20px' }}>
-                        <h3 style={{ fontWeight: '600' }}>{req.title}</h3>
+                        <h3 style={{ fontWeight: '600', width:'600px' }}>{req.description}</h3>
                         <Button variant="contained" component="label" onClick={(e) => openDropdown(e, index)}
                           sx={{ backgroundColor: '#1BAA64', textTransform: 'none', fontWeight: '600' }} startIcon={<ChangeCircleIcon />}>
                           Upload Files
@@ -286,7 +286,7 @@ const MilestoneForm = () => {
                         </Button>
                       </Box>
 
-                      <p>{req.description}</p>
+                      {/* <p>{req.description}</p> */}
                       <div className="w-[80%]">
                         <>
                           <div className="w-[70%]">

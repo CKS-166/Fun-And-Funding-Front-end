@@ -213,7 +213,7 @@ const BasicInfo = () => {
               <TextField
                 className="w-[50%]"
                 label='Start date'
-                type="datetime-local"
+                type="date"
                 InputLabelProps={{ shrink: true }}
                 {...register("startDate", { required: "Start date is required", validate: validateStartDate })}
                 error={!!errors.startDate}
@@ -222,7 +222,7 @@ const BasicInfo = () => {
               <TextField
                 label='End date'
                 className="w-[50%]"
-                type="datetime-local"
+                type="date"
                 InputLabelProps={{ shrink: true }}
                 {...register("endDate", { required: "End date is required", validate: validateEndDate })}
                 error={!!errors.endDate}

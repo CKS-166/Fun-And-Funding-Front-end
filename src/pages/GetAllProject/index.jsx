@@ -21,7 +21,7 @@ import './index.css';
 const GetAllProject = () => {
   const [categories, setCategories] = useState([]);
   const [selectedCategories, setSelectedCategories] = useState([]);
-  const [statusList, setStatusList] = useState([2, 3, 4, 5]);
+  const [statusList, setStatusList] = useState([2, 3, 4, 5,7]);
   const [searchValue, setSearchValue] = useState('');
   const [selectAll, setSelectAll] = useState(true);
   const [fromTarget, setFromTarget] = useState(0.0);

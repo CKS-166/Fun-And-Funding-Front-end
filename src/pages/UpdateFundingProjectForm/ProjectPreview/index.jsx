@@ -10,6 +10,7 @@ import { FaWallet, FaEnvelope } from "react-icons/fa";
 import Grid from '@mui/material/Grid2';
 import BarChartDashboard from '../../../components/Chart/BarChartDashboard/index.jsx';
 import transactionApiInstance from '../../../utils/ApiInstance/transactionApiInstance';
+import projectMilestoneApiInstace from '../../../utils/ApiInstance/projectMilestoneApiInstance.jsx';
 import TransactionTable from '../../../components/TransactionTable/index.jsx';
 import { FaUser } from "react-icons/fa";
 import { MdOutlineAttachMoney } from "react-icons/md";
@@ -21,10 +22,19 @@ function ProjectPreview() {
     const [barData, setBarData] = useState([]);
     const [transactionData, setTransactionData] = useState([]);
     const [backerCount, setBackerCount] = useState(0);
+    const [secondMilestone, setSecondMilestone] = useState(null);
     useEffect(() => {
         getProject();
         console.log("a")
     }, [])
+    const getSecondMilestone = async (id) => {
+        await projectMilestoneApiInstace.get(`/milestones-disbursement?projectId=${id}`).then(res => {
+            console.log(res)
+            const secMile = res.data._data.filter(m => m.milestone.milestoneOrder == 2);
+            console.log(secMile)
+            setSecondMilestone(secMile);
+        })
+    }
     // fetch project data
     const getProject = async () => {
         setLoading(true);
@@ -34,7 +44,8 @@ function ProjectPreview() {
             console.log(response.data);
             fetchLineChart(response.data._data.id);
             fetchBarData(response.data._data.id);
-            fetchTransaction()
+            fetchTransaction(response.data._data.id);
+            getSecondMilestone(response.data._data.id)
         } catch (error) {
             console.error('Error fetching project:', error);
             setLoading(false);
@@ -88,6 +99,9 @@ function ProjectPreview() {
                                 subtitle="Wallet Balance"
                                 increase="+21%"
                                 icon={<FaWallet size={26} />}
+                                withdraw={project.hasBeenWithdrawed}
+                                render={getProject}
+                                pmId={secondMilestone && secondMilestone[0].id}
                             />
 
                         </Grid>

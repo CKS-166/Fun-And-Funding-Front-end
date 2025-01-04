@@ -10,21 +10,22 @@ import {
     List,
     ListItem,
     ListItemText,
-    Typography,
+    Typography
 } from "@mui/material";
 import Cookies from "js-cookie";
 import React, { useEffect, useState } from "react";
 import { Outlet, useLocation } from "react-router";
 import { useNavigate, useParams } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
 import "sweetalert2";
+import Swal from 'sweetalert2';
+import ProjectEditorInstruction from "../../components/ProjectEditorInstruction";
 import fundingProjectApiInstace from "../../utils/ApiInstance/fundingProjectApiInstance";
 import milestoneApiInstace from "../../utils/ApiInstance/milestoneApiInstance";
 import "./index.css";
-// import LoadingProjectBackDrop from '../../components/LoadingProjectBackdrop';
-import { toast, ToastContainer } from "react-toastify";
-import Swal from 'sweetalert2';
 import ProjectContext from './UpdateFundingProjectContext';
-import { editorList } from './UpdateFundingProjectLayout';
+import { editorList, milestoneList } from './UpdateFundingProjectLayout';
+
 const notify = (message, type) => {
     const options = {
         position: "top-right",
@@ -58,35 +59,37 @@ function UpdateFundingProjectLayout() {
     const [edited, setIsEdited] = useState(false);
     const [project, setProject] = useState({});
     const [isLoading, setIsLoading] = useState(true);
+    const [showInstruction, setShowInstruction] = useState(true);
     const [loadingStatus, setLoadingStatus] = useState(0);
-    const [milestoneList, setMilestoneList] = useState([]);
+    const [currentMilestoneList, setCurrentMilestoneList] = useState([]);
     const [selectedMilestone, setSelectedMilestone] = useState("");
+
     const disbursement = 2;
     const funding = 1;
     const processing = 2;
     const fundedSuccess = 3;
     const approved = 7;
+
     //fetch milestones
     const fetchMilestones = async (status) => {
         setIsLoading(true);
-        if(status == 7 || status == 2 || status == 3){
+        if (status == 7 || status == 2 || status == 3) {
             await milestoneApiInstace
-            .get(`/group-latest-milestone?filter=${status == 2 || status == 7 ? 1 : status == 3 ? 2 : 0}`)
-            .then((response) => {
-                setMilestoneList(response.data._data);
-                setIsLoading(false);
-            });
-        }else{
-            setMilestoneList([]);
+                .get(`/group-latest-milestone?filter=${status == 2 || status == 7 ? 1 : status == 3 ? 2 : 0}`)
+                .then((response) => {
+                    setCurrentMilestoneList(response.data._data);
+                    setIsLoading(false);
+                });
+        } else {
+            setCurrentMilestoneList([]);
         }
-        
     };
+
     const handleSaveAll = async (event) => {
         event.preventDefault();
         try {
             setIsLoading(true);
             setLoadingStatus(2);
-            console.log(project);
 
             const formData = new FormData();
 
@@ -140,11 +143,6 @@ function UpdateFundingProjectLayout() {
                 });
             }
 
-            console.log("FormData contents:");
-            for (let pair of formData.entries()) {
-                console.log(pair[0], pair[1]);
-            }
-
             const response = await fundingProjectApiInstace.put('', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
@@ -154,7 +152,6 @@ function UpdateFundingProjectLayout() {
 
             if (response.status === 200) {
                 notify('Project saved successfully!', "success");
-                console.log(response);
                 setIsEdited(false);
             } else {
                 console.error(`Unexpected status code: ${response.error}`);
@@ -180,13 +177,11 @@ function UpdateFundingProjectLayout() {
     };
 
     useEffect(() => {
+        if (localStorage.getItem('confirm_instruction') === 'true') {
+            setShowInstruction(false);
+        }
         fetchProject();
-        // fetchMilestones();
     }, [id]);
-
-    const handleNavigatePreview = (id) => {
-        navigate(`/account/projects/update/${id}/preview`);
-    };
 
     const fetchProject = async () => {
         console.log(token);
@@ -258,6 +253,24 @@ function UpdateFundingProjectLayout() {
         setIsMilestoneExpanded(!isMilestoneExpanded);
     };
 
+    const handleMilestoneNavigation = (milestoneId, index) => {
+        navigate(`/account/projects/update/${id}/milestone${index}`, {
+            state: { milestoneId },
+        });
+    };
+
+    const handleNavigatePreview = (id) => {
+        navigate(`/account/projects/update/${id}/preview`);
+    };
+
+    const handleNavigateOverview = (id) => {
+        navigate(`/account/projects/update/${id}/milestone-overview`);
+    };
+
+    const handleNavigation = (link) => {
+        navigate(link);
+    };
+
     const getActiveEditor = (id) => {
         const matchedEditor = editorList.find((item) =>
             location.pathname.includes(item.link(id))
@@ -265,57 +278,68 @@ function UpdateFundingProjectLayout() {
         return matchedEditor ? `Project Editor / ${matchedEditor.name}` : "";
     };
 
+    const getActiveMilestone = (id) => {
+        const matchedMilestone = milestoneList.find((item) =>
+            location.pathname.includes(item.link(id))
+        );
+        return matchedMilestone ? `Project Milestone / ${matchedMilestone.name}` : "";
+    };
+
+    const getActiveMilestoneOrder = (id) => {
+        const matchedMilestone = milestoneList.find((item) =>
+            location.pathname.includes(item.link(id))
+        );
+        return matchedMilestone ? `${matchedMilestone.name}` : "";
+    };
+
     const getActivePreview = () => {
-        const matchedEditor = location.pathname.includes('preview');
-        return matchedEditor ? `Project Preview` : "";
+        const matchedPreview = location.pathname.includes('preview');
+        return matchedPreview ? `Project Preview` : "";
     };
 
-    const handleMilestoneNavigation = (milestoneId, index) => {
-        if (index === -1) {
-            // Milestone Overview
-            setSelectedMilestone("Milestone Overview");
-            navigate(`/account/projects/update/${id}/milestone-overview`);
-        }else{
-            console.log(milestoneId);
-            setSelectedMilestone(`Milestone ${index}`)
-            // console.log(id)
-            navigate(`/account/projects/update/${id}/milestone1`, {
-                state: { milestoneId },
-            });
-            if (index == 3) {
-                navigate(`/account/projects/update/${id}/milestone2`, {
-                    state: { milestoneId },
-                });
-            }
-        }
-        
-    };
-
-    const handleNavigation = (link) => {
-        navigate(link);
+    const getActiveOverview = () => {
+        console.log(location.pathname)
+        const matchedOverview = location.pathname.includes('milestone-overview');
+        console.log(matchedOverview);
+        return matchedOverview ? `Project Milestone / Milestone Overview` : "";
     };
 
     const isEditorActive = editorList.some((item) =>
         location.pathname.includes(item.link(id))
     );
+
     const isMilestoneActive = milestoneList.some((item) =>
-        location.pathname.includes(item.milestoneName.replace(/\s+/g, '').toLowerCase())
+        location.pathname.includes(item.link(id))
     );
 
     const isPreviewActive = location.pathname.includes('preview');
 
-    const getActiveSection = (id, selectedMilestone) => {
+    const isOverviewActive = location.pathname.includes('milestone-overview');
+
+    const getActiveSection = (id) => {
         const activeEditor = getActiveEditor(id);
         const activePreview = getActivePreview(id);
+        const activeOverview = getActiveOverview(id);
+        const activeMilestone = getActiveMilestone(id);
         if (activeEditor) {
             return activeEditor
         };
         if (activePreview) {
             return activePreview
         };
-        if (isMilestoneActive) return 'Project Milestone / ' + selectedMilestone;
+        if (activeOverview) {
+            return activeOverview
+        };
+        if (activeMilestone) {
+            return activeMilestone
+        };
         return "Unknown Section";
     };
+
+    const handleConfirmInstruction = (value) => {
+        setShowInstruction(value);
+        localStorage.setItem('confirm_instruction', true);
+    }
 
     return (
         <ProjectContext.Provider
@@ -330,7 +354,7 @@ function UpdateFundingProjectLayout() {
                 setLoadingStatus,
             }}
         >
-            {/* <LoadingProjectBackDrop isLoading={isLoading} loadingStatus={loadingStatus} /> */}
+            <ProjectEditorInstruction showInstruction={showInstruction} setShowInstruction={(value) => handleConfirmInstruction(value)} />
             <Container
                 sx={{
                     mx: "0",
@@ -403,7 +427,7 @@ function UpdateFundingProjectLayout() {
                                     >
                                         Project Preview
                                     </Typography>
-                                   
+
                                 </div>
                                 <div>
                                     <Typography
@@ -499,10 +523,11 @@ function UpdateFundingProjectLayout() {
                                     >
                                         <List component="nav">
                                             <ListItem
+                                                key={-1}
                                                 button
-                                                onClick={() => handleMilestoneNavigation(null, -1)} // Navigate to overview (no specific milestone)
+                                                onClick={() => handleNavigateOverview(id)}
                                                 sx={{
-                                                    backgroundColor: selectedMilestone === "Milestone Overview" && isMilestoneActive
+                                                    backgroundColor: isOverviewActive
                                                         ? "#88D1AE"
                                                         : "transparent",
                                                     "&:hover": {
@@ -516,9 +541,7 @@ function UpdateFundingProjectLayout() {
                                                 <ListItemText
                                                     primary="Milestone Overview"
                                                     sx={{
-                                                        color: selectedMilestone === "Milestone Overview" && isMilestoneActive
-                                                            ? "#F5F7F8"
-                                                            : "#F5F7F8",
+                                                        color: "#F5F7F8",
                                                         fontSize: "1rem",
                                                         fontWeight: "600",
                                                         height: "2rem",
@@ -529,15 +552,15 @@ function UpdateFundingProjectLayout() {
                                                     }}
                                                 />
                                             </ListItem>
-                                            {milestoneList.map((item, index) => (
+                                            {currentMilestoneList.map((item, index) => (
                                                 <ListItem
                                                     button
-                                                    key={item.name}
+                                                    key={item.milestoneName}
                                                     onClick={() =>
                                                         handleMilestoneNavigation(item.id, item.milestoneOrder)
                                                     }
                                                     sx={{
-                                                        backgroundColor: selectedMilestone == `Milestone ${index + 1}` && isMilestoneActive
+                                                        backgroundColor: getActiveMilestoneOrder(id) === item.milestoneName
                                                             ? "#88D1AE"
                                                             : "transparent",
                                                         "&:hover": {
@@ -551,9 +574,7 @@ function UpdateFundingProjectLayout() {
                                                     <ListItemText
                                                         primary={item.milestoneName}
                                                         sx={{
-                                                            color: selectedMilestone == `Milestone ${index + 1}` && isMilestoneActive
-                                                                ? "#F5F7F8"
-                                                                : "#F5F7F8",
+                                                            color: "#F5F7F8",
                                                             fontSize: "1rem",
                                                             fontWeight: "600",
                                                             height: "2rem",
@@ -570,14 +591,6 @@ function UpdateFundingProjectLayout() {
                                 </div>
                             </div>
                         </div>
-                        {/* <div>
-                            <Typography className="update-project-section">
-                                Learn More About Crowdfunding Policy
-                            </Typography>
-                            <Typography className="update-project-section">
-                                Get Help & Support
-                            </Typography>
-                        </div> */}
                     </Grid2>
                     <Grid2 size={9.5} style={{ position: "relative" }}>
                         <div>
@@ -592,7 +605,7 @@ function UpdateFundingProjectLayout() {
                                             width: "100%",
                                         }}
                                     >
-                                        {getActiveSection(id, selectedMilestone)}
+                                        {getActiveSection(id)}
                                     </Typography>
                                 </div>
                                 <div className={`${isEditorActive ? 'flex' : 'hidden'} justify-between gap-[1.5rem] items-center w-fit`}>

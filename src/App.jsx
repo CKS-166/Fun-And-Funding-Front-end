@@ -73,6 +73,7 @@ import Milestone1 from "./pages/UpdateFundingProjectForm/ProjectMilestone/Milest
 import Milestone2 from "./pages/UpdateFundingProjectForm/ProjectMilestone/Milestone2";
 import Milestone3 from "./pages/UpdateFundingProjectForm/ProjectMilestone/Milestone3";
 import Milestone4 from "./pages/UpdateFundingProjectForm/ProjectMilestone/Milestone4";
+import MilestoneOverview from "./pages/UpdateFundingProjectForm/ProjectMilestone/MilestoneOverview";
 import ProjectPreview from "./pages/UpdateFundingProjectForm/ProjectPreview";
 import MarketplaceProjectBankAccount from "./pages/UpdateMarketplaceProjectForm/MarketplaceProjectBankAccount";
 import MarketplaceProjectBasicInformation from "./pages/UpdateMarketplaceProjectForm/MarketplaceProjectBasicInformation";
@@ -80,7 +81,6 @@ import MarketplaceProjectContent from "./pages/UpdateMarketplaceProjectForm/Mark
 import MarketplaceProjectCoupon from "./pages/UpdateMarketplaceProjectForm/MarketplaceProjectCoupon";
 import MarketplaceProjectMediaFiles from "./pages/UpdateMarketplaceProjectForm/MarketplaceProjectMedia";
 import MarketplaceProjectPreview from "./pages/UpdateMarketplaceProjectForm/MarketplaceProjectPreview";
-import MilestoneOverview from "./pages/UpdateFundingProjectForm/ProjectMilestone/MilestoneOverview";
 
 function App() {
   const location = useLocation();

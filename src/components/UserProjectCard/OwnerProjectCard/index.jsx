@@ -213,11 +213,9 @@ function OwnerProjectCard({ project, projectType, fetchProjectData }) {
             onChange={handleChange}
             displayEmpty
             renderValue={(value) =>
-              value ? (
-                <Typography sx={{ color: "var(--black)" }}>Action</Typography>
-              ) : (
-                <Typography sx={{ color: "var(--black)" }}>Action</Typography>
-              )
+            (
+              <Typography sx={{ color: "var(--black)" }}>Action</Typography>
+            )
             }
             sx={{
               backgroundColor: "#EAEAEA",
@@ -252,7 +250,7 @@ function OwnerProjectCard({ project, projectType, fetchProjectData }) {
                   `/account/${projectType == "Funding"
                     ? "projects"
                     : "marketplace-projects"
-                  }/update/${project.id}/basic-info`,
+                  }/update/${project.id}/preview`,
                   "_blank"
                 )
               }
@@ -284,22 +282,10 @@ function OwnerProjectCard({ project, projectType, fetchProjectData }) {
                 </Modal>
               </>
             )}
-            {/* {(project.status === 1 ||
-              (project.status === 6 && projectType != "Funding")) && (
-              <MenuItem value="remove">
-                <Typography>Delete Project</Typography>
-              </MenuItem>
-            )} */}
             {project.status == 4 && (
               <MenuItem
                 value="publish"
                 onClick={handleContractOpen}
-              // onClick={() =>
-              //   window.open(
-              //     `/request-marketplace-project/${project.id}/basic-info`,
-              //     "_blank"
-              //   )
-              // }
               >
                 <Typography>Publish To Marketplace</Typography>
               </MenuItem>

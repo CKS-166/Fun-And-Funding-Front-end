@@ -1,45 +1,47 @@
-import React, { useState, useEffect } from 'react'
-import TaskColumn from '../../../../components/Kanban/TaskColumn';
-import TaskForm from '../../../../components/Kanban/TaskForm';
-import './index.css'
-import { useParams, useLocation } from 'react-router-dom';
-import milestoneApiInstace from '../../../../utils/ApiInstance/milestoneApiInstance';
-import { checkAvailableMilestone } from "../../../../utils/Hooks/checkAvailableMilestone";
-import BackdropRequestMilestone from '../../../../components/UpdateProject/BackdropRequestMilestone';
-import { Typography, Box, Tab } from '@mui/material';
-import axios from "axios";
-import Grid from '@mui/material/Grid2';
-import { set } from 'react-hook-form';
-import Swal from 'sweetalert2';
+import ChangeCircleIcon from '@mui/icons-material/ChangeCircle';
 import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
-import CompleteMilestoneButton from '../../../../components/UpdateProject/CompleteMilestoneButton';
-function Milestone2() {
-    const { id } = useParams(); // Get the project ID from the URL
-    console.log(id);
+import {
+    Backdrop,
+    Box, Button,
+    CircularProgress,
+    Tab,
+    Typography
+} from '@mui/material';
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import "react-quill/dist/quill.snow.css";
+import { useLocation, useParams } from 'react-router-dom';
+import Swal from "sweetalert2";
+import PackageEvidence from '../../../../components/PackageEvidence';
+import Timer from "../../../../components/Timer";
+import BackdropRequestMilestone from "../../../../components/UpdateProject/BackdropRequestMilestone";
+import MilestoneQuill from "../../../../components/UpdateProject/MilestoneQuill";
+import FileUploadDropdown from "../../../../components/UpdateProject/UploadFiles/FileUploadDropdown";
+import milestoneApiInstace from "../../../../utils/ApiInstance/milestoneApiInstance";
+import packageBackerApiInstance from '../../../../utils/ApiInstance/packageBackerApiInstance';
+import { checkAvailableMilestone } from "../../../../utils/Hooks/checkAvailableMilestone";
+import UpdateMilestone from "../UpdateMilestone";
+
+const Milestone2 = () => {
+    const { id } = useParams();
     const projectId = id;
     const location = useLocation();
     const milestoneId = location.state?.milestoneId;
-    console.log(milestoneId);
-    const [tasks, setTasks] = useState([]);
-    const [activeCard, setActiveCard] = useState(null);
-    const [milestoneData, setMilestoneData] = useState(null);
-    const [isLoading, setIsLoading] = useState(true);
     const [milestone, setMilestone] = useState(null);
+    const [formDataArray, setFormDataArray] = useState([]);
+    const [milestoneData, setMilestoneData] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
+    const [uploadedFiles, setUploadedFiles] = useState([]);
+    const [dropdownAnchorEl, setDropdownAnchorEl] = useState(null);
+    const [anchorEls, setAnchorEls] = useState({})
     const [isBackdropHidden, setIsBackdropHidden] = useState(false);
-    //get fixed milestone
-    const fetchFixedMilestone = async () => {
-        try {
-            await milestoneApiInstace.get(`/${milestoneId}?filter=1`).then(response => {
-                setMilestone(response.data.result._data);
-                console.log(response.data)
-            });
+    const [buttonActive, setButtonActive] = useState(false)
+    const [issueLog, setIssueLog] = useState("");
+    const [daysLeft, setDaysLeft] = useState(0);
+    const [packageBackers, setPackBackers] = useState([]);
 
-        } catch (error) {
-            console.error("Error fetching milestone:", error);
-        }
-    }
     //check available project milestone
     const getMilestoneData = async (id) => {
         setIsLoading(true); // Start loading when data fetch begins
@@ -47,19 +49,16 @@ function Milestone2() {
             const data = await checkAvailableMilestone(projectId, id);
             setMilestoneData(data); // Set data after fetching
             console.log(data);
-
+            const start = data.data[0] && new Date(data.data[0].createdDate);
+            const end = data.data[0] && new Date(data.data[0].endDate);
+            const timeDiff = end - start;
+            const dayDiff = Math.round(timeDiff / (1000 * 60 * 60 * 24));
+            setDaysLeft(dayDiff);
             if (data.status === 'create' || data.status === 'edit' || data.status === 'warning') {
-                setIsBackdropHidden(false)
-                setTasks(data.data[0].projectMilestoneRequirements)
-            }
-            else {
-                if (data.status == 'submitted' || data.status == 'completed') {
-                    setTasks(data.data[0].projectMilestoneRequirements)
-                }
-                console.log("a")
+                setIsLoading(false)
+            } else {
                 setIsBackdropHidden(true)
             }
-            console.log(tasks)
         } catch (error) {
             console.error('Error fetching milestone data:', error);
         } finally {
@@ -67,199 +66,282 @@ function Milestone2() {
         }
     };
 
-    // Handler to close Backdrop
+    const fetchFixedMilestone = async () => {
+        try {
+            const response = await milestoneApiInstace.get(
+                `/${milestoneId}?filter=1`
+            );
+            console.log(response.data);
+            if (response.data.result._isSuccess) {
+                const milestoneData = response.data.result._data;
+                setMilestone(milestoneData);
+                // Initialize formDataArray for requirements
+                const initialFormData = milestoneData.requirements.map((req) => ({
+                    requirementId: req.id,
+                    content: " ", // Initial content
+                    requirementStatus: 0,
+                    updateDate: new Date(),
+                    milestoneId: milestoneData.id,
+                    fundingProjectId: projectId,
+                    requirementFiles: [],
+                }));
+                setFormDataArray(initialFormData);
+            }
+        } catch (error) {
+            console.error("Error fetching milestone:", error);
+        }
+    };
+
+    const fetchPackageBackers = async (id) => {
+        setIsLoading(true);
+        await packageBackerApiInstance.get(`/project-backers-detail?projectId=${id}`).then((res) => {
+            if (res.data._isSuccess) {
+                setPackBackers(res.data._data);
+                setIsLoading(false);
+            }
+        })
+    }
+
     const handleBackdropClose = () => {
         setIsBackdropHidden(false);
     };
-    //fetch milestoneData
+
     useEffect(() => {
-        getMilestoneData(milestoneId);
-        fetchFixedMilestone();
-    }, []);
+        const fetchData = async () => {
+            setIsLoading(true);
+            try {
+                await fetchFixedMilestone(); // Fetch fixed milestone data first
+                await getMilestoneData(milestoneId); // Then fetch milestone data
+                await fetchPackageBackers(projectId);
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        fetchData();
+    }, [milestoneId]);
 
-    const handleDelete = (taskIndex) => {
-        const newTasks = tasks.filter((task, index) => index !== taskIndex);
-        setTasks(newTasks);
+    const handleQuillChange = (value, index) => {
+        const updatedFormData = [...formDataArray];
+        updatedFormData[index].content = value;
+        setFormDataArray(updatedFormData);
     };
-    console.log(isBackdropHidden)
 
-    //generate form data
-    const generateFormData = (task) => {
+    const categorizeFileType = (mimeType) => {
+        if (mimeType.startsWith("image/")) return 6;
+        if (mimeType.startsWith("video/")) return 7;
+        return 8; // Default to 2 for documents or other types
+    };
+    //form submitted
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        console.log(formDataArray);
         const data = new FormData();
-        data.append(`request[0].Id`, task.id);
-        data.append(`request[0].RequirementStatus`, task.requirementStatus);
-        data.append(`request[0].UpdateDate`, task.updateDate || new Date().toISOString());
-        data.append(`request[0].Content`, task.content);
+        formDataArray.forEach((formData, i) => {
+            data.append(`request[${i}].RequirementStatus`, formData.requirementStatus);
+            data.append(`request[${i}].UpdateDate`, formData.updateDate.toISOString());
+            data.append(`request[${i}].Content`, formData.content || " ");
+            data.append(`request[${i}].MilestoneId`, formData.milestoneId);
+            data.append(`request[${i}].FundingProjectId`, formData.fundingProjectId);
+            data.append(`request[${i}].RequirementId`, formData.requirementId);
 
-        // Add new files if they exist
-        if (task.addedFiles) {
-            task.addedFiles.forEach((fileObj, index) => {
-                data.append(`request[0].AddedFiles[${index}].URL`, fileObj.file);
-                data.append(`request[0].AddedFiles[${index}].Name`, fileObj.file.name);
-                data.append(`request[0].AddedFiles[${index}].Filetype`, fileObj.fileType);
+            formData.requirementFiles.forEach((file, fileIndex) => {
+                data.append(`request[${i}].RequirementFiles[${fileIndex}].URL`, file);
+                data.append(`request[${i}].RequirementFiles[${fileIndex}].Name`, file.name);
+                data.append(`request[${i}].RequirementFiles[${fileIndex}].Filetype`, categorizeFileType(file.type));
             });
-        }
-
-        // Add existing requirement files
-        if (task.requirementFiles) {
-            task.requirementFiles.forEach((file, fileIndex) => {
-                data.append(`request[0].RequirementFiles[${fileIndex}].Id`, file.id);
-                data.append(`request[0].RequirementFiles[${fileIndex}].URL`, file.url);
-                data.append(`request[0].RequirementFiles[${fileIndex}].Name`, file.name);
-                data.append(`request[0].RequirementFiles[${fileIndex}].IsDeleted`, file.IsDeleted || false);
-            });
-        }
-
-        return data;
-    };
-    // drop card
-    const handleDropCard = (newStatus, newPosition) => {
-        console.log(`Drop card to ${newStatus} at position ${newPosition}`);
-        if (activeCard == null) return;
-        // Get a copy of the tasks array
-        const updatedTasks = [...tasks];
-        const draggedTask = updatedTasks[activeCard];
-        console.log(draggedTask);
-        // If dropping within the same status, just reorder
-        if (draggedTask.requirementStatus === newStatus) {
-            // Remove dragged task from its original position
-            updatedTasks.splice(activeCard, 1);
-
-            // Insert it in the new position within the same status
-            updatedTasks.splice(newPosition, 0, draggedTask);
-        } else {
-            // If changing status, update the status and position
-            draggedTask.requirementStatus = newStatus;
-
-            // Remove from original position and insert at the new position in the target column
-            updatedTasks.splice(activeCard, 1);
-            updatedTasks.splice(newPosition, 0, draggedTask);
-        }
-
-        setTasks(updatedTasks);
-        var data = generateFormData(draggedTask);
-        handleUpdateTask(data);
-        setActiveCard(null);
-    };
-    //handle add task
-    const handleAddTask = async (data) => {
+        });
+        data.append("issueLog", issueLog);
+        data.append("type", milestone.milestoneType)
         try {
-            await axios.post("https://localhost:7044/api/project-milestone-requirements", data, {
-                headers: { "Content-Type": "multipart/form-data" },
+            await axios.post(
+                "https://localhost:7044/api/project-milestone-requirements",
+                data,
+                { headers: { "Content-Type": "multipart/form-data" } }
+            );
+            Swal.fire({
+                title: "You have been successfully updated evidence for this milestone",
+                text: "Milestone created successfully",
+                icon: "success"
             });
-            getMilestoneData(milestoneId); // Re-fetch the Kanban board data after adding a task
         } catch (error) {
-            console.error("Error adding task:", error);
             Swal.fire({
                 title: "Error",
-                text: error.response.data.message,
+                text: "Failed to submit requirements",
                 icon: "error"
             });
-        }
-    };
-    //handle update task
-    const handleUpdateTask = async (data) => {
-        try {
-            setIsLoading(true);
-            await axios.put("https://localhost:7044/api/project-milestone-requirements", data, {
-                headers: { "Content-Type": "multipart/form-data" },
-            });
-            getMilestoneData(milestoneId); // Re-fetch the Kanban board data after adding a task
-
-        } catch (error) {
-            console.error("Error adding task:", error);
         } finally {
-            setIsLoading(false);
+            getMilestoneData(milestoneId);
         }
     };
 
-    
-  const [value, setValue] = React.useState('1');
-  const [issueLog, setIssueLog] = useState("");
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
-  };
-    if (!milestone || !milestoneData || !tasks) return <p>Loading milestone...</p>;
-    console.log(isLoading)
+    //resubmit when complete
+
+    //dropdown files
+    const [anchorEl, setAnchorEl] = useState(null); // Tracks dropdown state
+    const [currentIndex, setCurrentIndex] = useState(null); // Tracks which requirement files are open
+
+
+    const handleFilesSelected = (selectedFiles, index) => {
+        const updatedFormData = [...formDataArray];
+        updatedFormData[index].requirementFiles = [
+            ...updatedFormData[index].requirementFiles,
+            ...selectedFiles,
+        ];
+        setFormDataArray(updatedFormData);
+    };
+
+    const openDropdown = (event, index) => {
+        setAnchorEls((prev) => ({
+            ...prev,
+            [index]: event.currentTarget,
+        }));
+    };
+
+    const closeDropdown = (index) => {
+        setAnchorEls((prev) => ({
+            ...prev,
+            [index]: null,
+        }));
+    };
+
+    const handleRemoveFile = (fileIndex) => {
+        const updatedFormData = [...formDataArray];
+        updatedFormData[currentIndex].requirementFiles.splice(fileIndex, 1);
+        setFormDataArray(updatedFormData);
+    };
+
+    const [value, setValue] = React.useState('1');
+
+    const handleChange = (event, newValue) => {
+        setValue(newValue);
+    };
+
+
     return (
-        <>
-            {milestoneData && milestone && !isLoading
-                && <BackdropRequestMilestone
-                    isHidden={isBackdropHidden}
-                    projectId={projectId}
-                    milestone={milestone}
-                    status={milestoneData.status}
-                    onCloseBackdrop={handleBackdropClose}
-                    render={() => getMilestoneData(milestoneId)} />}
-            <div className='basic-info-section'>
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingRight: '5rem' }}>
-                    <Box>
-                        <Typography
-                            className='basic-info-title'
-                        >
-                            {milestone.milestoneName}<span className='text-[#1BAA64]'>*</span>
-                        </Typography>
-                        <Typography
-                            className='basic-info-subtitle'
-                            sx={{ width: '100%' }}
-                        >
-                            {milestone.description}
-                        </Typography>
+        <div>
+            {(isLoading && !milestone || !milestoneData) ? (
+                <Backdrop
+                    sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                    open={true} // Force the Backdrop to open
+                >
+                    <CircularProgress color="inherit" />
+                </Backdrop>
+            ) : <>
+                {milestoneData && milestone && !isLoading && milestone.milestoneType == 1
+                    && <BackdropRequestMilestone
+                        isHidden={isBackdropHidden}
+                        projectId={projectId}
+                        milestone={milestone}
+                        status={milestoneData.status}
+                        onCloseBackdrop={handleBackdropClose}
+                        render={() => getMilestoneData(milestoneId)} />}
+
+                <div className='basic-info-section'>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingRight: '5rem' }}>
+                        <Box>
+                            <Typography
+                                className='basic-info-title'
+
+                            >
+                                <h3 style={{ fontWeight: '700' }}>{milestone.milestoneName} <span className='text-[#1BAA64]'>*</span></h3>
+                            </Typography>
+                            <Typography
+                                className='basic-info-subtitle'
+                                sx={{ width: '100%' }}
+                            >
+                                <h3 style={{ fontWeight: '600' }}>{milestone.description}</h3>
+                            </Typography>
+                        </Box>
+                        <Box>
+                            <Timer days={daysLeft} />
+                        </Box>
                     </Box>
-                    <Box>
-                        <CompleteMilestoneButton  render={() => getMilestoneData(milestoneId)} status={milestoneData.status} pmId={(milestoneData.status == 'edit' || milestoneData.status == 'warning') && milestoneData.data[0].id} />
-                    </Box>
-                </Box>
-                <Box>
-                    {milestone && milestone.requirements.map((req) => (
-                        <>
-                            <Typography sx={{ fontWeight: 600 }}>{req.description}  <span className='text-[#1BAA64]'>*</span></Typography>
-                                <TaskForm onAddTask={handleAddTask} projectId={projectId} milestoneId={milestoneId} requirementId={req.id} />
-                                <Grid container spacing={2}>
-                                    <Grid size={4} className="app_main">
-                                        <TaskColumn
-                                            className='task-column'
-                                            title="To-do"
-                                            tasks={tasks}
-                                            status={0}
-                                            handleDelete={handleDelete}
-                                            setActiveCard={setActiveCard}
-                                            onDrop={handleDropCard}
-                                            updateTask={handleUpdateTask}
-                                        />
-                                    </Grid>
-                                    <Grid size={4}>
-                                        <TaskColumn
-                                            title="Doing"
-                                            tasks={tasks}
-                                            status={1}
-                                            handleDelete={handleDelete}
-                                            setActiveCard={setActiveCard}
-                                            onDrop={handleDropCard}
-                                            updateTask={handleUpdateTask}
-                                        />
-                                    </Grid>
-                                    <Grid size={4}>
-                                        <TaskColumn
-                                            title="Done"
-                                            tasks={tasks}
-                                            status={2}
-                                            handleDelete={handleDelete}
-                                            setActiveCard={setActiveCard}
-                                            onDrop={handleDropCard}
-                                            updateTask={handleUpdateTask}
-                                        />
-                                    </Grid>
-                                </Grid>
-                            </>
-                    ))}
-                    </Box >
 
-            </div >
+                    {!isLoading && (milestoneData && milestoneData.status == 'create')
+                        ? (
+                            <form onSubmit={handleSubmit}>
+                                <TabContext value={value}>
+                                    <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                                        <TabList onChange={handleChange} aria-label="lab API tabs example">
+                                            <Tab label="Requirements" value="1" />
+                                            <Tab label="Issue Logs" value="2" />
+                                            {milestone.milestoneOrder == 4 && <Tab label="Reward Tracking" value="3" />}
+                                        </TabList>
+                                    </Box>
+                                    <TabPanel value="1">
+                                        {milestone.requirements.map((req, index) => (
+                                            <div key={req.id} style={{ marginBottom: "20px" }}>
+                                                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '70%', marginBottom: '20px' }}>
+                                                    <h3 style={{ fontWeight: '600', width: '600px' }}>{req.description}</h3>
+                                                    <Button variant="contained" component="label" onClick={(e) => openDropdown(e, index)}
+                                                        sx={{ backgroundColor: '#1BAA64', textTransform: 'none', fontWeight: '600' }} startIcon={<ChangeCircleIcon />}>
+                                                        Upload Files
+                                                        <input
+                                                            type="file"
+                                                            multiple
+                                                            hidden
+                                                            onChange={(e) => handleFilesSelected(Array.from(e.target.files), index)}
+                                                        />
+                                                    </Button>
+                                                </Box>
+                                                <div className="w-[80%]">
+                                                    <>
+                                                        <div className="w-[70%]">
+                                                            <MilestoneQuill
+                                                                value={formDataArray[index]?.content || " "}
+                                                                onChange={(value) => handleQuillChange(value, index)}
+                                                            />
+                                                        </div>
+                                                        {formDataArray[index] && formDataArray[index].requirementFiles && (
+                                                            <FileUploadDropdown
+                                                                uploadedFiles={formDataArray[index].requirementFiles}
+                                                                anchorEl={anchorEls[index]}
+                                                                onClose={() => closeDropdown(index)}
+                                                                onRemoveFile={(fileIndex) =>
+                                                                    handleRemoveFile(fileIndex, index)
+                                                                }
+                                                                requirementFiles={[]}
+                                                            />
+                                                        )}
 
-        </>
+                                                    </>
+                                                </div>
 
+                                            </div>
+                                        ))}
+                                    </TabPanel>
+                                    <TabPanel value="2">
+                                        <MilestoneQuill
+                                            value={issueLog || ""}
+                                            onChange={(value) => setIssueLog(value)}
+                                        />
+                                    </TabPanel>
+                                    <TabPanel value="3">
+                                        <PackageEvidence backers={packageBackers} />
+                                    </TabPanel>
+                                </TabContext>
+
+
+                                <Button ype="submit" variant="contained" color="primary" sx={{
+                                    backgroundColor: '#1BAA64'
+                                    , textTransform: 'none', fontWeight: '600', width: '100px'
+                                }} type="submit">
+                                    Save
+                                </Button >
+                            </form>
+                        ) : <UpdateMilestone render={() => getMilestoneData(milestoneId)}
+                            backers={packageBackers}
+                            type={milestone.milestoneType}
+                            milestones={milestoneData?.data[0]?.projectMilestoneRequirements}
+                            issueLog={milestoneData?.data[0]?.issueLog} pmId={milestoneData?.data[0]?.id}
+                            status={milestoneData?.status} order={milestone.milestoneOrder} />}
+                </div>
+            </>}
+
+        </div>
     );
-}
+};
 
-export default Milestone2
+export default Milestone2;

@@ -14,22 +14,21 @@ import React, { useEffect, useState } from "react";
 import "react-quill/dist/quill.snow.css";
 import { useLocation, useParams } from 'react-router-dom';
 import Swal from "sweetalert2";
+import PackageEvidence from '../../../../components/PackageEvidence';
 import Timer from "../../../../components/Timer";
 import BackdropRequestMilestone from "../../../../components/UpdateProject/BackdropRequestMilestone";
 import MilestoneQuill from "../../../../components/UpdateProject/MilestoneQuill";
 import FileUploadDropdown from "../../../../components/UpdateProject/UploadFiles/FileUploadDropdown";
 import milestoneApiInstace from "../../../../utils/ApiInstance/milestoneApiInstance";
+import packageBackerApiInstance from '../../../../utils/ApiInstance/packageBackerApiInstance';
 import { checkAvailableMilestone } from "../../../../utils/Hooks/checkAvailableMilestone";
 import UpdateMilestone from "../UpdateMilestone";
-import packageBackerApiInstance from '../../../../utils/ApiInstance/packageBackerApiInstance';
-import PackageEvidence from '../../../../components/PackageEvidence';
-const MilestoneForm = () => {
-  const { id } = useParams(); // Get the project ID from the URL
-  console.log(id);
+
+const Milestone1 = () => {
+  const { id } = useParams();
   const projectId = id;
   const location = useLocation();
   const milestoneId = location.state?.milestoneId;
-  console.log(milestoneId);
   const [milestone, setMilestone] = useState(null);
   const [formDataArray, setFormDataArray] = useState([]);
   const [milestoneData, setMilestoneData] = useState(null);
@@ -42,6 +41,7 @@ const MilestoneForm = () => {
   const [issueLog, setIssueLog] = useState("");
   const [daysLeft, setDaysLeft] = useState(0);
   const [packageBackers, setPackBackers] = useState([]);
+
   //check available project milestone
   const getMilestoneData = async (id) => {
     setIsLoading(true); // Start loading when data fetch begins
@@ -65,6 +65,7 @@ const MilestoneForm = () => {
       setIsLoading(false); // Stop loading once data fetch is complete
     }
   };
+
   const fetchFixedMilestone = async () => {
     try {
       const response = await milestoneApiInstace.get(
@@ -91,7 +92,7 @@ const MilestoneForm = () => {
     }
   };
 
-  const fetchPackageBackers = async (id) =>{
+  const fetchPackageBackers = async (id) => {
     setIsLoading(true);
     await packageBackerApiInstance.get(`/project-backers-detail?projectId=${id}`).then((res) => {
       if (res.data._isSuccess) {
@@ -258,86 +259,84 @@ const MilestoneForm = () => {
             </Box>
           </Box>
 
-          {!isLoading && (milestoneData && milestoneData.status == 'create') 
-           ? (
-            <form onSubmit={handleSubmit}>
-              <TabContext value={value}>
-                <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                  <TabList onChange={handleChange} aria-label="lab API tabs example">
-                    <Tab label="Requirements" value="1" />
-                    <Tab label="Issue Logs" value="2" />
-                    {milestone.milestoneOrder == 4 && <Tab label="Reward Tracking" value="3" />}
-                  </TabList>
-                </Box>
-                <TabPanel value="1">
-                  {milestone.requirements.map((req, index) => (
-                    <div key={req.id} style={{ marginBottom: "20px" }}>
-                      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '70%', marginBottom: '20px' }}>
-                        <h3 style={{ fontWeight: '600', width:'600px' }}>{req.description}</h3>
-                        <Button variant="contained" component="label" onClick={(e) => openDropdown(e, index)}
-                          sx={{ backgroundColor: '#1BAA64', textTransform: 'none', fontWeight: '600' }} startIcon={<ChangeCircleIcon />}>
-                          Upload Files
-                          <input
-                            type="file"
-                            multiple
-                            hidden
-                            onChange={(e) => handleFilesSelected(Array.from(e.target.files), index)}
-                          />
-                        </Button>
-                      </Box>
-
-                      {/* <p>{req.description}</p> */}
-                      <div className="w-[80%]">
-                        <>
-                          <div className="w-[70%]">
-                            <MilestoneQuill
-                              value={formDataArray[index]?.content || " "}
-                              onChange={(value) => handleQuillChange(value, index)}
+          {!isLoading && (milestoneData && milestoneData.status == 'create')
+            ? (
+              <form onSubmit={handleSubmit}>
+                <TabContext value={value}>
+                  <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                    <TabList onChange={handleChange} aria-label="lab API tabs example">
+                      <Tab label="Requirements" value="1" />
+                      <Tab label="Issue Logs" value="2" />
+                      {milestone.milestoneOrder == 4 && <Tab label="Reward Tracking" value="3" />}
+                    </TabList>
+                  </Box>
+                  <TabPanel value="1">
+                    {milestone.requirements.map((req, index) => (
+                      <div key={req.id} style={{ marginBottom: "20px" }}>
+                        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '70%', marginBottom: '20px' }}>
+                          <h3 style={{ fontWeight: '600', width: '600px' }}>{req.description}</h3>
+                          <Button variant="contained" component="label" onClick={(e) => openDropdown(e, index)}
+                            sx={{ backgroundColor: '#1BAA64', textTransform: 'none', fontWeight: '600' }} startIcon={<ChangeCircleIcon />}>
+                            Upload Files
+                            <input
+                              type="file"
+                              multiple
+                              hidden
+                              onChange={(e) => handleFilesSelected(Array.from(e.target.files), index)}
                             />
-                          </div>
-                          {formDataArray[index] && formDataArray[index].requirementFiles && (
-                            <FileUploadDropdown
-                              uploadedFiles={formDataArray[index].requirementFiles}
-                              anchorEl={anchorEls[index]}
-                              onClose={() => closeDropdown(index)}
-                              onRemoveFile={(fileIndex) =>
-                                handleRemoveFile(fileIndex, index)
-                              }
-                              requirementFiles={[]}
-                            />
-                          )}
+                          </Button>
+                        </Box>
+                        <div className="w-[80%]">
+                          <>
+                            <div className="w-[70%]">
+                              <MilestoneQuill
+                                value={formDataArray[index]?.content || " "}
+                                onChange={(value) => handleQuillChange(value, index)}
+                              />
+                            </div>
+                            {formDataArray[index] && formDataArray[index].requirementFiles && (
+                              <FileUploadDropdown
+                                uploadedFiles={formDataArray[index].requirementFiles}
+                                anchorEl={anchorEls[index]}
+                                onClose={() => closeDropdown(index)}
+                                onRemoveFile={(fileIndex) =>
+                                  handleRemoveFile(fileIndex, index)
+                                }
+                                requirementFiles={[]}
+                              />
+                            )}
 
-                        </>
+                          </>
+                        </div>
+
                       </div>
-
-                    </div>
-                  ))}
-                </TabPanel>
-                <TabPanel value="2">
-                  <MilestoneQuill
-                    value={issueLog || ""}
-                    onChange={(value) => setIssueLog(value)}
-                  />
-                </TabPanel>
-                <TabPanel value="3">
-                  <PackageEvidence backers={packageBackers}/>
-                </TabPanel>
-              </TabContext>
+                    ))}
+                  </TabPanel>
+                  <TabPanel value="2">
+                    <MilestoneQuill
+                      value={issueLog || ""}
+                      onChange={(value) => setIssueLog(value)}
+                    />
+                  </TabPanel>
+                  <TabPanel value="3">
+                    <PackageEvidence backers={packageBackers} />
+                  </TabPanel>
+                </TabContext>
 
 
-              <Button ype="submit" variant="contained" color="primary" sx={{
-                backgroundColor: '#1BAA64'
-                , textTransform: 'none', fontWeight: '600', width: '100px'
-              }} type="submit">
-                Save
-              </Button >
-            </form>
-          ) : <UpdateMilestone render={() => getMilestoneData(milestoneId)}
-              backers ={packageBackers}
+                <Button ype="submit" variant="contained" color="primary" sx={{
+                  backgroundColor: '#1BAA64'
+                  , textTransform: 'none', fontWeight: '600', width: '100px'
+                }} type="submit">
+                  Save
+                </Button >
+              </form>
+            ) : <UpdateMilestone render={() => getMilestoneData(milestoneId)}
+              backers={packageBackers}
               type={milestone.milestoneType}
-            milestones={milestoneData?.data[0]?.projectMilestoneRequirements}
-            issueLog={milestoneData?.data[0]?.issueLog} pmId={milestoneData?.data[0]?.id}
-            status={milestoneData?.status} order={milestone.milestoneOrder} />}
+              milestones={milestoneData?.data[0]?.projectMilestoneRequirements}
+              issueLog={milestoneData?.data[0]?.issueLog} pmId={milestoneData?.data[0]?.id}
+              status={milestoneData?.status} order={milestone.milestoneOrder} />}
         </div>
       </>}
 
@@ -345,4 +344,4 @@ const MilestoneForm = () => {
   );
 };
 
-export default MilestoneForm;
+export default Milestone1;

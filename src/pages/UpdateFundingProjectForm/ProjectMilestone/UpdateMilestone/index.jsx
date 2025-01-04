@@ -1,17 +1,17 @@
-import React, { useState, useEffect } from "react";
-import { Button, Backdrop, CircularProgress, Box, Tab } from "@mui/material";
-import axios from "axios";
-import MilestoneQuill from "../../../../components/UpdateProject/MilestoneQuill";
-import UploadButton from "../../../../components/UpdateProject/UploadFiles/UploadButton";
-import FileUploadDropdown from "../../../../components/UpdateProject/UploadFiles/FileUploadDropdown";
 import ChangeCircleIcon from '@mui/icons-material/ChangeCircle';
 import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
-import Swal from "sweetalert2";
+import { Backdrop, Box, Button, CircularProgress, Tab } from "@mui/material";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
-import CompleteMilestoneButton from "../../../../components/UpdateProject/CompleteMilestoneButton";
+import Swal from "sweetalert2";
 import PackageEvidence from "../../../../components/PackageEvidence";
+import CompleteMilestoneButton from "../../../../components/UpdateProject/CompleteMilestoneButton";
+import MilestoneQuill from "../../../../components/UpdateProject/MilestoneQuill";
+import FileUploadDropdown from "../../../../components/UpdateProject/UploadFiles/FileUploadDropdown";
+
 const UpdateMilestone = ({ milestones, render, issueLog, pmId, status, order, type, backers }) => {
   const [milestoneData, setMilestoneData] = useState([]);
   const [anchorEls, setAnchorEls] = useState({});
@@ -77,6 +77,7 @@ const UpdateMilestone = ({ milestones, render, issueLog, pmId, status, order, ty
     if (mimeType.startsWith("video/")) return 7;
     return 8; // Default to 2 for documents or other types
   };
+
   const handleSubmit = async (e) => {
     setLoading(true);
     e.preventDefault();
@@ -198,7 +199,7 @@ const UpdateMilestone = ({ milestones, render, issueLog, pmId, status, order, ty
               {milestoneData.map((milestone, index) => (
                 <div key={milestone.id} style={{ marginBottom: "20px" }}>
                   <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '70%', marginBottom: '20px' }}>
-                    <h3 style={{ fontWeight: '600', width:'600px' }}>{milestones[index] && milestones[index].reqDescription || ""}</h3>
+                    <h3 style={{ fontWeight: '600', width: '600px' }}>{milestones[index] && milestones[index].reqDescription || ""}</h3>
                     <Button variant="contained" component="label" onClick={(e) => openDropdown(e, index)}
                       sx={{ backgroundColor: '#1BAA64', textTransform: 'none', fontWeight: '600' }} startIcon={<ChangeCircleIcon />}>
                       Additional Files

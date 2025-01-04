@@ -18,7 +18,10 @@ export const editorList = [
 ];
 
 export const milestoneList = [
-  
+  {
+    name: "Milestone Overview",
+    link: (id) => `/account/projects/update/${id}/milestone-overview`,
+  },
   {
     name: "Milestone 1",
     link: (id) => `/account/projects/update/${id}/milestone1`,

@@ -30,9 +30,13 @@ function ProjectPreview() {
     const getSecondMilestone = async (id) => {
         await projectMilestoneApiInstace.get(`/milestones-disbursement?projectId=${id}`).then(res => {
             console.log(res)
-            const secMile = res.data._data.filter(m => m.milestone.milestoneOrder == 2);
+            if(res.data._data.length > 0){
+                const secMile = res.data._data.filter(m => m.milestone.milestoneOrder == 2);
             console.log(secMile)
             setSecondMilestone(secMile);
+            }
+
+            
         })
     }
     // fetch project data

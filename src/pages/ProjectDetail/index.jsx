@@ -715,7 +715,7 @@ const ProjectDetail = () => {
               <Divider />
             </Box>
 
-            <div className="bg-white flex justify-center pt-[3rem] min-h-[40rem] overflow-y-auto">
+            <div className="bg-white flex justify-center py-[3rem] min-h-[40rem] overflow-y-auto">
               <div className="w-[90%]">
                 {tabValue === "1" && (
                   <Grid2 container spacing={4}>

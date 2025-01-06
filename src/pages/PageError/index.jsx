@@ -1,6 +1,6 @@
 import { Button, Typography } from '@mui/material';
 import React from 'react';
-import ErrorGif from '../../assets/gifs/error-animation.gif';
+import ErrorGif from '../../assets/gifs/Error-Animation.gif';
 
 function PageError() {
     return (

@@ -1,42 +1,49 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+* {
+  font-family: "Poppins", sans-serif !important;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+body {
+  background-color: #f5f7f8;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+:root {
+  --primary-green: #1baa64;
+  --dark-green: #06402b;
+  --black: #2f3645;
+  --white: #f5f7f8;
+  --grey: #b7b7b7;
+  --light-grey: #eaeaea;
+  --red: #d9534f;
+  --yellow: #fcc737;
+  --header-height: 6.4rem;
+  --side-margin: 5.5rem;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+@font-face {
+  font-family: WhyteInktrap;
+  src: url("/src/assets/fonts/WhyteInktrap.ttf");
 }
 
-.card {
-  padding: 2em;
+@font-face {
+  font-family: GuthenBloots;
+  src: url("/src/assets/fonts/GuthenBloots.ttf");
 }
 
-.read-the-docs {
-  color: #888;
+.scrollbar-hidden {
+  scrollbar-width: none;
+}
+
+.scrollbar-hidden::-webkit-scrollbar {
+  display: none;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
 }

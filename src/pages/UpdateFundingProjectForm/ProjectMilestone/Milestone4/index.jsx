@@ -153,7 +153,6 @@ const Milestone4 = () => {
             });
         });
         data.append("issueLog", issueLog);
-        data.append("type", milestone.milestoneType)
         try {
             await axios.post(
                 "https://localhost:7044/api/project-milestone-requirements",

@@ -99,7 +99,7 @@ const UpdateMilestone = ({ milestones, render, issueLog, pmId, status, order, ty
       });
     });
     data.append("issueLog", issueLogData);
-    data.append("type", type);
+    // data.append("type", type);
     console.log(milestoneData);
 
     try {
@@ -111,7 +111,8 @@ const UpdateMilestone = ({ milestones, render, issueLog, pmId, status, order, ty
         icon: "success"
       });
     } catch (error) {
-      toast.warn("Please fill in all the required fields.");
+      console.log(error)
+      toast.warn(error.response.data.message || "Something went wrong");
     } finally {
       setLoading(false);
       render();

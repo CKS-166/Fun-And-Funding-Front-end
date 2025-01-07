@@ -14,10 +14,13 @@ import {
   Tabs,
   Tab,
   Button,
+  IconButton
 } from '@mui/material';
 import transactionApiInstance from '../../../../utils/ApiInstance/transactionApiInstance';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
+import InfoIcon from "@mui/icons-material/Info";
+import MilestonePolicyModal from '../../../../components/MilestonePolicyModal';
 
 const MilestoneOverview = () => {
   const { id } = useParams(); // Project ID from the URL
@@ -85,11 +88,40 @@ const MilestoneOverview = () => {
     window.open(chatUrl, '_blank'); // Opens in a new tab
   };
 
+  const [openModal, setOpenModal] = useState(false);
+
+  const handleOpenModal = () => {
+    setOpenModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setOpenModal(false);
+  };
+
   return (
     <Box sx={{ padding: 4 }}>
-      <Typography variant="h5" sx={{ fontWeight: 'bold', marginBottom: 2 }}>
-        Milestone Details
-      </Typography>
+<div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+  <Typography variant="h5" sx={{ fontWeight: "bold", marginBottom: 0 }}>
+    Milestone Details
+  </Typography>
+  {/* Info Icon Button */}
+  <IconButton
+    onClick={handleOpenModal}
+    size="small"
+    sx={{
+      padding: "4px", // Compact padding
+      borderRadius: "50%", // Circle shape
+      backgroundColor: "#1BAA64",
+      "&:hover": {
+        backgroundColor: "#1BAA64", // Hover color remains the same
+        opacity: 0.9, // Slight transparency on hover
+      },
+    }}
+  >
+    <InfoIcon fontSize="small" sx={{ color: "#FFFFFF" }} />
+  </IconButton>
+  <MilestonePolicyModal open={openModal} handleClose={handleCloseModal} />
+</div>
 
       {/* Tabs */}
       <Tabs

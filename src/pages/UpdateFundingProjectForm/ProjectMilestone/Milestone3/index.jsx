@@ -269,7 +269,10 @@ function Milestone3() {
                                     onAddTask={handleAddTask}
                                     projectId={projectId}
                                     milestoneId={milestoneId}
-                                    requirementId={milestoneData.data[0].projectMilestoneRequirements[0].requirementId}
+                                    requirementId={
+                                        milestoneData.data && 
+                                        milestoneData.data.length > 0 &&
+                                        milestoneData.data[0].projectMilestoneRequirements[0].requirementId}
                                 />
                                 {/* Render task data for other statuses */}
                                 <Grid container spacing={2}>

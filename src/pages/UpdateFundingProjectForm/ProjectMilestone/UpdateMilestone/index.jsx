@@ -17,7 +17,7 @@ const UpdateMilestone = ({ milestones, render, issueLog, pmId, status, order, ty
   const [anchorEls, setAnchorEls] = useState({});
   const [loading, setLoading] = useState(false);
   const [issueLogData, setIssueLogData] = useState(issueLog || "");
-  console.log(type)
+  console.log(milestones)
   useEffect(() => {
     if (milestones && milestones.length > 0) {
       // Initialize milestone data if milestones are available
@@ -174,7 +174,7 @@ const UpdateMilestone = ({ milestones, render, issueLog, pmId, status, order, ty
         </Box>
       )}
 
-      {!loading && milestones && milestones.length === 0 && <h2>No milestones found.</h2>}
+      {!loading && milestones && milestones.length === 0 && <h2>You have not updated anything for this milestone.</h2>}
 
       {!loading && milestones && milestones.length > 0 && (
         <form onSubmit={handleSubmit}>
@@ -242,9 +242,11 @@ const UpdateMilestone = ({ milestones, render, issueLog, pmId, status, order, ty
               <PackageEvidence backers={backers} />
             </TabPanel>
           </TabContext>
+          {type != 0 && status != "completed" && (
           <Button type="submit" variant="contained" color="primary" sx={{ backgroundColor: '#1BAA64', textTransform: 'none', fontWeight: '600' }}>
             Update Milestones
           </Button>
+          )}
         </form>
       )}
     </>

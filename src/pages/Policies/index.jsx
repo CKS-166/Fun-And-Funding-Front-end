@@ -41,7 +41,7 @@ const Policies = () => {
         {/* section 2 */}
         <Box id="section2">
           <Typography className='term-title'>
-            Section 2. Things You Definitely Shouldn’t Do
+            Section 2. Things You Definitely Should Do
           </Typography>
           <Box className='term-content'>
             <Typography sx={{ fontStyle: 'italic' }}>
@@ -61,38 +61,38 @@ const Policies = () => {
               </li>
               <li>
                 <Typography>
-                  <strong>Be truthful:</strong>Don’t share information that is false, misleading, or inaccurate. Avoid doing anything deceptive or dishonest.
+                  <strong>Be truthful:</strong> Don’t share information that is false, misleading, or inaccurate. Avoid doing anything deceptive or dishonest.
                 </Typography>
               </li>
               <li>
                 <Typography>
-                  <strong>Don’t offer forbidden items or rewards:</strong>
-                  Only offer rewards or items that are safe, appropriate for kids, and comply with our platform’s guidelines.
+                  <strong>Don’t offer forbidden items or rewards: </strong>
+                   Only offer rewards or items that are safe, appropriate for kids, and comply with our platform’s guidelines.
                 </Typography>
               </li>
               <li>
                 <Typography>
-                  <strong>Follow the law:</strong> Don’t do anything illegal or take actions
+                  <strong>Follow the law: </strong> Don’t do anything illegal or take actions
                   that could harm others or break promises you’ve made to them.
                 </Typography>
               </li>
               <li>
                 <Typography>
-                  <strong>Be respectful:</strong>
-                  Don’t say or do anything threatening, hurtful, or invasive toward other people. Avoid language or behavior that could be seen as
+                  <strong>Be respectful: </strong>
+                   Don’t say or do anything threatening, hurtful, or invasive toward other people. Avoid language or behavior that could be seen as
                   harassing, offensive, or inappropriate.
                 </Typography>
               </li>
               <li>
                 <Typography>
-                  <strong>Don’t harm others’ devices:</strong>
-                  Avoid sharing harmful software, viruses, or code that could damage another person’s computer or device.
+                  <strong>Don’t harm others’ devices: </strong>
+                   Avoid sharing harmful software, viruses, or code that could damage another person’s computer or device.
                 </Typography>
               </li>
               <li>
                 <Typography>
                   <strong>Respect others’ privacy: </strong>
-                  If you receive information about backers (like names or email addresses), use it only to fulfill their rewards and treat their information with care. Don’t use this information for other purposes, and ensure any helpers you involve also follow these rules.
+                   If you receive information about backers (like names or email addresses), use it only to fulfill their rewards and treat their information with care. Don’t use this information for other purposes, and ensure any helpers you involve also follow these rules.
                 </Typography>
               </li>
             </ul>
@@ -109,7 +109,7 @@ const Policies = () => {
               </li>
               <li>
                 <Typography>
-                  <strong>Don’t overload our system:</strong>
+                  <strong>Don’t overload our system: </strong>
                   Avoid actions that put too much strain on our platform or third-party providers. (We’ll determine what’s reasonable.)
                 </Typography>
               </li>

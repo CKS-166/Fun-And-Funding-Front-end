@@ -33,11 +33,8 @@ const Milestone1 = () => {
   const [formDataArray, setFormDataArray] = useState([]);
   const [milestoneData, setMilestoneData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [uploadedFiles, setUploadedFiles] = useState([]);
-  const [dropdownAnchorEl, setDropdownAnchorEl] = useState(null);
   const [anchorEls, setAnchorEls] = useState({})
   const [isBackdropHidden, setIsBackdropHidden] = useState(false);
-  const [buttonActive, setButtonActive] = useState(false)
   const [issueLog, setIssueLog] = useState("");
   const [daysLeft, setDaysLeft] = useState(0);
   const [packageBackers, setPackBackers] = useState([]);

@@ -75,7 +75,7 @@ function UpdateFundingProjectLayout() {
         setIsLoading(true);
         if (status == 7 || status == 2 || status == 3) {
             await milestoneApiInstace
-                .get(`/group-latest-milestone?filter=${status == processing || status == approved ? 1  : 0}`)
+                .get(`/group-latest-milestone?filter=${(status == processing || status == approved) ? 1  : 0}`)
                 .then((response) => {
                     setCurrentMilestoneList(response.data._data);
                     setIsLoading(false);

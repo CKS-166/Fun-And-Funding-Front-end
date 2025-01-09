@@ -79,6 +79,7 @@ function AdminWithdrawRequest() {
   const [data, setData] = useState([]);
   const [selectedRequest, setSelectedRequest] = useState(null); // Change initial value to null
   const [isProcessDialogOpen, setIsProcessDialogOpen] = useState(false);
+  const [isNoteDialogOpen, setNoteDialogOpen] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [bankNumber, setBankNumber] = useState("");
   const [bankCode, setBankCode] = useState("");
@@ -89,10 +90,16 @@ function AdminWithdrawRequest() {
     currentPage: 0,
     pageSize: 10,
   });
+  const [note, setNote] = useState(null);
+  const [tempNote, setTempNote] = useState(null);
   const updatePagination = (updates) => {
     setPagination((prev) => ({ ...prev, ...updates }));
   };
 
+  const openNoteDialog = () => {
+    setNoteDialogOpen(true);
+  };
+  const closeNoteDialog = () => setNoteDialogOpen(false);
   const openProcessDialog = () => {
     setIsProcessDialogOpen(true);
   };
@@ -206,6 +213,17 @@ function AdminWithdrawRequest() {
       console.error("No data returned for this ID");
     }
   };
+  const handleNoteClick = async (id) => {
+    console.log("Note clicked with ID:", id);
+    const mappingData = await fetchGetWithdrawById(id);
+    setNote(mappingData.note);
+    console.log("Data of note", note);
+    openNoteDialog();
+  };
+  const handleNoteSumit = async (id) => {
+    console.log("Note sumit with ID:", id);
+    handleCancel();
+  };
 
   const fetchGetWithdrawById = async (id) => {
     try {
@@ -282,12 +300,12 @@ function AdminWithdrawRequest() {
     }
   };
 
-  const fetchCancelWithdraw = async (id) => {
+  const fetchCancelWithdraw = async (id, inputNote) => {
     try {
       const token = Cookies.get("_auth");
       console.log("Token:", token);
       const res = await withdrawApiInstance.patch(
-        `/${id}/cancel`,
+        `/${id}/cancel?note=${inputNote}`,
         {},
         {
           headers: {
@@ -309,7 +327,10 @@ function AdminWithdrawRequest() {
     fetchWithdrawRequest();
   };
   const handleCancel = async (id) => {
-    await fetchCancelWithdraw(id);
+    openNoteDialog();
+    closeDialog();
+    console.log("tempNote is ", tempNote);
+    await fetchCancelWithdraw(id, tempNote);
     closeDialog();
     fetchWithdrawRequest();
   };
@@ -319,6 +340,7 @@ function AdminWithdrawRequest() {
       <CustomPaginationActionsTable
         data={mappingData}
         handleRowClick={handleRowClick} // Assuming you have a handler for row clicks
+        handleNoteClick={handleNoteClick}
         totalItems={pagination.totalItems}
         totalPages={pagination.totalPages}
         currentPage={pagination.currentPage}
@@ -326,6 +348,40 @@ function AdminWithdrawRequest() {
         onPageChange={handlePageChange} // Pass the page change handler
         onPageSizeChange={handlePageSizeChange} // Pass the page size change handler
       />
+      <Dialog open={isNoteDialogOpen} onClose={closeNoteDialog}>
+        <div className="fixed inset-0 flex justify-center items-center bg-gray-800 bg-opacity-75 z-50">
+          <div className="py-10 px-10 bg-white rounded-3xl relative shadow-lg w-[45rem]">
+            <button
+              onClick={closeNoteDialog}
+              className="absolute top-4 right-4 text-[#1BAA64] text-xl"
+            >
+              &times;
+            </button>
+            <h2 className="text-gray-800 font-bold mb-4">Note:</h2>
+            {note ? (
+              <div className="p-4 bg-gray-100 border border-gray-300 rounded-md text-sm text-gray-600">
+                {note}
+              </div>
+            ) : (
+              <>
+                <textarea
+                  placeholder="Enter your note..."
+                  value={tempNote} // Bind to tempNote
+                  onChange={(e) => setTempNote(e.target.value)} // Update tempNote state
+                  className="w-full p-3 bg-gray-50 border border-gray-300 rounded-md text-sm text-gray-600 focus:outline-none focus:ring focus:ring-green-500"
+                />
+                <button
+                  onClick={() => handleCancel(selectedRequest.id, tempNote)} // Pass note to handleCancel
+                  className="flex items-center justify-center gap-2 w-full py-3 bg-white border border-gray-300 rounded-md shadow-sm text-[#1BAA64] hover:bg-[#aa1b1b] hover:text-white transition-all duration-200"
+                >
+                  Cancel
+                </button>
+              </>
+            )}
+          </div>
+        </div>
+      </Dialog>
+
       <Dialog open={isProcessDialogOpen} onClose={closeProcessDialog}>
         <div className="fixed inset-0 flex justify-center items-center bg-gray-800 bg-opacity-75 z-50">
           <div className="py-10 px-10 bg-white rounded-3xl relative shadow-lg w-[45rem]">
@@ -377,7 +433,7 @@ function AdminWithdrawRequest() {
                   Approved
                 </button>
                 <button
-                  onClick={() => handleCancel(selectedRequest.id)}
+                  onClick={() => handleNoteSumit(selectedRequest.id)}
                   className="flex items-center justify-center gap-2 w-full py-3 bg-white border border-gray-300 rounded-md shadow-sm text-[#1BAA64]-600 hover:bg-[#aa1b1b] hover:text-white transition-all duration-200"
                 >
                   Cancel

@@ -30,7 +30,7 @@
 
 .manage-user-detail-cancel-button {
   white-space: nowrap !important;
-  background: #ffffff !important;
+  background: var(--light-grey) !important;
   font-weight: 600 !important;
   text-transform: none !important;
   margin-top: 0.5rem;
@@ -40,7 +40,7 @@
 }
 
 .manage-user-detail-cancel-button:hover {
-  background: #eaeaea !important;
+  background: var(--grey) !important;
 }
 
 .manage-user-detail-popup-cancel-button {

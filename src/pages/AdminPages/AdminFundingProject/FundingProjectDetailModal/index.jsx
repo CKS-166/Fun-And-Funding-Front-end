@@ -1,5 +1,5 @@
 import { ArrowRightAlt } from "@mui/icons-material";
-import { Backdrop, Box, Button, Fade, Grid2, Modal, Paper, Tab, Tabs, Typography } from "@mui/material";
+import { Backdrop, Box, Button, Fade, Grid2, Modal, Paper, Tab, Tabs, TextareaAutosize, Typography } from "@mui/material";
 import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
@@ -52,6 +52,8 @@ const FundingProjectDetailModal = ({ selectedFundingProjectId, openModal, setOpe
     const token = Cookies.get("_auth");
     const [selectedFundingProject, setSelectedFundingProject] = useState(null);
     const [activeTab, setActiveTab] = useState(0);
+    const [openNoteModal, setOpenNoteModal] = useState(false);
+    const [rejectNote, setRejectNote] = useState("");
 
     const style = {
         position: 'absolute',
@@ -63,7 +65,22 @@ const FundingProjectDetailModal = ({ selectedFundingProjectId, openModal, setOpe
         boxShadow: 24,
         px: '2rem',
         py: '2rem',
-        minHeight: '90%',
+        minHeight: '80%',
+        maxHeight: '90%',
+        borderRadius: 1
+    };
+
+    const noteStyle = {
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        width: '35%',
+        bgcolor: 'background.paper',
+        boxShadow: 24,
+        px: '2rem',
+        py: '2rem',
+        height: 'fit-content',
         borderRadius: 1
     };
 
@@ -71,6 +88,11 @@ const FundingProjectDetailModal = ({ selectedFundingProjectId, openModal, setOpe
         setOpenModal(false);
         setSelectedFundingProject(null);
         setActiveTab(0);
+    }
+
+    const handleNoteClose = () => {
+        setRejectNote("");
+        setOpenNoteModal(false);
     }
 
     useEffect(() => {
@@ -119,12 +141,14 @@ const FundingProjectDetailModal = ({ selectedFundingProjectId, openModal, setOpe
             }).then(async (result) => {
                 if (result.isConfirmed) {
                     try {
-                        const res = await fundingProjectApiInstance.put(`${selectedFundingProjectId}/status?status=${status}`, {
+                        const res = await fundingProjectApiInstance.put(`${selectedFundingProjectId}/status?status=${status}`, status == 6 ? JSON.stringify(rejectNote) : null, {
                             headers: {
                                 Authorization: `Bearer ${token}`,
+                                'Content-Type': 'application/json',
                             },
                         })
-                        console.log(res.data);
+                        setRejectNote('');
+                        setOpenNoteModal(false);
                         if (res.status === 200) {
                             fetchFundingProject();
                             fetchFundingProjectList();
@@ -184,8 +208,8 @@ const FundingProjectDetailModal = ({ selectedFundingProjectId, openModal, setOpe
                                 <Box
                                     sx={{
                                         height: [1, 2].includes(selectedFundingProject?.status)
-                                            ? '33.5rem'
-                                            : '30rem',
+                                            ? '28.5rem'
+                                            : '28.5rem',
                                         overflowY: 'auto',
                                         overflowX: 'visible',
                                         px: '0.5rem',
@@ -290,36 +314,90 @@ const FundingProjectDetailModal = ({ selectedFundingProjectId, openModal, setOpe
                                     </Box>
                                     {activeTab == 0 ? <FundingProjectOverview fundingProject={selectedFundingProject} /> : activeTab == 1 ? <FundingProjectPackages packages={selectedFundingProject.packages} /> : <FundingProjectDonation fundingProjectId={selectedFundingProjectId} />}
                                 </Box>
-                                <div className="mx-[0.5rem] pt-[1rem] justify-end gap-[1rem] shadow-[0_-4px_4px_-2px_rgba(0,0,0,0.1)] h-[3.5rem]" style={{ display: selectedFundingProject?.status == 1 ? 'flex' : 'none' }}>
-                                    <Button
-                                        variant="contained"
-                                        className="manage-user-detail-block-button"
-                                        onClick={() => handleChangeStatus(6)}
-                                    >
-                                        Reject
-                                    </Button>
-                                    <Button
-                                        variant="contained"
-                                        className="manage-user-detail-unblock-button"
-                                        onClick={() => handleChangeStatus(7)}
-                                    >
-                                        Approve
-                                    </Button>
-                                </div>
-                                <div className="mx-[0.5rem] pt-[1rem] justify-end gap-[1rem] shadow-[0_-4px_4px_-2px_rgba(0,0,0,0.1)] h-[3.5rem]" style={{ display: [2].includes(selectedFundingProject?.status) ? 'flex' : 'none' }}>
-                                    <Button
-                                        variant="contained"
-                                        className="manage-user-detail-block-button"
-                                        onClick={() => handleChangeStatus(10)}
-                                    >
-                                        Block Project
-                                    </Button>
+                                <div className="shadow-[0_-4px_4px_-2px_rgba(0,0,0,0.1)] h-[3.5rem]">
+                                    <div className="mx-[0.5rem] pt-[1rem] justify-end gap-[1rem]" style={{ display: selectedFundingProject?.status == 1 ? 'flex' : 'none' }}>
+                                        <Button
+                                            variant="contained"
+                                            className="manage-user-detail-block-button"
+                                            onClick={() => setOpenNoteModal(true)}
+                                        >
+                                            Reject
+                                        </Button>
+                                        <Button
+                                            variant="contained"
+                                            className="manage-user-detail-unblock-button"
+                                            onClick={() => handleChangeStatus(7)}
+                                        >
+                                            Approve
+                                        </Button>
+                                    </div>
+                                    <div className="mx-[0.5rem] pt-[1rem] justify-end gap-[1rem]" style={{ display: [2].includes(selectedFundingProject?.status) ? 'flex' : 'none' }}>
+                                        <Button
+                                            variant="contained"
+                                            className="manage-user-detail-block-button"
+                                            onClick={() => handleChangeStatus(10)}
+                                        >
+                                            Block Project
+                                        </Button>
+                                    </div>
                                 </div>
                             </>
                         }
                     </Box>
                 </Fade>
             </Modal >
+            <Modal open={openNoteModal} onClose={handleNoteClose} slots={{ backdrop: Backdrop }}
+                slotProps={{
+                    backdrop: {
+                        timeout: 500,
+                    },
+                }}
+                sx={{ zIndex: '51 !important' }}>
+                <Fade in={openNoteModal}>
+                    <Box sx={noteStyle}>
+                        <div className="flex justify-center flex-col items-center mb-[2rem]">
+                            <Typography sx={{ fontSize: '1.5rem', fontWeight: '700' }}>
+                                Provide feedbacks
+                            </Typography>
+                            <Typography sx={{ mt: '0.25rem', fontSize: '1rem', fontWeight: 400 }}>
+                                Give reasons to why this project is rejected
+                            </Typography>
+                        </div>
+                        <TextareaAutosize
+                            minRows={10}
+                            style={{
+                                width: '100%',
+                                padding: '0.5rem',
+                                border: '1px solid var(--light-grey)',
+                                borderRadius: '4px',
+                                outline: 'none',
+                                fontSize: '1rem',
+                                fontFamily: 'inherit',
+                            }}
+                            value={rejectNote}
+                            onChange={(e) => setRejectNote(e.target.value)}
+                            onFocus={(e) => (e.target.style.border = '1px solid var(--black)')}
+                            onBlur={(e) => (e.target.style.border = '1px solid var(--light-grey)')}
+                        />
+                        <div className="mt-[1rem] flex flex-row justify-center gap-[1rem]">
+                            <Button
+                                variant="contained"
+                                className="manage-user-detail-cancel-button !bg-[var(--light-grey)]"
+                                onClick={() => handleNoteClose()}
+                            >
+                                Cancel
+                            </Button>
+                            <Button
+                                variant="contained"
+                                className="manage-user-detail-unblock-button"
+                                onClick={() => handleChangeStatus(6)}
+                            >
+                                Send
+                            </Button>
+                        </div>
+                    </Box>
+                </Fade>
+            </Modal>
             <ToastContainer
                 position="bottom-left"
                 autoClose={3000}

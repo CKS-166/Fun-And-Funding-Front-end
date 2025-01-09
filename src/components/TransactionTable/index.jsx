@@ -23,6 +23,9 @@ const transactionTypes = [
   "Marketplace Withdraw",
   "Transfer First Half",
   "Transfer Second Half",
+  "Withdraw Refund",
+  "Withdraw Cancel",
+  "Withdraw Funding Process"
 ];
 
 const TransactionTable = ({ transactions }) => {

@@ -146,7 +146,7 @@ function DonationHistoryModal({ donationList, openModal, handleClose, project })
                                             </div>
                                         }
                                         <div className='w-[15%]'>
-                                            <div className="overflow-hidden flex justify-start items-center w-fit">
+                                            <div className="overflow-hidden flex justify-start items-center w-fit my-[0.5rem]">
                                                 <img class=" object-cover rounded-[0.625rem] h-[6rem]" alt="Package image" src={item.packageUrl == '' ? NoImage : item.packageUrl} />
                                             </div>
                                         </div>

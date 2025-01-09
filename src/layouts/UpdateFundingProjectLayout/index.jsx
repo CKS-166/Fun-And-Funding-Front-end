@@ -73,7 +73,7 @@ function UpdateFundingProjectLayout() {
     //fetch milestones
     const fetchMilestones = async (status) => {
         setIsLoading(true);
-        if (status == 7 || status == 2 || status == 3) {
+        if (status == 7 || status == 2 || status == 3 || status == 4) {
             await milestoneApiInstace
                 .get(`/group-latest-milestone?filter=${status == processing || status == approved ? 1  : 0}`)
                 .then((response) => {

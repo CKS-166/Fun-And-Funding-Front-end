@@ -112,7 +112,6 @@ function Milestone3() {
     };
     // drop card
     const handleDropCard = (newStatus, newPosition) => {
-        console.log(`Drop card to ${newStatus} at position ${newPosition}`);
         if (activeCard == null) return;
         // Get a copy of the tasks array
         const updatedTasks = [...tasks];

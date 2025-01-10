@@ -240,7 +240,6 @@ const UpdateMilestone = ({ milestones, render, issueLog, pmId, status, order, ty
               />
             </TabPanel>
             <TabPanel value="3">
-              <>hello</>
               <PackageEvidence backers={backers} />
             </TabPanel>
           </TabContext>

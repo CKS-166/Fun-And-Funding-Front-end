@@ -21,7 +21,7 @@ import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import InfoIcon from "@mui/icons-material/Info";
 import MilestonePolicyModal from '../../../../components/MilestonePolicyModal';
-
+import { useNavigate } from 'react-router-dom';
 const MilestoneOverview = () => {
   const { id } = useParams(); // Project ID from the URL
   const [tabValue, setTabValue] = useState(1); // Tabs state
@@ -29,7 +29,7 @@ const MilestoneOverview = () => {
   const [contacts, setContacts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [loadingContacts, setLoadingContacts] = useState(false);
-
+  const navigate = useNavigate();
   useEffect(() => {
     const fetchTransactions = async () => {
       try {
@@ -84,8 +84,9 @@ const MilestoneOverview = () => {
   };
 
   const handleChatRedirect = (userId) => {
-    const chatUrl = `http://localhost:5173/chat/${userId}`;
-    window.open(chatUrl, '_blank'); // Opens in a new tab
+    const chatUrl = `/chat/${userId}`;
+    window.open(chatUrl, '_blank'); 
+    // navigate(`/chat/${userId}`)
   };
 
   const [openModal, setOpenModal] = useState(false);

@@ -15,6 +15,7 @@ import {
   Button,
   Modal,
   Grid,
+  Paper,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { FilePond, registerPlugin } from "react-filepond";
@@ -91,16 +92,16 @@ const PackageEvidence = ({ backers }) => {
   };
 
   return (
-    <div>
-      <TableContainer>
+    <Box sx={{ padding: 3, backgroundColor: "#F8F9FA" }}>
+      <TableContainer component={Paper} sx={{ marginBottom: 3, borderRadius: 2 }}>
         <Table>
-          <TableHead>
+          <TableHead sx={{ bgcolor: "#E6F4EA" }}>
             <TableRow>
-              <TableCell><strong>User Name</strong></TableCell>
-              <TableCell><strong>Email</strong></TableCell>
-              <TableCell><strong>Package Name</strong></TableCell>
-              <TableCell><strong>Donate Amount</strong></TableCell>
-              <TableCell><strong>Actions</strong></TableCell>
+              <TableCell sx={{ fontWeight: "bold", color: "#1BAA64" }}>User Name</TableCell>
+              <TableCell sx={{ fontWeight: "bold", color: "#1BAA64" }}>Email</TableCell>
+              <TableCell sx={{ fontWeight: "bold", color: "#1BAA64" }}>Package Name</TableCell>
+              <TableCell sx={{ fontWeight: "bold", color: "#1BAA64" }}>Donate Amount</TableCell>
+              <TableCell sx={{ fontWeight: "bold", color: "#1BAA64" }}>Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -113,73 +114,117 @@ const PackageEvidence = ({ backers }) => {
                   <TableCell>{backer.name}</TableCell>
                   <TableCell>${backer.donateAmount.toLocaleString()}</TableCell>
                   <TableCell>
-                    <IconButton onClick={() => handleToggleRow(backer.id)}>
+                    <IconButton
+                      onClick={() => handleToggleRow(backer.id)}
+                      sx={{ marginRight: 1, color: "#1BAA64" }}
+                    >
                       <ExpandMoreIcon />
                     </IconButton>
                     <Button
                       variant="contained"
-                      color="primary"
                       size="small"
                       onClick={() => handleOpenModal(backer.id)}
+                      sx={{
+                        textTransform: "none",
+                        padding: "6px 12px",
+                        fontWeight: "bold",
+                        backgroundColor: "#1BAA64",
+                        "&:hover": { backgroundColor: "#148A4E" },
+                      }}
                     >
-                      Upload Evidence
+                      Upload
                     </Button>
                   </TableCell>
                 </TableRow>
 
                 {/* Expanded Row */}
                 <TableRow>
-                  <TableCell colSpan={5}>
-                    <Collapse in={expandedRow === backer.id} timeout="auto" unmountOnExit>
-                      <Box sx={{ border: 1, borderRadius: 1, p: 2, mt: 1 }}>
-                        <Tabs value={tabValue} onChange={handleTabChange}>
+                  <TableCell colSpan={5} sx={{ paddingBottom: 0, paddingTop: 0 }}>
+                    <Collapse
+                      in={expandedRow === backer.id}
+                      timeout="auto"
+                      unmountOnExit
+                    >
+                      <Box
+                        sx={{
+                          padding: 2,
+                          border: "1px solid #E6F4EA",
+                          borderRadius: 2,
+                          backgroundColor: "#FFFFFF",
+                        }}
+                      >
+                        <Tabs
+                          value={tabValue}
+                          onChange={handleTabChange}
+                          sx={{
+                            "& .MuiTab-root": { textTransform: "none", fontWeight: "bold" },
+                          }}
+                          indicatorColor="primary"
+                          textColor="primary"
+                        >
                           <Tab label="Evidence Images" />
                           <Tab label="Reward Items" />
                         </Tabs>
-                        <Box mt={2}>
-                          {tabValue === 0 && (
-                            <Grid container spacing={2}>
-                              {backer.evidenceImages.length > 0 ? (
-                                backer.evidenceImages.map((image, index) => (
-                                  <Grid item xs={4} key={index}>
-                                    <img
-                                      src={image}
-                                      alt={`Evidence ${index + 1}`}
-                                      style={{
-                                        width: "100%",
-                                        borderRadius: "5px",
-                                        cursor: "pointer",
-                                      }}
-                                      onClick={() => handleGalleryOpen(image)}
-                                    />
-                                  </Grid>
-                                ))
-                              ) : (
-                                <Typography>No evidence images available.</Typography>
-                              )}
-                            </Grid>
-                          )}
-                          {tabValue === 1 && (
-                            <Box>
-                              {backer.rewardItems.length > 0 ? (
-                                backer.rewardItems.map((item, index) => (
-                                  <div key={index} style={{ marginBottom: "10px" }}>
-                                    <Typography><strong>Name:</strong> {item.name}</Typography>
-                                    <Typography><strong>Description:</strong> {item.description}</Typography>
-                                    <Typography><strong>Quantity:</strong> {item.quantity}</Typography>
-                                    <img
-                                      src={item.imageUrl}
-                                      alt={item.name}
-                                      style={{ width: "100px", borderRadius: "5px", marginTop: "5px" }}
-                                    />
-                                  </div>
-                                ))
-                              ) : (
-                                <Typography>No reward items available.</Typography>
-                              )}
-                            </Box>
-                          )}
-                        </Box>
+                        {tabValue === 0 && (
+                          <Grid container spacing={2}>
+                            {backer.evidenceImages.length > 0 ? (
+                              backer.evidenceImages.map((image, index) => (
+                                <Grid item xs={4} key={index}>
+                                  <img
+                                    src={image}
+                                    alt={`Evidence ${index + 1}`}
+                                    style={{
+                                      width: "100%",
+                                      borderRadius: "8px",
+                                      cursor: "pointer",
+                                    }}
+                                    onClick={() => handleGalleryOpen(image)}
+                                  />
+                                </Grid>
+                              ))
+                            ) : (
+                              <Typography>No evidence images available.</Typography>
+                            )}
+                          </Grid>
+                        )}
+                        {tabValue === 1 && (
+                          <Box>
+                            {backer.rewardItems.length > 0 ? (
+                              backer.rewardItems.map((item, index) => (
+                                <Box
+                                  key={index}
+                                  sx={{
+                                    marginBottom: 2,
+                                    padding: 2,
+                                    border: "1px solid #E6F4EA",
+                                    borderRadius: 2,
+                                  }}
+                                >
+                                  <Typography>
+                                    <strong>Name:</strong> {item.name}
+                                  </Typography>
+                                  <Typography>
+                                    <strong>Description:</strong> {item.description}
+                                  </Typography>
+                                  <Typography>
+                                    <strong>Quantity:</strong> {item.quantity}
+                                  </Typography>
+                                  <img
+                                    src={item.imageUrl}
+                                    alt={item.name}
+                                    style={{
+                                      width: "100px",
+                                      borderRadius: "5px",
+                                      marginTop: "5px",
+                                    }}
+                                  />
+                                </Box>
+                              ))
+                            ) : (
+                              <Typography>No reward items available.</Typography>
+                            )}
+                          </Box>
+                        )}
                       </Box>
                     </Collapse>
                   </TableCell>
@@ -204,9 +249,9 @@ const PackageEvidence = ({ backers }) => {
             transform: "translate(-50%, -50%)",
             bgcolor: "background.paper",
             boxShadow: 24,
-            p: 4,
-            width: 400,
+            padding: 4,
             borderRadius: 2,
+            width: 400,
           }}
         >
           <Typography id="upload-evidence-modal" variant="h6" component="h2" mb={2}>
@@ -224,7 +269,7 @@ const PackageEvidence = ({ backers }) => {
             <Button variant="outlined" color="secondary" onClick={handleCloseModal}>
               Cancel
             </Button>
-            <Button variant="contained" color="primary" onClick={handleSaveEvidence}>
+            <Button variant="contained" sx={{ backgroundColor: "#1BAA64", color: "white" }} onClick={handleSaveEvidence}>
               Save
             </Button>
           </Box>
@@ -245,18 +290,18 @@ const PackageEvidence = ({ backers }) => {
             transform: "translate(-50%, -50%)",
             bgcolor: "background.paper",
             boxShadow: 24,
-            p: 4,
+            padding: 4,
             borderRadius: 2,
           }}
         >
           <img
             src={galleryModal.image}
             alt="Evidence"
-            style={{ width: "100%", borderRadius: "5px" }}
+            style={{ width: "100%", borderRadius: "8px" }}
           />
         </Box>
       </Modal>
-    </div>
+    </Box>
   );
 };
 

@@ -242,7 +242,6 @@ const Milestone4 = () => {
                         <Box>
                             <Typography
                                 className='basic-info-title'
-
                             >
                                 <h3 style={{ fontWeight: '700' }}>{milestone.milestoneName} <span className='text-[#1BAA64]'>*</span></h3>
                             </Typography>

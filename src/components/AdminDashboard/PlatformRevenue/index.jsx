@@ -38,7 +38,7 @@ function PlatformRevenue({ platformRevenue, platformStatistic }) {
                         </IconButton>
                     </Tooltip>
                 </Typography>
-                <Typography sx={{ fontSize: '1rem', fontWeight: 700, color: 'var(--black)' }}>System Wallet
+                <Typography sx={{ fontSize: '1rem', fontWeight: 700, color: 'var(--black)' }}>Website Revenue
                 </Typography>
             </div>
             <div className='mt-[0.75rem]'>

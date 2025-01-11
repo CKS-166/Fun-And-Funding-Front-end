@@ -1,8 +1,8 @@
-import React from 'react'
-import { Button } from '@mui/material'
-import { FaPlus } from 'react-icons/fa'
-import projectMilestoneApiInstace from '../../../utils/ApiInstance/projectMilestoneApiInstance'
-import Swal from 'sweetalert2'
+import ChecklistIcon from '@mui/icons-material/Checklist';
+import { Button } from '@mui/material';
+import React from 'react';
+import Swal from 'sweetalert2';
+import projectMilestoneApiInstace from '../../../utils/ApiInstance/projectMilestoneApiInstance';
 const CompleteMilestoneButton = ({ submit, status, pmId, render }) => {
     const processing = 1;
     const submitted = 5;
@@ -43,10 +43,9 @@ const CompleteMilestoneButton = ({ submit, status, pmId, render }) => {
                 variant="contained" component="label"
                 onClick={submitMilestone}
                 sx={{
-                    backgroundColor: '#1BAA64', textTransform: 'none', fontWeight: '600'
-                    , marginLeft: '30rem'
+                    backgroundColor: '#1BAA64', textTransform: 'none', fontWeight: '600', mt: '-1rem', mb: '2rem'
                 }}
-                startIcon={<FaPlus />}
+                startIcon={<ChecklistIcon />}
             >
                 Complete Milestone
             </Button>

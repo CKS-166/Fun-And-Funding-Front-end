@@ -475,7 +475,7 @@ const Milestone4 = () => {
                                         />
                                     </TabPanel>
                                     <TabPanel value="3" sx={{ padding: 0, mt: '2rem', mb: '2rem' }}>
-                                        <PackageEvidence backers={packageBackers} />
+                                        <PackageEvidence backers={packageBackers} rerender={() => fetchPackageBackers(projectId)}/>
                                     </TabPanel>
                                 </TabContext>
                                 <Button ype="submit" variant="contained" color="primary" sx={{

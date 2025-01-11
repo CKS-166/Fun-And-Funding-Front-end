@@ -12,6 +12,7 @@ import milestoneApiInstace from '../../../../utils/ApiInstance/milestoneApiInsta
 import { checkAvailableMilestone } from "../../../../utils/Hooks/checkAvailableMilestone";
 import './index.css';
 import { data } from 'autoprefixer';
+import projectMilestoneRequirementApiInstace from '../../../../utils/ApiInstance/projectMilestoneRequirementApiInstance';
 
 function Milestone3() {
     const { id } = useParams(); // Get the project ID from the URL
@@ -141,7 +142,7 @@ function Milestone3() {
     //handle add task
     const handleAddTask = async (data) => {
         try {
-            await axios.post("https://localhost:7044/api/project-milestone-requirements", data, {
+            await projectMilestoneRequirementApiInstace.post("/", data, {
                 headers: { "Content-Type": "multipart/form-data" },
             });
             getMilestoneData(milestoneId); // Re-fetch the Kanban board data after adding a task
@@ -158,7 +159,7 @@ function Milestone3() {
     const handleUpdateTask = async (data) => {
         try {
             setIsLoading(true);
-            await axios.put("https://localhost:7044/api/project-milestone-requirements", data, {
+            await projectMilestoneRequirementApiInstace.put("/", data, {
                 headers: { "Content-Type": "multipart/form-data" },
             });
             getMilestoneData(milestoneId); // Re-fetch the Kanban board data after adding a task
@@ -211,9 +212,7 @@ function Milestone3() {
                     {milestoneData.status === 'create' && milestone ? (
                         milestone.requirements.map((req) => (
                             <React.Fragment key={req.id}>
-                                <Typography sx={{ fontWeight: 600 }}>
-                                    {req.description} <span className='text-[#1BAA64]'>*</span>
-                                </Typography>
+                                
                                 <TaskForm
                                     onAddTask={handleAddTask}
                                     projectId={projectId}
@@ -261,9 +260,6 @@ function Milestone3() {
                     ) : (
                         milestoneData.data && (
                             <React.Fragment>
-                                <Typography sx={{ fontWeight: 600 }}>
-                                    <span className='text-[#1BAA64]'>*</span>
-                                </Typography>
                                 <TaskForm
                                     onAddTask={handleAddTask}
                                     projectId={projectId}

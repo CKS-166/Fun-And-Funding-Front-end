@@ -23,7 +23,7 @@ import milestoneApiInstace from "../../../../utils/ApiInstance/milestoneApiInsta
 import packageBackerApiInstance from '../../../../utils/ApiInstance/packageBackerApiInstance';
 import { checkAvailableMilestone } from "../../../../utils/Hooks/checkAvailableMilestone";
 import UpdateMilestone from "../UpdateMilestone";
-
+import projectMilestoneRequirementApiInstace from '../../../../utils/ApiInstance/projectMilestoneRequirementApiInstance';
 const Milestone1 = () => {
   const { id } = useParams();
   const projectId = id;
@@ -151,8 +151,8 @@ const Milestone1 = () => {
     });
     data.append("issueLog", issueLog);
     try {
-      await axios.post(
-        "https://localhost:7044/api/project-milestone-requirements",
+      await projectMilestoneRequirementApiInstace.post(
+        "/",
         data,
         { headers: { "Content-Type": "multipart/form-data" } }
       );

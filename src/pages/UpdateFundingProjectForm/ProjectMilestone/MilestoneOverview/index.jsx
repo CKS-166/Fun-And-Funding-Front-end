@@ -157,7 +157,7 @@ const MilestoneOverview = () => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {transactions.map((transaction) => (
+                  {transactions.length > 0 ? transactions.map((transaction) => (
                     <TableRow key={transaction.id}>
                       <TableCell>{transaction.milestoneName}</TableCell>
                       <TableCell>{transaction.description}</TableCell>
@@ -189,7 +189,11 @@ const MilestoneOverview = () => {
                         })}
                       </TableCell>
                     </TableRow>
-                  ))}
+                  )):(
+                    <>
+                      <Typography>No milestone disbursement yet</Typography>
+                    </>
+                  )}
                 </TableBody>
               </Table>
             </TableContainer>

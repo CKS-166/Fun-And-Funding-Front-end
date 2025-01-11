@@ -105,7 +105,7 @@ const PackageEvidence = ({ backers }) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {backers.map((backer) => (
+            {backers.length > 0 ? backers.map((backer) => (
               <React.Fragment key={backer.id}>
                 {/* Main Row */}
                 <TableRow>
@@ -183,7 +183,7 @@ const PackageEvidence = ({ backers }) => {
                                 </Grid>
                               ))
                             ) : (
-                              <Typography>No evidence images available.</Typography>
+                              <Typography sx={{padding:'20px'}}>No evidence images available.</Typography>
                             )}
                           </Grid>
                         )}
@@ -221,7 +221,7 @@ const PackageEvidence = ({ backers }) => {
                                 </Box>
                               ))
                             ) : (
-                              <Typography>No reward items available.</Typography>
+                              <Typography sx={{padding:'20px'}}>No reward items available.</Typography>
                             )}
                           </Box>
                         )}
@@ -230,7 +230,11 @@ const PackageEvidence = ({ backers }) => {
                   </TableCell>
                 </TableRow>
               </React.Fragment>
-            ))}
+            )) : (
+              <>
+                <Typography sx={{padding:'20px'}}>No package donations found</Typography>
+              </>
+            )}
           </TableBody>
         </Table>
       </TableContainer>

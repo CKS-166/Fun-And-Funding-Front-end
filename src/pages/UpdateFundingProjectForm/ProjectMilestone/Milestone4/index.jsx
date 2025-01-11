@@ -23,7 +23,7 @@ import milestoneApiInstace from "../../../../utils/ApiInstance/milestoneApiInsta
 import packageBackerApiInstance from '../../../../utils/ApiInstance/packageBackerApiInstance';
 import { checkAvailableMilestone } from "../../../../utils/Hooks/checkAvailableMilestone";
 import UpdateMilestone from "../UpdateMilestone";
-
+import projectMilestoneRequirementApiInstace from '../../../../utils/ApiInstance/projectMilestoneRequirementApiInstance';
 const Milestone4 = () => {
     const { id } = useParams();
     const projectId = id;

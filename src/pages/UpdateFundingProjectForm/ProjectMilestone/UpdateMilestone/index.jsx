@@ -11,7 +11,7 @@ import PackageEvidence from "../../../../components/PackageEvidence";
 import CompleteMilestoneButton from "../../../../components/UpdateProject/CompleteMilestoneButton";
 import MilestoneQuill from "../../../../components/UpdateProject/MilestoneQuill";
 import FileUploadDropdown from "../../../../components/UpdateProject/UploadFiles/FileUploadDropdown";
-
+import projectMilestoneRequirementApiInstace from '../../../../utils/ApiInstance/projectMilestoneRequirementApiInstance';
 const UpdateMilestone = ({ milestones, render, issueLog, pmId, status, order, type, backers }) => {
   const [milestoneData, setMilestoneData] = useState([]);
   const [anchorEls, setAnchorEls] = useState({});
@@ -105,7 +105,7 @@ const UpdateMilestone = ({ milestones, render, issueLog, pmId, status, order, ty
     console.log(milestoneData);
 
     try {
-      await axios.put("https://localhost:7044/api/project-milestone-requirements", data, {
+      await projectMilestoneRequirementApiInstace.put("/", data, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       Swal.fire({
@@ -148,7 +148,7 @@ const UpdateMilestone = ({ milestones, render, issueLog, pmId, status, order, ty
     console.log(milestoneData);
 
     try {
-      await axios.put("https://localhost:7044/api/project-milestone-requirements", data, {
+      await projectMilestoneRequirementApiInstace.put("/", data, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       console.log(data);

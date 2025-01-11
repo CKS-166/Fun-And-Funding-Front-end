@@ -410,7 +410,7 @@ const UpdateMilestone = ({ milestones, render, issueLog, pmId, status, order, ty
                             </svg>
                             <p className="mb-2 text-sm text-gray-500 font-semibold">Click to upload file</p>
                             <p className="text-xs text-gray-500">
-                              docx, exe, pdf, etc. (max. 500mb) {index}
+                              docx, exe, pdf, etc. (max. 500mb)
                             </p>
                           </div>
                         </label>

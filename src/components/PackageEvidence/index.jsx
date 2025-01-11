@@ -7,6 +7,7 @@ import {
   Grid2,
   IconButton,
   Modal,
+  Paper,
   Tab,
   Table,
   TableBody,

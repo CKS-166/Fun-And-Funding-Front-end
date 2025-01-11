@@ -167,11 +167,12 @@ function BrowseFundingCard({ fundingProject }) {
                         <BorderLinearProgress variant="determinate" sx={{ width: "100%", my: '0.313rem' }} value={convertPercentage(fundingProject.balance, fundingProject.target) <= 100 ? convertPercentage(fundingProject.balance, fundingProject.target) : 100} />
                         <div className='flex flex-row justify-between'>
                             <Typography sx={{ color: '#2F3645', fontSize: '0.75rem', fontWeight: '600' }}>
-                                {packBackers?.length} Investors
-                            </Typography>
-                            <Typography sx={{ color: '#2F3645', fontSize: '0.75rem', fontWeight: '600' }}>
                                 {convertPercentage(fundingProject.balance, fundingProject.target)}% of target
                             </Typography>
+                            <Typography sx={{ color: '#2F3645', fontSize: '0.75rem', fontWeight: '600' }}>
+                                {/* {packBackers?.length} Investors */}
+                            </Typography>
+
                         </div>
                     </div>
                 </Card>

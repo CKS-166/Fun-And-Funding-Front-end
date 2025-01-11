@@ -53,7 +53,7 @@ const BackdropRequestMilestone = ({ render, isHidden, milestone, projectId, onCl
                         variant="contained"
                         sx={{
                             width: "300px", whiteSpace: "nowrap",
-                            background: "#1BAA64", fontWeight: "bold", py: 1
+                            background: "#1BAA64", fontWeight: "700 !important", py: 1, textTransform: 'none'
                         }}
                         onClick={() => handleProcess()}
                         className="request-btn"

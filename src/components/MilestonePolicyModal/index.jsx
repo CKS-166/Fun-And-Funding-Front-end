@@ -62,6 +62,23 @@ const MilestonePolicyModal = ({ open, handleClose }) => {
                         </Typography>
                     </Box>
 
+                    {/* Reminder Section */}
+                    <Box
+                        sx={{
+                            mb: 4,
+                            p: 2,
+                            borderLeft: "5px solid #1BAA64",
+                            bgcolor: "#f5fff5",
+                        }}
+                    >
+                        <Typography variant="body1" color="primary" fontWeight="bold">
+                            Reminder for Project Owners:
+                        </Typography>
+                        <Typography variant="body2" color="textSecondary">
+                            During the <strong>processing stage</strong>, you have the option to withdraw 50% of the donations collected. If you do not withdraw at this stage, the commission fee will be calculated based on the full wallet balance, which can reduce your net funding. Consider withdrawing at this stage to optimize your available funds.
+                        </Typography>
+                    </Box>
+
                     {/* Funding and Disbursement Explanation */}
                     <Typography variant="h5" fontWeight="bold" sx={{ mb: 2 }}>
                         Milestone Process Overview

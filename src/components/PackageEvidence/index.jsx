@@ -30,7 +30,7 @@ import axios from "axios";
 
 registerPlugin(FilePondPluginFileValidateType, FilePondPluginImagePreview);
 
-const PackageEvidence = ({ backers }) => {
+const PackageEvidence = ({ backers, rerender }) => {
   const [expandedRow, setExpandedRow] = useState(null);
   const [tabValue, setTabValue] = useState(0);
   const [openModal, setOpenModal] = useState(false);
@@ -78,6 +78,11 @@ const PackageEvidence = ({ backers }) => {
     } catch (error) {
       console.error("Error uploading evidence:", error);
       alert("Failed to upload evidence.");
+    }
+    finally{
+      if(rerender){
+        rerender();
+      }
     }
   };
 

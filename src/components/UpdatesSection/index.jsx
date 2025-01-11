@@ -1,4 +1,4 @@
-import { Avatar, Box, Button, Collapse, Divider, Typography } from '@mui/material'
+import { Avatar, Box, Button, Collapse, Divider, Step, StepLabel, Stepper, Typography } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import kuru from '../../assets/images/ktm.jpg'
 import projectMilestoneApiInstace from '../../utils/ApiInstance/projectMilestoneApiInstance'
@@ -17,6 +17,7 @@ import userApiInstace from '../../utils/ApiInstance/userApiInstance'
 import { ArrowDropDown, ArrowDropUp, ArrowRight, ChatBubble } from '@mui/icons-material'
 import ProjectMilestoneModal2 from '../../pages/ProjectDetail/ProjectMilestoneModal2'
 import { useLoading } from '../../contexts/LoadingContext'
+import milestoneApiInstace from '../../utils/ApiInstance/milestoneApiInstance'
 const UpdatesSection = () => {
     const [pmData, setPmData] = useState(null)
     const { id } = useParams()
@@ -76,7 +77,26 @@ const UpdatesSection = () => {
 
         fetchProjectMilestone();
 
+        fetchLatestMilestone()
+
     }, [id, openModal]);
+
+    const [fetchedMilestones, setFetchedMilestones] = useState(null)
+
+    const fetchLatestMilestone = async () => {
+        try {
+            const response = await milestoneApiInstace.get("/group-latest-milestone", {
+                params: { status: true },
+            });
+            const milestones = response.data._data;
+            // setLatestMilestone(milestones.map((m) => m.milestoneName));
+            setFetchedMilestones(response.data._data);
+        } catch (err) {
+            console.error("Error fetching latest milestone:", err);
+        }
+    };
+
+    const milestoneStageName = ['Concept', 'Prototype', 'Production', 'Delivering']
 
     return (
         <>
@@ -89,13 +109,44 @@ const UpdatesSection = () => {
                     </div>
                 )
                 : <div>
+                    <div className='border-[0.1rem] border-gray-300 py-8 rounded mb-10'>
+                        {/* <div className='flex justify-center gap-2 items-center'>
+                            <div className='border-t-2 w-[36%]'></div>
+                            <div className='border-t-2 w-[36%]'></div>
+                        </div> */}
+                        <Stepper activeStep={pmData && pmData?.items[0]?.latestMilestone?.milestoneOrder - 1}
+                            alternativeLabel>
+                            {fetchedMilestones?.map((milestone) => (
+                                <Step key={milestone}>
+                                    <StepLabel
+                                        sx={{
+                                            "& .MuiStepIcon-root.Mui-active": {
+                                                color: 'var(--primary-green) !important',
+                                            },
+                                            '& .MuiStepIcon-root.Mui-completed': {
+                                                color: "var(--primary-green) !important",
+                                            },
+                                        }}
+                                    >
+                                        {/* <span className={`${(milestone.milestoneOrder == pmData?.milestone.milestoneOrder) ? 'bg-primary-green/80 text-white py-0.5 px-1 rounded' : ''}`}>
+                                            {milestone.milestoneName}
+
+                                        </span> */}
+                                        <span>
+                                            {milestone.milestoneOrder}. {milestoneStageName[milestone.milestoneOrder - 1]}
+                                        </span>
+                                    </StepLabel>
+                                </Step>
+                            ))}
+                        </Stepper>
+                    </div>
                     <div className='border-[0.1rem] border-gray-300 p-5 rounded'>
                         <div className='text-lg font-semibold mb-2'>
                             Concept & Prototype Stage
                         </div>
                         <div className='text-sm text-gray-700 mb-5'>
-                            The project team has a working prototype, but it’s not the final product. They are still refining the concept, and their ability to move into full production may be impacted by development or financial challenges.
-                            This stage can be reviewed and updated while the project is being funded.
+                            This stage is conducted while the project is being funded.
+                            The project team will showcase their working prototype, but it’s not the final product. The goal at this stage is to demonstrate the project's vision and direction, attracting potential backers.
                         </div>
 
                         {/* Button to toggle collapse */}
@@ -177,6 +228,25 @@ const UpdatesSection = () => {
                                                         <p className='text-sm'>
                                                             {pm.introduction}
                                                         </p>
+                                                        <div>
+                                                            {
+                                                                pm.projectMilestoneRequirements[0]?.requirementFiles?.length > 0
+                                                                    ? pm.projectMilestoneRequirements[0]?.requirementFiles?.map((file, index) => {
+                                                                        if (file.file == 6)
+                                                                            return (<div className="h-[20rem] object-cover overflow-hidden rounded-lg">
+                                                                                <img class=" max-w-full " src={file.url} alt="" />
+                                                                            </div>)
+                                                                        else if (file.file == 7)
+                                                                            return (<div className="h-[10rem] overflow-hidden rounded-lg">
+                                                                                <video class="h-auto max-w-full " controls alt="">
+                                                                                    <source src={file.url} type="video/mp4" />
+                                                                                </video>
+                                                                            </div>)
+                                                                    })
+                                                                    : ''
+
+                                                            }
+                                                        </div>
                                                     </div>
 
                                                     <div className='px-8 py-5 border-t-2 flex justify-between'>
@@ -206,8 +276,8 @@ const UpdatesSection = () => {
                             Production & Delivering Stage
                         </div>
                         <div className='text-sm text-gray-700 mb-5'>
-                            The project team has transitioned from prototype development to final production.
-                            The project team has begun to deliver product. The delivery may be affected by shipping challenges and delays.
+                            This stage is conducted after the project is successfully funded. The project team has transitioned from prototype development to final production.
+                            The project team has begun to deliver product.
                         </div>
 
                         {/* Button to toggle collapse */}
@@ -310,7 +380,7 @@ const UpdatesSection = () => {
                             </Timeline>
                         </Collapse>
                     </div>
-                </div>
+                </div >
             }
 
 

@@ -766,20 +766,20 @@ const ProjectDetail = () => {
                 )}
                 {tabValue === "4" && (
                   <Grid2 container spacing={4}>
-                    <Grid2 size={8} className="flex justify-center">
-                      <div className="w-[80%]">
+                    <Grid2 size={12} className="flex justify-center">
+                      <div className="w-[55%]">
                         <Box>
                           <UpdatesSection />
                         </Box>
                       </div>
                     </Grid2>
-                    <Grid2 size={4} sx={{ height: "100%" }}>
+                    {/* <Grid2 size={0} sx={{ height: "100%" }}>
                       <PackageSide
                         isButtonActive={buttonBackerActive}
                         packageList={projectData.packages}
                         reloadDetail={fetchProject}
                       />
-                    </Grid2>
+                    </Grid2> */}
                   </Grid2>
                 )}
                 {tabValue === "5" && (

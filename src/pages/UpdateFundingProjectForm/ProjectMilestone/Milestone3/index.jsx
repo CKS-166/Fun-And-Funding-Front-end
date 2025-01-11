@@ -111,7 +111,6 @@ function Milestone3() {
     };
     // drop card
     const handleDropCard = (newStatus, newPosition) => {
-        console.log(`Drop card to ${newStatus} at position ${newPosition}`);
         if (activeCard == null) return;
         // Get a copy of the tasks array
         const updatedTasks = [...tasks];
@@ -192,13 +191,23 @@ function Milestone3() {
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingRight: '5rem' }}>
                     <Box>
                         <Typography
-                            className='basic-info-title'
+                            sx={{
+                                color: '#2F3645',
+                                fontSize: '1.5rem',
+                                fontWeight: '700',
+                                userSelect: 'none',
+                                marginBottom: '1rem'
+                            }}
                         >
-                            {milestone.milestoneName}<span className='text-[#1BAA64]'>*</span>
+                            {milestone.milestoneName} <span className='text-[#1BAA64]'>*</span>
                         </Typography>
                         <Typography
-                            className='basic-info-subtitle'
-                            sx={{ width: '100%' }}
+                            sx={{
+                                color: '#2F3645',
+                                fontSize: '1rem',
+                                fontWeight: '400',
+                                userSelect: 'none',
+                            }}
                         >
                             {milestone.description}
                         </Typography>
@@ -208,52 +217,114 @@ function Milestone3() {
                     </Box>
                 </Box>
                 <Box>
-                    {milestone && milestone.requirements.map((req) => (
-                        <>
-                            <Typography sx={{ fontWeight: 600 }}>{req.description}  <span className='text-[#1BAA64]'>*</span></Typography>
-                            <TaskForm onAddTask={handleAddTask} projectId={projectId} milestoneId={milestoneId} requirementId={req.id} />
-                            <Grid container spacing={2}>
-                                <Grid size={4} className="app_main">
-                                    <TaskColumn
-                                        className='task-column'
-                                        title="To-do"
-                                        tasks={tasks}
-                                        status={0}
-                                        handleDelete={handleDelete}
-                                        setActiveCard={setActiveCard}
-                                        onDrop={handleDropCard}
-                                        updateTask={handleUpdateTask}
-                                    />
+                    {milestoneData.status === 'create' && milestone ? (
+                        milestone.requirements.map((req) => (
+                            <React.Fragment key={req.id}>
+                                <Typography sx={{ fontWeight: 600 }}>
+                                    {req.description} <span className='text-[#1BAA64]'>*</span>
+                                </Typography>
+                                <TaskForm
+                                    onAddTask={handleAddTask}
+                                    projectId={projectId}
+                                    milestoneId={milestoneId}
+                                    requirementId={req.id}
+                                />
+                                <Grid container spacing={2}>
+                                    <Grid size={4} className="app_main">
+                                        <TaskColumn
+                                            className='task-column'
+                                            title="To-do"
+                                            tasks={tasks}
+                                            status={0}
+                                            handleDelete={handleDelete}
+                                            setActiveCard={setActiveCard}
+                                            onDrop={handleDropCard}
+                                            updateTask={handleUpdateTask}
+                                        />
+                                    </Grid>
+                                    <Grid size={4}>
+                                        <TaskColumn
+                                            title="Doing"
+                                            tasks={tasks}
+                                            status={1}
+                                            handleDelete={handleDelete}
+                                            setActiveCard={setActiveCard}
+                                            onDrop={handleDropCard}
+                                            updateTask={handleUpdateTask}
+                                        />
+                                    </Grid>
+                                    <Grid size={4}>
+                                        <TaskColumn
+                                            title="Done"
+                                            tasks={tasks}
+                                            status={2}
+                                            handleDelete={handleDelete}
+                                            setActiveCard={setActiveCard}
+                                            onDrop={handleDropCard}
+                                            updateTask={handleUpdateTask}
+                                        />
+                                    </Grid>
                                 </Grid>
-                                <Grid size={4}>
-                                    <TaskColumn
-                                        title="Doing"
-                                        tasks={tasks}
-                                        status={1}
-                                        handleDelete={handleDelete}
-                                        setActiveCard={setActiveCard}
-                                        onDrop={handleDropCard}
-                                        updateTask={handleUpdateTask}
-                                    />
+                            </React.Fragment>
+                        ))
+                    ) : (
+                        milestoneData.data && (
+                            <React.Fragment>
+                                <Typography sx={{ fontWeight: 600 }}>
+                                    <span className='text-[#1BAA64]'>*</span>
+                                </Typography>
+                                <TaskForm
+                                    onAddTask={handleAddTask}
+                                    projectId={projectId}
+                                    milestoneId={milestoneId}
+                                    requirementId={
+                                        milestoneData.data &&
+                                        milestoneData.data.length > 0 &&
+                                        milestoneData.data[0].projectMilestoneRequirements[0].requirementId}
+                                />
+                                {/* Render task data for other statuses */}
+                                <Grid container spacing={2}>
+                                    <Grid size={4} className="app_main">
+                                        <TaskColumn
+                                            className='task-column'
+                                            title="To-do"
+                                            tasks={tasks}
+                                            status={0}
+                                            handleDelete={handleDelete}
+                                            setActiveCard={setActiveCard}
+                                            onDrop={handleDropCard}
+                                            updateTask={handleUpdateTask}
+                                        />
+                                    </Grid>
+                                    <Grid size={4}>
+                                        <TaskColumn
+                                            title="Doing"
+                                            tasks={tasks}
+                                            status={1}
+                                            handleDelete={handleDelete}
+                                            setActiveCard={setActiveCard}
+                                            onDrop={handleDropCard}
+                                            updateTask={handleUpdateTask}
+                                        />
+                                    </Grid>
+                                    <Grid size={4}>
+                                        <TaskColumn
+                                            title="Done"
+                                            tasks={tasks}
+                                            status={2}
+                                            handleDelete={handleDelete}
+                                            setActiveCard={setActiveCard}
+                                            onDrop={handleDropCard}
+                                            updateTask={handleUpdateTask}
+                                        />
+                                    </Grid>
                                 </Grid>
-                                <Grid size={4}>
-                                    <TaskColumn
-                                        title="Done"
-                                        tasks={tasks}
-                                        status={2}
-                                        handleDelete={handleDelete}
-                                        setActiveCard={setActiveCard}
-                                        onDrop={handleDropCard}
-                                        updateTask={handleUpdateTask}
-                                    />
-                                </Grid>
-                            </Grid>
-                        </>
-                    ))}
-                </Box >
+                            </React.Fragment>
+                        )
+                    )}
+                </Box>
 
             </div >
-
         </>
 
     );

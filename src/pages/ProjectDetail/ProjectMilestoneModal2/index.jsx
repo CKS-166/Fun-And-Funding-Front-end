@@ -190,7 +190,7 @@ const ProjectMilestoneModal = ({ pmData, openModal, setOpenModal }) => {
 
               <div className="p-4 md:p-5 flex-grow overflow-auto">
                 {/* Stepper and Tabs */}
-                <Stepper activeStep={pmData?.latestMilestone.milestoneOrder - 1}
+                {/* <Stepper activeStep={pmData?.latestMilestone.milestoneOrder - 1}
                   alternativeLabel>
                   {latestMilestone?.map((milestone) => (
                     <Step key={milestone}>
@@ -211,96 +211,101 @@ const ProjectMilestoneModal = ({ pmData, openModal, setOpenModal }) => {
                       </StepLabel>
                     </Step>
                   ))}
-                </Stepper>
+                </Stepper> */}
 
-                <div>
+                <div className="">
+                  {
+                    (pmData?.milestone.milestoneOrder != 1 && pmData?.milestone.milestoneOrder != 2)
+                      ? (
+                        <div className="relative overflow-x-auto sm:rounded-lg mt-[1rem] shadow-md">
+                          <table className="w-full text-sm text-left rtl:text-right text-gray-500">
+                            <caption className="p-5 text-lg font-semibold text-left rtl:text-right text-gray-900 bg-white">
+                              Milestone request
+                            </caption>
+                            <thead className="text-xs text-gray-700 uppercase">
+                              <tr>
+                                <th scope="col" className="px-6 py-3 bg-gray-50">
+                                  Information
+                                </th>
+                                <th scope="col" className="px-6 py-3">
+                                  Value
+                                </th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr className="border-b border-gray-200">
+                                <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50">
+                                  (1) {pmData?.milestone.milestoneName} disbursement percentage
+                                </th>
+                                <td className="px-6 py-4">
+                                  {pmData?.milestone.disbursementPercentage * 100}%
+                                </td>
+                              </tr>
+                              <tr className="border-b border-gray-200">
+                                <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50">
+                                  (2) Total fund
+                                </th>
+                                <td className="px-6 py-4">
+                                  {pmData?.fundingProject.balance.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")} đ
+                                </td>
+                              </tr>
+                              <tr class="border-b border-gray-200">
+                                <th
+                                  scope="row"
+                                  class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50"
+                                >
+                                  (3) Actual received amount (100% - <span className="font-semibold"><u>{commissionFee * 100}%</u></span>){' '}
+                                  <HtmlTooltip
+                                    title={
+                                      <>
+                                        <em className="text-md">{"Funding commission fee: "}</em> <b className="text-md">{'5%'}</b>
+                                      </>
+                                    }
+                                  >
+                                    <div className="inline">
+                                      <HelpOutline sx={{ fontSize: '1rem' }} />
+                                    </div>
+                                  </HtmlTooltip>
+                                </th>
+                                <td class="px-6 py-4">
+                                  {(1 - commissionFee) * 100}%
+                                </td>
+                              </tr>
+                              <tr className="border-b border-gray-200">
+                                <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 flex items-center gap-2">
+                                  Milestone requested amount = (1) x (2) x (3) x <u>50%</u>
+                                  <HtmlTooltip
+                                    title={
+                                      <>
+                                        <Typography color="inherit">Disbursement policy</Typography>
+                                        <em>{"Game owner shall firstly receive"}</em> <b>{'half'}</b>
+                                        <em>{" of the milestone fund"}</em> <b>{'for production'}</b> <em>{"and"}</em> <b>{'the remaining'}</b>
+                                        <em>{" after having provided sufficient evidences of production"}</em>
+                                      </>
+                                    }
+                                  >
+                                    <div>
+                                      <HelpOutline sx={{ fontSize: '1rem' }} />
+                                    </div>
+                                  </HtmlTooltip>
+                                </th>
+                                <td className="px-6 py-4 font-bold text-black text-lg">
+                                  {(pmData?.milestone.disbursementPercentage * pmData?.fundingProject.balance * 0.5 * 0.95).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")} đ
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      )
+                      : ('')
+                  }
 
-
-                  <div className="relative overflow-x-auto sm:rounded-lg mt-[1rem] shadow-md">
-                    <table className="w-full text-sm text-left rtl:text-right text-gray-500">
-                      <caption className="p-5 text-lg font-semibold text-left rtl:text-right text-gray-900 bg-white">
-                        Milestone request
-                      </caption>
-                      <thead className="text-xs text-gray-700 uppercase">
-                        <tr>
-                          <th scope="col" className="px-6 py-3 bg-gray-50">
-                            Information
-                          </th>
-                          <th scope="col" className="px-6 py-3">
-                            Value
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr className="border-b border-gray-200">
-                          <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50">
-                            (1) {pmData?.milestone.milestoneName} disbursement percentage
-                          </th>
-                          <td className="px-6 py-4">
-                            {pmData?.milestone.disbursementPercentage * 100}%
-                          </td>
-                        </tr>
-                        <tr className="border-b border-gray-200">
-                          <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50">
-                            (2) Total fund
-                          </th>
-                          <td className="px-6 py-4">
-                            {pmData?.fundingProject.balance.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")} đ
-                          </td>
-                        </tr>
-                        <tr class="border-b border-gray-200">
-                          <th
-                            scope="row"
-                            class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50"
-                          >
-                            (3) Actual received amount (100% - <span className="font-semibold"><u>{commissionFee * 100}%</u></span>){' '}
-                            <HtmlTooltip
-                              title={
-                                <>
-                                  <em className="text-md">{"Funding commission fee: "}</em> <b className="text-md">{'5%'}</b>
-                                </>
-                              }
-                            >
-                              <div className="inline">
-                                <HelpOutline sx={{ fontSize: '1rem' }} />
-                              </div>
-                            </HtmlTooltip>
-                          </th>
-                          <td class="px-6 py-4">
-                            {(1 - commissionFee) * 100}%
-                          </td>
-                        </tr>
-                        <tr className="border-b border-gray-200">
-                          <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-50 flex items-center gap-2">
-                            Milestone requested amount = (1) x (2) x (3) x <u>50%</u>
-                            <HtmlTooltip
-                              title={
-                                <>
-                                  <Typography color="inherit">Disbursement policy</Typography>
-                                  <em>{"Game owner shall firstly receive"}</em> <b>{'half'}</b>
-                                  <em>{" of the milestone fund"}</em> <b>{'for production'}</b> <em>{"and"}</em> <b>{'the remaining'}</b>
-                                  <em>{" after having provided sufficient evidences of production"}</em>
-                                </>
-                              }
-                            >
-                              <div>
-                                <HelpOutline sx={{ fontSize: '1rem' }} />
-                              </div>
-                            </HtmlTooltip>
-                          </th>
-                          <td className="px-6 py-4 font-bold text-black text-lg">
-                            {(pmData?.milestone.disbursementPercentage * pmData?.fundingProject.balance * 0.5 * 0.95).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")} đ
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
 
                 </div>
 
                 <div>
                   <div className="flex justify-center">
-                    <Divider sx={{ fontWeight: 'bold', color: 'rgba(0, 0, 0, 0.7)', my: '1rem', width: '60%', textAlign: 'center' }}>Milestone evidence</Divider>
+                    <Divider sx={{ fontWeight: 'bold', color: 'rgba(0, 0, 0, 0.7)', my: '1rem', width: '60%', textAlign: 'center' }}>Milestone Evidence</Divider>
                   </div>
                   <div class="relative overflow-x-auto">
                     <table class="w-full text-sm text-left rtl:text-right text-gray-500">

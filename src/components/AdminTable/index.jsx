@@ -92,6 +92,7 @@ TablePaginationActions.propTypes = {
 export default function CustomPaginationActionsTable({
   data,
   handleRowClick,
+  handleNoteClick,
   totalItems = data.length,
   totalPages,
   currentPage = 1,
@@ -174,8 +175,10 @@ export default function CustomPaginationActionsTable({
                 </TableCell>
               ))}
               <TableCell>
-                {row.STATUS !== "Approved" && row.STATUS !== "Rejected" && (
+                {row.STATUS !== "Rejected" ? (
                   <Button onClick={() => handleRowClick(row.Id)}>ACTION</Button>
+                ) : (
+                  <Button onClick={() => handleNoteClick(row.Id)}>NOTE</Button>
                 )}
               </TableCell>
             </TableRow>

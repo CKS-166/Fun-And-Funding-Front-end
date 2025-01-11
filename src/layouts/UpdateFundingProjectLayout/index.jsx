@@ -1,15 +1,23 @@
 /* eslint-disable no-unused-vars */
+import EmailIcon from '@mui/icons-material/Email';
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import InfoIcon from '@mui/icons-material/Info';
 import {
+    Backdrop,
+    Box,
     Button,
     Collapse,
     Container,
+    Fade,
     Grid2,
     IconButton,
     List,
     ListItem,
     ListItemText,
+    Modal,
+    TextareaAutosize,
+    Tooltip,
     Typography
 } from "@mui/material";
 import Cookies from "js-cookie";
@@ -25,6 +33,20 @@ import milestoneApiInstace from "../../utils/ApiInstance/milestoneApiInstance";
 import "./index.css";
 import ProjectContext from './UpdateFundingProjectContext';
 import { editorList, milestoneList } from './UpdateFundingProjectLayout';
+
+const projectStatus = {
+    0: { name: "Deleted", color: "var(--red)" },
+    1: { name: "Pending", color: "#FFC107" },
+    2: { name: "Processing", color: "#2196F3" },
+    3: { name: "Funded Successful", color: "var(--primary-green)" },
+    4: { name: "Successful", color: "var(--primary-green)" },
+    5: { name: "Failed", color: "var(--red)" },
+    6: { name: "Rejected", color: "var(--red)" },
+    7: { name: "Approved", color: "var(--primary-green)" },
+    8: { name: "Withdrawed", color: "#9C27B0" },
+    9: { name: "Refunded", color: "#FF5722" },
+    10: { name: "Reported", color: "#E91E63" },
+};
 
 const notify = (message, type) => {
     const options = {
@@ -50,6 +72,20 @@ const notify = (message, type) => {
 };
 
 function UpdateFundingProjectLayout() {
+    const noteStyle = {
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        width: '35%',
+        bgcolor: 'background.paper',
+        boxShadow: 24,
+        px: '2rem',
+        py: '2rem',
+        height: 'fit-content',
+        borderRadius: 1
+    };
+
     const token = Cookies.get("_auth");
     const { id } = useParams();
     const navigate = useNavigate();
@@ -59,10 +95,16 @@ function UpdateFundingProjectLayout() {
     const [edited, setIsEdited] = useState(false);
     const [project, setProject] = useState({});
     const [isLoading, setIsLoading] = useState(true);
-    const [showInstruction, setShowInstruction] = useState(true);
+    const [showInstruction, setShowInstruction] = useState(false);
     const [loadingStatus, setLoadingStatus] = useState(0);
     const [currentMilestoneList, setCurrentMilestoneList] = useState([]);
     const [selectedMilestone, setSelectedMilestone] = useState("");
+    const [selectedInstructionIndex, setSelectedInstructionIndex] = useState(0);
+    const [openNoteModal, setOpenNoteModal] = useState(false);
+
+    const handleNoteClose = () => {
+        setOpenNoteModal(false);
+    }
 
     const disbursement = 2;
     const funding = 1;
@@ -73,9 +115,9 @@ function UpdateFundingProjectLayout() {
     //fetch milestones
     const fetchMilestones = async (status) => {
         setIsLoading(true);
-        if (status == 7 || status == 2 || status == 3) {
+        if (status == 7 || status == 2 || status == 3 || status == 4) {
             await milestoneApiInstace
-                .get(`/group-latest-milestone?filter=${status == 2 || status == 7 ? 1 : status == 3 ? 2 : 0}`)
+                .get(`/group-latest-milestone?filter=${status == processing || status == approved ? 1 : 0}`)
                 .then((response) => {
                     setCurrentMilestoneList(response.data._data);
                     setIsLoading(false);
@@ -177,8 +219,8 @@ function UpdateFundingProjectLayout() {
     };
 
     useEffect(() => {
-        if (localStorage.getItem('confirm_instruction') === 'true') {
-            setShowInstruction(false);
+        if (localStorage.getItem('confirm_instruction') !== 'true') {
+            setShowInstruction(true);
         }
         fetchProject();
     }, [id]);
@@ -341,6 +383,19 @@ function UpdateFundingProjectLayout() {
         localStorage.setItem('confirm_instruction', true);
     }
 
+    const handleOpenInstruction = () => {
+        if (isPreviewActive) {
+            setSelectedInstructionIndex(1);
+        } else if (isEditorActive) {
+            setSelectedInstructionIndex(2);
+        } else if (isMilestoneActive || isOverviewActive) {
+            setSelectedInstructionIndex(3);
+        } else {
+            setSelectedInstructionIndex(0);
+        }
+        setShowInstruction(true);
+    }
+
     return (
         <ProjectContext.Provider
             value={{
@@ -354,7 +409,7 @@ function UpdateFundingProjectLayout() {
                 setLoadingStatus,
             }}
         >
-            <ProjectEditorInstruction showInstruction={showInstruction} setShowInstruction={(value) => handleConfirmInstruction(value)} />
+            <ProjectEditorInstruction showInstruction={showInstruction} setShowInstruction={(value) => handleConfirmInstruction(value)} selectedIndex={selectedInstructionIndex} />
             <Container
                 sx={{
                     mx: "0",
@@ -378,20 +433,44 @@ function UpdateFundingProjectLayout() {
                             overflow: "visible",
                         }}
                     >
+                        {project?.note != null && project.note.length > 0 &&
+                            <div className='absolute top-3 right-4'>
+                                <Tooltip title="Show admin feedback" arrow>
+                                    <IconButton onClick={() => setOpenNoteModal(true)} sx={{ padding: 0, ml: '1.5rem' }}>
+                                        <Box
+                                            sx={{
+                                                backgroundColor: "var(--white)",
+                                                display: "flex",
+                                                alignItems: "center",
+                                                justifyContent: "center",
+                                                width: "1.25rem",
+                                                height: "1rem",
+                                            }}
+                                        >
+                                            <EmailIcon
+                                                sx={{
+                                                    width: "1.75rem",
+                                                    height: "1.75rem",
+                                                    color: "var(--primary-green)",
+                                                }}
+                                            />
+                                        </Box>
+                                    </IconButton>
+                                </Tooltip>
+                            </div>}
                         <div className="sticky mb-[8rem] top-[1.5rem] z-10">
                             <div className="flex flex-col gap-[0.5rem] px-[2rem]">
-                                <span
-                                    className={`bg-[#1BAA64] text-[#EAEAEA] text-[0.75rem] px-[0.5rem] py-[0.25rem] rounded w-fit font-semibold ${project.status >= 0 && project.status <= 8
-                                        ? "bg-[#1BAA64]"
-                                        : "bg-[#FABC3F]"
-                                        } `}
-                                >
-                                    {project.status >= 0 && project.status <= 8
-                                        ? "Funding"
-                                        : project.status === 9
-                                            ? "Marketing"
-                                            : "Unknown Status"}
-                                </span>
+                                <div>
+                                    <span
+                                        className={`text-[#EAEAEA] text-[0.75rem] px-[0.5rem] py-[0.25rem] rounded w-fit font-semibold ${project.status != null
+                                            ? `bg-[${projectStatus[project.status].color}]`
+                                            : "bg-[#FABC3F]"
+                                            } `}
+                                    >
+                                        {project.status != null
+                                            ? projectStatus[project.status].name : "Unknown Status"}
+                                    </span>
+                                </div>
                                 <Typography
                                     sx={{
                                         color: "#F5F7F8",
@@ -595,7 +674,7 @@ function UpdateFundingProjectLayout() {
                     <Grid2 size={9.5} style={{ position: "relative" }}>
                         <div>
                             <div className="fixed-update-header">
-                                <div>
+                                <div className="flex flex-row justify-start items-center">
                                     <Typography
                                         sx={{
                                             color: "#2F3645",
@@ -607,6 +686,17 @@ function UpdateFundingProjectLayout() {
                                     >
                                         {getActiveSection(id)}
                                     </Typography>
+                                    <Tooltip title="Show information" arrow>
+                                        <IconButton onClick={() => handleOpenInstruction()}>
+                                            <InfoIcon
+                                                sx={{
+                                                    fontSize: "1.2rem",
+                                                    color: "var(--black)",
+                                                    cursor: "pointer",
+                                                }}
+                                            />
+                                        </IconButton>
+                                    </Tooltip>
                                 </div>
                                 <div className={`${isEditorActive ? 'flex' : 'hidden'} justify-between gap-[1.5rem] items-center w-fit`}>
                                     <Typography
@@ -657,6 +747,42 @@ function UpdateFundingProjectLayout() {
                 pauseOnHover
                 pauseOnFocusLoss
             />
+            <Modal open={openNoteModal} onClose={handleNoteClose} slots={{ backdrop: Backdrop }}
+                slotProps={{
+                    backdrop: {
+                        timeout: 500,
+                    },
+                }}
+                sx={{ zIndex: '1000000 !important' }}>
+                <Fade in={openNoteModal}>
+                    <Box sx={noteStyle}>
+                        <div className="flex justify-center flex-col items-center mb-[2rem]">
+                            <Typography sx={{ fontSize: '1.5rem', fontWeight: '700' }}>
+                                Admin feedback
+                            </Typography>
+                            <Typography sx={{ mt: '0.25rem', fontSize: '1rem', fontWeight: 400 }}>
+                                Admin provides reasons to why this project is rejected.
+                            </Typography>
+                        </div>
+                        <TextareaAutosize
+                            minRows={10}
+                            style={{
+                                width: '100%',
+                                padding: '0.5rem',
+                                border: '1px solid var(--light-grey)',
+                                borderRadius: '4px',
+                                outline: 'none',
+                                fontSize: '1rem',
+                                fontFamily: 'inherit',
+                            }}
+                            value={project?.note ?? null}
+                            disabled
+                            onFocus={(e) => (e.target.style.border = '1px solid var(--black)')}
+                            onBlur={(e) => (e.target.style.border = '1px solid var(--light-grey)')}
+                        />
+                    </Box>
+                </Fade>
+            </Modal>
         </ProjectContext.Provider>
     );
 }

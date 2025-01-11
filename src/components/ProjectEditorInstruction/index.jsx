@@ -1,5 +1,5 @@
 import { Backdrop, Button, Typography } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import instruction1 from '../../assets/images/instruction1.png';
 import instruction2 from '../../assets/images/instruction2.png';
@@ -35,8 +35,12 @@ const banners = [
     },
 ];
 
-function ProjectEditorInstruction({ showInstruction, setShowInstruction }) {
-    const [currentIndex, setCurrentIndex] = useState(0);
+function ProjectEditorInstruction({ showInstruction, setShowInstruction, selectedIndex }) {
+    const [currentIndex, setCurrentIndex] = useState(selectedIndex);
+
+    useEffect(() => {
+        setCurrentIndex(selectedIndex);
+    }, [selectedIndex]);
 
     const nextBanner = () => {
         if (currentIndex == banners.length - 1) {
@@ -52,6 +56,7 @@ function ProjectEditorInstruction({ showInstruction, setShowInstruction }) {
     const goToBanner = (index) => {
         setCurrentIndex(index);
     };
+
     return (
         <Backdrop
             sx={{
@@ -62,7 +67,7 @@ function ProjectEditorInstruction({ showInstruction, setShowInstruction }) {
             open={showInstruction}
         >
             <div className='flex flex-col justify-center items-center gap-[1rem]'>
-                <Typography sx={{ fontSize: '2rem', fontWeight: '700', mb: '0.5rem' }}>
+                <Typography sx={{ fontSize: '1.75rem', fontWeight: '600', mb: '0.5rem' }}>
                     Welcome to Project Editor
                 </Typography>
                 {banners.map((banner, index) =>

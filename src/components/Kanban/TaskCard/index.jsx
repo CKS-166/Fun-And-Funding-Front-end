@@ -81,6 +81,7 @@ const TaskCard = ({ task, title, handleDelete, index, setActiveCard, updateTask,
     // setModalOpen(false)
   };
 
+  console.log(docs)
   // Update formData whenever task changes
   useEffect(() => {
     setFormData({ ...task, addedFiles: [] });
@@ -129,7 +130,7 @@ const TaskCard = ({ task, title, handleDelete, index, setActiveCard, updateTask,
             />
             {images.length > 0 && (
               <div>
-                <h3>Images:</h3>
+                <h3 style={{fontWeight : 600}}>Images:</h3>
                 <ImageList sx={{ width: '100%', ml: '0 !important', maxHeight: '40rem', scrollbarWidth: 'thin' }} cols={3} rowHeight={160}>
                   {images.map((image, index) => (
                     <ImageListItem sx={{ bgcolor: '#000000' }} key={index} onClick={() => handleImageClick(index)}>
@@ -141,7 +142,7 @@ const TaskCard = ({ task, title, handleDelete, index, setActiveCard, updateTask,
             )}
             {videos.length > 0 && (
               <div>
-                <h3>Videos:</h3>
+                <h3 style={{fontWeight : 600}}>Videos:</h3>
                 <ImageList sx={{ width: '100%', ml: '0 !important', maxHeight: '40rem', scrollbarWidth: 'thin' }} cols={2} rowHeight={300}>
                   {videos.map((video, index) => (
                     <ImageListItem sx={{ bgcolor: '#000000' }} key={index}>
@@ -157,7 +158,27 @@ const TaskCard = ({ task, title, handleDelete, index, setActiveCard, updateTask,
                 </ImageList>
               </div>
             )}
+            {docs.length > 0 && (
+              <>
+              <h3 style={{fontWeight : 600}}>Files:</h3>
+              <ImageList sx={{ width: '100%', ml: '0 !important', maxHeight: '40rem', scrollbarWidth: 'thin' }} cols={2} rowHeight={300}>
+              <div className="h-[10rem] overflow-hidden rounded-lg bg-gray-200 flex justify-center items-center">
+                  {docs.map((doc,index) => (
+                  <div>
+                    <div className="font-light mb-1 italic text-gray-800">
+                      {doc.name}
+                    </div>
+                    <a href={doc.url} download class="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10 "><svg class="w-3.5 h-3.5 me-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M14.707 7.793a1 1 0 0 0-1.414 0L11 10.086V1.5a1 1 0 0 0-2 0v8.586L6.707 7.793a1 1 0 1 0-1.414 1.414l4 4a1 1 0 0 0 1.416 0l4-4a1 1 0 0 0-.002-1.414Z" />
+                      <path d="M18 12h-2.55l-2.975 2.975a3.5 3.5 0 0 1-4.95 0L4.55 12H2a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-4a2 2 0 0 0-2-2Zm-3 5a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z" />
+                    </svg> Download File</a>
+                  </div>
+                  ))}
+                </div>
+              </ImageList>
 
+              </>
+            )}
 
 
             <FilePond files={formData.addedFiles.map(f => f.file)} onupdatefiles={handleFilesChange} allowMultiple />

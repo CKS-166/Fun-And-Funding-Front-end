@@ -14,11 +14,14 @@ import {
   Tabs,
   Tab,
   Button,
+  IconButton
 } from '@mui/material';
 import transactionApiInstance from '../../../../utils/ApiInstance/transactionApiInstance';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
-
+import InfoIcon from "@mui/icons-material/Info";
+import MilestonePolicyModal from '../../../../components/MilestonePolicyModal';
+import { useNavigate } from 'react-router-dom';
 const MilestoneOverview = () => {
   const { id } = useParams(); // Project ID from the URL
   const [tabValue, setTabValue] = useState(1); // Tabs state
@@ -26,7 +29,7 @@ const MilestoneOverview = () => {
   const [contacts, setContacts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [loadingContacts, setLoadingContacts] = useState(false);
-
+  const navigate = useNavigate();
   useEffect(() => {
     const fetchTransactions = async () => {
       try {
@@ -81,15 +84,45 @@ const MilestoneOverview = () => {
   };
 
   const handleChatRedirect = (userId) => {
-    const chatUrl = `http://localhost:5173/chat/${userId}`;
-    window.open(chatUrl, '_blank'); // Opens in a new tab
+    const chatUrl = `/chat/${userId}`;
+    window.open(chatUrl, '_blank'); 
+    // navigate(`/chat/${userId}`)
+  };
+
+  const [openModal, setOpenModal] = useState(false);
+
+  const handleOpenModal = () => {
+    setOpenModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setOpenModal(false);
   };
 
   return (
     <Box sx={{ padding: 4 }}>
-      <Typography variant="h5" sx={{ fontWeight: 'bold', marginBottom: 2 }}>
-        Milestone Details
-      </Typography>
+<div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+  <Typography variant="h5" sx={{ fontWeight: "bold", marginBottom: 0 }}>
+    Milestone Details
+  </Typography>
+  {/* Info Icon Button */}
+  <IconButton
+    onClick={handleOpenModal}
+    size="small"
+    sx={{
+      padding: "4px", // Compact padding
+      borderRadius: "50%", // Circle shape
+      backgroundColor: "#1BAA64",
+      "&:hover": {
+        backgroundColor: "#1BAA64", // Hover color remains the same
+        opacity: 0.9, // Slight transparency on hover
+      },
+    }}
+  >
+    <InfoIcon fontSize="small" sx={{ color: "#FFFFFF" }} />
+  </IconButton>
+  <MilestonePolicyModal open={openModal} handleClose={handleCloseModal} />
+</div>
 
       {/* Tabs */}
       <Tabs

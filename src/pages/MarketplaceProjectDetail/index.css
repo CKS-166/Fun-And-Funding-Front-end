@@ -69,7 +69,7 @@
   z-index: 50;
 }
 
-.marketplace-project-tab.Mui-selected {
+.marketplace-project-tab .Mui-selected {
   color: var(--primary-green) !important;
   font-weight: bold;
 }

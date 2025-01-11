@@ -152,59 +152,61 @@ const AdminMilestone = () => {
                 </tr>
               </thead>
               <tbody>
-                {data?._data.items.map((pm, index) => (
-                  <tr key={index} className="border-b">
-                    <th
-                      scope="row"
-                      className="px-4 py-3 font-medium text-gray-900 whitespace-nowrap "
-                    >
-                      <div className="truncate w-48">
-                        {pm.fundingProject.name}
-                      </div>
-                    </th>
-                    <td className="px-4 py-3">
-                      {new Date(pm.createdDate).toLocaleString()}
-                    </td>
-                    <td className="px-4 py-3">
-                      {new Date(pm.endDate).toLocaleString()}
-                    </td>
-                    <td className="px-4 py-3">
-                      {/* <img className="w-10 h-10 rounded" src={pm.fundingProject.fundingFiles.} alt="Default avatar" /> */}
-                      {pm.milestoneName}
-                    </td>
-                    <td className="px-4 py-3">
-                      {(
-                        pm.milestone.disbursementPercentage *
-                        pm.fundingProject.balance
-                      )
-                        .toString()
-                        .replace(/\B(?=(\d{3})+(?!\d))/g, ".")}{" "}
-                      đ
-                    </td>
-                    <td className="px-4 py-3">
-                      <span className="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded">
-                        {pmStatus[pm.status]}
-                      </span>
-                    </td>
-                    <td className="px-4 py-3 flex items-center justify-end">
-                      <button
-                        onClick={() => handleOpenModal(pm)}
-                        className="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none"
-                        type="button"
+                {data?._data.items
+                  .filter(pm => pm.milestone.milestoneOrder !== 1 && pm.milestone.milestoneOrder !== 2)
+                  .map((pm, index) => (
+                    <tr key={index} className="border-b">
+                      <th
+                        scope="row"
+                        className="px-4 py-3 font-medium text-gray-900 whitespace-nowrap "
                       >
-                        <svg
-                          className="w-5 h-5"
-                          aria-hidden="true"
-                          fill="currentColor"
-                          viewbox="0 0 20 20"
-                          xmlns="http://www.w3.org/2000/svg"
+                        <div className="truncate w-48">
+                          {pm.fundingProject.name}
+                        </div>
+                      </th>
+                      <td className="px-4 py-3">
+                        {new Date(pm.createdDate).toLocaleString()}
+                      </td>
+                      <td className="px-4 py-3">
+                        {new Date(pm.endDate).toLocaleString()}
+                      </td>
+                      <td className="px-4 py-3">
+                        {/* <img className="w-10 h-10 rounded" src={pm.fundingProject.fundingFiles.} alt="Default avatar" /> */}
+                        {pm.milestoneName}
+                      </td>
+                      <td className="px-4 py-3">
+                        {(
+                          pm.milestone.disbursementPercentage *
+                          pm.fundingProject.balance
+                        )
+                          .toString()
+                          .replace(/\B(?=(\d{3})+(?!\d))/g, ".")}{" "}
+                        đ
+                      </td>
+                      <td className="px-4 py-3">
+                        <span className="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded">
+                          {pmStatus[pm.status]}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3 flex items-center justify-end">
+                        <button
+                          onClick={() => handleOpenModal(pm)}
+                          className="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none"
+                          type="button"
                         >
-                          <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
-                        </svg>
-                      </button>
-                    </td>
-                  </tr>
-                ))}
+                          <svg
+                            className="w-5 h-5"
+                            aria-hidden="true"
+                            fill="currentColor"
+                            viewbox="0 0 20 20"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
+                          </svg>
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
               </tbody>
             </table>
           </div>

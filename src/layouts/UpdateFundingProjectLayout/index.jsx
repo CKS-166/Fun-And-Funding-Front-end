@@ -95,7 +95,7 @@ function UpdateFundingProjectLayout() {
     const [edited, setIsEdited] = useState(false);
     const [project, setProject] = useState({});
     const [isLoading, setIsLoading] = useState(true);
-    const [showInstruction, setShowInstruction] = useState(true);
+    const [showInstruction, setShowInstruction] = useState(false);
     const [loadingStatus, setLoadingStatus] = useState(0);
     const [currentMilestoneList, setCurrentMilestoneList] = useState([]);
     const [selectedMilestone, setSelectedMilestone] = useState("");
@@ -219,8 +219,8 @@ function UpdateFundingProjectLayout() {
     };
 
     useEffect(() => {
-        if (localStorage.getItem('confirm_instruction') === 'true') {
-            setShowInstruction(false);
+        if (localStorage.getItem('confirm_instruction') !== 'true') {
+            setShowInstruction(true);
         }
         fetchProject();
     }, [id]);
@@ -433,6 +433,31 @@ function UpdateFundingProjectLayout() {
                             overflow: "visible",
                         }}
                     >
+                        {project?.note != null && project.note.length > 0 &&
+                            <div className='absolute top-3 right-4'>
+                                <Tooltip title="Show admin feedback" arrow>
+                                    <IconButton onClick={() => setOpenNoteModal(true)} sx={{ padding: 0, ml: '1.5rem' }}>
+                                        <Box
+                                            sx={{
+                                                backgroundColor: "var(--white)",
+                                                display: "flex",
+                                                alignItems: "center",
+                                                justifyContent: "center",
+                                                width: "1.25rem",
+                                                height: "1rem",
+                                            }}
+                                        >
+                                            <EmailIcon
+                                                sx={{
+                                                    width: "1.75rem",
+                                                    height: "1.75rem",
+                                                    color: "var(--primary-green)",
+                                                }}
+                                            />
+                                        </Box>
+                                    </IconButton>
+                                </Tooltip>
+                            </div>}
                         <div className="sticky mb-[8rem] top-[1.5rem] z-10">
                             <div className="flex flex-col gap-[0.5rem] px-[2rem]">
                                 <div>
@@ -445,29 +470,6 @@ function UpdateFundingProjectLayout() {
                                         {project.status != null
                                             ? projectStatus[project.status].name : "Unknown Status"}
                                     </span>
-                                    {project?.note != null && project.note.length > 0 &&
-                                        <Tooltip title="Show admin feedback" arrow>
-                                            <IconButton onClick={() => setOpenNoteModal(true)} sx={{ padding: 0, ml: '1.5rem' }}>
-                                                <Box
-                                                    sx={{
-                                                        backgroundColor: "var(--white)",
-                                                        display: "flex",
-                                                        alignItems: "center",
-                                                        justifyContent: "center",
-                                                        width: "1.25rem",
-                                                        height: "1rem",
-                                                    }}
-                                                >
-                                                    <EmailIcon
-                                                        sx={{
-                                                            width: "1.75rem",
-                                                            height: "1.75rem",
-                                                            color: "var(--primary-green)",
-                                                        }}
-                                                    />
-                                                </Box>
-                                            </IconButton>
-                                        </Tooltip>}
                                 </div>
                                 <Typography
                                     sx={{

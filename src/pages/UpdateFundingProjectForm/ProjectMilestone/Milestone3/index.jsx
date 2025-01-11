@@ -11,7 +11,6 @@ import CompleteMilestoneButton from '../../../../components/UpdateProject/Comple
 import milestoneApiInstace from '../../../../utils/ApiInstance/milestoneApiInstance';
 import { checkAvailableMilestone } from "../../../../utils/Hooks/checkAvailableMilestone";
 import './index.css';
-import { data } from 'autoprefixer';
 
 function Milestone3() {
     const { id } = useParams(); // Get the project ID from the URL
@@ -192,13 +191,23 @@ function Milestone3() {
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingRight: '5rem' }}>
                     <Box>
                         <Typography
-                            className='basic-info-title'
+                            sx={{
+                                color: '#2F3645',
+                                fontSize: '1.5rem',
+                                fontWeight: '700',
+                                userSelect: 'none',
+                                marginBottom: '1rem'
+                            }}
                         >
-                            {milestone.milestoneName}<span className='text-[#1BAA64]'>*</span>
+                            {milestone.milestoneName} <span className='text-[#1BAA64]'>*</span>
                         </Typography>
                         <Typography
-                            className='basic-info-subtitle'
-                            sx={{ width: '100%' }}
+                            sx={{
+                                color: '#2F3645',
+                                fontSize: '1rem',
+                                fontWeight: '400',
+                                userSelect: 'none',
+                            }}
                         >
                             {milestone.description}
                         </Typography>
@@ -269,7 +278,7 @@ function Milestone3() {
                                     projectId={projectId}
                                     milestoneId={milestoneId}
                                     requirementId={
-                                        milestoneData.data && 
+                                        milestoneData.data &&
                                         milestoneData.data.length > 0 &&
                                         milestoneData.data[0].projectMilestoneRequirements[0].requirementId}
                                 />

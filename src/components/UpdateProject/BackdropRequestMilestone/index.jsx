@@ -1,7 +1,7 @@
-import React, { useState } from 'react'
-import { Backdrop, Button, Typography, Box } from '@mui/material'
+import { Backdrop, Button, Typography } from '@mui/material';
+import React, { useState } from 'react';
 import RequestMilestoneModal from '../../RequestMilestoneModal';
-import './index.css'
+import './index.css';
 
 const BackdropRequestMilestone = ({ render, isHidden, milestone, projectId, onCloseBackdrop, status }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -24,15 +24,15 @@ const BackdropRequestMilestone = ({ render, isHidden, milestone, projectId, onCl
 
         switch (status) {
             case 'completed':
-                return <Typography variant='h4'>Milestone Completed</Typography>;
+                return <Typography sx={{ fontWeight: '600', fontSize: '2rem' }}>Milestone Completed</Typography>;
             case 'pending':
-                return <Typography variant='h4'>Milestone Pending</Typography>;
+                return <Typography sx={{ fontWeight: '600', fontSize: '2rem' }}>Milestone Pending</Typography>;
             case 'submitted':
-                return <Typography variant='h4'>Milestone has been submitted</Typography>;
+                return <Typography sx={{ fontWeight: '600', fontSize: '2rem' }}>Milestone has been submitted</Typography>;
             case 'failed':
-                return <Typography variant='h4'>Milestone has failed</Typography>;
+                return <Typography sx={{ fontWeight: '600', fontSize: '2rem' }}>Milestone has failed</Typography>;
             case 'reSubmitted':
-                return <Typography variant='h4'>Milestone has been re-submitted</Typography>;
+                return <Typography sx={{ fontWeight: '600', fontSize: '2rem' }}>Milestone has been re-submitted</Typography>;
             default:
                 return null;
         }
@@ -53,7 +53,7 @@ const BackdropRequestMilestone = ({ render, isHidden, milestone, projectId, onCl
                         variant="contained"
                         sx={{
                             width: "300px", whiteSpace: "nowrap",
-                            background: "#1BAA64", fontWeight: "bold", py: 1
+                            background: "#1BAA64", fontWeight: "700 !important", py: 1, textTransform: 'none'
                         }}
                         onClick={() => handleProcess()}
                         className="request-btn"

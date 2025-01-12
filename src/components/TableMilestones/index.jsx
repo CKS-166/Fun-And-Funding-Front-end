@@ -285,7 +285,7 @@ function MilestoneTable({ dataLoad, notify }) {
                       {milestone.milestoneOrder}
                     </TableCell>
                     <TableCell align="center" className="milestoneTable-cell">
-                      {milestone.disbursementPercentage + "%"}
+                      {milestone.disbursementPercentage * 100 + "%"}
                     </TableCell>
                     <TableCell align="center" className="milestoneTable-cell">
                       {formatDate(milestone.updateDate)}
@@ -310,13 +310,15 @@ function MilestoneTable({ dataLoad, notify }) {
                             >
                               Requirements
                             </Typography>
-                            <button
-                              type="button"
-                              onClick={() => handleAddRequirement(milestone.id)}
-                              className="w-[12rem] bg-green-500 text-white py-3 rounded-lg mb-4  hover:bg-green-600 transition-all duration-20"
-                            >
-                              Create Requirement
-                            </button>
+                            {milestone.milestoneOrder != 3 && (
+                              <button
+                                type="button"
+                                onClick={() => handleAddRequirement(milestone.id)}
+                                className="w-[12rem] bg-green-500 text-white py-3 rounded-lg mb-4  hover:bg-green-600 transition-all duration-20"
+                              >
+                                Create Requirement
+                              </button>
+                            )}
                           </div>
 
                           {milestone.requirements.length > 0 ? (
